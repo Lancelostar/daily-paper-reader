@@ -3279,6 +3279,7 @@ article.markdown-section {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  border-bottom: 1px solid transparent;
 }
 
 .dpr-admin-header-left {
