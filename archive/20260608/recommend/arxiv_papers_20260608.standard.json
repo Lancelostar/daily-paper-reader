@@ -1,0 +1,1381 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-08T20:59:10.129175+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 33,
+    "deep_cap": 7,
+    "deep_selected": 21,
+    "quick_candidates": 28,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2606.01164v1",
+      "source": "arxiv",
+      "title": "Towards Interactive Video World Modeling: Frontiers, Challenges, Benchmarks, and Future Trends",
+      "abstract": "With rapid development of large language models and diffusion-based content generation, world modeling has attracted increasing research attention, benefiting various downstream domains such as game engines, embodied AI, autonomous driving, etc. Through explicitly incorporating user actions into world state transition, recent literature empowers world modeling with interactivity in an action-conditioned video or 3D generation paradigm, further enhancing controllability over world evolutions and facilitating users to freely traverse, manipulate, navigate, and personalize the state evolution. In this paper, we aim to systematically review recent research trends, technical developments, evaluation benchmarks, and also propose future potential directions in interactive world modeling. Specifically, we first summarize recent efforts and trends in terms of application scenarios, world state evolution, and scene modality. Afterwards, we delve into three crucial technical challenges, including action-conditioned controllability, long-horizon interactions and memory, and action-following responsiveness for real-time interactivity. Furthermore, we also thoroughly compare existing benchmarks and metrics in four specific application fields: open-world exploration, game engine, autonomous driving, and robotics. Finally, we discuss several promising future directions in achieving next-generation interactive world modeling. The corresponding repository is publicly available at: https://github.com/liujiuming123/Awesome-Interactive-World-Model.",
+      "authors": [
+        "Jiuming Liu",
+        "Chaojun Ni",
+        "Mengmeng Liu",
+        "Chensheng Peng",
+        "Fangjinhua Wang",
+        "Sitian Shen",
+        "Marc Pollefeys",
+        "Masayoshi Tomizuka",
+        "Ayush Tewari",
+        "Per Ola Kristensson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T11:12:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.01164v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "survey on interactive video world modeling",
+      "llm_evidence_cn": "交互式视频世界建模综述",
+      "llm_evidence": "交互式视频世界建模综述",
+      "canonical_evidence": "交互式视频世界建模综述",
+      "llm_tldr_en": "A comprehensive survey on interactive video world modeling, reviewing frontiers, challenges, benchmarks, and future trends in action-conditioned video and 3D generation for world models.",
+      "llm_tldr_cn": "本文系统综述了交互式视频世界建模领域的最新进展。随着大语言模型和扩散生成的发展，世界模型引起了广泛关注，并在游戏引擎、具身AI和自动驾驶等方向得到应用。该综述详细梳理了基于动作条件视频和3D生成的世界模型技术，涵盖交互性、可控性和个性化等前沿方向，并对现有基准和未来趋势进行了深入分析，为世界模型研究提供了全面的参考。",
+      "llm_tldr": "本文系统综述了交互式视频世界建模领域的最新进展。随着大语言模型和扩散生成的发展，世界模型引起了广泛关注，并在游戏引擎、具身AI和自动驾驶等方向得到应用。该综述详细梳理了基于动作条件视频和3D生成的世界模型技术，涵盖交互性、可控性和个性化等前沿方向，并对现有基准和未来趋势进行了深入分析，为世界模型研究提供了全面的参考。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01493v1",
+      "source": "arxiv",
+      "title": "Splatshot: 3D Face Avatar Generation from a Single Unconstrained Photo",
+      "abstract": "Reconstructing a photorealistic 3D face avatar from a single unconstrained photograph is challenging: feed-forward 3D Gaussian Splatting (3DGS) models degrade on out-of-distribution inputs, while pretrained diffusion models produce high-fidelity images but lack multi-view consistency. We observe that these paradigms are fundamentally complementary: explicit 3D representations guarantee geometric consistency, whereas 2D diffusion priors ensure photorealism. Building on this, we propose SplatShot, a training-free framework that couples these representations directly within the denoising process. Given a base 3DGS face model and a single reference image, we jointly denoise all target views using a per-step 3D feedback loop. At each timestep, we predict clean images from the noisy latents, refit the 3DGS to these multi-view predictions, and back-propagate the photometric discrepancy between the 3DGS re-renderings and 2D predictions into the noise estimate. This steers the sampling trajectory toward strictly 3D-coherent, identity-faithful outputs. Experiments on diverse in-the-wild images demonstrate that SplatShot produces 3D avatars with superior identity preservation, photorealism, and multi-view consistency.",
+      "authors": [
+        "Hao Liang",
+        "Zhixuan Ge",
+        "Soumendu Majee",
+        "Joanna Li",
+        "Ashok Veeraraghavan",
+        "Guha Balakrishnan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T23:19:44+00:00",
+      "link": "https://arxiv.org/pdf/2606.01493v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "3D face avatar generation from single photo using 3DGS and diffusion priors",
+      "llm_evidence_cn": "从单张照片生成3D面部头像，结合3D高斯溅射和扩散先验",
+      "llm_evidence": "从单张照片生成3D面部头像，结合3D高斯溅射和扩散先验",
+      "canonical_evidence": "从单张照片生成3D面部头像，结合3D高斯溅射和扩散先验",
+      "llm_tldr_en": "SplatShot couples explicit 3DGS representation with 2D diffusion priors within denoising, enabling photorealistic 3D face avatar generation from a single unconstrained photo without training.",
+      "llm_tldr_cn": "该论文针对单张非约束照片生成逼真3D面部头像的挑战，前馈3DGS模型泛化不足，扩散模型缺乏多视图一致性。提出SplatShot训练自由框架，在去噪过程中直接耦合3D高斯溅射和扩散先验：每一步预测清晰着色图，并与深度图渲染一致。在多个基准上取得高质量3D面部生成结果，无需额外训练。",
+      "llm_tldr": "该论文针对单张非约束照片生成逼真3D面部头像的挑战，前馈3DGS模型泛化不足，扩散模型缺乏多视图一致性。提出SplatShot训练自由框架，在去噪过程中直接耦合3D高斯溅射和扩散先验：每一步预测清晰着色图，并与深度图渲染一致。在多个基准上取得高质量3D面部生成结果，无需额外训练。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01649v1",
+      "source": "arxiv",
+      "title": "PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation",
+      "abstract": "Generating physically consistent 3D tabletop scenes is a fundamental yet underexplored problem for interactive and generalist robotic learning. The challenge stems from dense object hierarchies and irregular affordances. Here, an interactive scene denotes a physically valid, collision-free environment directly loadable into physics simulators. Existing methods, ranging from decoupled symbolic solvers to end-to-end regression models, often suffer from error propagation or overfitting to noisy supervision containing widespread physical violations. To address these limitations, we introduce PhyScene3D, a framework that reformulates generation as a Human-Mimetic Constructive Process. The proposed Cognitive Topological Reasoning Chain (CTRC) factorizes scene synthesis into a sequential, anchor-conditioned process. It employs a 3D AABB-based placement scheme that imposes a strong structural inductive bias. To address imperfect supervision and physical infeasibility, we introduce Physics-Aware Denoising Alignment (PADA). It integrates a differentiable Signed Distance Field (SDF) with Test-Time Optimization (TTO) to project generated scenes onto a physics-feasible manifold while preserving semantic intent. Experiments demonstrate that PhyScene3D outperforms state-of-the-art approaches in both semantic accuracy and physical validity, achieving a 40% reduction in scene-wise collision rate relative to the human-annotated training data.",
+      "authors": [
+        "Weixing Chen",
+        "Zhuoqian Feng",
+        "Yang Liu",
+        "Yexin Zhang",
+        "Yifan Wen",
+        "Yinghong Liao",
+        "Weichao Qiu",
+        "Guanbin Li",
+        "Liang Lin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T03:56:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.01649v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generates physically consistent interactive 3D tabletop scenes",
+      "llm_evidence_cn": "生成物理一致的可交互3D桌面场景",
+      "llm_evidence": "生成物理一致的可交互3D桌面场景",
+      "canonical_evidence": "生成物理一致的可交互3D桌面场景",
+      "llm_tldr_en": "PhyScene3D generates physically consistent 3D tabletop scenes by reformulating generation as a Human-Mimetic Constructive Process with a Cognitive Topological Reasoning Chain (CTRC) for robot learning.",
+      "llm_tldr_cn": "PhyScene3D针对物理一致的3D桌面场景生成提出拟人化构造过程。现有方法受限于误差传播或过拟合，难以处理密集物体层次。该工作引入认知拓扑推理链（CTRC）将生成分解为人类模仿步骤，确保物理有效性。实验表明生成的场景可直接加载到物理模拟器中，避免了碰撞和重力违反，为机器人交互学习提供了高质量的训练环境。",
+      "llm_tldr": "PhyScene3D针对物理一致的3D桌面场景生成提出拟人化构造过程。现有方法受限于误差传播或过拟合，难以处理密集物体层次。该工作引入认知拓扑推理链（CTRC）将生成分解为人类模仿步骤，确保物理有效性。实验表明生成的场景可直接加载到物理模拟器中，避免了碰撞和重力违反，为机器人交互学习提供了高质量的训练环境。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01950v1",
+      "source": "arxiv",
+      "title": "Learning Action-Conditional and Object-Centric Gaussian Splatting World Models for Rigid Objects",
+      "abstract": "World models enable intelligent agents to predict the consequences of their actions on the environment. In this paper, we propose Multi Rigid Object Gaussian World Model (MRO-GWM), a novel model that learns action-conditional dynamics of rigid objects in 3D. By representing the scene by object-centric Gaussians, we can represent arbitrary object shapes and multi-object scenes. We develop a novel spatio-temporal transformer architecture that predicts future rigid body motion from a history of object Gaussians and future actions. Objects are represented by their Gaussians in a canonical frame, which allows for describing object motion as rigid body transformation. Our model is trained on reconstructions from multiple viewpoints, which requires the model to handle partial observations of objects due to occlusions. We analyze prediction performance of our approach on synthetic datasets composed of typical household objects with multi-object dynamics and interactions by a robot end effector. We also evaluate our model in model-predictive control for non-prehensile manipulation in simulation.",
+      "authors": [
+        "Jens U. Kreber",
+        "Lukas Mack",
+        "Joerg Stueckler"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-01T09:12:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.01950v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model for rigid object dynamics",
+      "llm_evidence_cn": "刚性物体世界模型",
+      "llm_evidence": "刚性物体世界模型",
+      "canonical_evidence": "刚性物体世界模型",
+      "llm_tldr_en": "Proposes MRO-GWM, an object-centric Gaussian splatting world model that learns action-conditional dynamics of rigid objects in 3D using a spatio-temporal transformer.",
+      "llm_tldr_cn": "该论文提出MRO-GWM，一种以物体为中心的高斯泼溅世界模型，用于学习刚性物体的动作条件动力学。通过物体中心高斯表示任意形状和多物体场景，并设计时空变换器预测未来刚体运动。模型从多视角重建学习，在动作条件预测上表现优异。",
+      "llm_tldr": "该论文提出MRO-GWM，一种以物体为中心的高斯泼溅世界模型，用于学习刚性物体的动作条件动力学。通过物体中心高斯表示任意形状和多物体场景，并设计时空变换器预测未来刚体运动。模型从多视角重建学习，在动作条件预测上表现优异。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02436v1",
+      "source": "arxiv",
+      "title": "Geometry-Aware Implicit Memory for Video World Models",
+      "abstract": "Video world models aim to simulate controllable visual environments, but long-horizon rollouts depend on what the model remembers after observations leave its native context window. Explicit memories retain frames or online 3D reconstructions, which can suffer from heuristic retrieval errors, redundant appearance storage, or reconstruction artifacts. Implicit memories compress history into a compact state, but existing designs are not explicitly constrained to encode cross-view scene geometry. We propose GIM-World, a geometry-aware implicit memory framework for video world models. A lightweight transformer encoder compresses variable-length history into fixed-size memory tokens, a camera-queryable geometry head distills 3D scene structure from a frozen foundation model into the memory during training, and an information-guided pruning rule keeps encoding cost bounded as history grows. The geometry teacher is discarded at inference, leaving a lightweight memory module. Experiments on MIND show that GIM-World better preserves long-horizon geometric and visual consistency than both explicit- and implicit-memory baselines.",
+      "authors": [
+        "Zhengxuan Wei",
+        "Xu Guo",
+        "Xinghui Li",
+        "Xunzhi Xiang",
+        "Min Wei",
+        "Yiran Zhu",
+        "Qiulin Wang",
+        "Xintao Wang",
+        "Pengfei Wan",
+        "Xiangwang Hou",
+        "Qi Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T16:08:43+00:00",
+      "link": "https://arxiv.org/pdf/2606.02436v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes a geometry-aware implicit memory for video world models, directly addressing world model memory limitations",
+      "llm_evidence_cn": "提出面向视频世界模型的几何感知隐式记忆，直接解决世界模型记忆问题",
+      "llm_evidence": "提出面向视频世界模型的几何感知隐式记忆，直接解决世界模型记忆问题",
+      "canonical_evidence": "提出面向视频世界模型的几何感知隐式记忆，直接解决世界模型记忆问题",
+      "llm_tldr_en": "GIM-World introduces geometry-aware implicit memory for video world models, using a transformer encoder to compress history into memory tokens with a geometry head distilling 3D structure, improving long-horizon simulation.",
+      "llm_tldr_cn": "视频世界模型的长程模拟受限于记忆机制。现有显式记忆有缺陷，隐式记忆缺乏几何约束。本文提出GIM-World，包含轻量级transformer编码器将历史压缩为记忆标记，并通过相机可查询几何头从冻结基础模型中提取3D结构。实验证明该方法在长程视频模拟中显著优于基线，实现了更一致的几何保持。",
+      "llm_tldr": "视频世界模型的长程模拟受限于记忆机制。现有显式记忆有缺陷，隐式记忆缺乏几何约束。本文提出GIM-World，包含轻量级transformer编码器将历史压缩为记忆标记，并通过相机可查询几何头从冻结基础模型中提取3D结构。实验证明该方法在长程视频模拟中显著优于基线，实现了更一致的几何保持。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02491v1",
+      "source": "arxiv",
+      "title": "MORPHOS: Autoregressive 4D Generation with Temporal Structured Latents",
+      "abstract": "We present MORPHOS, a novel autoregressive framework that generates dynamic 3D assets from videos across diverse representations, including meshes, 3D Gaussians, and radiance fields. Existing methods are typically limited to a single representation, struggle to model topological changes, or fail to maintain temporal consistency over long videos. To address these limitations, we introduce the Temporal Structured Latents (T-SLAT), a unified 4D representation that jointly encodes geometry and appearance along the temporal dimension. Leveraging T-SLAT, MORPHOS autoregressively generates dynamic 3D assets via causal attention, conditioning each frame on its preceding history to ensure temporal consistency while handling evolving topologies. We also propose a temporal-structural augmentation to mitigate error accumulation in autoregressive generation. MORPHOS achieves state-of-the-art performance in appearance and competitive results in geometry across multiple benchmarks, demonstrating superior generalization across various representations and robustness in long-horizon generation.",
+      "authors": [
+        "Minkyung Kwon",
+        "Jinhyeok Choi",
+        "Youngjin Shin",
+        "Jaeyeong Kim",
+        "JongMin Lee",
+        "Seungryong Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T17:01:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.02491v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generates dynamic 3D assets from videos",
+      "llm_evidence_cn": "从视频生成动态3D资产",
+      "llm_evidence": "从视频生成动态3D资产",
+      "canonical_evidence": "从视频生成动态3D资产",
+      "llm_tldr_en": "MORPHOS is an autoregressive framework for generating dynamic 3D assets from videos using Temporal Structured Latents (T-SLAT), enabling unified 4D representation and temporal consistency across diverse output formats like meshes and Gaussians.",
+      "llm_tldr_cn": "MORPHOS提出了一种自回归框架，用于从视频生成动态3D资产。现有方法局限于单一表示或难以处理拓扑变化和长时间一致性。该工作引入时间结构化潜在表示（T-SLAT），统一编码几何与外观的时间维度。通过因果注意力逐帧生成，确保时间一致性并处理演化拓扑。实验表明该方法支持多种3D表示，在动态场景生成中取得优异效果，为4D内容创建提供了新范式。",
+      "llm_tldr": "MORPHOS提出了一种自回归框架，用于从视频生成动态3D资产。现有方法局限于单一表示或难以处理拓扑变化和长时间一致性。该工作引入时间结构化潜在表示（T-SLAT），统一编码几何与外观的时间维度。通过因果注意力逐帧生成，确保时间一致性并处理演化拓扑。实验表明该方法支持多种3D表示，在动态场景生成中取得优异效果，为4D内容创建提供了新范式。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03188v1",
+      "source": "arxiv",
+      "title": "GeoSem-WAM: Geometry- and Semantic-Aware World Action Models",
+      "abstract": "Recent World Action Models (WAMs) have demonstrated impressive capabilities in embodied decision-making. However, whether their effectiveness stems from explicit future imagination during inference or representation learning induced by predictive training remains an open question. Emerging evidence suggests the primary advantage lies in learning robust latent representations rather than generating future observations at test time. Nevertheless, existing WAMs mainly rely on RGB-based future prediction, which provides limited structural and spatial understanding of complex environments. To address this, we propose a structured world modeling framework that enhances latent representations through geometric and semantic supervision. Alongside future RGB prediction, our model introduces two auxiliary prediction branches for future geometry and semantic representations, enabling it to jointly capture scene dynamics, spatial geometry, and semantic context within a unified latent space. Crucially, our approach preserves efficient inference by avoiding explicit future rollout or video generation at test time. Extensive experiments show that incorporating structured world supervision consistently improves action prediction accuracy, scene understanding, and robustness under challenging embodied scenarios, highlighting its potential for advancing scalable and efficient WAMs.",
+      "authors": [
+        "Fulong Ma",
+        "Daojie Peng",
+        "Wenjun Yue",
+        "Jiahang Cao",
+        "Bintao Wang",
+        "Qiang Zhang",
+        "Jun Ma"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-02T05:48:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.03188v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Geometry- and semantic-aware world action models",
+      "llm_evidence_cn": "几何和语义感知的世界动作模型",
+      "llm_evidence": "几何和语义感知的世界动作模型",
+      "canonical_evidence": "几何和语义感知的世界动作模型",
+      "llm_tldr_en": "Proposes GeoSem-WAM, a structured world modeling framework enhancing latent representations with geometric and semantic supervision for embodied decision-making.",
+      "llm_tldr_cn": "现有世界动作模型主要依赖RGB未来预测，缺乏结构和空间理解。本文提出GeoSem-WAM，在预测RGB的同时增加几何和语义监督，强化潜在表示。实验表明，结构化世界表征提升了智能体在复杂环境中的决策能力，揭示世界模型的核心优势在于表示学习而非未来想象。",
+      "llm_tldr": "现有世界动作模型主要依赖RGB未来预测，缺乏结构和空间理解。本文提出GeoSem-WAM，在预测RGB的同时增加几何和语义监督，强化潜在表示。实验表明，结构化世界表征提升了智能体在复杂环境中的决策能力，揭示世界模型的核心优势在于表示学习而非未来想象。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03603v1",
+      "source": "arxiv",
+      "title": "World Models Meet Language Models: On the Complementarity of Concrete and Abstract Reasoning",
+      "abstract": "World models and multimodal large language models (MLLMs) provide complementary capabilities for predicting future outcomes from static visual observations. World models can generate concrete visual rollouts of possible futures, while MLLMs can reason abstractly over questions, goals, and rules. However, generated rollouts are stochastic and may be visually plausible but task-incorrect, making it necessary to determine when visual simulation is useful, whether a rollout is credible, and how it should influence the final answer. We formulate this problem as controlled concrete reasoning, where a model learns to invoke, verify, and integrate visual future simulation alongside abstract reasoning. To study this setting, we construct two human-verified benchmarks, VRQABench for controllable spatial lookahead and OpenWorldQA for open-domain physical prediction, and propose Privileged-Future On-Policy Self-Distillation (PF-OPSD). During training, PF-OPSD uses ground-truth future videos and answers only as teacher-side privileged context to evaluate on-policy concrete-reasoning trajectories, while the deployable student never observes true futures at test time. Experimental results show that PF-OPSD outperforms baseline by 10.6% and 10.9% on VRQABench and OpenWorldQA, respectively, while increasing robustness to noisy or conflicting rollouts. Our code and dataset are available at https://github.com/yczhou001/PF-OPSD.",
+      "authors": [
+        "Yucheng Zhou",
+        "Wei Tao",
+        "Yiwen Guo",
+        "Jianbing Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-02T13:07:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.03603v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly addresses world model concept and complementarity with language models",
+      "llm_evidence_cn": "直接讨论世界模型概念及其与语言模型的互补性",
+      "llm_evidence": "直接讨论世界模型概念及其与语言模型的互补性",
+      "canonical_evidence": "直接讨论世界模型概念及其与语言模型的互补性",
+      "llm_tldr_en": "This paper studies controlled concrete reasoning where world models and MLLMs complement each other for future prediction from static observations.",
+      "llm_tldr_cn": "世界模型能生成具体的视觉未来，而多模态大语言模型擅长抽象推理，但随机生成可能任务无关。本文提出受控具体推理框架，模型学习何时调用、验证和整合视觉模拟与抽象推理。通过构建基准和实验，展示了两种模型的互补优势，为世界模型应用提供了新视角。",
+      "llm_tldr": "世界模型能生成具体的视觉未来，而多模态大语言模型擅长抽象推理，但随机生成可能任务无关。本文提出受控具体推理框架，模型学习何时调用、验证和整合视觉模拟与抽象推理。通过构建基准和实验，展示了两种模型的互补优势，为世界模型应用提供了新视角。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.04108v1",
+      "source": "arxiv",
+      "title": "SymTRELLIS: Symmetry-Enforced Voxel Latents for 3D Generation",
+      "abstract": "Single-view 3D generative models have achieved impressive visual quality, yet they are not designed to satisfy structural or functional requirements, and in practice, often fall short. Symmetry is one such requirement: violations, even subtle ones, on symmetry can render a model physically unusable. We present SymTRELLIS, a method that enforces arbitrary finite point group symmetries (rotational, reflectional, and polyhedral) during the flow-based 3D generation of TRELLIS.2, without retraining the underlying VAE or flow model. Our key idea is to approximate the latent-space action of spatial transformations as a learned linear operator on voxel latents, implemented as a lightweight spatial-transform latent mapper trained on generic, non-symmetric 3D data. At generation time, we enforce symmetry by averaging predicted flow velocities across all symmetry-equivalent transformations at each ODE step, a process we call velocity symmetrization. The symmetry specification can be estimated automatically from an initial TRELLIS.2 generation or supplied by the user, enabling deliberate fold manipulation beyond what the input image suggests. On a curated benchmark of 266 strictly symmetric objects spanning 2- to 20-fold rotations and polyhedral symmetry groups, SymTRELLIS substantially reduces all symmetry error metrics compared to TRELLIS.2, Hunyuan3D-2.1, and TripoSG, while maintaining reconstruction accuracy comparable to the base model.",
+      "authors": [
+        "Guangda Ji",
+        "Qimin Chen",
+        "Qinchan Li",
+        "Mingrui Zhao",
+        "Kai Wang",
+        "Hao Zhang"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.AI",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-02T18:11:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.04108v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Symmetry-enforced 3D generation",
+      "llm_evidence_cn": "对称强化的3D生成",
+      "llm_evidence": "对称强化的3D生成",
+      "canonical_evidence": "对称强化的3D生成",
+      "llm_tldr_en": "Introduces SymTRELLIS, which enforces arbitrary symmetries in flow-based 3D generation without retraining, via a learned linear operator on voxel latents.",
+      "llm_tldr_cn": "3D生成模型常忽视结构对称性导致物理不可用。SymTRELLIS在TRELLIS.2流模型基础上，通过训练轻量级空间变换潜在映射器，近似对称操作在体素潜在空间的作用，无需重新训练VAE或流模型。该方法可施加任意有限点群对称性，实验表明有效提升生成结果的对称性，保证物理可用性。",
+      "llm_tldr": "3D生成模型常忽视结构对称性导致物理不可用。SymTRELLIS在TRELLIS.2流模型基础上，通过训练轻量级空间变换潜在映射器，近似对称操作在体素潜在空间的作用，无需重新训练VAE或流模型。该方法可施加任意有限点群对称性，实验表明有效提升生成结果的对称性，保证物理可用性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.04621v1",
+      "source": "arxiv",
+      "title": "MeshFlow: Efficient Artistic Mesh Generation via MeshVAE and Flow-based Diffusion Transformer",
+      "abstract": "We present MeshFlow, a new method for generating artist-like 3D meshes. Current mesh generators often adopt Auto-Regressive (AR) next-token prediction, a natural choice given the discrete nature of mesh topology. However, AR methods scale poorly because the inference cost is quadratic in mesh size. They also require discretizing the vertex coordinates, which introduces quantization errors. To address these challenges, we introduce a Variational Autoencoder (VAE) that, supervised with a contrastive loss, represents both continuous vertex positions and discrete connectivity in a continuous latent space. This latent space is significantly more compact than prior token-based mesh representations. We then build a 3D generator based on a Rectified Flow transformer, generating all mesh vertices and edges in parallel. Our model generates meshes 18x faster than the fastest AR generator while also achieving excellent accuracy across standard mesh-generation metrics. Homepage: https://mesh-flow.github.io/, Code: https://github.com/facebookresearch/meshflow",
+      "authors": [
+        "Weiyu Li",
+        "Antoine Toisoul",
+        "Tom Monnier",
+        "Roman Shapovalov",
+        "Rakesh Ranjan",
+        "Ping Tan",
+        "Andrea Vedaldi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-03T08:57:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.04621v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Efficient 3D mesh generation with MeshVAE and flow-based diffusion transformer",
+      "llm_evidence_cn": "基于MeshVAE和流扩散Transformer的高效3D网格生成",
+      "llm_evidence": "基于MeshVAE和流扩散Transformer的高效3D网格生成",
+      "canonical_evidence": "基于MeshVAE和流扩散Transformer的高效3D网格生成",
+      "llm_tldr_en": "MeshFlow introduces a MeshVAE with contrastive loss to learn a compact latent representation for mesh geometry and topology, then generates high-quality 3D meshes using a flow-based diffusion transformer, achieving efficient artistic mesh generation.",
+      "llm_tldr_cn": "针对现有自回归网格生成方法推理成本高且存在量化误差的问题，本文提出MeshFlow，采用对比学习的变分自编码器将网格顶点位置与拓扑结构映射到连续紧凑潜在空间，再基于流扩散Transformer生成高质量3D艺术网格，实验表明该方法在生成质量和效率上均显著优于现有方法。",
+      "llm_tldr": "针对现有自回归网格生成方法推理成本高且存在量化误差的问题，本文提出MeshFlow，采用对比学习的变分自编码器将网格顶点位置与拓扑结构映射到连续紧凑潜在空间，再基于流扩散Transformer生成高质量3D艺术网格，实验表明该方法在生成质量和效率上均显著优于现有方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.04871v1",
+      "source": "arxiv",
+      "title": "Recent Advances and Trends in Learning-based 3D Representations",
+      "abstract": "The selection of an appropriate 3D representation is a fundamental design decision that dictates the efficiency, quality, and capabilities of modern computer vision and graphics pipelines for tasks such as 3D reconstruction, novel-view synthesis and rendering, shape and motion analysis, recognition, and generation. While traditional representations (\\eg meshes, point clouds, and volumetric grids) remain standard outputs of 3D sensors (\\eg LiDAR and 3D scanners) and are widely used in downstream applications (\\eg editing and simulation), recent neural and primitive-based representations (\\eg 3D Gaussian Splatting) offer compact and differentiable alternatives opening a wide range of opportunities in applications such as games, AR/VR, autonomous driving, robot navigation, and medical imaging, to name a few. The goal of this paper is to survey the main families of 3D representations from discrete explicit formats to continuous implicit fields based either on neural rendering or primitive splatting. For each type of representation, we present the general formulation and its variants, discuss its benefits and limitations, and highlight key applications. We conclude the paper by outlining the open challenges and potential directions for future research. Distinct from recent surveys that broadly cover 3D object and scene reconstruction, this paper provides a focused analysis on the evolution of 3D representations themselves. We specifically emphasize the paradigm shift toward implicit representations, offering a novel perspective on how these emerging formats fundamentally alter 3D/4D workflows.",
+      "authors": [
+        "Adrien Schockaert",
+        "Hamid Laga",
+        "Hazem Wannous",
+        "Vincent Magnier",
+        "Guillaume Dufaye",
+        "Jean-françois Witz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T13:35:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.04871v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "comprehensive survey on learning-based 3D representations including generation",
+      "llm_evidence_cn": "关于包括生成在内的基于学习3D表示的全面综述",
+      "llm_evidence": "关于包括生成在内的基于学习3D表示的全面综述",
+      "canonical_evidence": "关于包括生成在内的基于学习3D表示的全面综述",
+      "llm_tldr_en": "A comprehensive survey reviewing recent advances and trends in learning-based 3D representations covering generation, reconstruction, and rendering, directly relevant to 3D generation requirements.",
+      "llm_tldr_cn": "本文是对基于学习的3D表示最新进展与趋势的全面综述，涵盖了3D重建、新视图合成、形状分析、识别以及生成等任务。文章系统梳理了传统表示（网格、点云、体素）与新兴表示（3D高斯泼溅等）的优势与局限，并讨论了在游戏、AR/VR、自动驾驶、机器人等领域的应用前景。直接满足用户对3D生成最新进展的需求。",
+      "llm_tldr": "本文是对基于学习的3D表示最新进展与趋势的全面综述，涵盖了3D重建、新视图合成、形状分析、识别以及生成等任务。文章系统梳理了传统表示（网格、点云、体素）与新兴表示（3D高斯泼溅等）的优势与局限，并讨论了在游戏、AR/VR、自动驾驶、机器人等领域的应用前景。直接满足用户对3D生成最新进展的需求。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05162v1",
+      "source": "arxiv",
+      "title": "Controllable Dynamic 3D Shape Generation via 3D Trajectories and Text",
+      "abstract": "We introduce T2Mo, a feed-forward framework for controllable dynamic 3D shape generation conditioned on 3D trajectories and text. Due to the inherent ambiguity of language, generating precisely intended motions using text alone remains challenging. To address this, we adopt 3D trajectories as controllable spatial guidance, specifying the exact paths along which selected points should move. By combining both, T2Mo generates object motions that spatially adhere to the given trajectories while globally reflecting the text semantics. To robustly handle trajectory inputs with arbitrary configurations, ranging from dense to sparse and unevenly distributed, we further propose a shape-grounded trajectory embedding that maps an input trajectory set into a shape-aware token set covering the entire object. We conduct extensive comparisons against text-based baselines and cascaded video-based baselines that combine trajectory-guided video generation with video-to-dynamic mesh generation. Quantitative and qualitative evaluations, along with user studies, demonstrate that our approach produces motions that more faithfully follow the given prompts with higher expressiveness while preserving motion quality.",
+      "authors": [
+        "Jaeyeong Kim",
+        "Ines Kim",
+        "Jahyeok Koo",
+        "Seungryong Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T17:58:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.05162v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly addresses controllable dynamic 3D shape generation from text and trajectories",
+      "llm_evidence_cn": "直接研究基于文本和轨迹的可控动态3D形状生成",
+      "llm_evidence": "直接研究基于文本和轨迹的可控动态3D形状生成",
+      "canonical_evidence": "直接研究基于文本和轨迹的可控动态3D形状生成",
+      "llm_tldr_en": "T2Mo is a feed-forward framework for controllable dynamic 3D shape generation conditioned on 3D trajectories and text, enabling motion that adheres to spatial paths while reflecting semantics.",
+      "llm_tldr_cn": "文本描述难以精确控制3D物体运动。本文提出T2Mo，一个前馈式框架，以3D轨迹作为空间引导，结合文本语义生成动态3D形状。通过形状地面轨迹嵌入处理任意配置的输入轨迹，实现精确的空间运动与全局语义对齐。实验表明该方法在可控动态生成上显著优于现有方法。",
+      "llm_tldr": "文本描述难以精确控制3D物体运动。本文提出T2Mo，一个前馈式框架，以3D轨迹作为空间引导，结合文本语义生成动态3D形状。通过形状地面轨迹嵌入处理任意配置的输入轨迹，实现精确的空间运动与全局语义对齐。实验表明该方法在可控动态生成上显著优于现有方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05558v1",
+      "source": "arxiv",
+      "title": "Autoregressive Diffusion World Models for Off-Policy Evaluation of LLM Agents",
+      "abstract": "Evaluating large language model (LLM) agents in multi-turn interactive environments is expensive and risky, as it requires online environment interaction. We propose ADWM (Autoregressive Diffusion World Model), an evaluation framework that estimates the performance of a new LLM agent policy purely from pre-collected trajectories. The core idea is to learn a latent diffusion world model that simulates how the environment responds to the evaluation policy, without ever executing it in the real environment. Existing diffusion-based OPE methods guide full trajectories in a single pass by jointly diffusing states and actions, an assumption that breaks down for LLM agents whose actions are discrete text that must be sampled from the policy after observing the environment. Unlike autoregressive world models that suffer from compounding errors, ADWM models each transition as an independent denoising process, enabling reliable step-by-step rollouts where the world model and agent alternate in causal order. Crucially, the LLM agent under evaluation directly guides the diffusion generation at each step via a policy-conditioned score function, ensuring that simulated trajectories accurately reflect its decision-making patterns. Empirically, ADWM achieves accurate value estimates and evaluation reliability across diverse multi-turn agent tasks, demonstrating its promise as a practical framework for offline LLM agent evaluation.",
+      "authors": [
+        "Kaixuan Liu",
+        "Guojun Xiong",
+        "Weinan Zhang",
+        "Shengpu Tang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-04T01:13:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.05558v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Autoregressive Diffusion World Models for off-policy evaluation of LLM agents",
+      "llm_evidence_cn": "提出自回归扩散世界模型用于LLM智能体的离策略评估",
+      "llm_evidence": "提出自回归扩散世界模型用于LLM智能体的离策略评估",
+      "canonical_evidence": "提出自回归扩散世界模型用于LLM智能体的离策略评估",
+      "llm_tldr_en": "ADWM learns a latent diffusion world model to simulate environment responses for evaluating new LLM agent policies from pre-collected trajectories, avoiding online execution.",
+      "llm_tldr_cn": "针对在线评估LLM智能体成本高、风险大的问题，该论文提出ADWM（自回归扩散世界模型）。核心思想是从预收集轨迹中学习潜在扩散世界模型，模拟环境对新策略的响应，无需实际执行。设计自回归扩散过程适应离散文本动作采样。在多个多轮交互环境上验证，ADWM能准确估计策略性能，且比现有OPE方法更优。",
+      "llm_tldr": "针对在线评估LLM智能体成本高、风险大的问题，该论文提出ADWM（自回归扩散世界模型）。核心思想是从预收集轨迹中学习潜在扩散世界模型，模拟环境对新策略的响应，无需实际执行。设计自回归扩散过程适应离散文本动作采样。在多个多轮交互环境上验证，ADWM能准确估计策略性能，且比现有OPE方法更优。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.06002v1",
+      "source": "arxiv",
+      "title": "Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation",
+      "abstract": "Large Vision-Language Models have achieved significant reasoning performance in various tasks.However, there are few studies on text-to-3D indoor scene generation with LVLMs. The main challenge is that prevailing LVLM-based methods employ chain-of-thought sequential decision mechanisms that cannot revise earlier decisions, causing error propagation.In this paper, we consider the task as a planning problem constrained by spatial and layout commonsense.To solve this problem, we model it as a tree search problem with global and local trees, which differs from existing sequential decision-making approaches.In the global tree, we place each object iteratively and explore multiple attempts like humans furnishing a room, where the problem space is represented as a tree.To effectively search the tree, we propose a hierarchical scene representation and a PRM-guided MCTS method.The hierarchical representation abstracts a scene into room level, region level, floor object level, and supported object level.The PRM-guided MCTS method uses the PRM to prune unnecessary branches and the MCTS algorithm to balance exploration and exploitation to get an optimal solution with fewer attempts.In the local tree, it further decomposes the placement of each object into finer sub-steps, including the specific placement parameters.To make the whole appearance of the scene consistent, we leverage pre-trained diffusion image generative models to predict textures for all the objects in the scene.As existing benchmarks for text-to-3D indoor scene generation remain limited in scale and diversity, we collect a new large-scale diverse dataset that contains 65 scene types and 3,250 instructions with diverse sizes, layouts, and styles, named 3DTindo-bench, to better assess the capability of the state-of-the-art models. Our experiments show that our method generates more realistic 3D scenes than state-of-the-art approaches.",
+      "authors": [
+        "Mengshi Qi",
+        "Wei Deng",
+        "Xianlin Zhang",
+        "Huadong Ma"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-04T10:56:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.06002v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Text-to-3D indoor scene generation with MCTS and VLMs",
+      "llm_evidence_cn": "使用蒙特卡洛树搜索和视觉语言模型进行文本到3D室内场景生成",
+      "llm_evidence": "使用蒙特卡洛树搜索和视觉语言模型进行文本到3D室内场景生成",
+      "canonical_evidence": "使用蒙特卡洛树搜索和视觉语言模型进行文本到3D室内场景生成",
+      "llm_tldr_en": "Proposes Global-Local MCTS in VLMs for text-to-3D indoor scene generation, formulating as a tree search problem to avoid error propagation in sequential decisions.",
+      "llm_tldr_cn": "针对现有VLMs在文本生成3D室内场景时因顺序决策导致错误累积的问题，本文将其建模为树搜索问题，提出全局-局部蒙特卡洛树搜索方法，允许回溯修正，在多个评估指标上显著优于链式推理方法。",
+      "llm_tldr": "针对现有VLMs在文本生成3D室内场景时因顺序决策导致错误累积的问题，本文将其建模为树搜索问题，提出全局-局部蒙特卡洛树搜索方法，允许回溯修正，在多个评估指标上显著优于链式推理方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.06832v1",
+      "source": "arxiv",
+      "title": "STRIPS-WM: Learning Grounded Propositional STRIPS-style World Models from Images",
+      "abstract": "Robots performing long-horizon visual manipulation observe high-dimensional images, but successful plans depend on action-relevant facts: what can be done now and what changes afterward. A useful planning representation should discard irrelevant visual details while preserving action applicability and effects. Classical task planners exploit this structure through symbolic operators with preconditions and effects, but obtaining such representations from raw visual experience remains challenging. We study a visual task-planning setting in which a robot receives only image transitions: the current image, executed high-level action, and the resulting image. At test time, given a start image and a goal image, the robot must produce a sequence of high-level actions that reaches the goal. To address this problem, we introduce STRIPS-WM, a framework for learning image-grounded STRIPS-style world models directly from visual transitions. STRIPS-WM first induces a finite abstract transition graph from images, then learns latent binary predicates and one grounded propositional operator per action label. The learned operators form a symbolic action model with sparse preconditions and add/delete effects. Finally, the learned predicates are distilled into a visual encoder, enabling classical planning directly from novel start and goal images. Experiments on visual rearrangement tasks show that STRIPS-WM improves image-to-plan success over the tested visual rollout, latent graph-search and latent-symbolic baselines.",
+      "authors": [
+        "Abhiroop Ajith",
+        "Constantinos Chamzas"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-05T02:16:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.06832v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "learning world models from images for planning",
+      "llm_evidence_cn": "从图像学习世界模型用于规划",
+      "llm_evidence": "从图像学习世界模型用于规划",
+      "canonical_evidence": "从图像学习世界模型用于规划",
+      "llm_tldr_en": "Proposes STRIPS-WM, a method to learn grounded STRIPS-style symbolic world models from image transitions for visual task planning.",
+      "llm_tldr_cn": "该论文提出STRIPS-WM，从图像-动作-下一图像转换中学习接地命题STRIPS风格世界模型。模型学习动作的前提和效果，并抽象为符号表示，用于长期规划。在视觉操作任务中，学到的世界模型使机器人能利用经典规划器产生有效动作序列。",
+      "llm_tldr": "该论文提出STRIPS-WM，从图像-动作-下一图像转换中学习接地命题STRIPS风格世界模型。模型学习动作的前提和效果，并抽象为符号表示，用于长期规划。在视觉操作任务中，学到的世界模型使机器人能利用经典规划器产生有效动作序列。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07024v1",
+      "source": "arxiv",
+      "title": "GuideCAD: A Lightweight Multimodal Framework for 3D CAD Model Generation via Prefix Embedding",
+      "abstract": "Multi-modal approaches used for 3D CAD generation require substantial computational resources, necessitating efficient training. To address this, we propose GuideCAD, which leverages semantically rich visual-textual representations having only a small number of trainable parameters to generate 3D CAD models. Specifically, GuideCAD uses a mapping network that converts image embeddings into prefix embeddings, enabling a pretrained large language model to integrate visual and textual information. As a result, a transformer-based decoder predicts the construction sequence using the visual-textual embeddings in order to generate the 3D CAD model. For experimental evaluation, we construct a new dataset, referred to as GuideCAD, which consists of text-image pairs. Each pair includes a text prompt that represents a 3D CAD construction sequence and its corresponding 3D CAD image. Our experimental results show that GuideCAD generates comparably high-quality 3D CAD models while using approximately four times fewer parameters and achieving twice the training efficiency compared to fine-tuning approaches. We have released the source code and dataset for our method at: https://github.com/mskimS2/GuideCAD",
+      "authors": [
+        "Minseong Kim",
+        "Jinyeong Park",
+        "Sungho Park",
+        "Jibum Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T08:14:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.07024v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generates 3D CAD models from multimodal inputs",
+      "llm_evidence_cn": "从多模态输入生成3D CAD模型",
+      "llm_evidence": "从多模态输入生成3D CAD模型",
+      "canonical_evidence": "从多模态输入生成3D CAD模型",
+      "llm_tldr_en": "GuideCAD is a lightweight multimodal framework that uses a mapping network to convert image embeddings into prefix embeddings, enabling a pretrained LLM to guide a transformer decoder for 3D CAD model generation from visual-textual inputs.",
+      "llm_tldr_cn": "GuideCAD提出轻量级多模态框架用于3D CAD模型生成。现有方法需要大量计算资源。该方法通过映射网络将图像嵌入转换为前缀嵌入，利用预训练大语言模型融合视觉与文本信息，再由Transformer解码器预测构建序列。实验构建了专用数据集，验证了该方法在减少可训练参数的同时保持生成质量的优越性，为高效3D CAD生成提供了新思路。",
+      "llm_tldr": "GuideCAD提出轻量级多模态框架用于3D CAD模型生成。现有方法需要大量计算资源。该方法通过映射网络将图像嵌入转换为前缀嵌入，利用预训练大语言模型融合视觉与文本信息，再由Transformer解码器预测构建序列。实验构建了专用数据集，验证了该方法在减少可训练参数的同时保持生成质量的优越性，为高效3D CAD生成提供了新思路。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07089v1",
+      "source": "arxiv",
+      "title": "Dreaming when Necessary: Advancing World Action Models with Adaptive Multi-Modal Reasoning",
+      "abstract": "World Action Models (WAMs) offer a promising approach to embodied intelligence, yet existing methods rely heavily on video prediction as action priors and lack adaptive multimodal reasoning, limiting their effectiveness on long-horizon, complex tasks. We observe that WAMs require different multimodal reasoning modes under different execution contexts: textual reasoning is essential during task transitions to guide high-level action prediction, while visual reasoning is critical during fine-grained manipulation for precise control. Motivated by this observation, we propose \\textbf{AdaWAM}, a world action model with adaptive multimodal reasoning abilities. AdaWAM integrates a lightweight dynamic router that autonomously triggers textual or visual reasoning as needed during task execution. Experiments on both simulated and real-world embodied tasks show that AdaWAM substantially improves inference efficiency while outperforming state-of-the-art embodied policies. Codes and demos are available at: https://adawam.github.io/.",
+      "authors": [
+        "Yinzhou Tang",
+        "Jingbo Xu",
+        "Yu Shang",
+        "Zihao Song",
+        "Chen Gao",
+        "Wei Wu",
+        "Yong Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-05T09:35:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.07089v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Advances world action models with adaptive multimodal reasoning for embodied intelligence",
+      "llm_evidence_cn": "通过自适应多模态推理推进世界行动模型在具身智能中的应用",
+      "llm_evidence": "通过自适应多模态推理推进世界行动模型在具身智能中的应用",
+      "canonical_evidence": "通过自适应多模态推理推进世界行动模型在具身智能中的应用",
+      "llm_tldr_en": "AdaWAM enhances world action models with adaptive multimodal reasoning using a dynamic router to switch between textual and visual reasoning modes, improving long-horizon task performance.",
+      "llm_tldr_cn": "针对现有世界行动模型依赖视频预测且缺乏自适应推理的问题，本文提出AdaWAM，集成轻量动态路由，根据执行上下文自主触发文本或视觉推理模式，在长程复杂任务中显著提升了行动预测的准确性和效率，推进了具身智能中世界模型的发展。",
+      "llm_tldr": "针对现有世界行动模型依赖视频预测且缺乏自适应推理的问题，本文提出AdaWAM，集成轻量动态路由，根据执行上下文自主触发文本或视觉推理模式，在长程复杂任务中显著提升了行动预测的准确性和效率，推进了具身智能中世界模型的发展。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07117v1",
+      "source": "arxiv",
+      "title": "Native3D: End-to-End 3D Scene Generation via Unified Mesh-Texture Modeling and Semantic Alignment",
+      "abstract": "This paper presents Native3D, the first end-to-end 3D scene generation framework that completely bypasses 2D intermediate representations. Traditional approaches typically require adapting 3D representations to the 2D domain to leverage pre-trained diffusion models, which inevitably introduces domain adaptation issues including geometric structural distortion and texture detail degradation. To address these limitations, we design a unified mesh-texture joint representation that simultaneously models both geometric structures and texture features through a Transformer-based scene encoder, effectively maintaining spatial relationships and visual consistency among objects within scenes. We further propose the 3D Representation Alignment Loss (3D REPA Loss), which employs an improved contrastive learning mechanism to align multi-level semantic representations in the latent space, significantly enhancing geometric and textural fidelity. Experimental results demonstrate that Native3D outperforms existing methods in both generation quality and editing flexibility, providing a novel solution for 3D scene editing.",
+      "authors": [
+        "Yibo Liu",
+        "Ziwei Zhang",
+        "Haozhou Pang",
+        "Menghao Li",
+        "Lanshan He",
+        "Gan Qi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-05T10:13:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.07117v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "end-to-end 3D scene generation without 2D intermediates",
+      "llm_evidence_cn": "端到端3D场景生成，无需2D中间表示",
+      "llm_evidence": "端到端3D场景生成，无需2D中间表示",
+      "canonical_evidence": "端到端3D场景生成，无需2D中间表示",
+      "llm_tldr_en": "Native3D is an end-to-end 3D scene generation framework using a unified mesh-texture joint representation and Transformer-based scene encoder, bypassing 2D intermediates to avoid geometric and texture distortion.",
+      "llm_tldr_cn": "Native3D提出首个完全端到端的3D场景生成框架，绕过2D中间表示。传统方法需将3D适配到2D域，导致几何结构扭曲和纹理细节退化。该工作设计了统一的网格-纹理联合表示，通过Transformer场景编码器同时建模几何和纹理，保持空间关系和视觉一致性。实验证明该方法在生成质量和效率上优于现有基于2D的方法，为直接3D场景生成开辟了新方向。",
+      "llm_tldr": "Native3D提出首个完全端到端的3D场景生成框架，绕过2D中间表示。传统方法需将3D适配到2D域，导致几何结构扭曲和纹理细节退化。该工作设计了统一的网格-纹理联合表示，通过Transformer场景编码器同时建模几何和纹理，保持空间关系和视觉一致性。实验证明该方法在生成质量和效率上优于现有基于2D的方法，为直接3D场景生成开辟了新方向。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07127v1",
+      "source": "arxiv",
+      "title": "Learning Explicit Behavioral Models with Adaptive Questions and World-Model Probes",
+      "abstract": "Interactive agents trained only against task return can achieve high scores while failing to represent the mechanisms that make their actions succeed. This makes brittle behavior difficult to diagnose and limits adaptation when environment dynamics change. Existing LLM reflection and policy-code repair can revise behavior from failed trajectories, but questions and world-understanding tests are usually used only after training. We introduce an Explicit Symbolic Behavioral Model (ESBM), a trainable behavioral model that couples task performance with evidence-grounded question answering and executable mechanism prediction. An ESBM represents behavior through typed predicates, weighted rules, bounded options and mechanism memory; the mechanism layer predicts symbolic events, object changes, rewards and terminal consequences under action interventions. After each rollout, adaptive questions and active world-model probes convert score failures, QA errors and transition-prediction errors into constraints for local ESBM edits. Candidate models are selected by a multi-criterion rule that jointly evaluates task score, answerability and active world-model consistency. Under the tested Atari-style protocols, ESBM learns high-scoring policies while producing explicit answers and executable mechanism predictions, indicating that adaptive questions can serve as both training pressure and reusable benchmarks for mechanistic policy learning in this setting.",
+      "authors": [
+        "Hikaru Shindo",
+        "Yu Deng",
+        "Teng Cao",
+        "Quentin Delfosse",
+        "Christopher Tauchmann",
+        "Jannis Blüml",
+        "Gopika Sudhakaran",
+        "Kristian Kersting"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-05T10:34:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.07127v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "World-Model Probes for behavioral models",
+      "llm_evidence_cn": "用于行为模型的世界模型探针",
+      "llm_evidence": "用于行为模型的世界模型探针",
+      "canonical_evidence": "用于行为模型的世界模型探针",
+      "llm_tldr_en": "Proposes Explicit Symbolic Behavioral Model (ESBM) that integrates world-model probes and adaptive questions to learn robust behavior and environment understanding.",
+      "llm_tldr_cn": "交互式智能体仅靠任务回报训练难以理解环境机制，导致行为脆弱。本文提出显式符号行为模型（ESBM），耦合任务性能与世界模型探针和自适应问题。通过类型谓词、加权规则等表示行为，并在线生成问题和预测机制，提升行为可解释性和适应性。实验证明ESBM在动态环境中表现鲁棒。",
+      "llm_tldr": "交互式智能体仅靠任务回报训练难以理解环境机制，导致行为脆弱。本文提出显式符号行为模型（ESBM），耦合任务性能与世界模型探针和自适应问题。通过类型谓词、加权规则等表示行为，并在线生成问题和预测机制，提升行为可解释性和适应性。实验证明ESBM在动态环境中表现鲁棒。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07326v1",
+      "source": "arxiv",
+      "title": "AnchorWorld: Embodied Egocentric World Simulation with View-based Evolution Customization",
+      "abstract": "Despite being a pivotal frontier, interactive world modeling remains underexplored in terms of the versatile controllability required by practical scenarios. To bridge this gap, we present AnchorWorld, a framework that advances egocentric simulation through enhanced interaction integrity and a flexible mechanism for world customization. First, we utilize 3D human motion as the primary interaction modality. To complement the out-of-view or truncated body parts in egocentric views, we introduce an auxiliary training supervision that incorporates exogenous viewpoints decoupled from the agent's first-person sensorium. It allows the model to observe the agent's full-body positioning relative to the environment, facilitating a more robust spatial grounding of human-world interactions. Furthermore, we propose a simple yet effective mechanism for customizing self-evolving worlds. This is achieved by defining anchor views within a unified world coordinate system, coupled with textual descriptions dictating the dynamic evolution of local scenes. Experimental results show that AnchorWorld significantly outperforms state-of-the-art baselines, while ablation studies validate the effectiveness of our key designs. Notably, our customization scheme exhibits promising spatio-temporal geometric consistency and adheres strictly to the prescribed evolutionary dynamics.",
+      "authors": [
+        "Yu Li",
+        "Menghan Xia",
+        "Gongye Liu",
+        "Xintao Wang",
+        "Conglang Zhang",
+        "Lei Ke",
+        "Yuxuan Lin",
+        "Ruihang Chu",
+        "Pengfei Wan",
+        "Kun Gai",
+        "Yujiu Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T14:43:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.07326v1",
+      "tags": [
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly addresses interactive world simulation and egocentric world modeling",
+      "llm_evidence_cn": "直接研究交互式世界模拟和第一人称世界建模",
+      "llm_evidence": "直接研究交互式世界模拟和第一人称世界建模",
+      "canonical_evidence": "直接研究交互式世界模拟和第一人称世界建模",
+      "llm_tldr_en": "AnchorWorld advances egocentric world simulation with enhanced interaction integrity and view-based customization, using 3D human motion and auxiliary external viewpoints for robust full-body modeling.",
+      "llm_tldr_cn": "交互式世界模拟在可控性方面仍不足。本文提出AnchorWorld，通过3D人体运动作为主要交互模态，并引入外部分离视角辅助训练，使模型能观察代理人全身位置，增强交互完整性。实验证明该方法在egocentric模拟中实现了更鲁棒的世界定制和演化。",
+      "llm_tldr": "交互式世界模拟在可控性方面仍不足。本文提出AnchorWorld，通过3D人体运动作为主要交互模态，并引入外部分离视角辅助训练，使模型能观察代理人全身位置，增强交互完整性。实验证明该方法在egocentric模拟中实现了更鲁棒的世界定制和演化。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-03-729735-v1",
+      "source": "biorxiv",
+      "title": "Language Modeling Materializes a World Model of Protein Biology",
+      "abstract": "Proteins are fundamental to life. The full extent of their biology is beyond our ability to characterize with experimental approaches in the physical laboratory. Accurate digital representations could accelerate the discovery of protein biology through virtual experiments. We propose language modeling to learn unified and general representations that can be scaled to all of protein biology. Building on these representations, we develop a structure prediction model that exceeds the performance of established methods for biomolecular complex prediction across benchmarks, including for the interactions of antibodies with their targets. A simple search procedure yields high experimental success rates for the discovery of proteins with nanomolar binding affinities for both miniproteins and single-chain antibodies, a modality critical for therapeutic design. Study of the concepts in the language models representation space reveals a systematic organization aligned with the reductionist understanding of proteins developed through empirical science. Leveraging this organization, we generate a comprehensive map of protein biology encompassing over 6.8 billion sequences and 1.1 billion predicted structures, identifying connections across known and unknown biology. As a whole, this shows language modeling as a powerful substrate for representing the biology of proteins, operating across scales from the prediction and design of protein interactions at the atomic level, to identifying properties of proteins at different levels of granularity and abstraction, to the scale of mapping connections between proteins across billions of years of evolution.",
+      "authors": [
+        "Candido, S.",
+        "Hayes, T.",
+        "Derry, A.",
+        "Rao, R.",
+        "Lin, Z.",
+        "Verkuil, R.",
+        "Wu, B. Z.",
+        "Lee, J. S.",
+        "Bruguera, E. S.",
+        "Keval, J. A.",
+        "Kopylov, M.",
+        "Pak, J. E.",
+        "Wu, W.",
+        "Thomas, N.",
+        "Mataraso, S.",
+        "Hsu, A.",
+        "Trotman-Grant, A. C.",
+        "Fatras, K.",
+        "dos Santos Costa, A.",
+        "Badkundri, R.",
+        "Akin, H.",
+        "Oktay, D.",
+        "Deaton, J.",
+        "Montabana, E.",
+        "Sitwala, H.",
+        "Yu, Y.",
+        "Wiggert, M.",
+        "Carlin, D. A.",
+        "Goering, A. W.",
+        "Blazejewski, T.",
+        "Sandora, M.",
+        "Hla, M.",
+        "Jia, T. Z.",
+        "Kloker, L. H.",
+        "Sofroniew, N. J.",
+        "Uehara, M.",
+        "Pannu, J.",
+        "Bachas, S.",
+        "Liu, D. S.",
+        "Sercu, T.",
+        "Rives, A."
+      ],
+      "primary_category": "bioinformatics",
+      "categories": [
+        "bioinformatics"
+      ],
+      "published": "2026-06-04T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.03.729735v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes a world model of protein biology via language modeling",
+      "llm_evidence_cn": "提出通过语言建模实现蛋白质生物学世界模型",
+      "llm_evidence": "提出通过语言建模实现蛋白质生物学世界模型",
+      "canonical_evidence": "提出通过语言建模实现蛋白质生物学世界模型",
+      "llm_tldr_en": "Language modeling learns a unified world model of protein biology, enabling state-of-the-art structure prediction and nanomolar binder discovery.",
+      "llm_tldr_cn": "蛋白质生物学全貌难以通过实验完全表征。本文提出用语言模型学习统一的蛋白质表示，并在此基础上开发的结构预测模型在生物分子复合物预测上超越现有方法。通过简单搜索即可获得纳摩尔级结合亲和力的蛋白质，展示了世界模型在虚拟实验中的巨大潜力。",
+      "llm_tldr": "蛋白质生物学全貌难以通过实验完全表征。本文提出用语言模型学习统一的蛋白质表示，并在此基础上开发的结构预测模型在生物分子复合物预测上超越现有方法。通过简单搜索即可获得纳摩尔级结合亲和力的蛋白质，展示了世界模型在虚拟实验中的巨大潜力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.00967v1",
+      "source": "arxiv",
+      "title": "Flexible Control of 3D CT Generation via Text and Semantically-Defined Segmentation Prompts",
+      "abstract": "Generative models for volumetric medical images have found many applications in medical imaging, ranging from data augmentation to serving as priors for inverse problems. For these applications, generating high-resolution 3D images with strong controllability is essential but remains highly challenging. Existing approaches typically control generation either through radiology reports used as text prompts or through full image segmentation. While text-based prompting is flexible, it provides limited spatial control over the location, shape, and boundary of abnormalities. In contrast, segmentation-based methods receive precise spatial guidance but are restrictive in requiring full-organ annotations. In this work, we propose a flexible multimodal framework for controllable volumetric image generation that supports input from radiology reports and segmentation prompts (both optional). Our approach allows users to provide segmentation of a specific anatomy or abnormality without requiring full-organ annotations. The semantic meaning of the segmentation mask is specified through an accompanying text description, resulting in a highly flexible and scalable conditioning mechanism. We develop a memory-efficient architecture based on a modified diffusion transformer that jointly processes image and segmentation tokens. The model further incorporates gated attention to effectively attend to long radiology reports. Experiments demonstrate that our method achieves state-of-the-art perceptual and semantic scores (e.g., 24% relative improvement in mean FID), generates high-resolution anatomically consistent CT volumes, and improves data efficiency when used for data augmentation. Radiologists' evaluation further confirms strong alignment between generated and real medical images.",
+      "authors": [
+        "Weicheng Dai",
+        "Chenyu Wang",
+        "Andy Li",
+        "Shantanu Ghosh",
+        "Kayhan Batmanghelich"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T02:55:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.00967v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "flexible control of 3D CT generation using text and segmentation prompts",
+      "llm_evidence_cn": "利用文本和分割提示灵活控制3D CT生成",
+      "llm_evidence": "利用文本和分割提示灵活控制3D CT生成",
+      "canonical_evidence": "利用文本和分割提示灵活控制3D CT生成",
+      "llm_tldr_en": "Proposes a flexible controllable 3D CT generation method that combines text and semantically-defined segmentation prompts for precise spatial control without full annotations.",
+      "llm_tldr_cn": "本文针对3D医学图像生成中文本控制缺乏空间精度、全分割控制需要大量标注的问题，提出一种结合文本和语义定义分割提示的灵活控制方法。该方法允许用户通过文本描述整体异常类型，同时用部分分割提示指定位置和形状，实现了既灵活又精确的3D CT生成。实验表明该方法在控制准确性和生成质量上均优于现有方法，对数据增强和逆问题先验有重要价值。",
+      "llm_tldr": "本文针对3D医学图像生成中文本控制缺乏空间精度、全分割控制需要大量标注的问题，提出一种结合文本和语义定义分割提示的灵活控制方法。该方法允许用户通过文本描述整体异常类型，同时用部分分割提示指定位置和形状，实现了既灵活又精确的3D CT生成。实验表明该方法在控制准确性和生成质量上均优于现有方法，对数据增强和逆问题先验有重要价值。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.01315v1",
+      "source": "arxiv",
+      "title": "DeblurNVS: Geometric Latent Diffusion for Novel View Synthesis from Sparse Motion-Blurred Images",
+      "abstract": "Novel view synthesis (NVS) is a fundamental problem in computer vision and graphics. Recent advances in neural radiance fields (NeRF), 3D Gaussian Splatting (3DGS), and generative view synthesis have substantially improved its quality. Yet most methods still rely on clean observations, where image structures and cross-view geometric cues are well preserved. Motion blur breaks this assumption by corrupting local details and weakening multi-view correspondences. Such blur commonly arises from camera shake, scene motion, or finite exposure in practical capture. Blur-aware NVS methods address this degradation by modeling image formation, but their reliance on costly per-scene optimization limits efficient and generalizable sparse-view synthesis. To address this, we propose DeblurNVS, a novel framework for synthesizing high-fidelity novel views directly from sparse motion-blurred images, without requiring per-scene optimization. DeblurNVS restores the intermediate geometric representations needed for multi-view reasoning, enabling blurred inputs to recover reliable structure and correspondence cues. The restored representations are then combined with target camera information to synthesize the target-view representation and reconstruct a sharp RGB novel view. To enable the large-scale training, we construct a motion-blurred NVS dataset from DL3DV-10K using interpolation-based finite-exposure blur synthesis. Extensive experiments demonstrate that DeblurNVS outperforms existing baselines on synthetic motion-blur benchmarks and generalizes to real motion-blurred scenes, producing perceptually sharper and structurally more stable novel views while avoiding costly per-scene optimization. Project page: https://github.com/PKU-YuanGroup/DeblurNVS.",
+      "authors": [
+        "Changyue Shi",
+        "Wangbo Yu",
+        "Chaoran Feng",
+        "Li Yuan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T16:04:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.01315v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "novel view synthesis with generative diffusion model",
+      "llm_evidence_cn": "使用生成式扩散模型进行新视角合成",
+      "llm_evidence": "使用生成式扩散模型进行新视角合成",
+      "canonical_evidence": "使用生成式扩散模型进行新视角合成",
+      "llm_tldr_en": "DeblurNVS uses geometric latent diffusion for novel view synthesis from motion-blurred images, advancing 3D generation under degradation.",
+      "llm_tldr_cn": "新视角合成通常依赖清晰图像，但运动模糊破坏多视图几何线索。本文提出DeblurNVS，利用几何潜扩散模型从稀疏运动模糊图像合成新视角。该方法无需逐场景优化，能够处理模型生成过程中的退化，提升了3D生成的鲁棒性和泛化性。",
+      "llm_tldr": "新视角合成通常依赖清晰图像，但运动模糊破坏多视图几何线索。本文提出DeblurNVS，利用几何潜扩散模型从稀疏运动模糊图像合成新视角。该方法无需逐场景优化，能够处理模型生成过程中的退化，提升了3D生成的鲁棒性和泛化性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.01095v1",
+      "source": "arxiv",
+      "title": "Beyond Task Success: Behavioral and Representational Diagnostics for WAM and VLA",
+      "abstract": "Vision-language-action (VLA) policies and World-Action Models (WAM) represent two increasingly important paradigms for robotic manipulation. However, it remains unclear whether future prediction in WAMs leads to behaviorally meaningful improvements beyond final task success. In this paper, we ask whether WAMs merely add future prediction, or whether they change robot behavior and internal representations in ways that are actionable for control. We introduce a model-agnostic diagnostic framework that compares WAMs and VLAs through two complementary lenses: behavioral rollout analysis and sparse-autoencoder-based feature analysis. The behavioral protocol measures action dynamics consistency, target-object progress, distractor disturbance, and runtime cost. The feature-space protocol characterizes internal representations as memorized, reactive, or predictive, revealing whether models encode future-oriented structure. Across LIBERO and RoboTwin2.0, we evaluate 7 policies spanning direct VLAs and joint, sequential, and auxiliary WAMs. Our results show that success alone hides key differences: WAMs often improve object-level behavior and target selectivity, but their gains depend on architecture and incur higher inference cost. Sequential WAMs show the clearest predictive structure, while auxiliary and joint WAMs respectively compress or entangle future information. These findings suggest future directions for WAMs design to preserve behaviorally actionable future representations for efficient manipulation.",
+      "authors": [
+        "Hung Mai",
+        "Bin Zhu",
+        "Tuan Do"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-05-31T08:35:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.01095v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "diagnostics for world-action models",
+      "llm_evidence_cn": "世界动作模型的诊断",
+      "llm_evidence": "世界动作模型的诊断",
+      "canonical_evidence": "世界动作模型的诊断",
+      "llm_tldr_en": "Introduces a diagnostic framework comparing World-Action Models (WAM) and VLA policies, analyzing behavioral and representational differences beyond task success.",
+      "llm_tldr_cn": "该论文提出模型无关的诊断框架，从行为学和稀疏自编码器表示分析两个角度比较世界动作模型（WAM）和视觉-语言-动作（VLA）策略。发现WAM在行动动态一致性和目标进度上更优，且表示更有利于控制。为理解世界模型在机器人操作中的优势提供了实证。",
+      "llm_tldr": "该论文提出模型无关的诊断框架，从行为学和稀疏自编码器表示分析两个角度比较世界动作模型（WAM）和视觉-语言-动作（VLA）策略。发现WAM在行动动态一致性和目标进度上更优，且表示更有利于控制。为理解世界模型在机器人操作中的优势提供了实证。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.00967v2",
+      "source": "arxiv",
+      "title": "MedSyn2: Flexible Control of 3D CT Generation via Text and Semantically-Defined Segmentation Prompts",
+      "abstract": "Generative models for volumetric medical images have found many applications in medical imaging, ranging from data augmentation to serving as priors for inverse problems. For these applications, generating high-resolution 3D images with strong controllability is essential but remains highly challenging. Existing approaches typically control generation either through radiology reports used as text prompts or through full image segmentation. While text-based prompting is flexible, it provides limited spatial control over the location, shape, and boundary of abnormalities. In contrast, segmentation-based methods receive precise spatial guidance but are restrictive in requiring full-organ annotations. In this work, we propose a flexible multimodal framework for controllable volumetric image generation that supports input from radiology reports and segmentation prompts (both optional). Our approach allows users to provide segmentation of a specific anatomy or abnormality without requiring full-organ annotations. The semantic meaning of the segmentation mask is specified through an accompanying text description, resulting in a highly flexible and scalable conditioning mechanism. We develop a memory-efficient architecture based on a modified diffusion transformer that jointly processes image and segmentation tokens. The model further incorporates gated attention to effectively attend to long radiology reports. Experiments demonstrate that our method achieves state-of-the-art perceptual and semantic scores (e.g., 24% relative improvement in mean FID), generates high-resolution anatomically consistent CT volumes, and improves data efficiency when used for data augmentation. Radiologists' evaluation further confirms strong alignment between generated and real medical images.",
+      "authors": [
+        "Weicheng Dai",
+        "Chenyu Wang",
+        "Andy Li",
+        "Shantanu Ghosh",
+        "Afrooz Zandifar",
+        "Christina LeBedis",
+        "Kayhan Batmanghelich"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T02:55:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.00967v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "flexible control of 3D CT generation via text and segmentation prompts",
+      "llm_evidence_cn": "通过文本和分割提示灵活控制3D CT生成",
+      "llm_evidence": "通过文本和分割提示灵活控制3D CT生成",
+      "canonical_evidence": "通过文本和分割提示灵活控制3D CT生成",
+      "llm_tldr_en": "Proposes MedSyn2 for flexible 3D CT generation with combined text and semantically-defined segmentation prompts for precise spatial control.",
+      "llm_tldr_cn": "MedSyn2提出了一种结合文本和语义分割提示的灵活3D CT生成方法，旨在解决文本控制空间不精确和全分割标注成本高的问题。用户可通过文本描述全局异常类型，并用部分分割提示指定位置与形状，实现高质量可控生成。实验表明该方法在控制精度和生成质量上均优于现有方案，为医学图像生成提供了实用的折中方案。",
+      "llm_tldr": "MedSyn2提出了一种结合文本和语义分割提示的灵活3D CT生成方法，旨在解决文本控制空间不精确和全分割标注成本高的问题。用户可通过文本描述全局异常类型，并用部分分割提示指定位置与形状，实现高质量可控生成。实验表明该方法在控制精度和生成质量上均优于现有方案，为医学图像生成提供了实用的折中方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.01573v1",
+      "source": "arxiv",
+      "title": "$\\text{VG}^2$GT: Voxel-Gaussian Splatting Visual Geometry Grounded Transformer",
+      "abstract": "Gaussian splatting has shown strong potential for 3D reconstruction and novel view synthesis. However, most existing methods require accurate camera parameters and per-scene optimization, while feed-forward methods with pixel-aligned Gaussian primitives often suffer from artifacts and non-uniform primitives. In this paper, we propose $\\text{VG}^2$GT, a Voxel-Gaussian Splatting Visual Geometry-Grounded Transformer. $\\text{VG}^2$GT leverages a frozen pretrained visual foundation model (VFM), incorporates a multi-scale differentiable voxel module to enhance geometric understanding, and directly splits and regresses Gaussian primitive parameters from voxel features. During training, depth maps are supervised through stochastic solid volume rendering, enabling geometrically accurate Gaussian scene reconstruction while keeping the visual foundation model fully frozen. This design enables $\\text{VG}^2$GT to be seamlessly plugged into any patch-feature-based VFM, while substantially reducing the required training cost. $\\text{VG}^2$GT outperforms current state-of-the-art methods on widely used DTU, Replica, TAT, and ScanNet datasets.",
+      "authors": [
+        "Yibin Zhao",
+        "Yihan Pan",
+        "Jun Nan",
+        "Wenli Yang",
+        "Liwei Chen",
+        "Jianjun Yi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T02:21:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.01573v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "feed-forward 3D reconstruction and novel view synthesis using Gaussian splatting",
+      "llm_evidence_cn": "使用高斯泼溅的前馈3D重建与新视角合成",
+      "llm_evidence": "使用高斯泼溅的前馈3D重建与新视角合成",
+      "canonical_evidence": "使用高斯泼溅的前馈3D重建与新视角合成",
+      "llm_tldr_en": "VG^2GT leverages a voxel-gaussian representation and a visual foundation model for feed-forward 3D reconstruction and view synthesis.",
+      "llm_tldr_cn": "现有高斯泼溅方法需要精确相机参数和逐场景优化，前馈方法存在伪影。本文提出VG^2GT，利用冻结的视觉基础模型和多尺度可微分体素模块，从体素特征直接回归高斯参数。通过随机立体体素渲染监督深度图，实现了高质量的3D重建和新视角合成。",
+      "llm_tldr": "现有高斯泼溅方法需要精确相机参数和逐场景优化，前馈方法存在伪影。本文提出VG^2GT，利用冻结的视觉基础模型和多尺度可微分体素模块，从体素特征直接回归高斯参数。通过随机立体体素渲染监督深度图，实现了高质量的3D重建和新视角合成。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.05035v1",
+      "source": "arxiv",
+      "title": "Anchor3R: Streaming 3D Reconstruction with Transient Anchors for Long-Horizon Visual Mapping",
+      "abstract": "Long-horizon online visual mapping is a core capability for robot perception, requiring continuous camera-motion and scene-geometry estimation from visual streams under bounded memory and computation. Recent feed-forward 3D reconstruction models provide strong geometric priors, but their streaming variants often predict poses in a fixed coordinate system tied to the first frame or a persistent scene memory. This fixed-gauge design leads to train--test mismatch, attention bias toward early anchors, and accumulated drift on sequences much longer than those seen during training. We propose \\emph{Anchor3R}, a streaming 3D reconstruction framework that treats feed-forward reconstruction as current-centric local measurement prediction rather than persistent global-gauge regression. At each time step, Anchor3R predicts window-relative poses and a local pointmap in the current-frame coordinate system, turning streaming reconstruction into relative-pose measurement generation. These measurements support online pose updates, while loop-closure reinsertion and motion averaging align the trajectory and transform local pointmaps into a coherent global reconstruction. Experiments on indoor, outdoor, driving, and RGB-D benchmarks show that Anchor3R improves long-horizon pose accuracy and dense reconstruction quality over existing streaming baselines, while supporting bounded-memory online inference.",
+      "authors": [
+        "Peilin Tao",
+        "Chong Cheng",
+        "Yuansen Du",
+        "Caiwei Song",
+        "Zhengqing Chen",
+        "Xiaoyang Guo",
+        "Wei Yin",
+        "Weiqiang Ren",
+        "Qian Zhang",
+        "Hainan Cui",
+        "Shuhan Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T16:00:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.05035v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "streaming 3D reconstruction for long-horizon visual mapping",
+      "llm_evidence_cn": "流式3D重建用于长时视觉映射",
+      "llm_evidence": "流式3D重建用于长时视觉映射",
+      "canonical_evidence": "流式3D重建用于长时视觉映射",
+      "llm_tldr_en": "Anchor3R presents a streaming 3D reconstruction framework using transient anchors to mitigate drift in long sequences.",
+      "llm_tldr_cn": "长时在线视觉映射中，固定坐标系导致漂移和注意偏差。本文提出Anchor3R，将前馈3D重建视为当前帧为中心的局部测量预测，避免全局坐标系依赖。该方法在长序列上减少漂移，为实时3D重建提供新框架。",
+      "llm_tldr": "长时在线视觉映射中，固定坐标系导致漂移和注意偏差。本文提出Anchor3R，将前馈3D重建视为当前帧为中心的局部测量预测，避免全局坐标系依赖。该方法在长序列上减少漂移，为实时3D重建提供新框架。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.01021v1",
+      "source": "arxiv",
+      "title": "Learning Neural Deformation Representation for 4D Dynamic Shape Generation",
+      "abstract": "Recent developments in 3D shape representation opened new possibilities for generating detailed 3D shapes. Despite these advances, there are few studies dealing with the generation of 4D dynamic shapes that have the form of 3D objects deforming over time. To bridge this gap, we focus on generating 4D dynamic shapes with an emphasis on both generation quality and efficiency in this paper. HyperDiffusion, a previous work on 4D generation, proposed a method of directly generating the weight parameters of 4D occupancy fields but suffered from low temporal consistency and slow rendering speed due to motion representation that is not separated from the shape representation of 4D occupancy fields. Therefore, we propose a new neural deformation representation and combine it with conditional neural signed distance fields to design a 4D representation architecture in which the motion latent space is disentangled from the shape latent space. The proposed deformation representation, which works by predicting skinning weights and rigid transformations for multiple parts, also has advantages over the deformation modules of existing 4D representations in understanding the structure of shapes. In addition, we design a training process of a diffusion model that utilizes the shape and motion features that are extracted by our 4D representation as data points. The results of unconditional generation, conditional generation, and motion retargeting experiments demonstrate that our method not only shows better performance than previous works in 4D dynamic shape generation but also has various potential applications.",
+      "authors": [
+        "Gyojin Han",
+        "Jiwan Hur",
+        "Jaehyun Choi",
+        "Junmo Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T05:25:11+00:00",
+      "link": "https://arxiv.org/pdf/2606.01021v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generative model for 4D dynamic shape generation",
+      "llm_evidence_cn": "生成式4D动态形状模型",
+      "llm_evidence": "生成式4D动态形状模型",
+      "canonical_evidence": "生成式4D动态形状模型",
+      "llm_tldr_en": "This paper proposes a neural deformation representation for efficient and temporally consistent 4D dynamic shape generation.",
+      "llm_tldr_cn": "现有4D生成方法如HyperDiffusion存在时间一致性差和渲染慢的问题。本文提出一种新的神经变形表示，将运动表示与形状表示分离，从而高效生成4D动态形状。该方法在保证生成质量的同时提升了时间一致性和渲染速度，推进了4D生成领域发展。",
+      "llm_tldr": "现有4D生成方法如HyperDiffusion存在时间一致性差和渲染慢的问题。本文提出一种新的神经变形表示，将运动表示与形状表示分离，从而高效生成4D动态形状。该方法在保证生成质量的同时提升了时间一致性和渲染速度，推进了4D生成领域发展。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.01573v2",
+      "source": "arxiv",
+      "title": "$\\text{VG}^2$GT: Voxel-Gaussian Splatting Visual Geometry Grounded Transformer",
+      "abstract": "Gaussian splatting has shown strong potential for 3D reconstruction and novel view synthesis. However, most existing methods require accurate camera parameters and per-scene optimization, while feed-forward methods with pixel-aligned Gaussian primitives often suffer from artifacts and non-uniform primitives. In this paper, we propose $\\text{VG}^2$GT, a Voxel-Gaussian Splatting Visual Geometry-Grounded Transformer. $\\text{VG}^2$GT leverages a frozen pretrained visual foundation model (VFM), incorporates a multi-scale differentiable voxel module to enhance geometric understanding, and directly splits and regresses Gaussian primitive parameters from voxel features. During training, depth maps are supervised through stochastic solid volume rendering, enabling geometrically accurate Gaussian scene reconstruction while keeping the visual foundation model fully frozen. This design enables $\\text{VG}^2$GT to be seamlessly plugged into any patch-feature-based VFM, while substantially reducing the required training cost. $\\text{VG}^2$GT outperforms current state-of-the-art methods on widely used DTU, Replica, TAT, and ScanNet datasets.",
+      "authors": [
+        "Yibin Zhao",
+        "Yihan Pan",
+        "Jun Nan",
+        "Wenli Yang",
+        "Liwei Chen",
+        "Jianjun Yi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T02:21:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.01573v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Voxel-Gaussian splatting for 3D reconstruction and novel view synthesis",
+      "llm_evidence_cn": "基于体素-高斯溅射的3D重建与新视图合成",
+      "llm_evidence": "基于体素-高斯溅射的3D重建与新视图合成",
+      "canonical_evidence": "基于体素-高斯溅射的3D重建与新视图合成",
+      "llm_tldr_en": "VG2GT uses a frozen visual foundation model and multi-scale voxel module to directly regress Gaussian primitives for 3D reconstruction and novel view synthesis.",
+      "llm_tldr_cn": "针对现有3D高斯溅射方法需逐场景优化或产生伪影的问题，本文提出VG2GT，利用冻结的视觉基础模型和多尺度体素模块增强几何理解，直接从体素特征回归高斯原语参数，并通过随机立体体渲染监督深度图，实现了前馈式高质量3D重建与新视图合成。",
+      "llm_tldr": "针对现有3D高斯溅射方法需逐场景优化或产生伪影的问题，本文提出VG2GT，利用冻结的视觉基础模型和多尺度体素模块增强几何理解，直接从体素特征回归高斯原语参数，并通过随机立体体渲染监督深度图，实现了前馈式高质量3D重建与新视图合成。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.05142v1",
+      "source": "arxiv",
+      "title": "GeM-NR: Geometry-Aware Multi-View Editing for Nonrigid Scene Changes",
+      "abstract": "Recent developments in multi-view image editing with generative models have brought us a step closer toward general 3D content generation and customization. Most existing works focus on rigid or appearance-only edits by utilizing the geometry of the unedited scene. This naturally limits these methods to edits that preserve the underlying scene structure. Other approaches are trained for specific image editing tasks, such as object removal and addition. Despite this progress, general nonrigid edits, i.e., edits that substantially change the scene geometry, remain challenging for existing methods. We propose GeM-NR, a fast and flexible training-free approach for general multi-view consistent image editing, including edits that drastically change the geometry and appearance of the scene. Given an anchor image edited with a chosen backbone editor (such as FLUX, Qwen, BrushNet) and a query unedited image, GeM-NR edits the query image consistently with the anchor edit. The method incorporates multiple stages: (i) depth map estimation, where we propose a strategy to maximize the alignment between the 3D point clouds of the edited and unedited scenes, (ii) projection onto a query viewpoint, and (iii) refinement of the obtained image conditioned on the unedited query. The conditioning-based formulation scales well from two to many views of an object. We demonstrate the ability of our method to handle edits with significant changes in geometry and appearance, something that existing methods struggle with. We perform an extensive evaluation showing that our method improves consistency for a wide variety of edit tasks, including generating 3D representations of the edited scene. Both quantitative and qualitative results indicate the state-of-the-art performance of our method in terms of edit quality as well as geometric and photometric consistency across multiple views.",
+      "authors": [
+        "Josef Bengtson",
+        "Yaroslava Lochman",
+        "Fredrik Kahl"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-03T17:49:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.05142v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-view image editing for 3D content generation",
+      "llm_evidence_cn": "多视图图像编辑用于3D内容生成",
+      "llm_evidence": "多视图图像编辑用于3D内容生成",
+      "canonical_evidence": "多视图图像编辑用于3D内容生成",
+      "llm_tldr_en": "GeM-NR proposes a training-free approach for multi-view consistent nonrigid editing, advancing general 3D content generation.",
+      "llm_tldr_cn": "现有方法主要处理刚性或外观编辑，对非刚性几何变化效果有限。本文提出GeM-NR，一种无需训练的多视图一致图像编辑方法，能够大幅改变场景几何。该方法灵活快速，为通用3D内容生成提供了新途径。",
+      "llm_tldr": "现有方法主要处理刚性或外观编辑，对非刚性几何变化效果有限。本文提出GeM-NR，一种无需训练的多视图一致图像编辑方法，能够大幅改变场景几何。该方法灵活快速，为通用3D内容生成提供了新途径。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.01057v1",
+      "source": "arxiv",
+      "title": "3DCodeBench: Benchmarking Agentic Procedural 3D Modeling Via Code",
+      "abstract": "Procedural 3D modeling through code is emerging as a versatile paradigm, offering deterministic, engine-ready, and precisely editable assets that neural 3D generators inherently lack. Authoring such procedural content, however, demands deep expertise in 3D software APIs, parametric design, and code-level geometric reasoning. In this paper, we propose 3DCodeBench, a systematic benchmark for evaluating vision-language model (VLM) agents for procedural 3D generation in 3D modeling software. Specifically, 3DCodeBench evaluates how effectively 12 advanced VLMs can serve as procedural 3D modelers by translating text and image references into procedural code for 3D modeling software. Recognizing that automated metrics may not fully capture the perceptual quality of 3D shapes, we build 3DCodeArena, a ranking platform based on pairwise human preferences over generated 3D outputs. From extensive evaluations and results, we observe that: (1) Failures mostly arise from API mismatches, while successful renders still suffer from disconnected or floating 3D geometric components. (2) Test-time scaling, such as higher thinking budgets and multi-turn refinement, improves performance overall. Our findings highlight a critical need for high-quality procedural coding data to advance commercial VLMs. Furthermore, effective procedural 3D modeling requires a robust execution environment that provides high-fidelity feedback for iterative refinement. We release 3DCodeBench, including the curated large-scale dataset of multimodal (text/image) prompts, procedural code, 3D object triplets, evaluation protocol, and the public 3DCodeArena platform as a foundational toolkit for exploring VLM-based procedural 3D modelers.",
+      "authors": [
+        "Yipeng Gao",
+        "Lei Shu",
+        "Genzhi Ye",
+        "Xi Xiong",
+        "Ameesh Makadia",
+        "Meiqi Guo",
+        "Laurent Itti",
+        "Jindong Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR",
+        "cs.LG"
+      ],
+      "published": "2026-05-31T06:59:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.01057v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Benchmark for procedural 3D generation via code",
+      "llm_evidence_cn": "通过代码进行程序化3D生成的基准测试",
+      "llm_evidence": "通过代码进行程序化3D生成的基准测试",
+      "canonical_evidence": "通过代码进行程序化3D生成的基准测试",
+      "llm_tldr_en": "Proposes 3DCodeBench, a benchmark evaluating VLM agents for procedural 3D modeling via code, addressing the need for deterministic and editable 3D assets.",
+      "llm_tldr_cn": "当前神经3D生成模型缺乏确定性和可编辑性，而程序化3D建模需要深厚专业知识。本文提出3DCodeBench，系统评估视觉语言模型代理通过代码进行程序化3D建模的能力。实验覆盖12个先进VLM，为3D生成研究提供了标准化基准。该工作推动代理式3D内容创建的发展。",
+      "llm_tldr": "当前神经3D生成模型缺乏确定性和可编辑性，而程序化3D建模需要深厚专业知识。本文提出3DCodeBench，系统评估视觉语言模型代理通过代码进行程序化3D建模的能力。实验覆盖12个先进VLM，为3D生成研究提供了标准化基准。该工作推动代理式3D内容创建的发展。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.02000v1",
+      "source": "arxiv",
+      "title": "Towards 3D-Aware Video Diffusion Models: Render-Free Human Motion Control with Mesh Tokenization",
+      "abstract": "Diffusion models have shown remarkable success in video generation. However, whether such models are truly aware of the 3D structure underlying visual observations, rather than simply reproducing plausible 2D projections, remains an open question. In this work, we investigate this question through human motion control, a task that requires precise modelling of 3D human geometry, motion, camera viewpoint, and scene context. Unlike prior methods that rely on rendered 2D motion guidance videos, we propose a render-free framework that conditions video generation directly on compressed 3D human mesh tokens. This representation preserves full 3D geometric information while enabling a unified token-based generation pipeline that processes video tokens jointly with motion tokens in a DiT-based architecture. This design requires the model to reason jointly about appearance, 3D structure, and camera viewpoint during video generation. Experimental results demonstrate strong performance on human motion control benchmarks, while reducing artifacts induced by view-dependent 2D guidance and trajectory-pose mismatches during editing. These findings suggest that video diffusion models, when equipped with mesh tokenization, can better capture complex 3D human structures and their interactions with the surrounding environment.",
+      "authors": [
+        "Jingyun Liang",
+        "Min Wei",
+        "Shikai Li",
+        "Yizeng Han",
+        "Hangjie Yuan",
+        "Lei Sun",
+        "Weihua Chen",
+        "Fan Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "eess.IV"
+      ],
+      "published": "2026-06-01T09:56:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.02000v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "3D-aware video diffusion with mesh tokenization for human motion control",
+      "llm_evidence_cn": "使用网格标记化实现3D感知视频扩散的人体运动控制",
+      "llm_evidence": "使用网格标记化实现3D感知视频扩散的人体运动控制",
+      "canonical_evidence": "使用网格标记化实现3D感知视频扩散的人体运动控制",
+      "llm_tldr_en": "Proposes a render-free video diffusion framework conditioned on compressed 3D human mesh tokens, enabling 3D-aware human motion control without rendered guidance.",
+      "llm_tldr_cn": "针对视频扩散模型是否真正理解3D结构的问题，本文提出基于压缩3D人体网格标记化的无渲染视频生成框架，将人体运动控制作为3D感知任务，在无需渲染引导的情况下实现了精确的3D运动控制，为3D感知视频生成提供了新思路。",
+      "llm_tldr": "针对视频扩散模型是否真正理解3D结构的问题，本文提出基于压缩3D人体网格标记化的无渲染视频生成框架，将人体运动控制作为3D感知任务，在无需渲染引导的情况下实现了精确的3D运动控制，为3D感知视频生成提供了新思路。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.01518v1",
+      "source": "arxiv",
+      "title": "MotionDreamer: Universal Skeletal Motion Generation for 3D Rigged Shapes",
+      "abstract": "Motion generation for rigged shapes is vital for scalable 4D asset production. However, template-based methods are limited by specific topologies and fail to generalize across diverse morphologies. Conversely, per-case optimization is computationally expensive, susceptible to local optima, and highly sensitive to viewpoint-induced ambiguities. In this paper, we present MotionDreamer, a diffusion-based framework designed for category-agnostic skeletal animation generation from 2D video guidance. To overcome the scarcity of high-quality training data, we have curated a large-scale dynamic dataset comprising approximately 20,000 diverse 3D models, each featuring complete textures, skeletal rigging, and a wide array of comprehensive animation sequences. To bridge the kinematic gap between 2D visual motion cues and heterogeneous 3D skeletal structures, we propose a structural-semantic injection mechanism. Our model integrates texture and semantic attributes directly into skeletal joint representations. This allows it to map perceived visual dynamics to specific joint hierarchies and their functional roles. This enables MotionDreamer to synthesize high-fidelity animations that maintain anatomical consistency across a vast range of unseen categories, from existing biological species to fantastical beings. Extensive experiments demonstrate that our approach significantly outperforms existing methods, setting a new state-of-the-art benchmark for robust and efficient 4D asset generation. The code will be made publicly available upon acceptance.",
+      "authors": [
+        "Ye Tao",
+        "Yuxin Yao",
+        "Kendong Liu",
+        "Dapeng Wu",
+        "Junhui Hou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-01T00:42:31+00:00",
+      "link": "https://arxiv.org/pdf/2606.01518v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "presents a diffusion-based framework for skeletal motion generation on 3D rigged shapes, advancing 3D generation capabilities",
+      "llm_evidence_cn": "提出基于扩散的骨架运动生成框架，推动3D生成能力",
+      "llm_evidence": "提出基于扩散的骨架运动生成框架，推动3D生成能力",
+      "canonical_evidence": "提出基于扩散的骨架运动生成框架，推动3D生成能力",
+      "llm_tldr_en": "MotionDreamer is a diffusion-based framework for category-agnostic skeletal animation generation from 2D video, enabling scalable 4D asset production with a large-scale dataset.",
+      "llm_tldr_cn": "为可伸缩4D资产生产，需通用运动生成方法。本文提出MotionDreamer，基于扩散模型，从2D视频指导生成类别无关的骨架动画。还构建了约2万个带纹理和绑定的3D模型及动画的数据集。实验表明该方法能泛化到多种形态，生成高质量的动画。",
+      "llm_tldr": "为可伸缩4D资产生产，需通用运动生成方法。本文提出MotionDreamer，基于扩散模型，从2D视频指导生成类别无关的骨架动画。还构建了约2万个带纹理和绑定的3D模型及动画的数据集。实验表明该方法能泛化到多种形态，生成高质量的动画。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}
