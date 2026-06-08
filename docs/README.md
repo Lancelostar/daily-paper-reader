@@ -7,139 +7,118 @@
 
 ## 每次日报
 - 最新运行日期：2026-05-10 ~ 2026-06-08
-- 运行时间：2026-06-08 05:22:11 UTC
+- 运行时间：2026-06-08 11:17:57 UTC
 - 运行状态：成功
-- 本次总论文数：39
+- 本次总论文数：32
 - 精读区：0
-- 速读区：39
+- 速读区：32
 
 ### 今日简报（AI）
-1) 今日阅读39篇论文，重点覆盖世界模型、具身信念推理与行动模型三大前沿方向。
-2) 最值得关注的是世界模型综合综述（10.0分）及基于生成式3D世界的具身信念推理（9.0分），它们正成为具身AI的下一个突破点。
-3) 建议从《World Models》综述入手建立全局认知，再结合《3D-Belief》和《World Action Models》深入具体技术方法。
+1) 本期日报收录32篇速读论文，重点聚焦极长时世界生成、像素级3D生成与图像到3D视频扩散。  
+2) 最值得关注的高分工作包括：DecMem通过解耦记忆实现分钟级一致世界生成，Pixal3D与GTA分别从像素对齐和几何-外观两阶段推进图像转3D视频质量。  
+3) 建议优先精读DecMem以理解长时一致性的核心方法，再结合Pixal3D和GTA对比不同3D生成路线的优劣。
 - 详情：[/20260510-20260608/README](/20260510-20260608/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [World Models: A Comprehensive Survey of Architectures, Methodologies, Reasoning Paradigms, and Applications](/20260510-20260608/2606.00133v1-world-models-a-comprehensive-survey-of-architectures-methodologies-reasoning-paradigms-and-applications)  
+1. [DecMem: Towards Minute-Long Consistent World Generation with Decoupled Memory](/20260510-20260608/2605.31336v1-decmem-towards-minute-long-consistent-world-generation-with-decoupled-memory)  
    标签：评分：10.0/10、query:world-model
-   evidence：全面综述世界模型的架构、方法论、推理范式与应用
-2. [3D-Belief: Embodied Belief Inference via Generative 3D World Modeling](/20260510-20260608/2605.11367v1-3d-belief-embodied-belief-inference-via-generative-3d-world-modeling)  
-   标签：评分：9.0/10、query:world-model
-   evidence：使用生成式3D世界模型进行具身信念推断
-3. [World Action Models: The Next Frontier in Embodied AI](/20260510-20260608/2605.12090v1-world-action-models-the-next-frontier-in-embodied-ai)  
-   标签：评分：9.0/10、query:world-model
-   evidence：具身AI中的世界动作模型范式
-4. [JEDI: Joint Embedding Diffusion World Model for Online Model-Based Reinforcement Learning](/20260510-20260608/2605.13013v1-jedi-joint-embedding-diffusion-world-model-for-online-model-based-reinforcement-learning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：用于在线模型强化学习的扩散世界模型
-5. [ChannelAgent-Empowered Electromagnetic Space World Model: A Case Study on Agent-Driven Channel Generation for 6G AI-Native Air Interface](/20260510-20260608/2605.14757v1-channelagent-empowered-electromagnetic-space-world-model-a-case-study-on-agent-driven-channel-generation-for-6g-ai-native-air-interface)  
-   标签：评分：9.0/10、query:world-model
-   evidence：电磁空间世界模型概念在6G信道生成中的应用
-6. [Actionable World Representation](/20260510-20260608/2605.18743v1-actionable-world-representation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：世界模型中的可动作对象表示
-7. [WorldString: Actionable World Representation](/20260510-20260608/2605.18743v2-worldstring-actionable-world-representation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出面向物理对象状态的可操作世界表征
-8. [PROWL: Prioritized Regret-Driven Optimization for World Model Learning](/20260510-20260608/2605.18803v1-prowl-prioritized-regret-driven-optimization-for-world-model-learning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：通过对抗课程学习优化世界模型
-9. [World-Ego Modeling for Long-Horizon Evolution in Hybrid Embodied Tasks](/20260510-20260608/2605.19957v1-world-ego-modeling-for-long-horizon-evolution-in-hybrid-embodied-tasks)  
-   标签：评分：9.0/10、query:world-model
-   evidence：将世界和自我分解的具身世界模型方法
-10. [stable-worldmodel: A Platform for Reproducible World Modeling Research and Evaluation](/20260510-20260608/2605.21800v1-stable-worldmodel-a-platform-for-reproducible-world-modeling-research-and-evaluation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：世界模型可重复性平台
-11. [Nano World Models: A Minimalist Implementation of Future Video Prediction](/20260510-20260608/2605.23993v1-nano-world-models-a-minimalist-implementation-of-future-video-prediction)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提供世界模型的极简实现，用于未来视频预测
-12. [UWM-JEPA: Predictive World Models That Imagine in Belief Space](/20260510-20260608/2605.25313v1-uwm-jepa-predictive-world-models-that-imagine-in-belief-space)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出UWM-JEPA，使用密度矩阵潜变量进行信念空间推理的世界模型
-13. [Back to Parsimonious Latents: Learning Task-Centric World Models from Visual Foundations](/20260510-20260608/2605.25620v1-back-to-parsimonious-latents-learning-task-centric-world-models-from-visual-foundations)  
-   标签：评分：9.0/10、query:world-model
-   evidence：从视觉基础模型学习任务中心世界模型的方法
-14. [Scaling World-Model Reinforcement Learning Through Diffusion Policy Optimization](/20260510-20260608/2605.26282v1-scaling-world-model-reinforcement-learning-through-diffusion-policy-optimization)  
-   标签：评分：9.0/10、query:world-model
-   evidence：世界模型概念在强化学习中的应用
-15. [Emergent Semantic Representations in World Models through Physical Interaction without Linguistic Supervision](/20260510-20260608/2605.28865v1-emergent-semantic-representations-in-world-models-through-physical-interaction-without-linguistic-supervision)  
-   标签：评分：9.0/10、query:world-model
-   evidence：物理交互中世界模型涌现的语义结构
-16. [minWM: A Full-Stack Open-Source Framework for Real-Time Interactive Video World Models](/20260510-20260608/2605.30263v1-minwm-a-full-stack-open-source-framework-for-real-time-interactive-video-world-models)  
-   标签：评分：9.0/10、query:world-model
-   evidence：实时交互式视频世界模型的全栈框架
-17. [PatchWorld: Gradient-Free Optimization of Executable World Models](/20260510-20260608/2605.30880v1-patchworld-gradient-free-optimization-of-executable-world-models)  
-   标签：评分：9.0/10、query:world-model
-   evidence：引入免梯度优化从轨迹中诱导可执行世界模型
-18. [World Models for Robotic Manipulation: A Survey](/20260510-20260608/2606.00113v1-world-models-for-robotic-manipulation-a-survey)  
-   标签：评分：9.0/10、query:world-model
-   evidence：关于操作中世界模型概念与应用的综述
-19. [Physical Object Understanding with a Physically Controllable World Model](/20260510-20260608/2606.00439v1-physical-object-understanding-with-a-physically-controllable-world-model)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出概率世界模型，从原始视频中理解物理对象
-20. [MBench: A Comprehensive Benchmark on Memory Capability for Video World Models](/20260510-20260608/2606.00793v1-mbench-a-comprehensive-benchmark-on-memory-capability-for-video-world-models)  
-   标签：评分：9.0/10、query:world-model
-   evidence：针对世界模型记忆能力的基准测试
-21. [Towards Interactive Video World Modeling: Frontiers, Challenges, Benchmarks, and Future Trends](/20260510-20260608/2606.01164v1-towards-interactive-video-world-modeling-frontiers-challenges-benchmarks-and-future-trends)  
-   标签：评分：9.0/10、query:world-model
-   evidence：交互式视频世界建模综述，涵盖概念与应用
-22. [IMWM: Intuition Models Complement World Models for Latent Planning](/20260510-20260608/2606.01626v1-imwm-intuition-models-complement-world-models-for-latent-planning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：直觉模型与世界模型结合的潜在规划方法
-23. [Learning Action-Conditional and Object-Centric Gaussian Splatting World Models for Rigid Objects](/20260510-20260608/2606.01950v1-learning-action-conditional-and-object-centric-gaussian-splatting-world-models-for-rigid-objects)  
-   标签：评分：9.0/10、query:world-model
-   evidence：刚性物体的动作条件对象中心世界模型
-24. [COMAP: Co-Evolving World Models and Agent Policies for LLM Agents](/20260510-20260608/2606.02372v1-comap-co-evolving-world-models-and-agent-policies-for-llm-agents)  
-   标签：评分：9.0/10、query:world-model
-   evidence：语言智能体世界模型与策略共同演化框架
-25. [Cosmos 3: Omnimodal World Models for Physical AI](/20260510-20260608/2606.02800v1-cosmos-3-omnimodal-world-models-for-physical-ai)  
-   标签：评分：9.0/10、query:world-model
-   evidence：统一语言、图像、视频、音频和动作的全模态世界模型
-26. [GeoSem-WAM: Geometry- and Semantic-Aware World Action Models](/20260510-20260608/2606.03188v1-geosem-wam-geometry--and-semantic-aware-world-action-models)  
-   标签：评分：9.0/10、query:world-model
-   evidence：通过几何与语义监督增强世界动作模型
-27. [World Models Meet Language Models: On the Complementarity of Concrete and Abstract Reasoning](/20260510-20260608/2606.03603v1-world-models-meet-language-models-on-the-complementarity-of-concrete-and-abstract-reasoning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：探索世界模型与语言模型在具体与抽象推理中的互补性
-28. [Generalization of World Models under Environmental Variability for Vision-based Quadrotor Navigation](/20260510-20260608/2606.05015v1-generalization-of-world-models-under-environmental-variability-for-vision-based-quadrotor-navigation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：研究世界模型在无人机导航中的泛化能力，应对环境变异性
-29. [Autoregressive Diffusion World Models for Off-Policy Evaluation of LLM Agents](/20260510-20260608/2606.05558v1-autoregressive-diffusion-world-models-for-off-policy-evaluation-of-llm-agents)  
-   标签：评分：9.0/10、query:world-model
-   evidence：用于LLM智能体离线策略评估的自回归扩散世界模型
-30. [World-Language-Action Model for Unified World Modeling, Language Reasoning, and Action Synthesis](/20260510-20260608/2606.05979v1-world-language-action-model-for-unified-world-modeling-language-reasoning-and-action-synthesis)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出统一世界-语言-动作模型，结合世界建模、语言推理与动作合成
-31. [Susagi: A Microbiome World Model](/20260510-20260608/biorxiv-10-64898-2026-05-07-723428-v1-susagi-a-microbiome-world-model)  
-   标签：评分：9.0/10、query:world-model
-   evidence：将世界模型概念应用于微生物组群落动态
-32. [How Mobile World Model Guides GUI Agents?](/20260510-20260608/2605.10347v1-how-mobile-world-model-guides-gui-agents)  
-   标签：评分：8.0/10、query:world-model
-   evidence：研究移动世界模型如何指导GUI代理，训练多模态模型
-33. [Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations](/20260510-20260608/2605.14937v1-slot-mpc-goal-conditioned-model-predictive-control-with-object-centric-representations)  
-   标签：评分：8.0/10、query:world-model
-   evidence：提出以对象为中心的世界模型结合模型预测控制进行规划
-34. [Entity-Centric World Models: Interaction-Aware Masking for Causal Video Prediction](/20260510-20260608/2605.15466v1-entity-centric-world-models-interaction-aware-masking-for-causal-video-prediction)  
-   标签：评分：8.0/10、query:world-model
-   evidence：提出以实体为中心的世界模型，采用交互感知遮罩进行因果视频预测
-35. [World Model-Enabled Causal Digital Twins for Semantic Communications in Physical AI Systems](/20260510-20260608/2605.16547v1-world-model-enabled-causal-digital-twins-for-semantic-communications-in-physical-ai-systems)  
-   标签：评分：8.0/10、query:world-model
-   evidence：世界模型在物理AI语义通信中的应用
-36. [WorldArena 2.0: Extending Embodied World Model Benchmarking on Modality, Functionality and Platform](/20260510-20260608/2605.17912v1-worldarena-20-extending-embodied-world-model-benchmarking-on-modality-functionality-and-platform)  
-   标签：评分：8.0/10、query:world-model
-   evidence：具身世界模型基准，在模态、功能和平台维度扩展评估
-37. [World Machine: Towards Generative World Modeling for Time-Series](/20260510-20260608/2605.23025v1-world-machine-towards-generative-world-modeling-for-time-series)  
-   标签：评分：8.0/10、query:world-model
-   evidence：提出World Machine，面向时间序列的生成式世界模型
-38. [Distilling Game Code World Model Generation into Lightweight Large Language Models](/20260510-20260608/2605.24375v1-distilling-game-code-world-model-generation-into-lightweight-large-language-models)  
-   标签：评分：8.0/10、query:world-model
-   evidence：将代码世界模型生成蒸馏到轻量级LLM
-39. [Physically Viable World Models: A Case for Query-Conditioned Embodied AI](/20260510-20260608/2605.30542v1-physically-viable-world-models-a-case-for-query-conditioned-embodied-ai)  
-   标签：评分：8.0/10、query:world-model
-   evidence：定义具身AI中物理可行的世界模型
+   evidence：基于解耦记忆的一致世界生成
+2. [Pixal3D: Pixel-Aligned 3D Generation from Images](/20260510-20260608/2605.10922v1-pixal3d-pixel-aligned-3d-generation-from-images)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：提出像素对齐的3D图像生成，直接针对生成式3D模型
+3. [GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion](/20260510-20260608/2605.12957v1-gta-advancing-image-to-3d-world-generation-via-geometry-then-appearance-video-diffusion)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：基于几何先行的图像到3D世界生成
+4. [TelePhysics: Physics-Grounded Multi-Object Scene Generation from a Single Image with Real-Time Interaction](/20260510-20260608/2605.20290v1-telephysics-physics-grounded-multi-object-scene-generation-from-a-single-image-with-real-time-interaction)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：基于物理的生成式3D场景重建
+5. [PhysX-Omni: Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated Objects](/20260510-20260608/2605.21572v1-physx-omni-unified-simulation-ready-physical-3d-generation-for-rigid-deformable-and-articulated-objects)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：统一仿真就绪的物理3D生成
+6. [GAP3D: Generative Alignment of VLM Latents to Patch-Level Embeddings for 3D Generation](/20260510-20260608/2605.28995v2-gap3d-generative-alignment-of-vlm-latents-to-patch-level-embeddings-for-3d-generation)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：生成对齐VLM潜在用于3D生成
+7. [GuideCAD: A Lightweight Multimodal Framework for 3D CAD Model Generation via Prefix Embedding](/20260510-20260608/2606.07024v1-guidecad-a-lightweight-multimodal-framework-for-3d-cad-model-generation-via-prefix-embedding)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：轻量级多模态3D CAD生成框架
+8. [Native3D: End-to-End 3D Scene Generation via Unified Mesh-Texture Modeling and Semantic Alignment](/20260510-20260608/2606.07117v1-native3d-end-to-end-3d-scene-generation-via-unified-mesh-texture-modeling-and-semantic-alignment)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：端到端三维场景生成，统一网格-纹理建模
+9. [PG-3DGS: Optimizing 3D Gaussian Splatting to Satisfy Physics Objectives](/20260510-20260608/2605.11266v1-pg-3dgs-optimizing-3d-gaussian-splatting-to-satisfy-physics-objectives)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：物理引导的3D高斯泼溅生成
+10. [Rigel3D: Rig-aware Latents for Animation-Ready 3D Asset Generation](/20260510-20260608/2605.13129v1-rigel3d-rig-aware-latents-for-animation-ready-3d-asset-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：具有骨架感知潜在的动画就绪3D资产生成
+11. [TOPOS: High-Fidelity and Efficient Industry-Grade 3D Head Generation](/20260510-20260608/2605.14594v1-topos-high-fidelity-and-efficient-industry-grade-3d-head-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：单图驱动的工业级三维头生成，固定拓扑
+12. [3DEditSafe: Defending 3D Editing Pipelines from Unsafe Generation](/20260510-20260608/2605.15398v1-3deditsafe-defending-3d-editing-pipelines-from-unsafe-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：3D生成编辑安全
+13. [Efficient 3D Content Reconstruction and Generation](/20260510-20260608/2605.18052v1-efficient-3d-content-reconstruction-and-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：关于高效3D内容重建和生成的论文，直接相关
+14. [Fast 4D Mesh Generation by Spatio-Temporal Attention Chains](/20260510-20260608/2605.19786v1-fast-4d-mesh-generation-by-spatio-temporal-attention-chains)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：直接解决4D网格生成，属于生成式3D模型
+15. [Structural Energy Guidance for View-Consistent Text-to-3D Generation](/20260510-20260608/2605.19876v1-structural-energy-guidance-for-view-consistent-text-to-3d-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：基于结构能量引导的视角一致文本到三维生成
+16. [Sketch2MinSurf: Vision-Language Guided Generation of Editable Minimal Surfaces from Hand-Drawn Sketches](/20260510-20260608/2605.20733v1-sketch2minsurf-vision-language-guided-generation-of-editable-minimal-surfaces-from-hand-drawn-sketches)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：草图到3D表面生成
+17. [ROAR-3D: Routing Arbitrary Views for High-Fidelity 3D Generation](/20260510-20260608/2605.21121v1-roar-3d-routing-arbitrary-views-for-high-fidelity-3d-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：提出ROAR-3D用于从单图进行多视图条件3D生成
+18. [Stream3D: Sequential Multi-View 3D Generation via Evidential Memory](/20260510-20260608/2605.21472v1-stream3d-sequential-multi-view-3d-generation-via-evidential-memory)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：基于记忆的免训练流式多视图3D生成
+19. [GenRecon: Bridging Generative Priors for Multi-View 3D Scene Reconstruction](/20260510-20260608/2605.23888v1-genrecon-bridging-generative-priors-for-multi-view-3d-scene-reconstruction)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：利用生成先验的多视图三维场景重建
+20. [Multi-view Consistent 3D Gaussian Head Avatars 'without' Multi-view Generation](/20260510-20260608/2605.25220v1-multi-view-consistent-3d-gaussian-head-avatars-without-multi-view-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：单图驱动的多视角一致三维高斯头生成
+21. [AssetGen: Deployable 3D Asset Generation at Interactive Speed](/20260510-20260608/2605.26137v1-assetgen-deployable-3d-asset-generation-at-interactive-speed)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：提出AssetGen用于从单张图像快速生成3D资产
+22. [BrickAnything: Geometry-Conditioned Buildable Brick Generation with Structure-Aware Tokenization](/20260510-20260608/2605.26182v1-brickanything-geometry-conditioned-buildable-brick-generation-with-structure-aware-tokenization)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：几何条件约束的可建造砖块生成
+23. [CubePart: An Open-Vocabulary Part-Controllable 3D Generator](/20260510-20260608/2605.28763v1-cubepart-an-open-vocabulary-part-controllable-3d-generator)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：开放词汇部分可控的3D网格生成
+24. [GAP3D: Generative Alignment of VLM Latents to Patch-Level Embeddings for 3D Generation](/20260510-20260608/2605.28995v1-gap3d-generative-alignment-of-vlm-latents-to-patch-level-embeddings-for-3d-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：对齐VLM潜在用于三维生成
+25. [SuperVoxelGPT: Adaptive and Ordered 3D Tokenization for Autoregressive Shape Generation](/20260510-20260608/2605.29655v1-supervoxelgpt-adaptive-and-ordered-3d-tokenization-for-autoregressive-shape-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：使用超体素分词的3D形状自回归生成
+26. [SuperVoxelGPT: Adaptive and Ordered 3D Tokenization for Autoregressive Shape Generation](/20260510-20260608/2605.29655v2-supervoxelgpt-adaptive-and-ordered-3d-tokenization-for-autoregressive-shape-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：提出用于自回归形状生成的新型3D标记化方法
+27. [Learning Neural Deformation Representation for 4D Dynamic Shape Generation](/20260510-20260608/2606.01021v1-learning-neural-deformation-representation-for-4d-dynamic-shape-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：专注于生成4D动态形状，属于生成式3D模型
+28. [PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation](/20260510-20260608/2606.01649v1-physcene3d-physically-consistent-interactive-3d-tabletop-scene-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：物理一致的3D场景生成
+29. [PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation](/20260510-20260608/2606.01649v2-physcene3d-physically-consistent-interactive-3d-tabletop-scene-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：物理一致的3D场景生成
+30. [MORPHOS: Autoregressive 4D Generation with Temporal Structured Latents](/20260510-20260608/2606.02491v1-morphos-autoregressive-4d-generation-with-temporal-structured-latents)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：从视频自回归生成动态3D资产的4D生成
+31. [SymTRELLIS: Symmetry-Enforced Voxel Latents for 3D Generation](/20260510-20260608/2606.04108v1-symtrellis-symmetry-enforced-voxel-latents-for-3d-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：在流式3D生成中强制执行对称性
+32. [Controllable Dynamic 3D Shape Generation via 3D Trajectories and Text](/20260510-20260608/2606.05162v1-controllable-dynamic-3d-shape-generation-via-3d-trajectories-and-text)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：基于三维轨迹和文本的可控动态三维形状生成
 
 
 <div class="dpr-home-promo-card">

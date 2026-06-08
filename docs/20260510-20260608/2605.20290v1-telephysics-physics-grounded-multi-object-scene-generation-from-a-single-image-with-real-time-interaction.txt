@@ -1,0 +1,1201 @@
+Title: TelePhysics: Physics-Grounded Multi-Object Scene Generation from a Single Image with Real-Time Interaction
+
+URL Source: https://arxiv.org/pdf/2605.20290v1
+
+Published Time: Thu, 21 May 2026 00:10:40 GMT
+
+Number of Pages: 33
+
+Markdown Content:
+TelePhysics: Physics-Grounded Multi-Object Scene Generation from a Single Image with Real-Time Interaction 
+
+Xin Zhang *1,2, Yabo Chen *2, Yijie Fang 2, Wanying Qu 1, Haibin Huang 2, Chi Zhang 2,
+
+Feng Xu †1, Xuelong Li †21Fudan University, 2Institute of Artificial Intelligence, China Telecom (TeleAI) 
+
+> *
+
+Equal Contributions 
+
+Recent generative video models achieve impressive visual quality but remain constrained by limited physical consistency and controllability. Existing video generation methods provide minimal physical control, and single-image-to-3D conversion approaches often suffer from object interpenetration. Furthermore, physics-based scene-level 3D generation methods exhibit spatial misalignment, stylized artifacts, and inconsistencies with the input data, restricting their use in realistic interactive video synthesis. We propose TelePhysics, a training-free framework that converts a single image into a physically consistent and controllable video through holistic scene-level 3D reconstruction. By representing the full scene geometry in a unified spatial coordinate system, TelePhysics resolves object penetration and alignment ambiguity. Unlike prior methods, this formulation enables accurate scene-level multi-object interactions and introduces richer, complex control types for advanced mechanics-based manipulation. By decoupling simulation from rendering, TelePhysics bypasses latency-heavy priors, achieving real-time physical interaction previews paired while preserving photorealistic visual fidelity. Experimental results demonstrate that TelePhysics substantially outperforms prior methods in physical fidelity, spatial coherence, and controllability. The open-source code is available at https: //github.com/xinzhang007/TelePhysics .
+
+# 1 Introduction 
+
+Recent advances in generative video modeling have achieved remarkable visual realism, largely driven by diffusion and autoregressive architectures. However, these predominantly appearance-driven methods lack explicit mechanical reasoning. As summarized in Figure 2, generating physics-grounded scenes from a single image is hindered by five primary limitations. First, current video generators are physically uncontrollable (Figure 2a) and fail to reliably support object-level interactions or physics-grounded manipulation. Although some studies incorporate physics through auxiliary priors or intermediate signals Gillman et al. (2025); Li 
+
+et al. (2025b); Xie et al. (2025); Wang et al. (2025); Liu et al. (2026); Zhang et al. (2025); Yang et al. 
+
+(2025); Satish et al. (2026), they typically rely on manually specified parameters and soft constraints. As a result, they offer limited fine-grained temporal control and yield short, simplistic motions that fail to capture long-horizon, complex physical interactions. To improve physical reasoning, recent work has explored 3D reconstruction and physics-based scene gen-eration from visual inputs. Yet, single-image-to-3D conversion methods Zhang et al. (2024a); Lai et al. 
+
+(2025); Xiang et al. (2025a); Xu et al. (2024); Wu et al. (2025b); Chen et al. (2024b,c); Li et al. (2025a) commonly reconstruct objects independently. Despite segmentation-aware formulations Liu et al. (2024a); Chen et al. (2024a), this lack of global spatial constraints often causes severe multi-object inter-penetration (Figure 2b), while directly combining 3D generation with physical control frequently yields cartoonish ap-pearances (Figure 2d). Scene-level 3D generation methods jointly model object layouts and physical plausi-bility Paschalidou et al. (2021); Tang et al. (2024); Yang et al. (2024b,a); Zhou et al. (2024b); Chen et al. 
+
+1
+
+> arXiv:2605.20290v1 [cs.GR] 19 May 2026 Video generation (left to right: time steps)
+> 3D Initial
+> Velocity
+> Gravity Field
+> Constant Force
+> Field
+> Vortex Force
+> Field
+> Wind Force
+> Field
+> Turbulence Force
+> Field
+> Noise Force
+> Field
+> Input Image User Control s
+> Control Type
+> Multiple objects
+> enables fine-grained
+> control with realistic
+> multi-object
+> interactions
+> Physics-based Sections
+> Single object
+> provides global
+> control but lacks
+> object-level
+> interaction modeling
+
+Figure 1 TelePhysics is a unified, training-free framework designed to facilitate holistic 3D scene generation and physically grounded video synthesis from a single input image. The figure showcases interactions among multiple objects across diverse scenes. Additional results are provided in Fig. 11 
+
+(2025b); Lin et al. (2025), using scalable explicit representations like Gaussian splatting Zhou et al. (2024b); Yang et al. (2024a); Go et al. (2025); Zhou et al. (2024a). Nevertheless, aligning generated scenes with the input image remains challenging. Spatial misalignment (Figure 2c) in object pose, scale, and orientation is frequent, and enforcing physical constraints can conflict with image evidence under occlusion and limited viewpoints Yang et al. (2024b); Yao et al. (2025); Wu et al. (2025a), introducing inconsistency with the input image (Figure 2e). We present TelePhysics, a training-free unified framework for holistic 3D scene generation and physics simulation from a single image. Unlike fragmented object-centric pipelines, TelePhysics jointly models all elements within a shared 3D representation under consistent spatial constraints, resolving penetration and alignment ambiguities. This unified formulation enables accurate scene-level multi-object interactions and introduces richer control types for advanced mechanics-based manipulation (e.g., diverse force fields and 3D velocities). By decoupling simulation from rendering, TelePhysics bypasses latency-heavy priors, pro-viding real-time interactive physics previews to transform static images into dynamic, physically coherent environments. We evaluate TelePhysics on scenes containing single and multiple objects. In single-object settings, it re-constructs geometry from one image and produces stable, physically plausible dynamics under diverse forces, reducing artifacts like drifting and penetration over long-horizon simulations. In challenging multi-object scenes, TelePhysics maintains global spatial coherence and models complex interactions including contact, support, collision, and stacking. Under occlusion and limited viewpoints, the unified representation aligns the pose, scale, and relative layout of objects, mitigating inter-penetration. Quantitative and qualitative re-sults show that TelePhysics outperforms prior methods in physical realism, temporal consistency, and visual fidelity. 2Text Prompt:      
+
+> The elastic ball falls naturally
+> under the influence of gravity.
+> Video Generation:
+> Physically Uncontrollable
+> Single-Image to 3D:
+> Multi-Object Inter-
+> Penetration
+> Physics-Based Scene-
+> Level 3D Generation:
+> Inconsistency with Input
+> Image
+> Physics-Based 3D
+> Generation and Control:
+> Cartoonish Appearance
+> Physics-Based Scene-
+> Level 3D Generation:
+> Spatial Misalignment
+
+Figure 2 Primary issues of physics-grounded scene generation. Given a single reference image and a text prompt describing a physical event (e.g., a ball falling under gravity), existing paradigms exhibit five distinct limitations: (a) Video Generation is physically uncontrollable; (b) Single-Image to 3D suffers from multi-object inter-penetration; (c) Scene-Level 3D Generation shows spatial misalignment; (d) 3D Generation and Control yields cartoonish appearances; and (e) Scene-Level 3D Generation introduces inconsistency with the input image. 
+
+• We introduce TelePhysics, a training-free framework enabling accurate scene-level multi-object interactions and complex control types. By decoupling simulation from rendering, it delivers real-time interactive physics previews while maintaining the visual fidelity of the input. 
+
+• We propose a Scene-Aware Pose Alignment mechanism that transforms representations of egocentric meshes into a unified world coordinate system and anchors them to a canonical ground plane, which enforces coherent and physically plausible configurations of the scene. 
+
+• We introduce a coarse-to-fine camera pose optimization strategy for perspective alignment, which ensures accurate photometric and geometric consistency between reconstructed objects and the input image. 
+
+# 2 Related Works 
+
+2.1 Controllable and Physics-Aware Video Generation 
+
+Recent generative video models based on diffusion Ho et al. (2022); Chen et al. (2025d) and autoregressive architectures Xiang et al. (2025b) have achieved unprecedented visual realism in synthesizing dynamic con-tent. However, these models are predominantly appearance-driven and lack an explicit understanding of 3D geometry and mechanical laws. To address this, several methods attempt to incorporate physics through auxiliary priors, drag-based controls, or intermediate physical signals. PhysGen Liu et al. (2024b) integrates rigid-body simulation with video diffusion to generate physically plausible image-to-video content conditioned on applied forces. PhysDreamer Zhang et al. (2024b) endows static 3D Gaussian objects with interactive dynamics by leveraging video generation priors for material property estimation. PhysAnimator Xie et al. 
+
+(2025) combines deformable-body simulation with sketch-guided video diffusion for physically grounded car-toon animation. Force Prompting Gillman et al. (2025) finetunes video models on simulator-synthesized data to follow localized point forces and global wind fields. PhysCtrl Wang et al. (2025) learns a generative physics network that produces 3D point trajectories conditioned on physical parameters across multiple ma-terial types. WonderPlay Li et al. (2025b) introduces a hybrid generative simulator that couples a physics solver with a video generator for action-conditioned dynamic 3D scene synthesis. VLIPP Yuan et al. (2026) proposes a two-stage framework that first predicts coarse physical trajectories via vision-language reasoning, then conditions a controllable diffusion model on the resulting optical flow. VideoREPA Zhang et al. (2025) distills physics understanding from self-supervised video encoders into text-to-video diffusion models through token-level relational alignment. PhysVideoGenerator Satish et al. (2026) embeds a learnable physics prior by aligning diffusion latents with V-JEPA 2 representations via cross-attention. RealWonder Liu et al. 
+
+3(2026) achieves real-time action-conditioned generation at 13.2 FPS by bridging single-image 3D reconstruc-tion, physics simulation, and a distilled four-step video generator. PhysAlign Xiong et al. (2026) constructs a fully controllable synthetic data pipeline based on rigid-body simulation and proposes a unified physical latent space that couples 3D geometry constraints with Gram-based spatio-temporal relational alignment. Despite these advances, existing approaches rely heavily on soft constraints and manually specified pa-rameters, limiting them to short, simplistic motions that fail to support fine-grained, long-horizon physical interactions. In contrast, TelePhysics enables real-time, explicit mechanical control over complex multi-object scenes using diverse force fields ( e.g. , vortex, wind, gravity) without relying on latency-heavy priors. 
+
+2.2 Single-Image to 3D Reconstruction 
+
+Significant progress has been made in single-image-to-3D conversion. Score Distillation Sampling (SDS) Poole 
+
+et al. (2023) pioneered lifting 2D diffusion priors into 3D optimization, inspiring a family of methods that em-ploy triplanes, large-scale feed-forward networks, and rectified flow transformers. CLAY Zhang et al. (2024a) trains a 1.5B-parameter latent diffusion transformer on diverse 3D geometries with multi-resolution VAE encoding. Hunyuan3D 2.5 Lai et al. (2025) scales a shape foundation model (LATTICE) to 10B parameters for sharp, detailed mesh generation with PBR texture support. TRELLIS Xiang et al. (2025a) introduces Structured 3D Latents (SLAT) decoded into radiance fields, Gaussians, or meshes via 2B-parameter rectified flow transformers trained on 500K objects. InstantMesh Xu et al. (2024) combines multi-view diffusion with a transformer-based sparse-view reconstruction model for mesh generation within 10 seconds. Amodal3R Wu 
+
+et al. (2025b) addresses occluded objects through mask-weighted cross-attention and occlusion-aware con-ditioning for amodal 3D reconstruction. Cascade-Zero123 Chen et al. (2024b) proposes a self-prompted cascade framework that progressively generates nearby views to improve multi-view consistency. LiftIm-age3D Chen et al. (2024c) leverages latent video diffusion models with articulated camera trajectories and distortion-aware 3D Gaussian splatting. TripoSG Li et al. (2025a) employs large-scale rectified flow models with an advanced SDF-based VAE to achieve state-of-the-art shape fidelity. However, these pipelines typically reconstruct individual objects in isolation within egocentric coordinate systems. Even with segmentation-aware formulations such as Part123 Liu et al. (2024a) and PartGen Chen 
+
+et al. (2024a), they lack global spatial awareness. When independently reconstructed objects are composed into a single scene, severe spatial misalignment and interpenetration inevitably arise. Unlike these fragmented object-centric methods, TelePhysics introduces a Scene-Aware Pose Alignment mechanism that anchors all elements to a canonical ground plane and transforms them into a unified world coordinate system, inherently resolving penetration ambiguities and guaranteeing geometrically coherent configurations. 
+
+2.3 Physics-Grounded Scene Generation and Simulation 
+
+Recent literature has explored physics-based scene-level generation, jointly modeling object layouts and physical plausibility. ATISS Paschalidou et al. (2021) formulates indoor scene synthesis as autoregressive generation of object attributes via transformers. DiffuScene Tang et al. (2024) extends this with denois-ing diffusion models operating on unordered object sets, synthesizing physically plausible indoor scenes. PhyScene Yang et al. (2024b) incorporates physical interaction constraints into 3D scene synthesis for em-bodied AI. SceneCraft Yang et al. (2024a) leverages layout-guided diffusion with 3D bounding boxes for complex indoor scene generation. GALA3D Zhou et al. (2024b) proposes layout-guided generative Gaussian splatting with LLM-generated priors and compositional diffusion optimization. Layout2Scene Chen et al. 
+
+(2025b) employs semantic-guided geometry and appearance diffusion priors conditioned on 3D semantic lay-outs. PAT3D Lin et al. (2025) integrates differentiable rigid-body contact simulation into the text-to-3D pipeline, introducing simulation-in-the-loop optimization for intersection-free, physically stable scenes. Vide-oRFSplat Go et al. (2025) jointly models multi-view images and camera poses via a dual-stream architecture for direct text-to-3D Gaussian generation. DreamScene360 Zhou et al. (2024a) generates 360-degree scenes by lifting panoramic images into 3D Gaussians with globally optimized point cloud initialization. CAST Yao 
+
+et al. (2025) reconstructs component-aligned 3D scenes from single RGB images using physics-aware correc-tion with fine-grained relation graphs, and was nominated for SIGGRAPH 2025 Best Paper. Diorama Wu 
+
+et al. (2025a) proposes a zero-shot pipeline that decomposes single-view scene modeling into perception and CAD-based assembly with semantic-aware layout optimization. SceneGen Meng et al. (2026) generates 4multiple 3D assets from a scene image in a single feedforward pass with local-global feature aggregation. However, accurately aligning these generated scenes with the original input image remains a critical challenge. Imposing physical constraints often conflicts with visual evidence under occlusion or limited viewpoints Yang et al. (2024b); Yao et al. (2025); Wu et al. (2025a), resulting in spatial discrepancies, stylized artifacts, or a loss of input fidelity. To overcome this, TelePhysics employs a coarse-to-fine camera pose optimization strategy to ensure precise photometric and geometric alignment. Crucially, by decoupling the underlying physical simulation from the rendering pipeline, our framework uniquely bypasses the latency bottlenecks of previous methods, delivering real-time interactive physics previews while perfectly preserving the high-fidelity appearance of the original input. 
+
+# 3 Methods 
+
+Existing pipelines for physics-grounded scene generation struggle with several interconnected issues (Fig. 2). The inherent difficulty in controlling generative video models complicates the enforcement of target motions and physical constraints. When lifting multiple objects into 3D, current methods often produce interpen-etrating shapes and spatial misalignments, creating layouts that are physically implausible and globally incoherent. Furthermore, synthesized assets typically lack geometric and photometric realism, adopting a cartoon-like appearance. These problems are compounded by a tendency for generated outputs to drift from the input image, degrading both structural consistency and visual fidelity. We address these challenges with TelePhysics, a training-free framework that unifies 3D scene generation and physics-based video synthesis from a single image. The pipeline (Fig. 3) operates through four main stages. The Scene Perception module (Section 3.1) initially decomposes the input into a background and interactive 3D primitives, translating pixel-level data into a manipulable 3D structure. The Scene Alignment stage (Section 3.2) then establishes a shared world coordinate frame, assigning consistent poses, scales, and orientations to all entities. This aligns the abstract geometry with the original image perspective to create a physically actionable scene state. To connect semantic information with physical properties, a Vision-Language Model (VLM) evaluates the material parameters of these aligned entities. The Physics Simulation Engine (Section 3.3) processes these assets to resolve multibody dynamics and contact constraints, yielding physically plausible trajecto-ries. To bypass the computational cost of traditional graphics rendering while maintaining visual quality, WonderTrace (Section 3.4) refines the simulated frames into photorealistic, temporally coherent sequences using priors from modern video models. Together, these processes convert a static image into an interactive, physically consistent 3D environment that remains faithful to the source and supports long-horizon control. 
+
+3.1 Scene Perception 
+
+The reconstruction of complex scenes from a single image is an inherently ill-posed problem. Many existing single-view 3D methods lack holistic spatial reasoning, which often results in artifacts such as inter-object penetration and fragmented geometry. To address these limitations, we decompose the input image into instance-level foreground geometry and a globally consistent background. Foreground objects are segmented and reconstructed independently as separate 3D meshes within local coordinate frames, a strategy that prevents geometric interference and inter-penetration. These meshes are subsequently integrated through geometric constraints and coordinate alignment. In parallel, the background is reconstructed using a two-stage completion strategy: inpainting is employed to fill occluded regions, while generative outpainting extends the scene beyond the visible field of view(Fig. 3a). 
+
+Instance-level Mesh Reconstruction. Given an input image I ∈ RH×W ×3 and a set of semantic prompts 
+
+P , we first employ the Segment Anything Model 3 (SAM 3) Carion et al. (2025) to generate high-fidelity instance masks {Mi}Ni=1 . These masks are utilized by SAM-3D-Objects Chen et al. (2025c) to lift 2D representations into 3D geometric primitives. In contrast to implicit or point-based representations, which are prone to ghosting artifacts and numer-ical instability during contact, we adopt an explicit mesh-based representation with well-defined surface topology. This choice facilitates stable mechanical simulation by providing precise contact interfaces for the computation of collision manifolds and friction forces. By jointly processing masks and image features, 5Main issues of 
+
+prior methods: 
+
+> User text
+> prompts
+> (objects of
+> interest)
+
+Scene Perception 
+
+> Foreground branch
+> Background branch
+> Instance
+> Segmentation
+> Per-object 3D Mesh
+> Reconstruction
+> Background
+> Inpainting
+> Outpainting /
+> FOV Expansion
+> Object Meshes
+> + Extended
+> background
+> Structured 3D
+> primitives + holistic
+> environment
+
+Scene Alignment 
+
+Physics Simulation WonderTrace  
+
+> User control:
+> forces / initial
+> velocities / triggers Trajectories +
+> contacts /
+> collisions
+
+Uncontrollable 
+
+motion 
+
+Object 
+
+interpenetration 
+
+Scene 
+
+misalignment 
+
+Cartoonish 
+
+rendering 
+
+Inconsistent with 
+
+input image 
+
+(One-time initialization: Perception + Alignment | Real-tmie loop: Physics Simulation Video Generation(per frame) )  
+
+> Simulation-based
+> coarse render
+> (low-fidelity frames)
+> 0
+> Nt
+> Anchor-Guided
+> Ground Plane
+> Estimation
+> (AGMF)
+> World Coordinate
+> Alignment
+> (rotate + translate)
+> Perspective / Camera Pose
+> Refinement
+> z=0
+> z
+> y
+> xy
+> yz
+> Aligned scene in global
+> world frame
+> (grounded,
+> consistent scale / pose )
+> Video Diffusion
+> Re-rendering
+> (partial denoising)
+> Wan VACE
+> (few-step refinement)
+> coarse-to-fine optimization
+
+Output Video 
+
+Input Image 
+
+User Controls 
+
+> (Velocity & Force Field Controls)
+> VLM-based
+> Material
+> Parameter
+> Estimation
+> Aligned Meshes
+> Material Parameters
+> Physical properties
+
+Figure 3 Overview of the TelePhysics framework. (a) Given a single input image and user controls, the pipeline applies Scene Perception to reconstruct 3D object meshes and synthesize a background environment. (b) These components are grounded in a unified global coordinate system through Scene Alignment to ensure geometric consis-tency, while a VLM-driven parameter estimation module concurrently deduces the physical properties of each entity. 
+
+(c) Guided by these semantic priors, the Physics Simulation stage computes physically compliant trajectories and collision responses. (d) WonderTrace then bridges the visual domain gap by refining the coarse simulation renders into photorealistic video sequences. 
+
+our framework preserves the relative spatial configuration and scale of individual entities, ensuring that the recovered geometries Si adhere to fundamental physical constraints. 
+
+Background Synthesis and Expansion. To ensure effective separation of the background and spatial consistency, we reconstruct the environment by eliminating foreground occlusions. We first synthesize the occluded regions using the LaMa inpainting model Suvorov et al. (2021) to derive a restored background: 
+
+Brest = Finpaint (I, 
+
+N[
+
+i=1 
+
+Mi), (1) which provides an unobstructed view of the static environment. To accommodate dynamic camera viewpoints and resolve scale ambiguity, we further expand the field of view via outpainting Filoni (2025): 
+
+Bext = Foutpaint (Brest , Φ) , (2) where Φ denotes the target aspect ratio and expansion parameters. This extended panoramic context Bext 
+
+provides constraints on vanishing points and the global layout. Consequently, as the camera moves, the parallax between the foreground meshes Si and the distant background Bext remains physically consistent, effectively mitigating the “cardboard” effect often observed in localized reconstruction methods. 
+
+3.2 Scene Alignment 
+
+To ensure physically valid object interactions and maintain consistency with the input image, we introduce a Scene Alignment module(Fig. 3b) designed to resolve spatial inconsistencies stemming from egocentric reconstruction and inaccurate camera estimation (Fig. 2). This module comprises two primary components: 
+
+Pose Coordinate Alignment , which maps reconstructed meshes into a unified world coordinate system and 6anchors them to the ground plane; and Perspective Alignment , which refines camera parameters to ensure geometric consistency between the reconstructed scene and the input image. 
+
+3.2.1 Pose Coordinate Alignment 
+
+Although the previous stage yields detailed mesh representations, these raw descriptors are ill-suited for downstream physical reasoning and interaction tasks. As illustrated in Fig. 2, a primary bottleneck arises from the inherent spatial misalignment introduced during the transformation of camera-centric observations into a global world coordinate system. As depicted in the figure, objects expected to adhere to basic physical constraints often exhibit implausible configurations. For instance, a ball positioned directly above a carton may drift laterally or penetrate the ground plane. To address these spatial misalignments and enforce physical plausibility, we introduce a Scene-Aware Pose Alignment mechanism. This module systematically transforms egocentric mesh representations into a unified world coordinate frame and anchors them to a canonical ground plane, thereby ensuring coherent spatial alignment and physically valid scene configurations. To establish a consistent coordinate system for physical interactions, we implement a hierarchical align-ment strategy that transforms meshes from the camera coordinate system C to the world coordinate system 
+
+W.
+
+Single-Object Canonical Alignment. For isolated objects, we first perform Global Centroid Normaliza-tion. Given a mesh comprising Nv vertices V = {vi}Nv
+
+> i=1
+
+, we translate the mesh to the world origin such that the centroid ¯v satisfies: 
+
+¯v = 1
+
+NvNvX
+
+> i=1
+
+vi, v′ 
+
+> i
+
+= vi − ¯v. (3) To determine the principal axes of the object, we apply Principal Component Analysis (PCA) to the zero-centered vertex distribution. The covariance matrix Σ ∈ R3×3 is computed as follows: 
+
+Σ = 1
+
+NvNvX
+
+> i=1
+
+v′
+
+> i
+
+(v′
+
+> i
+
+)⊤. (4) Through eigendecomposition Σu k = λkuk, we identify the primary eigenvector u1 corresponding to the largest eigenvalue λ1. We then derive the rotation matrix R required to align u1 with the world vertical axis (Z-up) [0 , 0, 1] ⊤ to achieve a canonical pose. Finally, Ground-Contact Correction is applied: 
+
+vfinal = Rv ′ 
+
+> i
+
+− [0 , 0, Z min ]⊤, (5) where Zmin denotes the minimum vertical extent of the rotated mesh, ensuring the object rests precisely on the Z = 0 plane. 
+
+Multi-Object Scene Alignment. Building upon the alignment of individual objects, we extend the approach to complex scenes involving multiple objects. To ensure physical consistency across such multi-object environments, we implement a multi-stage rectification pipeline, as illustrated in Fig. 4. Starting from the constituent meshes of all objects in the scene, denoted as Vall , we first aggregate their vertices to form a global unorganized point cloud P within the camera frustum. To identify the environmental layout, we employ the RANSAC algorithm to fit a dominant plane to P, defined by the equation ax + by + cz + d = 0. The unit normal n = [ a, b, c ]⊤ thus represents the estimated ground orientation (Fig. 4b-c). To standardize the reference frame for downstream physics-based tasks, we derive an orthogonal transformation Text that aligns the estimated normal n with the world vertical axis zw = [0 , 0, 1] ⊤.Specifically, the rotation R ∈ SO (3) is computed via Rodrigues’ formula to map n to zw, while the translation 
+
+t is determined by the minimum vertical coordinate of the rectified points. This effectively anchors the lowest point of the scene to the global ground level (Fig. 4e-f). 
+
+Anchor-Guided Ground Plane Estimation. Standard plane estimation techniques, such as vanilla RANSAC, often prove suboptimal in spatially complex scenes populated by multiple vertical structures (e.g., standing human subjects). As illustrated in Fig. 5a, RANSAC is prone to converging on regions of high point den-sity—such as the torsos of human subjects or walls—rather than the true ground manifold (e.g., the soles of the feet). To address this density-driven bias, we introduce Anchor-Guided Manifold Fitting (AGMF). 74 2 0 2                                        
+
+> 4
+> X4
+> 2024
+> Y
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> Z
+> (a) Initial Point Cloud
+> 4202
+> 4
+> X4
+> 2024
+> Y
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> Z
+> (b) RANSAC Mean Plane Fitting
+> 4202
+> 4
+> X4
+> 2024
+> Y
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> Z
+> (c) Normal Orientation Analysis
+> Normal n
+> Target Z
+> 4202
+> 4
+> X4
+> 2024
+> Y
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> Z
+> (d) Rotational Alignment
+> 4202
+> 4
+> X4
+> 2024
+> Y
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> Z
+> (e) Translated to Lowest Point
+> 4202
+> 4
+> X4
+> 2024
+> Y
+> 2
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> Z
+> (f) Final Calibration ( Z= 0 )
+
+Figure 4 Ground Plane Alignment Pipeline. An overview of the proposed scene-level alignment procedure, which estimates the dominant ground plane from the aggregated point cloud and applies a rigid transformation to obtain a gravity-aligned world frame W, where the ground plane coincides with z = 0. 
+
+Figure 5 Comparison of plane estimation strategies. (a) Standard RANSAC: Global density-based fitting is sus-ceptible to high-density vertical distractors (e.g., human torsos or walls), leading to erroneous orientation estimates. (b) Anchor-Guided Manifold Fitting (Ours): By selectively sampling local minima Pbase from object extrema, our strategy effectively decouples the ground manifold from vertical structures, ensuring a physically plausible estimation of the surface normal n and the gravitational axis. 
+
+Unlike global fitting methods that treat all points with equal importance, AGMF shifts the optimization focus toward local geometric extrema that are likely to represent ground-contact points. The core intuition behind AGMF is to isolate semantic “anchors”—points physically constrained to the ground—prior to performing the fit. For a scene containing N object meshes, we define an anchor set Pbase 
+
+by extracting vertices from the lower extrema of each individual mesh Mi. Specifically, we sample vertices within a proximity threshold δ of the local Z-minimum for each object: 
+
+Pbase =
+
+N[
+
+i=1 
+
+{v ∈ Mi | vz ≤ min 
+
+u∈Mi
+
+uz + δ}. (6) By restricting the input space to Pbase , we effectively eliminate the vertical distractors that typically cause RANSAC to yield erroneous estimates. We then determine the optimal ground plane parameters 
+
+π = [ a, b, c, d ]⊤ by minimizing a robust M-estimator over this refined subset: min 
+
+π
+
+X
+
+p∈P base 
+
+ρ
+
+ |ax p + by p + cz p + d|√a2 + b2 + c2
+
+
+
+, (7) 8Figure 6 Differentiable rendering pipeline for explicit camera pose estimation. The framework optimizes camera spa-tial parameters by minimizing the discrepancy between the rendered output and the target image. The visualization (right) illustrates the transition from global stochastic sampling to local refinement, leading to the final converged pose v∗.
+
+where ρ(·) denotes a robust loss function (e.g., Huber or Tukey) employed to suppress outliers within the anchor set. This formulation ensures that the resulting surface normal n = [ a, b, c ]⊤ aligns with the collective gravitational base of all objects in the scene. As demonstrated in Fig. 5b, AGMF yields a physically plausible world orientation, whereas standard RANSAC fails by fitting to dominant vertical geometries. 
+
+3.2.2 Perspective Alignment 
+
+As illustrated in Fig. 2, naive rendering often results in significant perspective discrepancies between the reconstructed objects and the input image, manifesting as inaccuracies in apparent scale and pose (see also Fig. 7). To mitigate these issues, we formulate perspective alignment as a continuous optimization problem over the camera parameters. The objective is to recover a camera pose that ensures geometric consistency with the input observation. Fig. 6 depicts this process, wherein camera parameters are iteratively refined to align the rendered output with the input image. The pipeline accepts a target RGB image of the object and an initial estimate of the 3D camera pose (represented by a camera frustum) as input. Given the current camera parameters, a renderer generates a synthetic image of the 3D object and a corresponding binary silhouette mask. These outputs are compared to the target image to compute multiple loss terms, including the pixel-wise mean squared error for both the object and background regions, as well as a Dice-based mask loss that quantifies the geometric overlap between silhouettes. The aggregated loss serves as the objective function for updating the camera parameters. Given the non-convex nature of the rendering loss landscape, identifying the global optimum is non-trivial. Consequently, we propose a robust coarse-to-fine optimization strategy that integrates global stochastic sampling with local derivative-free refinement. Initially, we conduct a coarse global search by uniformly sampling candidate poses within a bounded space B. This step identifies a reliable initialization, thereby mitigating the risk of convergence to poor local minima. Subsequently, starting from the optimal candidate identified in the coarse stage, we execute a local refinement step using the derivative-free Powell method under box constraints. This approach enables precise pose adjustment without reliance on potentially unstable gradients associated with the rendering process. 
+
+Problem Formulation. Let Pc = ( Xc, Y c, Z c) ∈ R3 denote the position of the camera (or object) within the world coordinate system. Given an initial estimate Pinit  
+
+> c
+
+, we define a bounded search space B as follows: 
+
+B = [ x0 − ∆x, x 0 + ∆ x] × [y0 − ∆y , y 0 + ∆ y ] × [z0 − ∆z , z 0 + ∆ z ], (8) where ( x0, y 0, z 0) corresponds to Pinit  
+
+> c
+
+. For any candidate position P ∈ B , we generate a rendered image I(P)and its associated object mask M (P). The goal is to minimize the discrepancy between these outputs and the target image I∗ through a set of region-aware constraints. To this end, we categorize the optimization objectives into photometric consistency and geometric alignment. 
+
+Region-Aware Appearance Loss. To capture local photometric details, we define an appearance loss for 9the object region using the target mask M ∗:
+
+Lobj (P) = ∥(I(P) − I∗) ⊙ M ∗∥1
+
+∥M ∗∥1 + ϵ , (9) where ⊙ denotes element-wise multiplication and ∥ · ∥ 1 represents the L1 norm. The normalization term is critical to prevent the optimization from biasing toward larger foreground areas. Similarly, the background-region loss is formulated as: 
+
+Lbg (P) = ∥(I(P) − I∗) ⊙ (1 − M ∗)∥1
+
+∥1 − M ∗∥1 + ϵ . (10) 
+
+Mask Alignment Loss. To explicitly enforce geometric consistency between the rendered silhouette and the target, we employ a Dice loss: 
+
+Lmask (P) = 1 − 2∥M (P) ⊙ M ∗∥1 + ϵ
+
+∥M (P)∥1 + ∥M ∗∥1 + ϵ . (11) This formulation ensures robustness against scale variations and is particularly effective for small foreground objects. 
+
+Overall Objective. The final objective function is a weighted combination of the aforementioned losses, balanced by the hyperparameters λ:
+
+L(P) = λobj Lobj (P) + λbg Lbg (P) + λmask Lmask (P). (12) As demonstrated in Fig. 7, the proposed coarse-to-fine camera pose optimization substantially improves the geometric and perspective consistency between the rendered results and the input images. In contrast to the initial estimates, the optimized poses yield renderings that align well with the input in terms of both spatial configuration and viewpoint, effectively eliminating the perspective distortion and pose misalignment observed earlier. The close agreement regarding object silhouettes and visual appearance indicates that the proposed method successfully resolves inconsistencies with the input image and enables accurate camera pose estimation. 
+
+3.3 Physical Simulation 
+
+To ensure physically consistent 3D dynamics without relying on unscalable manual assignment, our frame-work utilizes a Vision-Language Model (VLM) to automatically estimate categorical and continuous ma-terial parameters—such as mass, friction, and Young’s modulus (detailed in Appendix D.1)—for each re-constructed entity based on its visual appearance and scene context. Following this parameter evaluation, objects are routed to appropriate solvers within a multi-physics backend. While recent physics-based gen-eration methods, such as PhysCtrl Wang et al. (2025) and PhysGen3D Chen et al. (2025a), primarily use the Material Point Method (MPM), this approach can be computationally expensive and may introduce artifacts when handling rigid bodies or stiff constraints. We instead adopt Genesis Authors (2024) as a unified backend(Fig. 3c) to address these limitations. Guided by the VLM classifications, the framework decouples material representations across three specialized solvers. Rigid Body Dynamics (RBD) handles non-deformable objects and robotic manipulators; MPM is reserved for fluids and hyperelastic materials un-dergoing large volumetric deformations; and Position-Based Dynamics (PBD) manages thin-shell structures like cloth and cables. These solvers operate concurrently with GPU-based parallelism and adaptive time-stepping, exchanging force and state information to enable efficient, high-fidelity multi-material interactions. The mathematical formulations and integration mechanisms for these solvers are detailed in Appendix D.2. 
+
+3.4 WonderTrace 
+
+To bridge the domain gap between visually coarse physical simulations and photorealistic real-world dy-namics, we introduce the WonderTrace module (Fig. 3d). Videos rendered directly from physical simulators typically exhibit a synthetic, “plastic” appearance resulting from simplified lighting models, unrealistic ma-terial responses, and the absence of environmental stochasticity, such as atmospheric scattering or organic 10 texture variations (as highlighted in Fig. 2). WonderTrace addresses these limitations by leveraging the high-dimensional latent space of state-of-the-art video generation models as a rendering prior, translating simulated frames into high-fidelity temporal sequences. By projecting simulated physical states and trajectories into conditional control signals—such as depth maps, optical flow, and object masks—the module synthesizes photorealistic, pixel-level semantic enhance-ments while strictly adhering to the engine’s underlying structural and temporal dynamics. To balance computational efficiency with visual fidelity, we employ a partial denoising strategy. Rather than generating videos from pure Gaussian noise—a process that is computationally intensive and prone to deviating from the underlying simulation logic—we perturb the simulation frames with a moderate level of noise and apply only the final denoising stages of the diffusion process. This ensures that the generated video faithfully in-herits the complex spatiotemporal structure of the simulation while enriching the scene with high-frequency visual details (e.g., sub-surface reflections and motion blur) that are challenging for real-time simulators to model accurately. Specifically, our primary pipeline adopts the Wan2.1 VACE Wan et al. (2025) model, which incorporates a self-forcing DMD-based distillation strategy. This design enables the rerendering process to operate with a minimal number of refinement steps, significantly reducing inference latency and facilitating real-time performance without compromising visual quality. For offline rendering or scenarios demanding maximum perceptual realism, we provide an alternative configuration utilizing the larger Wan2.2 VACE 14B Wan et al. 
+
+(2025) model, which delivers higher-resolution outputs and superior high-fidelity visualization. Furthermore, a fundamental challenge in 3D scene modeling is the inherent sparsity of source data, which typically captures a limited field of view (FOV) and leads to voids or severe boundary artifacts when the virtual camera deviates from its original trajectory. To overcome this, WonderTrace seamlessly supports novel view synthesis and extensive virtual camera movements without out-of-bounds artifacts. Following the background handling approach discussed in Section 3.1, we employ a combined in-painting and out-painting strategy to decouple the foreground content from the environment. Because the background environment is expanded during the initial Scene Perception stage, we extend this design into the video rerendering stage to enable scene completion well beyond the original camera frustum. As illustrated in Fig. 8, the reconstructed background is spatially expanded to provide sufficient semantic context for severe viewpoint changes. Finally, the rerendered, expanded background is seamlessly composited with the dynamic foreground elements. This dual-stream processing ensures continuous visual fidelity and robust temporal consistency under entirely novel camera trajectories. 
+
+# 4 Experiments 
+
+We evaluate TelePhysics in terms of controllability, physical consistency, visual quality, and runtime efficiency. The qualitative results presented in Fig. 11 highlight the model’s ability to maintain physical integrity even during complex multi-object interactions. 
+
+4.1 Experimental Setup 
+
+We consider the single-image-to-video setting and evaluate all methods on a 60-scene test set spanning diverse indoor and outdoor environments. The benchmark includes single- and multi-object interactions, such as dropping, pushing, rolling, collision, support, stacking, and long-horizon rigid-body motion. The scenes vary in object count, occlusion level, and camera viewpoint, providing a challenging testbed for controllable physics-based video generation. Unless otherwise specified, all experiments are conducted on a single NVIDIA H100 GPU. For scene perception, we use SAM 3 Carion et al. (2025) for instance segmentation and SAM-3D-Objects Chen et al. (2025c) for instance-level 3D lifting. Genesis Authors (2024) performs physics simulation, handling rigid objects via the rigid-body solver and deformable assets with MPM or PBD. For video rerendering, we use Wan2.1 VACE Wan et al. (2025) as the default fast refinement model and Wan2.2 VACE 14B Wan et al. (2025) as an optional high-quality offline variant. We compare TelePhysics against representative appearance-driven and physics-aware baselines, including Sora2-pro OpenAI (2025), Veo3.1 Google DeepMind (2025), CogVideoX1.5 Yang et al. (2024c), Wan2.2-A14B Wan et al. (2025), WonderPlay Li et al. (2025b), and PhysCtrl Wang et al. (2025). To ensure a fair 11 Table 1 Quantitative comparison 
+
+Method SA ↑ PC ↑ VQ ↑
+
+PhysCtrl Wang et al. (2025) 1.85 2.34 2.58 WonderPlay Li et al. (2025b) 2.24 2.49 2.97 CogVideoX1.5 Yang et al. (2024c) 2.36 2.02 2.42 Wan2.2-A14B Wan et al. (2025) 2.46 2.68 3.46 Sora2-pro OpenAI (2025) 2.82 2.35 3.58 Veo3.1 Google DeepMind (2025) 2.66 2.92 3.71 Ours 3.29 3.15 3.61 
+
+> SA: Semantic Adherence. PC: Physical Commonsense. VQ: Video Quality.
+
+comparison, all methods receive the same input image and the same underlying event description, with no method given extra semantic information beyond what is required by its native interface. For WonderPlay and PhysCtrl, we only convert the shared event description into their official physics-control input formats while keeping the released models, checkpoints, and default inference settings unchanged. For video-prior baselines, we use the same event description as the text prompt and additionally provide object-centric motion descriptions and 2D motion arrows on the input image, strengthening motion control under a supervision budget comparable to that of physics-aware methods. 
+
+4.2 Qualitative Comparison 
+
+Figure 9 shows qualitative comparisons with strong video generation baselines. While appearance-driven methods often produce visually appealing motion, they frequently lack reliable control over object trajectories and interactions. In scenes involving multiple objects, these methods tend to generate ambiguous collisions, inconsistent contacts, or motions that deviate from the specified force direction. Although PhysCtrl improves controllability, it still struggles with long-horizon stability and spatial consistency in multi-object settings. In contrast, TelePhysics produces motions that remain temporally coherent and mechanically consistent with the intended events. The advantage is especially clear in scenarios involving support, collision, and sequential interactions among multiple objects. By reconstructing the scene in a shared world frame and ex-plicitly simulating object dynamics, our method avoids the drift, interpenetration, and identity inconsistency commonly observed in video-prior baselines. 
+
+4.3 Quantitative Comparison 
+
+We quantitatively evaluate the 60-scene test set for controllability, physical plausibility, and overall video quality. Following the VideoPhy Bansal et al. (2024) protocol, we adopt a GPT-5-based 5-point Likert scoring framework. For each method, we evaluate 60 generated videos under three complementary criteria. Seman-tic adherence(SA) measures alignment between the generated video and text prompt, emphasizing whether specified initial forces or velocities and resulting motions match intended dynamics. Physical common-sense(PC) assesses whether generated motions and interactions are plausible under basic physical principles like gravity, inertia, and contact constraints. Video quality(VQ) evaluates visual fidelity, frame-level realism, and temporal smoothness. Table 1 reports the GPT-5 evaluation results. Our method achieves the best performance on semantic adherence and physical commonsense, showing that explicit scene reconstruction and simulator-based dy-namics substantially improve controllability and physical plausibility. Notably, the lower scores of PhysCtrl and WonderPlay stem from our test set predominantly featuring multi-object scenes, where earlier methods struggle to accurately model complex physical interactions. Although Veo3.1 attains the highest video qual-ity score, TelePhysics remains competitive while providing substantially stronger physical grounding and interaction correctness. These results support the core design of TelePhysics: decoupling physical reasoning from appearance synthesis leads to better control without sacrificing perceptual quality. 12 Table 2 Human evaluation 
+
+Method SA ↑ PC ↑ VQ ↑ UP ↑
+
+PhysCtrl Wang et al. (2025) 3.45 3.12 3.29 3.31 WonderPlay Li et al. (2025b) 2.02 2.05 1.98 2.06 CogVideoX1.5 Yang et al. (2024c) 2.78 2.81 2.86 2.84 Wan2.2-A14B Wan et al. (2025) 3.72 3.85 3.73 3.76 Sora2-pro OpenAI (2025) 4.38 4.43 4.67 4.28 Veo3.1 Google DeepMind (2025) 4.72 4.84 4.83 4.84 
+
+Ours 6.93 6.90 6.64 6.91    
+
+> Participants rank seven videos per scene, one per method. Scores are aggregated using Borda count (8 −rank), yielding a score range of [1 ,7].
+
+Table 3 Average runtime breakdown of TelePhysics. 
+
+Component Time / Throughput 
+
+One-time processing (per scene, pure inference) 
+
+Segmentation (SAM3 + inpainting) ∼5 s 3D Mesh Reconstruction (SAM3D) ∼15 s Physics Config Estimation (VLM) ∼10 s Scene Alignment (pose + camera opt.) ∼16 s 
+
+Interactive simulation loop 
+
+End-to-end Interactive Loop ∼15 FPS 
+
+> Processing timings represent highly-optimized pure model inference, excluding model loading overhead. Physics configuration estimation uses Qwen2.5-VL-72B for automatic material and force prediction. The interactive loop throughput corresponds to a real-time interactive physics preview. Optional high-fidelity offline diffusion re-rendering can be applied afterward for enhanced photorealism.
+
+4.4 Human Evaluation 
+
+To complement the automatic evaluation, we conduct a ranking-based human study. In each trial, par-ticipants view seven videos generated from the same input image, one from each method, and rank them according to semantic adherence, physical commonsense, video quality, and overall preference. We convert the rankings into Borda scores using si = 8 − πi, where πi ∈ { 1, . . . , 7} denotes the rank of method i. Higher scores indicate stronger human preference. As shown in Table 2, TelePhysics achieves the highest scores across all four criteria. The large margins in semantic adherence and physical commonsense indicate that human annotators consistently perceive our results as more controllable and physically plausible. Moreover, TelePhysics obtains the best overall preference, suggesting that stronger physical grounding improves not only correctness but also the overall viewing experience. 
+
+4.5 Generation Speed 
+
+We further analyze the runtime of TelePhysics on an NVIDIA H100 GPU. As shown in Table 3, scene perception and scene alignment introduce only a one-time initialization cost per scene. After initialization, the system supports a real-time interactive physics preview at approximately 15 FPS. We report the runtime of this interactive pipeline here; the subsequent high-fidelity offline diffusion re-rendering stage is explicitly excluded from the FPS statistics. 13 Table 4 Ablation on scene-aware pose alignment. 
+
+Variant Mask IoU ↑ PR ↓ SVR ↓ ISR ↑
+
+w/o alignment 0.11 0.00 0.00 1.00 
+
++ single-object canonical alignment 0.35 0.50 0.00 0.88 + vanilla RANSAC plane fitting 0.54 0.01 0.15 0.88 + AGMF (full pose alignment) 0.54 0.00 0.15 0.90  
+
+> PR: Penetration Rate. SVR: Support Violation Rate. ISR: Interaction Success Rate.
+> Table 5 Ablation on perspective alignment.
+
+Variant SSIM ↑ LPIPS ↓ Mask IoU ↑ Reproj. Err. ↓
+
+Initial camera only 0.76 0.14 0.26 38.95 Global search only 0.76 0.13 0.44 20.97 Local Powell only 0.77 0.13 0.55 14.77 Coarse-to-fine (ours) 0.76 0.13 0.54 14.33 
+
+> Reproj. Err. denotes average reprojection error in pixels after optimization.
+
+4.6 Ablation Study 
+
+To isolate the contribution of key components in TelePhysics, we conduct extensive ablation studies. We evaluate the modular designs covering scene alignment, physical simulation constraints, and rerendering efficiency. 
+
+Scene-aware pose alignment. Accurately placing objects into the 3D scene without violating physical constraints is crucial for realistic simulation. Table 4 evaluates different pose alignment strategies. Removing alignment completely ( w/o alignment ) reliably avoids physical violations (Penetration Rate, PR = 0 .00) but fails to place the object accurately, resulting in a drastically low Mask IoU of 0.11. Simply applying single-object canonical alignment improves the IoU (0.35) but introduces severe geometric conflicts, raising the PR to 0.50. Incorporating vanilla RANSAC plane fitting significantly improves spatial grounding (IoU reaches 0.54) and reduces PR, yet it still struggles with proper physical resting states, yielding a Support Violation Rate (SVR) of 0.15. In contrast, our full pose alignment using the AGMF strategy strictly resolves collisions (PR = 0 .00) while maintaining the highest spatial alignment and achieving an Interaction Success Rate (ISR) of 0.90. This demonstrates that holistic scene-aware alignment is indispensable for valid initial physical states. 
+
+Perspective alignment. Table 5 ablates the camera parameter optimization module. Relying solely on the initial camera guess leads to poor geometric projection, as evidenced by a severe Reprojection Error of 38.95 pixels and low Mask IoU (0.26). Using either global search or local Powell optimization individually improves the alignment. However, our proposed coarse-to-fine approach consistently achieves the most robust geometric consistency, yielding the lowest Reprojection Error (14.33) and highly competitive visual metrics (SSIM 0 .76, LPIPS 0 .13). This confirms that combining global contextual search with local precision refinement is necessary to bridge the gap between 2D pixels and the 3D simulation space. 
+
+Force field configuration. Table 6 investigates the impact of force fields during the physical simulation stage. Interestingly, the No forces variant achieves the highest scores in automated 2D metrics such as Motion Amplitude (4.77) and Smoothness (0.45). However, we argue that these purely appearance-based metrics inherently favor unconstrained, linear, or “floating” motions. When our Full forces (including gravity and intended primary forces) are introduced, the objects are subjected to strict physical laws—such as sudden deceleration due to collisions, friction, and resting contacts. While these physical constraints naturally reduce the naive optical flow smoothness and overall motion amplitude, they are fundamentally required to prevent objects from drifting unnaturally. The parity between Primary force only and Full forces further suggests that explicit external driving forces dominate the valid dynamic interactions in our targeted events. 14 Table 6 Ablation on force field configuration. 
+
+Variant Motion Amp. ↑ Smoothness ↑ Aesthetic ↑
+
+No forces 4.77 0.45 0.22 
+
+Gravity only 4.73 0.41 0.17 Primary force only 4.35 0.40 0.17 Full forces (ours) 4.35 0.40 0.17  
+
+> Motion Amp.: mean optical flow magnitude. Smoothness: inverse flow variance.
+> Table 7 Ablation on video synthesis inference steps.
+
+Variant SSIM ↑ LPIPS ↓ Aesthetic ↑ Time (s) ↓
+
+10 steps 0.82 0.05 0.20 539.03 
+
+30 steps 0.79 0.06 0.16 1247.30 50 steps 0.79 0.06 0.15 1922.37 
+
+> Time: wall-clock inference time per video in seconds.
+
+Inference efficiency in video synthesis. Finally, we study the trade-off between rendering quality and computational cost in the video synthesis stage (Table 7). We observe that executing the diffusion process for 10 steps yields the optimal visual fidelity (SSIM 0 .82, LPIPS 0 .05, Aesthetic 0 .20) while requiring the least wall-clock time (539 .03 s). Increasing the inference to 30 or 50 steps exponentially increases the computational burden but slightly degrades the perceptual metrics. This indicates that our condition signals (rendered explicit dynamics) are highly informative, allowing the rerendering model to converge rapidly without requiring over-parameterized iterative refinement. Consequently, we adopt 10 steps as the default setting for optimal efficiency. 
+
+Geometric Fidelity of Re-rendering. We evaluate whether depth-conditioned video re-rendering (using 10 denoising steps) reliably preserves the underlying physical geometry of the raw simulation. As demon-strated in Tab. 8, the re-rendered outputs maintain robust scene layouts, achieving an overall SSIM of 0.72 and a background SSIM of 0.78. Fluid environments exhibit the highest structural fidelity (SSIM of 0.80, background SSIM of 0.84), indicating that depth maps provide strong geometric constraints for con-tinuous surfaces. Additionally, deformable objects such as cloth demonstrate nearly zero silhouette drift (∆IoU ≈ 0.00). This structural consistency is further corroborated by an average centroid displacement of merely 52.5 pixels (6.0% of the 880-pixel image width), confirming that precise spatial positioning is strictly maintained throughout the re-rendering process. 
+
+# 5 Conclusion and Limitations 
+
+We presented TelePhysics, a training-free framework that converts a single image into a physically grounded and controllable video by reconstructing a holistic 3D scene, aligning all entities in a shared world co-ordinate system, simulating object dynamics with an explicit physics engine, and rerendering the result into a realistic video. Compared with appearance-driven video generation, TelePhysics offers substantially stronger control over object interactions and long-horizon dynamics. Compared with object-centric 3D lift-ing pipelines, it reduces inter-object penetration and spatial ambiguity through scene-aware pose alignment and perspective optimization. Our experiments and ablations show that each component—scene percep-tion, anchor-guided alignment, coarse-to-fine camera refinement, multi-solver physics, and diffusion-based rerendering—contributes meaningfully to the final quality. 
+
+Limitations. Despite these advantages, several limitations remain. First, the overall quality still depends on the accuracy of monocular segmentation and 3D reconstruction; failures in instance decomposition or heavily occluded geometry can propagate to later stages. Second, the current system handles rigid and mod-15 Table 8 Geometric fidelity of video re-rendering. We measure structural similarity between raw physics simulation and depth-conditioned re-rendered output (10 denoising steps) to verify that the re-rendering preserves underlying physical geometry. 
+
+Material SSIM ↑ BG-SSIM ↑ Obj-SSIM ↑ Centroid ↓ ∆IoU 
+
+Fluid (7) 0.80 0.84 0.56 42.3 -0.34 Rigid/Elastic (5) 0.65 0.71 0.40 72.7 -0.27 Cloth (3) 0.67 0.74 0.44 42.8 -0.00 
+
+Overall (15) 0.72 0.78 0.48 52.5 -0.25      
+
+> SSIM: per-frame structural similarity (raw sim. ↔re-rendered). BG/Obj-SSIM: SSIM within background/object regions. Centroid: mean object centroid displacement (px, image size 880 ×880). ∆IoU: mask IoU change vs. ground truth after re-rendering.
+
+erately deformable objects well, but highly articulated objects, transparent surfaces, and complex material behavior remain challenging. Third, although the interactive simulation loop is real-time after initializa-tion, high-quality offline rerendering still incurs additional latency. Finally, material parameters and contact properties are not always directly observable from a single image and may require heuristic initialization. 
+
+Future work. A promising direction is to jointly infer geometry, material, and contact attributes from image and language supervision, enabling richer physical interaction and better generalization to unseen scenes. Another important avenue is uncertainty-aware scene reconstruction, which would allow the simulator and renderer to reason explicitly about ambiguous geometry under severe occlusion. We believe TelePhysics provides a practical foundation for controllable, image-faithful, and physically consistent video generation from minimal visual input. 16 Original Perspective Original Mask Generated video frames at t = 0, 40, and 81 
+
+> Perspective Alignment Optimization
+
+Figure 7 Qualitative visualization of the perspective alignment optimization process. From top to bottom, the rendering loss gradually decreases as the camera parameters are refined. Each row displays the original image, the rendered perspective under the current camera parameters, and the corresponding binary mask. Due to the non-convex nature of the rendering loss, directly identifying a global optimum is challenging. Our proposed coarse-to-fine optimization strategy combines global random sampling with local derivative-free optimization, enabling robust convergence and progressively improved alignment. Suboptimal alignment at this stage would otherwise lead to significant geometric distortion and rendering artifacts in downstream synthesis. 
+
+17 The camera moves in a circular 
+
+motion upwards, with the 
+
+viewpoint always directed 
+
+towards the center of the scene. 
+
+The camera moves in a circular 
+
+motion to the right, with the 
+
+viewpoint always directed 
+
+towards the center of the scene. 
+
+The camera moves in a circular 
+
+motion to the right, with the 
+
+viewpoint always directed 
+
+towards the center of the scene. 
+
+The camera moves to the right in a 
+
+circular motion, always 
+
+maintaining its view towards the 
+
+center of the scene. Simultaneously, 
+
+the teddy bear is pulled to the right 
+
+by a force that causes it to fall off 
+
+the chair. 
+
+The camera moves in a circle to 
+
+the right, always maintaining its 
+
+view towards the center of the 
+
+scene. Simultaneously, the ball 
+
+on the left collidees with the 
+
+other two balls and rotates. Figure 8 Illustration of camera motion and viewpoint variation 
+
+18 Initially, the dominoes are stationary. A 
+
+row of white dominoes falls from left to 
+
+right, each domino tilting forward and 
+
+striking the next, as if a propagating 
+
+force is transmitted along the chain of 
+
+dominoes, causing each domino to 
+
+rotate around its base until it falls 
+
+completely flat. The viewing 
+
+perspective is fixed. 
+
+> Ours  Wan2.2-14B WonderPlay  CogVideoX1.5
+
+Initially, the three balls in the scene 
+
+were stationary. Then, they were 
+
+simultaneously subjected to a horizontal 
+
+force directed towards the bucket, 
+
+causing them to roll across the table, 
+
+strike the bucket, and then fall to the 
+
+ground. 
+
+Initially, the two ceramic bowls were 
+
+stationary. Then, the smaller bowl was 
+
+smoothly lifted upwards, moved to the 
+
+left, and then, due to gravity, dropped 
+
+onto the larger bowl, eventually 
+
+stacking inside it. The camera angle 
+
+shifted slightly downwards. 
+
+> PhysCtrl  Veo3.1  Sora2-pro
+
+Figure 9 Qualitative comparisons between the proposed approach and existing video generation methods. 
+
+19 Ours  Wan2.2-14B  Wan2.2-5B  CogVideoX1.5 PhysCtrl  Veo3.1  Sora2-pro 
+
+Initially, the teddy bear was at rest with 
+
+zero initial velocity. Subsequently, due 
+
+to a force applied from the right, the 
+
+teddy bear began to move and 
+
+eventually fell off the edge of the chair. 
+
+The viewing perspective switches from 
+
+the front to the right side. 
+
+Initially, all three oranges were 
+
+stationary on a flat surface. Their texture 
+
+was somewhat like jelly. Subsequently, 
+
+each of the three oranges was subjected 
+
+to an upward force, causing them to 
+
+move, and eventually fall. The camera 
+
+perspective remained unchanged 
+
+throughout the entire process. 
+
+Initially, all the whales were stationary; 
+
+the blue whale was first subjected to a 
+
+force pushing it towards the upper right, 
+
+and the gray shark was subjected to an 
+
+upward force. Eventually, the gray shark 
+
+plush toy was knocked out of view. The 
+
+camera perspective remained unchanged 
+
+throughout the entire process. Ours  Wan2.2-14B  Wan2.2-5B  CogVideoX1.5 PhysCtrl  Veo3.1  Sora2-pro 
+
+Initially resting left of the bowl, the 
+
+white ball rose and drifted rightward to 
+
+hover above it. It then descended and 
+
+settled inside the bowl. Finally, the bowl 
+
+tipped and rolled slightly to the right 
+
+with the ball remaining inside. The 
+
+camera and background remained static 
+
+throughout. 
+
+Four boxes were initially stacked in two 
+
+columns on a pallet. An outward lateral 
+
+force pushed the two base boxes apart, 
+
+causing the stack to destabilize. The top-
+
+left box drifted and descended toward 
+
+the pallet's center, while the right-side 
+
+boxes slid and tipped partially out of the 
+
+frame. The viewpoint and background 
+
+remained static. 
+
+The toy drone initially remained 
+
+stationary at the center of the helipad, 
+
+then steadily ascended vertically while 
+
+rotating, and finally landed smoothly 
+
+due to gravity. There was no noticeable 
+
+camera movement, and the background 
+
+remained unchanged. Figure 10 Qualitative comparison between the proposed method and existing video generation methods. 
+
+20 Input Image & U ser Controls Video generation (left to right: time steps) Figure 11 Qualitative results of the proposed method. The approach robustly handles complex interactions among multiple objects, such as simultaneous collisions, thereby demonstrating its effectiveness in challenging dynamic scenarios. 
+
+21 References 
+
+Authors, Genesis. 2024 (December). Genesis: A Generative and Universal Physics Engine for Robotics and Beyond .Bansal, Hritik, Lin, Zongyu, Xie, Tianyi, Zong, Zeshun, Yarom, Michal, Bitton, Yonatan, Jiang, Chenfanfu, Sun, Yizhou, Chang, Kai-Wei, & Grover, Aditya. 2024. Videophy: Evaluating physical commonsense for video generation. arXiv preprint arXiv:2406.03520 .Carion, Nicolas, Gustafson, Laura, Hu, Yuan-Ting, Debnath, Shoubhik, Hu, Ronghang, Suris, Didac, Ryali, Chaitanya, Alwala, Kalyan Vasudev, Khedr, Haitham, Huang, Andrew, Lei, Jie, Ma, Tengyu, Guo, Bais-han, Kalla, Arpit, Marks, Markus, Greer, Joseph, Wang, Meng, Sun, Peize, R¨ adle, Roman, Afouras, Triantafyllos, Mavroudi, Effrosyni, Xu, Katherine, Wu, Tsung-Han, Zhou, Yu, Momeni, Liliane, Hazra, Rishi, Ding, Shuangrui, Vaze, Sagar, Porcher, Francois, Li, Feng, Li, Siyuan, Kamath, Aishwarya, Cheng, Ho Kei, Doll´ ar, Piotr, Ravi, Nikhila, Saenko, Kate, Zhang, Pengchuan, & Feichtenhofer, Christoph. 2025. 
+
+SAM 3: Segment Anything with Concepts .Chen, Boyuan, Jiang, Hanxiao, Liu, Shaowei, Gupta, Saurabh, Li, Yunzhu, Zhao, Hao, & Wang, Shenlong. 2025a. Physgen3d: Crafting a miniature interactive world from a single image. Pages 6178–6189 of: Proceedings of the Computer Vision and Pattern Recognition Conference .Chen, Minghao, Shapovalov, Roman, Laina, Iro, Monnier, Tom, Wang, Jianyuan, Novotny, David, & Vedaldi, Andrea. 2024a. PartGen: Part-level 3D Generation and Reconstruction with Multi-View Diffusion Models .Chen, Minglin, Wang, Longguang, Ao, Sheng, Zhang, Ye, Xu, Kai, & Guo, Yulan. 2025b. Layout2Scene: 3D Semantic Layout Guided Scene Generation via Geometry and Appearance Diffusion Priors. arXiv preprint arXiv:2501.02519 .Chen, Xingyu, Chu, Fu-Jen, Gleize, Pierre, Liang, Kevin J, Sax, Alexander, Tang, Hao, Wang, Weiyao, Guo, Michelle, Hardin, Thibaut, Li, Xiang, et al. 2025c. Sam 3d: 3dfy anything in images. arXiv preprint arXiv:2511.16624 .Chen, Yabo, Fang, Jiemin, Huang, Yuyang, Yi, Taoran, Zhang, Xiaopeng, Xie, Lingxi, Wang, Xinggang, Dai, Wenrui, Xiong, Hongkai, & Tian, Qi. 2024b. Cascade-Zero123: One Image to Highly Consistent 3D with Self-Prompted Nearby Views .Chen, Yabo, Yang, Chen, Fang, Jiemin, Zhang, Xiaopeng, Xie, Lingxi, Shen, Wei, Dai, Wenrui, Xiong, Hongkai, & Tian, Qi. 2024c. LiftImage3D: Lifting any single image to 3D Gaussians with video generation priors. arXiv preprint arXiv:2412.09597 .Chen, Yabo, Liang, Yuanzhi, Wang, Jiepeng, Chen, Tingxi, Cheng, Junfei, Gu, Zixiao, Huang, Yuyang, Jiang, Zicheng, Li, Wei, Li, Tian, Li, Weichen, Li, Zuoxin, Liu, Guangce, Liu, Jialun, Liu, Junqi, Wang, Haoyuan, Weng, Qizhen, Wu, Xuan’er, Xiang, Xunzhi, Yang, Xiaoyan, Zhang, Xin, Zhang, Shiwen, Zhou, Junyu, Zhou, Chengcheng, Huang, Haibin, Zhang, Chi, & Li, Xuelong. 2025d. TeleWorld: Towards Dynamic Multimodal Synthesis with a 4D World Model .Featherstone, Roy. 2014. Rigid body dynamics algorithms . Springer. Filoni, Sylvain. 2025. Diffusers Image Outpaint . Hugging Face Space. https://huggingface.co/spaces/ fffiloni/diffusers-image-outpaint .Fischler, Martin A, & Bolles, Robert C. 1981. Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography. Communications of the ACM , 24 (6), 381–395. Gillman, Nate, Herrmann, Charles, Freeman, Michael, Aggarwal, Daksh, Luo, Evan, Sun, Deqing, & Sun, Chen. 2025. Force Prompting: Video Generation Models Can Learn and Generalize Physics-based Control Signals .22 Go, Hyojun, Park, Byeongjun, Nam, Hyelin, Kim, Byung-Hoon, Chung, Hyungjin, & Kim, Changick. 2025. 
+
+VideoRFSplat: Direct Scene-Level Text-to-3D Gaussian Splatting Generation with Flexible Pose and Multi-View Joint Modeling .Google DeepMind. 2025. Veo 3 Technical Report . Tech. rept. Google DeepMind. Technical report. Ho, Jonathan, Salimans, Tim, Gritsenko, Alexey, Chan, William, Norouzi, Mohammad, & Fleet, David J. 2022. Video Diffusion Models .Hu, Yuanming, Fang, Yuanhao, Ge, Ziheng, Qu, Zheng, Zhu, Yixin, Pradhana, Arman, & Jiang, Chenfanfu. 2018. A moving least squares material point method with displacement discontinuity and two-way rigid body coupling. ACM Transactions on Graphics , 37 (4), 1–14. Jiang, Chenfanfu, Schroeder, Craig, Teran, Joseph, Stomakhin, Alexey, & Selle, Andrew. 2016. The material point method for simulating continuum materials. Pages 1–52 of: ACM SIGGRAPH 2016 Courses .Kl´ ar, Gergely, Gast, Theodore, Pradhana, Arman, Fu, Chuyuan, Schroeder, Craig, Jiang, Chenfanfu, & Teran, Joseph. 2016. Drucker–Prager elastoplasticity for sand animation. ACM Transactions on Graphics ,
+
+35 (4), 1–12. Lai, Zeqiang, Zhao, Yunfei, Liu, Haolin, Zhao, Zibo, Lin, Qingxiang, Shi, Huiwen, Yang, Xianghui, Yang, Mingxin, Yang, Shuhui, Feng, Yifei, Zhang, Sheng, Huang, Xin, Luo, Di, Yang, Fan, Yang, Fang, Wang, Lifu, Liu, Sicong, Tang, Yixuan, Cai, Yulin, He, Zebin, Liu, Tian, Liu, Yuhong, Jiang, Jie, Linus, Huang, Jingwei, & Guo, Chunchao. 2025. Hunyuan3D 2.5: Towards High-Fidelity 3D Assets Generation with Ultimate Details .Li, Yangguang, Zou, Zi-Xin, Liu, Zexiang, Wang, Dehu, Liang, Yuan, Yu, Zhipeng, Liu, Xingchao, Guo, Yuan-Chen, Liang, Ding, Ouyang, Wanli, et al. 2025a. TripoSG: High-Fidelity 3D Shape Synthesis using Large-Scale Rectified Flow Models. arXiv preprint arXiv:2502.06608 .Li, Zizhang, Yu, Hong-Xing, Liu, Wei, Yang, Yin, Herrmann, Charles, Wetzstein, Gordon, & Wu, Jiajun. 2025b. WonderPlay: Dynamic 3D Scene Generation from a Single Image and Actions. In: Proceedings of the IEEE/CVF International Conference on Computer Vision .Lin, Guying, Huang, Kemeng, Liu, Michael, Gao, Ruihan, Chen, Hanke, Chen, Lyuhao, Lu, Beijia, Komura, Taku, Liu, Yuan, Zhu, Jun-Yan, & Li, Minchen. 2025. PAT3D: Physics-Augmented Text-to-3D Scene Generation .Liu, Anran, Lin, Cheng, Liu, Yuan, Long, Xiaoxiao, Dou, Zhiyang, Guo, Hao-Xiang, Luo, Ping, & Wang, Wenping. 2024a. Part123: Part-aware 3D Reconstruction from a Single-view Image .Liu, Shaowei, Ren, Zhongzheng, Gupta, Saurabh, & Wang, Shenlong. 2024b. PhysGen: Rigid-Body Physics-Grounded Image-to-Video Generation. In: European Conference on Computer Vision ECCV .Liu, Wei, Chen, Ziyu, Li, Zizhang, Wang, Yue, Yu, Hong-Xing, & Wu, Jiajun. 2026. RealWonder: Real-Time Physical Action-Conditioned Video Generation .Meng, Yanxu, Wu, Haoning, Zhang, Ya, & Xie, Weidi. 2026. SceneGen: Single-Image 3D Scene Generation in One Feedforward Pass. In: International Conference on 3D Vision .M¨ uller, Matthias, Heidelberger, Bruno, Hennix, Marcus, & Ratcliff, John. 2007. Position Based Dynamics. 
+
+Journal of Visual Communication and Image Representation , 18 (2), 109–118. OpenAI. 2025. Sora 2 is here . https://openai.com/index/sora-2/ . OpenAI Research Blog. Paschalidou, Despoina, Kar, Amlan, Shugrina, Maria, Kreis, Karsten, Geiger, Andreas, & Fidler, Sanja. 2021. ATISS: Autoregressive Transformers for Indoor Scene Synthesis. In: Advances in Neural Information Processing Systems .23 Poole, Ben, Jain, Ajay, Barron, Jonathan T., & Miltenhoff, Ben. 2023. DreamFusion: Text-to-3D using 2D Diffusion. In: International Conference on Learning Representations .Powell, Michael JD. 1964. An efficient method for finding the minimum of a function of several variables without calculating derivatives. The Computer Journal , 7(2), 155–162. Ram, Dinesh, Gast, Theodore, Jiang, Chenfanfu, Schroeder, Craig, Stomakhin, Alexey, Teran, Joseph, & Kavehpour, Hooman. 2015. A material point method for viscoelastic fluids, foams and sponges. Pages 157–163 of: Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation .Satish, Siddarth Nilol Kundur, Jaiswal, Devesh, Chen, Hongyu, & Bakshi, Abhishek. 2026. PhysVideoGen-erator: Towards Physically Aware Video Generation via Latent Physics Guidance .Stomakhin, Alexey, Schroeder, Craig, Chai, Lawrence, Teran, Joseph, & Selle, Andrew. 2013. A material point method for snow simulation. ACM Transactions on Graphics , 32 (4), 1–10. Sulsky, Deborah, Chen, Zhen, & Schreyer, Howard L. 1994. A particle method for history-dependent mate-rials. Computer Methods in Applied Mechanics and Engineering , 118 (1–2), 179–196. Suvorov, Roman, Logacheva, Elizaveta, Mashikhin, Anton, Remizova, Anastasia, Ashukha, Arsenii, Silve-strov, Aleksei, Kong, Naejin, Goka, Harshith, Park, Kiwoong, & Lempitsky, Victor. 2021. Resolution-robust Large Mask Inpainting with Fourier Convolutions. arXiv preprint arXiv:2109.07161 .Tang, Jiapeng, Nie, Yinyu, Markhasin, Lev, Dai, Angela, Thies, Justus, & Nießner, Matthias. 2024. Dif-fuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis. Pages 20507–20518 of: IEEE/CVF Conference on Computer Vision and Pattern Recognition .Wan, Team, Wang, Ang, Ai, Baole, Wen, Bin, Mao, Chaojie, Xie, Chen-Wei, Chen, Di, Yu, Feiwu, Zhao, Haiming, Yang, Jianxiao, et al. 2025. Wan: Open and advanced large-scale video generative models. arXiv preprint arXiv:2503.20314 .Wang, Chen, Chen, Chuhao, Huang, Yiming, Dou, Zhiyang, Liu, Yuan, Gu, Jiatao, & Liu, Lingjie. 2025. Physctrl: Generative physics for controllable and physics-grounded video generation. arXiv preprint arXiv:2509.20358 .Wang, Peng, Bai, Shuai, Tan, Sinan, Wang, Shijie, Fan, Zhihao, Bai, Jinze, Chen, Keqin, Liu, Xuejing, Wang, Jialin, Ge, Wenbin, Fan, Yang, Dang, Kai, Du, Mengfei, Ren, Xuancheng, Men, Rui, Liu, Dayiheng, Zhou, Chang, Zhou, Jingren, & Lin, Junyang. 2024. Qwen2-VL: Enhancing Vision-Language Model’s Perception of the World at Any Resolution. arXiv preprint arXiv:2409.12191 .Wang, Zhou, Bovik, Alan C, Sheikh, Hamid R, & Simoncelli, Eero P. 2004. Image quality assessment: from error visibility to structural similarity. IEEE Transactions on Image Processing , 13 (4), 600–612. Wu, Qirui, Iliash, Denys, Ritchie, Daniel, Savva, Manolis, & Chang, Angel X. 2025a. Diorama: Unleashing Zero-shot Single-view 3D Indoor Scene Modeling. In: IEEE/CVF International Conference on Computer Vision .Wu, Tianhao, Zheng, Chuanxia, Guan, Frank, Vedaldi, Andrea, & Cham, Tat-Jen. 2025b. Amodal3R: Amodal 3D Reconstruction from Occluded 2D Images .Xiang, Jianfeng, Lv, Zelong, Xu, Sicheng, Deng, Yu, Wang, Ruicheng, Zhang, Bowen, Chen, Dong, Tong, Xin, & Yang, Jiaolong. 2025a. Structured 3D Latents for Scalable and Versatile 3D Generation .Xiang, Xunzhi, Chen, Yabo, Zhang, Guiyu, Wang, Zhongyu, Gao, Zhe, Xiang, Quanming, Shang, Gonghu, Liu, Junqi, Huang, Haibin, Gao, Yang, Zhang, Chi, Fan, Qi, & Li, Xuelong. 2025b. Macro-from-Micro Planning for High-Quality and Parallelized Autoregressive Long Video Generation .Xie, Tianyi, Zhao, Yiwei, Jiang, Ying, & Jiang, Chenfanfu. 2025. PhysAnimator: Physics-Guided Generative Cartoon Animation. arXiv preprint arXiv:2501.16550 .24 Xiong, Zhexiao, Song, Yizhi, He, Liu, Xiong, Wei, Yuan, Yu, Qiao, Feng, & Jacobs, Nathan. 2026. PhysAlign: Physics-Coherent Image-to-Video Generation through Feature and 3D Representation Alignment. arXiv preprint arXiv:2603.13770 .Xu, Jiale, Cheng, Weihao, Gao, Yiming, Wang, Xintao, Gao, Shenghua, & Shan, Ying. 2024. InstantMesh: Efficient 3D Mesh Generation from a Single Image with Sparse-view Large Reconstruction Models. arXiv preprint arXiv:2404.07191 .Yang, Xindi, Li, Baolu, Zhang, Yiming, Yin, Zhenfei, Bai, Lei, Ma, Liqian, Wang, Zhiyong, Cai, Jianfei, Wong, Tien-Tsin, Lu, Huchuan, & Jia, Xu. 2025. VLIPP: Towards Physically Plausible Video Generation with Vision and Language Informed Physical Prior .Yang, Xiuyu, Man, Yunze, Chen, Jun-Kun, & Wang, Yu-Xiong. 2024a. SceneCraft: Layout-Guided 3D Scene Generation. In: Advances in Neural Information Processing Systems .Yang, Yandan, Jia, Baoxiong, Zhi, Peigen, & Huang, Siyuan. 2024b. PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI. In: IEEE/CVF Conference on Computer Vision and Pattern Recognition .Yang, Zhuoyi, Teng, Jiayan, Zheng, Wendi, Ding, Ming, Huang, Shiyu, Xu, Jiazheng, Yang, Yuanming, Hong, Wenyi, Zhang, Xiaohan, Feng, Guanyu, et al. 2024c. Cogvideox: Text-to-video diffusion models with an expert transformer. arXiv preprint arXiv:2408.06072 .Yao, Kaixin, Zhang, Longwen, Yan, Xinhao, Zeng, Yan, Zhang, Qixuan, Yang, Wei, Xu, Lan, Gu, Jiayuan, & Yu, Jingyi. 2025. CAST: Component-Aligned 3D Scene Reconstruction from an RGB Image .Yuan, Jianhao, Zhang, Xiaofeng, Friedrich, Felix, Beltran-Velez, Nicolas, Hall, Melissa, Askari-Hemmat, Rey-hane, Han, Xiaochuang, Ballas, Nicolas, Drozdzal, Michal, & Romero-Soriano, Adriana. 2026. Inference-time Physics Alignment of Video Generative Models with Latent World Models .Zhang, Longwen, Wang, Ziyu, Zhang, Qixuan, Qiu, Qiwei, Pang, Anqi, Jiang, Haoran, Yang, Wei, Xu, Lan, & Yu, Jingyi. 2024a. Clay: A controllable large-scale generative model for creating high-quality 3d assets. 
+
+ACM Transactions on Graphics , 43 (4), 1–20. Zhang, Richard, Isola, Phillip, Efros, Alexei A, Shechtman, Eli, & Wang, Oliver. 2018. The unreasonable effectiveness of deep features as a perceptual metric. Pages 586–595 of: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition .Zhang, Tianyuan, Yu, Hong-Xing, Wu, Rundi, Feng, Brandon Y., Zheng, Changxi, Snavely, Noah, Wu, Jiajun, & Freeman, William T. 2024b. PhysDreamer: Physics-Based Interaction with 3D Objects via Video Generation. In: European Conference on Computer Vision . Springer. Zhang, Xiangdong, Liao, Jiaqi, Zhang, Shaofeng, Meng, Fanqing, Wan, Xiangpeng, Yan, Junchi, & Cheng, Yu. 2025. VideoREPA: Learning Physics for Video Generation through Relational Alignment with Foun-dation Models .Zhou, Shijie, Fan, Zhiwen, Xu, Dejia, Chang, Haoran, Chari, Pradyumna, Bharadwaj, Tejas, You, Suya, Wang, Zhangyang, & Kadambi, Achuta. 2024a. DreamScene360: Unconstrained Text-to-3D Scene Gener-ation with Panoramic Gaussian Splatting. Pages 324–342 of: European Conference on Computer Vision .Zhou, Xiaoyu, Ran, Xingjian, Xiong, Yajiao, He, Jinlin, Lin, Zhiwei, Wang, Yongtao, Sun, Deqing, & Yang, Ming-Hsuan. 2024b. Gala3d: Towards text-to-3d complex scene generation via layout-guided generative gaussian splatting. arXiv preprint arXiv:2402.07207 .25 Supplementary Material 
+
+# A Full Pipeline Algorithm 
+
+Algorithm 1 TelePhysics Full Pipeline 
+
+Require: RGB image I ∈ RH×W ×3
+
+Ensure: Interactive physics simulation video V
+
+Stage 1: Scene Perception  
+
+> 1:
+
+{Mk}K−1 
+
+> k=0
+
+← SAM3 (I, text prompts ) ▷ Instance segmentation  
+
+> 2:
+
+Ibg ← LaMa (I, S 
+
+> k
+
+Mk) ▷ Background inpainting  
+
+> 3:
+
+for k = 0 , . . . , K − 1 do  
+
+> 4:
+
+Mk ← SAM3D (I, M k) ▷ 3D mesh reconstruction  
+
+> 5:
+
+end for  
+
+> 6:
+
+C ← VLM (I, {Mk}) ▷ Physics config estimation 
+
+Stage 2: Scene Alignment  
+
+> 7:
+
+ˆn, d, c ← RANSAC PlaneFit ({M k}) ▷ Ground plane estimation  
+
+> 8:
+
+R ← Rodrigues (ˆ n, [0 , 0, 1] ⊤) ▷ Rotation to z-up frame  
+
+> 9:
+
+for k = 0 , . . . , K − 1 do  
+
+> 10:
+
+Mnorm  
+
+> k
+
+← R(Mk − c); z ← z − zmin ▷ Ground normalization  
+
+> 11:
+
+end for  
+
+> 12:
+
+ResolvePenetration ({M norm  
+
+> k
+
+}) ▷ AABB de-penetration  
+
+> 13:
+
+p0, l0, ϕ ← CameraInit ({M norm  
+
+> k
+
+}) ▷ Initial camera pose  
+
+> 14:
+
+p∗ ← CoarseToFine (p0, Lcam ) ▷ Camera optimization 
+
+Stage 3: Interactive Simulation  
+
+> 15:
+
+Build Genesis scene with materials from C 
+
+> 16:
+
+for t = 0 , . . . , T − 1 do  
+
+> 17:
+
+Genesis.Step () ▷ Physics step (∆ t = 4 ms)  
+
+> 18:
+
+Activate scheduled forces at frame t 
+
+> 19:
+
+Ft ← Composite (Render (p∗, l0), I bg ) ▷ Shadow-aware rendering  
+
+> 20:
+
+end for Stage 4: WonderTrace (Optional)  
+
+> 21:
+
+D ← VideoDepthAnything ({Ft}) ▷ Depth estimation  
+
+> 22:
+
+V ← Wan2.2-VACE ({Ft}, D, I ) ▷ Diffusion rerendering 
+
+# B Scene-Aware Pose Alignment 
+
+RANSAC Ground Plane Fitting. Given K reconstructed meshes {M k}, we uniformly sample 5,000 surface points per mesh and concatenate them into a point cloud P ∈ RN ×3. We select the lowest p% of points along the gravity direction ( p = 5 by default, with fallback to p = 10) to form a ground-candidate set Plow .We then fit a plane ˆ n⊤x + d = 0 using RANSAC (Fischler & Bolles, 1981) with: 
+
+• Distance threshold: τd = 0 .01 
+
+• Minimum sample size: nransac = 3 
+
+• Iterations: Niter = 2 ,000 The fitted normal ˆ n is validated against the gravity hint ug = [0 , 0, 1] ⊤ by checking |ˆn · ug | ≥ τcos (τcos = 0 .8default). If validation fails, we apply an adaptive retry strategy (up to 8 attempts), progressively relaxing 26 p, τd, and τcos .
+
+Scene Normalization. We compute the rotation matrix R that aligns ˆ n with [0 , 0, 1] ⊤ via the Rodrigues formula: 
+
+R = I + [ v]× + [ v]2 
+
+> ×
+
+· 1 − c
+
+∥v∥2 , v = ˆ n × [0 , 0, 1] ⊤, c = ˆ n · [0 , 0, 1] ⊤. (13) where [ v]× is the skew-symmetric matrix of v. All meshes are transformed as x′ = R(x − ¯x) and then shifted so zmin = 0. 
+
+Penetration Resolution. For multi-object scenes, we detect pairwise AABB overlaps and iteratively push objects apart along the axis of minimum overlap: ∆i = 12 min 
+
+> axis
+
+ eai + eaj
+
+2 − | cai − caj |
+
+
+
+, ∥∆i∥ ≤ δmax = 0 .05 . (14) where ea and ca denote the extent and center along axis a. Two iterations of pairwise repulsion suffice to resolve most interpenetrations. 
+
+# C Camera Pose Optimization 
+
+Given an initial camera position p0 (from heuristic ground-plane fitting or DA3 estimation), we optimize the camera pose to minimize a composite loss: 
+
+Lcam (p) = wobj · L obj (p) + wbg · L bg (p) + wmask · L mask (p), (15) with default weights wobj = 1 .0, wbg = 0 .2, wmask = 1 .0. 
+
+Object Region Loss. Measures pixel-wise MSE within the ground-truth object mask Ω obj :
+
+Lobj =
+
+P 
+
+> (u,v )∈Ωobj
+
+∥ ˆI(u, v ) − I∗(u, v )∥2
+
+P 
+
+> (u,v )
+
+Ωobj (u, v ) · C + ϵ , (16) where ˆI is the rendered image, I∗ is the target, and C is the number of channels. 
+
+Background Region Loss. Same formulation as Lobj but evaluated over 1 − Ωobj .
+
+Mask Alignment Loss. Dice loss between the rendered silhouette ˆΩ and Ω obj :
+
+Lmask = 1 − 2 P ˆΩ · Ωobj + ϵ
+
+P ˆΩ + P Ωobj + ϵ . (17) 
+
+Coarse-to-Fine Optimization. We apply a two-stage strategy: 1. Global search : 60 uniform random samples within the search bounds [ p0 ± δ], where δ = ( δx, δ y , δ z ) are per-axis search radii (default δy = δz = 0 .5). 2. Local refinement : Powell’s conjugate direction method (Powell, 1964) initialized at the best random sample, with a maximum of 80 iterations. 
+
+# D Details of Physical Simulation 
+
+D.1 VLM-Based Physics Configuration 
+
+We use Qwen2.5-VL-72B-Instruct (Wang et al. , 2024) to automatically estimate per-object physics materials and scene force fields from a single image. The VLM receives: (1) the full scene image, and (2) per-object crops extracted via segmentation masks. The complete system prompt is shown in Figure 12. 27 VLM System Prompt for Physics Configuration                                            
+
+> You are an expert physics material analyst and simulation designer. I will show you a scene image followed by cropped images of individual objects.
+> Task A: Object Materials
+> For each object (numbered starting from 0), identify: 1. What the object is (e.g., sand castle, rubber duck) 2. Best-matching physics material type for INTERESTING DEFORMABLE simulation. IMPORTANT: Prefer non-rigid materials --- choose the MOST DEFORMABLE plausible interpretation. Available material types:
+> MPM materials (particle-based, fluids/deformation): - "mpm liquid": liquids, viscous fluids. Params: E, nu, rho, viscous - "mpm elastoplastic": permanent deformation (clay, cream). Params: E, nu, rho, use von mises, yield stress - "mpm elastic": elastic deformable (rubber, jelly). Params: E, nu, rho, model - "mpm sand": granular (sand, powder). Params: E, nu, rho, friction angle - "mpm snow": snow/ice. Params: E, nu, rho, yield lower, yield higher
+> PBD materials (position-based dynamics): - "pbd cloth": thin sheet (fabric, paper). Params: rho, friction, compliance, air resistance - "pbd elastic": 3D soft body (sponge). Params: rho, friction, compliance - "pbd liquid": position-based fluid. Params: rho, density/viscosity relaxation
+> Rigid (use sparingly, ONLY for immovable structures): - "rigid": ground, wall, table. Do NOT use for small or deformable objects. 3. material params: E (Young modulus), rho (density), nu (Poisson ratio) 4. fixed: true ONLY if truly static 5. surface color: RGB float [0--1]
+> Task B: Force Fields
+> Suggest 1--3 force fields for interesting dynamics. Types: constant, wind, point, drag, turbulence, vortex Each with: direction, strength, start frame (-1 = immediate). Respond with ONLY a JSON object: {"objects": [...], "forces": [...] }
+
+Figure 12 Complete VLM prompt for automatic physics configuration. The prompt instructs Qwen2.5-VL-72B to identify per-object materials and suggest force fields from the scene image and per-object crops. 
+
+Parameter Guidance. We provide the VLM with parameter ranges to ensure physically plausible outputs: 
+
+• Young’s modulus E: foam ∼ 10 4, jelly ∼ 10 3, rubber ∼ 10 6, glass ∼ 10 5
+
+• Density ρ (kg/m 3): foam ∼ 50, cream ∼ 500, rubber ∼ 1100, clay ∼ 1800, glass ∼ 2500 
+
+• Poisson’s ratio ν: typical 0 .2–0 .45; nearly incompressible ≈ 0.45 
+
+Postprocessing. The VLM output JSON is parsed with regex-based extraction (handling both {"objects":... }
+
+and legacy array formats). Unknown material types fall back to mpm elastic . Invalid force types are dis-carded. All parameters are validated against type-specific defaults (Table 9). Table 9 lists all supported physics materials and their default parameters. Table 10 lists the available force field types. 
+
+D.2 Multi-Physics Solvers Formulation 
+
+As discussed in Sec. 3.3, our physical simulation relies on a unified multi-physics backend, Genesis Authors (2024), which integrates three specialized solvers. The detailed formulations and integration strategies are described below. 
+
+Rigid Body Dynamics (RBD). We utilize an RBD solver based on articulated body algorithms Feather-stone (2014) for non-deformable objects and robotic manipulators. This method ensures stable, penetration-free interactions and accurate friction handling. The dynamics are governed by the generalized equation of motion: 
+
+M(q)¨ q + C(q, ˙q) = τ + J(q)T fext , (18) where q and ˙q denote the generalized coordinates and velocities, respectively. M represents the inertia matrix, C accounts for Coriolis and centrifugal forces, τ denotes actuation torques, and fext represents external forces (e.g., contact) mapped into the joint space via the Jacobian J. By solving for the acceleration ¨q, the solver updates the kinematic state of rigid entities without the numerical dissipation typical of particle-based methods. 28 Table 9 Supported physics material types and default parameters. 
+
+Material Solver Default Parameters 
+
+rigid Rigid Body ρ = 200, μ = 0 .7
+
+mpm elastic MPM E = 3 × 10 5, ν = 0 .2, ρ = 1000, model = corotation 
+
+mpm elastoplastic MPM E = 3 × 10 4, ν = 0 .4, ρ = 100, von Mises yield = 10 4
+
+mpm sand MPM E = 5 × 10 5, ν = 0 .2, ρ = 1800, friction angle = 45 ◦
+
+mpm liquid MPM E = 10 6, ν = 0 .2, ρ = 1000, viscous = false 
+
+mpm snow MPM E = 10 6, ν = 0 .2, ρ = 1000, yield ∈ [0 .025 , 0.0045] 
+
+mpm muscle MPM E = 10 6, ν = 0 .2, ρ = 1000, model = Neo-Hookean 
+
+pbd elastic PBD ρ = 1000, stretch/bending/volume compliance = 0, relax-ation = 0.1 
+
+pbd cloth PBD ρ = 4 kg/m 2, stretch compliance = 10 −7, bending = 10 −5,air resistance = 10 −3
+
+pbd liquid PBD ρ = 1000, density relaxation = 0.2, viscosity relaxation = 0.01 
+
+pbd particle PBD ρ = 1000  
+
+> Table 10 Supported force field types and default parameters.
+
+Type Default Parameters 
+
+constant direction = [0 , 0, −1], strength = 9 .8
+
+wind direction = [1 , 0, 0], strength = 1 .0, ra-dius = 1 .0
+
+point strength = 1.0, position = [0 , 0, 0], falloff power = 0 
+
+drag linear = 0, quadratic = 0 
+
+vortex direction = [0 , 0, 1], perpendicular strength = 20 .0
+
+turbulence strength = 1 .0, frequency = 3 
+
+noise strength = 1 .0
+
+Material Point Method (MPM). We employ MPM Sulsky et al. (1994); Hu et al. (2018); Jiang et al. 
+
+(2016); Kl´ ar et al. (2016); Ram et al. (2015); Stomakhin et al. (2013) to simulate fluids and hyperelastic materials. As a hybrid Lagrangian-Eulerian method, MPM tracks mass and momentum on Lagrangian particles ( p) while computing forces on a background Eulerian grid ( i). The governing equation for the grid node force fi is derived from the divergence of particle stress σp:
+
+fi = X
+
+> p
+
+Vpσp∇wip + fext , (19) where Vp is the particle volume and ∇wip is the gradient of the interpolation kernel function connecting particle p to grid node i. In each time step, particle states are transferred to the grid to solve the momentum equation, and the updated grid velocities are interpolated back to deform the particles, naturally facilitating the simulation of fracture, splashing, and plastic flow. 
+
+Position-Based Dynamics (PBD). We apply PBD M¨ uller et al. (2007) for thin-shell structures such as cloth and cables. Unlike force-based solvers that require small time steps for stability in stiff systems, PBD directly modifies object positions to satisfy geometric constraints. The position correction ∆ xi for a particle 29 i is computed to satisfy a constraint function C(x) = 0: ∆xi = −wi
+
+C(x)
+
+P 
+
+> j
+
+wj |∇ xj C(x)|2 ∇xi C(x), (20) where wi is the inverse mass of particle i. By iteratively projecting positions onto the constraint manifold, PBD ensures that cloth remains inextensible and drapes naturally. 
+
+Solver Integration and Optimization. The integration of these three solvers is critical for high-fidelity multi-material simulations. The solvers operate concurrently, with interactions managed by transferring forces and state information at each simulation step. For instance, contact forces from the RBD solver are propagated to the MPM solver to induce material deformation, while the PBD solver enforces constraints during interactions with rigid bodies. To address computational challenges, we leverage GPU-based paral-lelism. Each solver operates independently on its respective domain subset, utilizing spatial partitioning to optimize interaction computations. Furthermore, adaptive time-stepping dynamically adjusts the simulation frequency based on local material properties, ensuring a balance between accuracy and efficiency. 
+
+# E Details of Experiments 
+
+E.1 Simulation Details 
+
+Physics Engine. We build on Genesis (Authors, 2024), a GPU-accelerated differentiable physics engine. The simulation operates at ∆ t = 4 ms with 10 substeps per step, using the MPM (Material Point Method) solver for continuum materials and PBD (Position-Based Dynamics) for cloth and particles. Rigid–MPM and Rigid–PBD coupling is enabled via the legacy coupler. The MPM domain spans [ −2, 2] 3 with particle size 0 .01. 
+
+Rendering. Each simulation frame is composited via a shadow-aware pipeline: 1. Render with segmentation: obtain RGB, segmentation IDs per pixel. 2. Extract object mask (seg id ≥ 2) and plane shadow mask (seg id = 1 and brightness < 0.3). 3. Composite: F = Ibg · (1 − αobj ) + Irender · αobj , then apply shadow darkening with strength 0 .3. Resolution is fixed at 880 × 880. 
+
+PBD Cloth Fixation. For cloth-like objects (e.g., dresses), we support a fix top ratio parameter that pins the topmost r% of particles by z-coordinate after scene building, simulating hanging or attachment points. 
+
+Camera Motion. Six camera motion modes are supported: four orbital (around XY or YZ axes, clock-wise/counterclockwise), one lateral, and one descent. The angular velocity is v = 0 .001 rad/frame at 60 FPS. 
+
+E.2 Mesh Reconstruction Details 
+
+Segmentation. We use SAM3 for text-prompted instance segmentation. Given text prompts (e.g., “glass ball”, “sand castle”), SAM3 produces per-object binary masks {Mk}. A combined binary mask S 
+
+> k
+
+Mk is computed for background inpainting. 
+
+Background Inpainting. LaMa inpaints the masked regions to produce a clean background Ibg . We apply cumulative inpainting: objects are removed sequentially to handle overlapping masks. Dilation kernel size is 100 pixels. 
+
+3D Reconstruction. SAM3D reconstructs per-object 3D meshes from single-view images with per-object masks. The model predicts rotation (quaternion), scale, and translation for each object, which are composed into an affine transform: 
+
+xworld = s · Rq xlocal + t, (21) 30 where Rq is the rotation matrix from the predicted quaternion, s is the scale factor, and t is the translation. A coordinate frame conversion (Y-up to Z-up) is applied before exporting as OBJ files. 
+
+E.3 Evaluation Metrics 
+
+Image Quality. 
+
+• SSIM : Structural Similarity (Wang et al. , 2004) between rendered first frame and input image (grayscale, data range 255). 
+
+• LPIPS : Learned Perceptual Image Patch Similarity (Zhang et al. , 2018) using AlexNet backbone. Falls back to normalized MSE (min(4 · MSE , 1)) when model weights are unavailable. 
+
+Alignment Metrics. 
+
+• Mask IoU : Binary intersection-over-union between the rendered object silhouette and the GT segmentation mask. 
+
+• Reproj. Error : L2 distance (pixels) between the centroids of the predicted and GT masks. 
+
+Physics Metrics. 
+
+• Penetration Rate (PR) : Fraction of object pairs with AABB overlap. Lower is better. 
+
+• Support Violation Rate (SVR) : Fraction of objects with zmin > 0.02 (floating above ground). Lower is better. 
+
+• Interaction Success Rate (ISR) : Fraction of frames where the object mask covers > 0.1% of the image area (880 × 880). Higher is better. 
+
+Video Quality. 
+
+• Motion Amplitude : Mean optical flow magnitude (Farneback) across consecutive frames. 
+
+• Motion Smoothness : Inverse of frame-to-frame flow variance: S = 1 /(1 + Var( { ¯ft})). 
+
+• Aesthetic : CLIP-based (ViT-B/32) cosine similarity with “a beautiful high quality scene”. Falls back to sigmoid-normalized Laplacian variance: A = 2 /(1 + e−¯σ2
+
+> L/500
+
+) − 1. 
+
+# F Quantitative Evaluation via GPT-5 
+
+To quantitatively evaluate the 59-scene test set for controllability, physical plausibility, and overall video quality, we adopt an automated Vision-Language Model (VLM) scoring framework inspired by the Video-Phy Bansal et al. (2024) protocol. Specifically, we utilize a GPT-5-based evaluator to assign 5-point Likert scores to the generated videos. 
+
+F.1 Data Preparation and Frame Sampling 
+
+To construct the evaluation queries while adhering to the context limits of the VLM, we preprocess the input images and generated videos as follows: 
+
+• Frame Extraction: For each generated video, we uniformly sample 10 evenly spaced frames across the temporal axis to represent the full sequence. 
+
+• Resolution Scaling: Both the initial input image and the sampled video frames are downscaled such that their longest edge is 880 pixels, preserving the aspect ratio. 
+
+• Visual Prompts: The input image explicitly visualizes the initial motion position and direction using a red arrow, providing the model with a clear spatial reference for the applied physical constraints. All images and frames are converted into base64 JPEG format before being parsed to the VLM. 31 F.2 Evaluation Prompt and Criteria 
+
+The VLM is provided with the text prompt, the initial condition image, and the sequences of 10 sampled frames from the compared models (presented in chronological order). The model is instructed to assess the videos on a scale of 1 (poor) to 5 (excellent) based on three complementary criteria: Semantic Adherence, Physical Commonsense, and Video Quality. The exact prompt template used for the evaluation is provided below: 
+
+You are tasked with evaluating the quality of image-to-video generation produced by a model. For each test case, you will be given: 1. A text prompt describes one or more objects along with the initial motion direction. The motion’s position and direction are visualized as a red arrow in the input image. 2. An input image of the object. 3. Eight sets of 10 evenly spaced frames—each set corresponds to a video generated by a different model from the same input. Please evaluate this video based on the following three criteria using a 5-point Likert scale (1 = poor, 5 = excellent): - Semantic Adherence: How well the content and motion in the video match the description in the text prompt, especially the alignment with the motion direction and position. Note that the video should starts with the input image. - Physical Commonsense: Whether the object’s motion follows intuitive, physically plausible dy-namics given the applied force direction and position. - Video Quality: The overall visual and temporal quality of the video (note that static or nearly-static sequences are less preferred). Provide your evaluation for each video strictly in the following one-line format: Model i, Semantic Adherence score, Physical Commonsense score, Video Quality score 
+
+F.3 Hyperparameter Settings 
+
+32 Table 11 Key hyperparameters. 
+
+Component Parameter Value 
+
+Physics Time step ∆ t 4 ms Substeps 10 Default simulation steps T 300 Render FPS 60 RANSAC Distance threshold τd 0.01 Min. samples nransac 3Iterations 2,000 Horizontality threshold τcos 0.8 Camera Opt. Random search samples Nrand 60 Powell max iterations 80 Object loss weight wobj 1.0 Background loss weight wbg 0.2 Mask loss weight wmask 1.0 Video Synthesis Denoising steps 10 Number of frames 81 Output FPS 15 Penetration AABB padding 0.01 Max displacement δmax 0.05 33
