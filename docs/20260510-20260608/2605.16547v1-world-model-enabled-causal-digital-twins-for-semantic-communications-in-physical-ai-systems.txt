@@ -1,0 +1,789 @@
+Title: World Model-Enabled Causal Digital Twins for Semantic Communications in Physical AI Systems
+
+URL Source: https://arxiv.org/pdf/2605.16547v1
+
+Published Time: Tue, 19 May 2026 00:16:29 GMT
+
+Number of Pages: 13
+
+Markdown Content:
+> 1
+
+# World Model-Enabled Causal Digital Twins for Semantic Communications in Physical AI Systems 
+
+Lingyi Wang, Graduate Student Member, IEEE, Tingyu Shui, Graduate Student Member, IEEE, 
+
+Walid Saad, Fellow, IEEE, and Pascal Adjakple 
+
+Abstract —Semantic communication has emerged as a promis-ing paradigm for enabling goal-oriented networking. However, most existing semantic communication solutions are tailored to one-shot tasks and optimize instantaneous performance. Hence, they cannot be used to support closed-loop dynamic systems with physical artificial intelligence (AI), in which the transmitted semantics affect not only the current inference outcome but also future control actions, state evolution, and ultimately long-horizon task performance. To address this gap, this paper investigates goal-oriented semantic communications for physical AI systems with closed-loop sensing-communication-inference-control. In particular, the problem of semantic communications is formulated as a long-term return-per-bit maximization under wireless bit-budget constraints while capturing both control efficiency and communication efficiency. To solve this problem, a novel causal information value (CIV) metric is introduced to evaluate the marginal contribution of each semantic token to the expected long-term return by transmission interventions. Then, a world-model-enabled causal digital twin (WM-CDT) framework is proposed to capture the dynamics of closed-loop physical AI systems and enable counterfactual reasoning for long-horizon imagined rollouts. Based on these imagined rollouts, an actor-critic policy is trained for long-horizon agent control with high data efficiency, while the semantic token selector is trained through CIV-per-bit evaluation. Extensive simulations on an AirSim-Sionna-based unmanned aerial vehicle (UAV) navigation simulator with realistic wireless channel modeling show that the proposed WM-CDT framework achieves significant improvement in return-per-kbit and navigation success rate compared to exist-ing reinforcement learning solutions. Moreover, CIV is shown to provide a better estimation of the true long-horizon return gain compared to existing information value metrics. 
+
+Index Terms —Goal-oriented semantic communications, physi-cal AI systems, world model, counterfactual reasoning. 
+
+I. I NTRODUCTION 
+
+Recent advances in embodied and physical artificial in-telligence (AI) are driving wireless networks toward inte-grated sensing, communication, inference, and control ar-chitectures [1]–[3]. In such systems, physical agents, such as unmanned aerial vehicles (UAVs), autonomous vehicles, and mobile robots, interact with dynamic environments, other agents, and edge servers through sequential sensing, com-munication, and control decisions [3]. The networked de-ployment of such physical AI agents creates a fundamental challenge for wireless system design, as the network must 
+
+Lingyi Wang, Tingyu Shui, and Walid Saad are with the Bradley Depart-ment of Electrical and Computer Engineering, Virginia Tech, Alexandria, VA, 22305, USA. (emails: {lingyiwang, tygrady, walids }@vt.edu). Pascal Adjakple is with the Research and Innovation Labs, InterDig-ital Communications Inc., New York, NY 10120, USA (email: Pas-cal.Adjakple@InterDigital.com). 
+
+support not only reliable information delivery, but also timely and task-relevant interactions with the physical world over extended horizons. Semantic communication [4]–[6] provides a promising approach for addressing this challenge by shifting wireless system design beyond reliable bit delivery toward task-oriented information exchange in which the goal is not to reproduce the source signal itself, but to convey the informa-tion that is useful for accomplishing a downstream task. This property is particularly important for closed-loop physical AI systems, where high-dimensional sensory observations must be converted into compact and task-relevant representations that not only support timely edge inference and control, but also influence future state evolution and long-horizon task performance over bandwidth-constrained wireless links [7]. Deploying goal-oriented semantic communication for closed-loop physical AI systems yields two fundamental challenges: (a) how to evaluate the value of semantic information, and (b) how to learn and optimize long-horizon task performance under communication constraints. For addressing Challenge (a), existing importance-aware semantic communication solutions [8] usually rely on feature importance scores or instantaneous task losses. Although such metrics are useful for one-step inference, in the context of physical AI, they cannot capture the delayed impact of se-mantic transmission on future control actions, state evolution, and long-horizon task utility. Traditional information-centric metrics, such as age of information (AoI) [9] and value of information (VoI) [10], [11], measure information freshness or relevance, but they do not fully characterize the closed-loop coupling among sensing, communication, inference, and control. In particular, the observed correlation between trans-mitted semantics and high task return does not necessarily represent the true marginal contribution of the transmitted information, since the transmission decision itself depends on the system history. Hence, instead of only observing whether the transmitted semantic information is correlated with a high task return, we need to ask a counterfactual question: given the same past system history, what would the future trajectory and long-term return have been if this semantic information had not been transmitted? By using the concept of counterfactual reasoning that compares this hypothetical trajectory with the actual one in which the semantic information is transmitted, the system can isolate the closed-loop causal effect of that information on future belief updates, control actions, state evolution, and long-horizon task performance. This motivates defining a causal long-horizon information value metric that goes beyond statistical association. 
+
+> arXiv:2605.16547v1 [cs.LG] 15 May 2026 2
+
+When it comes to Challenge (b), despite the success of tradi-tional mathematical optimization approaches [12]–[15], such as dynamic programming [12], Lyapunov optimization [13], and model predictive control [15], their direct deployment in closed-loop physical AI systems is challenging due to high-dimensional state spaces, uncertain and time-varying dynamics, and the need for long-horizon task-aware decision making. To alleviate these challenges, there has been a recent surge of reinforcement learning (RL)-driven solutions [16]– [19], which can learn directly from sensory data and wireless data, and adapt to dynamic environments without predefined models. However, existing RL-based approaches [16]–[19] are not suitable for closed-loop physical AI systems. First, RL relies on trial-and-error interactions, which are data-inefficient and may be unsafe in physical AI systems. Second, RL-based approaches mainly optimize policies from current observa-tions, rather than explicitly reasoning over future wireless and physical states. Hence, they cannot fully address the long-horizon optimization requirements of closed-loop physical AI systems. These limitations call for a new learning framework that allows a wireless network to support physical AI by endowing it with the ability to model closed-loop dynamics, evaluate counterfactual semantic value, and plan over future system evolutions under communication constraints. The main contribution of this paper is to address the above challenges by developing a novel world-model-enabled causal digital twin (WM-CDT) framework that enables goal-oriented semantic communications in closed-loop physical AI systems. In the proposed framework, the semantic communication problem is formulated as a long-term return-per-bit maxi-mization problem that jointly captures control efficiency and communication efficiency. To quantify the long-horizon utility of transmitted semantics, we introduce a causal information value (CIV) metric that evaluates the causal effect of semantic tokens on the expected long-term return through transmission interventions. We then develop a WM-CDT to learn the closed-loop dynamics of physical AI systems, support counterfactual reasoning for CIV estimation, and enable long-horizon action planning. In summary, our key contributions include:  
+
+> •
+
+We study goal-oriented semantic communications for closed-loop physical AI systems with integrated sensing, communication, inference, and control. Semantic commu-nication allows the proposed system to convey compact task-related information for optimizing long-horizon sys-tem performance. To capture the tradeoff between long-horizon task performance and communication efficiency, we formulate the semantic communication problem as a return-per-bit maximization approach that jointly opti-mizes semantic token selection and agent control.  
+
+> •
+
+We introduce a novel CIV metric to capture long-horizon causality between transmitted semantic tokens and long-horizon task returns in closed-loop physical AI systems. Particularly, CIV quantifies the marginal long-horizon contribution of each semantic token by comparing the expected returns under two counterfactual interventions that share the same system history but differ only in whether the token is transmitted.  
+
+> •
+
+We develop a WM-CDT framework to solve the return-per-bit maximization problem over extended horizons. At the edge server, the digital twin learns the closed-loop system dynamics from received semantic tokens and executed control actions, and enables long-horizon imagined rollouts. Based on this imagination ability, an actor-critic (AC)-based control policy is trained for long-horizon agent control with high data efficiency, while the semantic token selector is trained through CIV-per-bit evaluation.  
+
+> •
+
+We introduce an AirSim-Sionna-based simulator with realistic wireless channel modeling for physical AI sys-tems. Extensive simulation results on the UAV navigation task show that WM-CDT achieves up to 17 .3% , 55 .4% ,
+
+30 .7% , and 33 .7% higher return-per-kbit than AC-based recurrent reinforcement learning (AC-RRL) [20], model-based policy optimization (MBPO), AC, and proximal policy optimization (PPO), respectively, and improves the navigation success rate by up to 9.6% , 26 .3% , 16 .1% , and 
+
+18 .0% , respectively. Moreover, CIV is shown to be more aligned with the true long-horizon return gain than the myopic VoI, saliency score, and confidence score. II. R ELATED WORKS 
+
+A. Goal-Oriented Semantic Communications 
+
+Existing research on goal-oriented semantic communica-tions [21]–[25] has mainly focused on one-shot tasks, such as image classification [21] and speech-to-text translation [22]. The solutions in [21]–[25] seek to transmit task-relevant semantics for improving the performance of a specific down-stream task, but they do not consider long-horizon closed-loop system-level optimization. The work in [21] proposed a multi-task semantic communication framework for autonomous ve-hicles that jointly performs image reconstruction and classifi-cation. Recent studies [23]–[25] have also moved toward data-efficient, channel-aware, and explicitly goal-driven semantic communication designs. For instance, the authors in [23] proposed a self-supervised low-label semantic communica-tion framework to reduce the dependence on annotated data. Despite these advances, most existing works [21]–[25] still optimize semantic transmission for instantaneous or short-term task performance. They do not explicitly account for how transmitted semantics affect future belief updates, control actions, state evolution, and long-horizon task performance in closed-loop physical AI systems. In [20], we developed a semantic communication framework for supporting physical AI agents. However, our solution in [20] does not take into account the causal effects of transmitted semantics, thus it cannot capture long-horizon information value and lacks long-term closed-loop optimization in physical AI systems. 
+
+B. Information Value in Communication and Control 
+
+Research on information value in communication and con-trol [9]–[11] ranges from freshness-aware scheduling toward task-aware and semantics-aware metrics. The authors in [9] compared AoI and VoI in cellular networked control systems and showed that information freshness alone cannot capture control relevance. More recent studies [26]–[28] have ex-tended these metrics toward semantic importance and joint communication-control optimization. In [26], the authors de-veloped a semantic value metric to measure the importance 3 
+
+> Fig. 1. The closed-loop goal-oriented semantic communication system with a world model-enabled causal digital twin.
+
+of semantic information in text transmission, and in [27] and [28], VoI was exploited for the joint optimization of control and communication. However, the works in [9]–[11] and [26]–[28] mainly evaluate information utility for short-term scheduling objectives, and they do not explicitly capture the influence of transmitted semantics on long-horizon task return in closed-loop physical AI systems, where transmitted information affects future belief updates, control decisions, state evolution, and environment-agent dynamics. 
+
+C. World Model-Based Learning Approaches 
+
+The use of world models for long-horizon planning in robotics and embodied AI tasks has recently attracted attention [29]–[31]. In [32]–[34], the authors showed that recurrent state-space model (RSSM)-based world models can support robust imagination-based reinforcement learning across di-verse domains. The works in [35]–[39] used world mod-els in the context of wireless networking and edge intel-ligence. In [35] and [36], we proposed world-model-based learning approaches for highly dynamic and mobile wireless networks with few-shot generalization. These works [35]– [39] demonstrate the promise of world models for improving data efficiency, generalization, and long-horizon optimization in wireless systems. However, existing wireless world-model approaches [35]–[39] represent network-side states and ac-tions for network evolution prediction, rather than modeling information as intervention variables that update the remote controller’s belief and influence future physical actions. Hence, these approaches cannot evaluate long-horizon information value. This motivates a world-model design that explicitly couples semantic transmission, belief evolution, physical agent control, and long-term task return in physical AI systems. III. S YSTEM MODEL FOR GOAL -O RIENTED SEMANTIC 
+
+COMMUNICATIONS 
+
+In this section, we introduce goal-oriented semantic com-munications in closed-loop physical AI systems. Then, we for-mulate a system-level return-per-bit optimization problem by jointly optimizing the agent control and semantic transmission. 
+
+A. System Model 
+
+We consider a closed-loop wireless physical AI system consisting of a physical AI agent, such as a UAV or a mobile robot, and a remote decision maker deployed at an edge server, as shown in Fig. 1. The physical AI agent senses and acts in a physical environment, whose state at time slot t is represented by ζt. After the execution of control action at−1,the environment state evolves as ζt ∼ p(ζt | ζt−1, at−1, ξ ),
+
+where ξ represents exogenous uncertainty and disturbances, and at−1 is the action of the physical AI agent at time 
+
+t − 1. From the environment dynamics, the physical AI agent acquires a local partial observation ot ∼ p(ot | ζt).At each time slot t, the physical agent first executes the control command at−1 resulting from the control policy computed at the edge server and then extracts N candidate semantic-entity tokens (referred to hereinafter as “semantic tokens” for brevity) from the acquired local observation ot by using a semantic encoder fω (·):
+
+zt = fω (ot) = {zt, 1, . . . , zt,N }, (1) where ω captures the parameters of the encoder at the phys-ical agent. Each semantic token zt,n is a compact symbolic descriptor of a task-relevant aspect of the current observation, such as an object hypothesis, a spatial relation, an event cue such as an approaching obstacle or collision risk, or an uncertainty indicator. Since the wireless network’s uplink is rate-limited, the agent cannot transmit all candidate tokens at every time slot. We use bt,n ∈ { 0, 1} to indicate whether token n is transmitted, and the token selection is generated by the selector bt,n ∼ π1 
+
+> ϖ
+
+. Let the selected token subset be 
+
+Bt ≜ {n : bt,n = 1 }. The selected tokens are encoded into a semantic message by ct = E({zt,n : n ∈ B t}) , with code length ℓ(ct) bits, and then modulated into a physical transmit signal xt for uplink delivery. The received signal at the remote server is given by ˆxt =
+
+Htxt + nt, where Ht is the time-varying wireless channel and nt is the additive noise. The received signal is then demodulated and decoded into ˆct, from which semantic tokens 
+
+yt are reconstructed by the message decoder yt = Q(ˆ ct).Based on the received tokens, the edge server maintains a belief ut of the agent system by the recurrent model: 
+
+ht = Ψ ϕ(ht−1, ut−1, at−1), (2a) 
+
+ut ∼ qϕ(ut | ht, yt), (2b) where ht is the historical deterministic information. Then, the edge server selects the next agent control with the policy π2 
+
+> θ
+
+by 4
+
+at ∼ π2 
+
+> θ
+
+(· | ht, ut), and feeds the control command at to the physical agent, where θ is the parameter of the control policy. In contrast to existing semantic communication solutions [21]– [25] that are tailored to one-step downstream tasks, in our model, the selected semantic tokens yt from the physical agent to the remote server shape the recurrent control state 
+
+ht, which, in turn, impacts the subsequent control commands 
+
+a>t taken by the agent. Moreover, these control commands further reshape future environment evolution ζ>t , observations 
+
+o>t , and long-term task performance. Hence, most existing one-step optimization solutions [21]–[25] are inadequate for capturing this closed-loop physical AI system, and a new system-level formulation is required to jointly optimize long-horizon communication and task performance. 
+
+B. Problem Formulation 
+
+We define rt as the task reward at time slot t. In a networked physical AI system, rt represents the closed-loop task outcome induced by the transmitted semantics and the resulting control action. For example, in UAV navigation, rt can reward the UAV for moving closer to the destination and successfully reaching the target, while penalizing collisions, unsafe trajecto-ries, or unnecessary motion. Similarly, in autonomous driving, 
+
+rt can reward the vehicle for safely following the planned route, maintaining lane discipline, and keeping a safe distance from surrounding vehicles, while penalizing collisions, lane departures, abrupt maneuvers, or inefficient driving. Thus, a semantic message is valuable not because it is accurately reconstructed, but because it helps the remote server make actions that improve the task performance over time. The long-horizon discounted return from time t onward is defined as 
+
+Gt ≜ PTτ =t γτ −trτ , where γ ∈ (0 , 1] is a discount factor, and 
+
+T is the episode horizon. Under the joint semantic selection and control policy π = {π1 
+
+> ϖ
+
+, π 2 
+
+> θ
+
+}, the discounted task return and discounted communication cost are, respectively, given by 
+
+R(π) ≜ Eπ
+
+" TX
+
+> t=0
+
+γtrt
+
+#
+
+= Eπ [G0] , C (π) ≜ Eπ
+
+" TX
+
+> t=0
+
+γtℓ(ct)
+
+#
+
+. (3) Here, R(π) measures the expected long-horizon physical task performance, while C(π) measures the expected number of semantic bits consumed to support the closed-loop interaction. Hence, the semantic communication problem for the closed-loop physical AI system is formulated as 
+
+max  
+
+> π
+
+η(π) ≜ R(π)
+
+C(π) (4a) s.t. C(π) > 0, (4b) 
+
+ℓ(ct) ≤ Ut, ∀t, (4c) where η(π) measures the amount of long-horizon physical task utility obtained per transmitted semantic bit, and Ut is the per-slot uplink bit budget. The ratio η(π) is important for semantic communications in closed-loop physical AI systems. For instance, in UAV navigation, a policy has a high η(π) if it reaches the destination and avoids collisions by transmitting only a small number of control-relevant semantic descriptions, such as obstacle locations or goal-direction cues. In contrast, a policy has a low η(π) if it transmits many visually detailed but control-irrelevant features that do not improve the UAV trajec-tory, or if it saves bits so aggressively that the remote controller loses critical obstacle information and the UAV fails the task. Therefore, maximizing η(π) encourages the communication system to allocate bits to semantics that improve closed-loop system-level performance, rather than to semantics that are merely informative for one-step perception. The optimization problem in (4) is challenging to solve by existing RL approaches [16]–[19] for three main reasons. First, the utility of a transmitted token must be evaluated over extended horizons. Once received by the edge server, the token changes the latent belief of the environment-agent system, which further impacts the selected control action, the subsequent physical state evolution, future observations, and ultimately the long-horizon return. Hence, the value of a semantic token cannot be evaluated from the current time slot alone or from its observed correlation with a high task return. Second, semantic token selection is a combinatorial decision tightly coupled with physical agent control under the per-slot bit-budget constraint. The contribution of each token depends on the other transmitted tokens due to redundancy and complementarity. Moreover, the fractional objective in (4) couples accumulated task return with accumulated communi-cation cost, and, thus, the system must determine whether each semantic token is worth transmitting for long-horizon closed-loop performance. Hence, simple feature-importance scores cannot reliably identify the most useful semantics for long-horizon control performance [9]–[11]. Third, the edge server has only partial access to the environment through received semantic tokens, while the environment dynamics and the wireless channel are nonlinear, stochastic, and uncertain. It is therefore difficult to directly apply traditional mathematical optimization approaches [12]–[15] without strong and often unrealistic analytical assumptions. Here, the use of model-free RL [16]–[19] is also not appropriate because reliable estimation of long-horizon return-per-bit from real physical in-teractions requires extensive trial-and-error exploration, which is data-inefficient and can be unsafe for physical AI agents. These challenges motivate a learning framework that can model closed-loop physical and wireless dynamics, perform counterfactual token value estimation, and jointly optimize token selection and control over extended horizons. IV. P ROPOSED WORLD MODEL -E NABLED CAUSAL 
+
+DIGITAL TWIN 
+
+Motivated by the above challenges, we develop a WM-CDT framework to solve the return-per-bit problem in (4). This approach is suitable for this problem because the learned digital twin can capture the coupled evolution of semantic transmission, belief updates, physical control, and environment dynamics, while enabling counterfactual and imagined rollouts without interacting with the real physical system. We first introduce a novel CIV metric for counterfactual valuation of long-horizon information value. We then present the proposed WM-CDT and show how it can learn the closed-loop dynamics of physical AI systems and enable imagined rollouts for CIV estimation and agent control. Next, we present a goal-oriented semantic encoder, an AC control policy, and a CIV-guided to-ken selector. Finally, we analyze the computational complexity and summarize the centralized-training-distributed-execution (CTDE) implementation of the proposed framework. 5
+
+A. Causal Information Value Metric 
+
+First, in order to evaluate long-horizon information value of semantic tokens in physical AI systems, the simple approach of directly associating a transmitted token with the observed short-term or single-step return is not suitable because the token-selection decision is history-dependent and affects long-term task performance. Particularly, a token may appear useful simply because it is selected in situations where the agent is already likely to achieve a high return. At the same time, a token that is not useful at the current time step may play a crucial role in the future. Hence, we introduce a novel CIV metric to quantify the marginal causal contribution of each semantic token to long-horizon closed-loop task performance in physical AI systems. We define Yt as the historical states of the wireless physical AI system before token selection at time t, which can include the current local observation, past received actions, and the preceding interaction history. The value of a candidate semantic token should be assessed by comparing two hypothetical system evolutions that share the same history Yt and differ only in whether that token is transmitted. This requires a counterfactual comparison of interventional outcomes. Particularly, we externally set the transmission decision of the token of interest to either bt,n = 1 
+
+or bt,n = 0 , while keeping the remaining semantic context and system dynamics unchanged. Based on this principle, we first define the subset-conditioned CIV of any semantic token zt,n ,
+
+n ∈ B t, as the change in expected long-horizon return caused by intervening on its transmission as follows. 
+
+Definition 1. For a candidate semantic token zt,n within the subset Bt, the subset-conditioned CIV is defined as 
+
+CIV t,n (Bt) ≜ E[Gt | do( bt,n = 1) , Yt, Bt \ { n}]
+
+− E[Gt | do( bt,n = 0) , Yt, Bt \ { n}] . (5) 
+
+where do( bt,n = ·) is a Pearl’s do-operator, which intervenes on the transmission selection of zt,n at time step t, while leaving the remaining token selection unchanged. 
+
+Hence, CIV t,n measures the marginal long-horizon con-tribution of the semantic token zt,n by comparing two intervention-consistent system evolutions with the same his-tory and the same remaining semantic context, rather than evaluating single-step reward correlation. CIV provides atoken-level causal valuation of how much a semantic token contributes to the long-horizon return term R(π) for the return-per-bit optimization problem in (4). When combined with the bit cost of the token, CIV can further guide semantic selection toward tokens that provide larger long-horizon task improvement per transmitted bit. In this way, CIV evaluates the semantic utility at the system level, where it captures not only how informative a token is at the current time step, but also how transmitting that token changes future belief evolution, control actions, and ultimately the long-horizon task return. However, it is challenging to evaluate CIV t,n in a real wireless physical AI system. In particular, CIV t,n is a counterfactual quantity and its evaluation requires comparing two future trajectories that share the same history but differ only in whether token n is transmitted. Such intervention-consistent comparisons are often unavailable from raw obser-vations alone and cannot be obtained by naive correlation-based estimation. This motivates the introduction of a world-model-enabled digital twin, which serves as a latent simulator for counterfactual semantic evaluation, long-horizon decision-making, and high data efficiency, as introduced next. 
+
+B. World Model-Enabled Digital Twins 
+
+To solve the return-per-bit maximization problem in (4), the edge server needs a predictive model that can reason about how transmitted tokens affect future belief updates, control actions, physical state evolution, and long-horizon task return. Direct evaluation in the real system is inefficient and potentially unsafe, since each token selection and control policy may induce a different closed-loop trajectory. Hence, we construct a WM-CDT at the edge server as a learned latent simulator of the closed-loop physical AI system. The digital twin learns a compact latent representation of the environment-agent dynamics from received semantic tokens, executed ac-tions, and rewards. Based on this learned model, the edge server can perform imagined rollouts to estimate long-horizon returns under candidate control policies and counterfactual semantic transmission interventions. Hence, the digital twin provides the foundation for both CIV estimation and long-horizon control planning under partial system observability and wireless bit-budget constraints. In particular, we introduce an RSSM-based digital twin: Deterministic State: ht = Ψ ϕ(ht−1, ut−1, at−1), (6a) Belief Update: ut ∼ qϕ(ut | ht, yt), (6b) Prior Dynamics: ˜ut ∼ pϕ( ˜ ut | ht) , (6c) Decoder: ˆyt ∼ pϕ( ˆ yt | ht, ut) , (6d) Reward Prediction: ˆrt ∼ pϕ(ˆ rt | ht, ut) , (6e) where Ψϕ(·) is the deterministic transition model, pϕ( ˜ ut | ht)
+
+is the latent prior model, qϕ(ut | ht, yt) is the posterior inference model that updates the latent belief by using the received semantic tokens, pϕ(yt | ht, ut) is the decoder of semantic tokens, and pϕ(ˆ rt | ht, ut) is the reward prediction model. We adopt the RSSM-based world model in (6) to obtain a probabilistic belief dynamics model for the partially observ-able closed-loop physical AI system. RSSM can jointly learn posterior belief inference from received semantic tokens, prior dynamics for token-free imagination, and semantic/reward pre-diction. This structure enables intervention-consistent imag-ined rollouts under hypothetical semantic transmissions and control actions, thereby supporting both counterfactual CIV estimation and long-horizon planning without additional real-environment interactions. Given data {(yt, at, r t)}Tt=0 collected from actual system interactions, the world model can be trained by maximizing the following variational evidence lower bound (ELBO) [29]: 
+
+Lwm (ϕ) = Eqϕ
+
+
+
+> T
+
+X
+
+> t=0
+
+log pϕ( ˆ yt | ht, ut) + log pϕ(ˆ rt | ht, ut)
+
+| {z }
+
+> preserve predictive information
+
+−
+
+> T
+
+X
+
+> t=0
+
+KL( qϕ(ut | ht, yt) ∥ pϕ( ˜ ut | ht)) 
+
+| {z }
+
+> posterior belief toward the latent prior
+
+ . (7) 6
+
+C. Temporal Difference (TD)-Based Semantic Encoder 
+
+The semantic encoder fω (·) is designed to extract compact semantic tokens at the physical agent. However, the con-ventional reconstruction-based encoder [5] usually preserves features for reproducing the original observations, which is not fully aligned with the return-per-bit objective in (4), since sensory details that are useful for observation reconstruction may not contribute to closed-loop control, but may still occupy semantic tokens and consume wireless resources. Hence, the goal-oriented semantic encoder should extract compact and control-relevant tokens for long-horizon control optimization. To this end, we first train the encoder with an action-conditioned TD objective, so that the learned tokens capture semantic features related to future system evolution rather than merely preserving observation-level details [40]. Let dω (·)
+
+be a TD dynamics head. Given the current semantic tokens 
+
+zt = fω (ot) and the executed action at, the next-step semantic tokens are predicted as ˆzt+1 = dω (zt, at). To further align the learned representation with long-horizon task utility and avoid representation collapse, we attach a semantic value head Ωχ(·)
+
+to the encoder during centralized training, which predicts the long-horizon discounted return. The semantic encoder is then trained by minimizing 
+
+Lenc (ω, χ ) = ∥ ˆzt+1 − sg( zt+1 )∥22 +βχ (Ω χ(zt) − Gt)2 , (8) where sg( ·) is the stop-gradient operator, and βχ ∈ (0 , 1) is the weighting factor. 
+
+D. Actor-Critic-Based Agent Control 
+
+Given the WM-CDT, we optimize the control policy of the physical agent, which must account for the coupled effects of sensing, semantic transmission, inference, and physical dynamics over an extended horizon. Hence, we adopt an AC-based RL approach as the planner of the world model for agent control to solve the long-horizon return-per-bit problem in (4). We approximate the partially observable problem by a partially observable Markov decision process (POMDP) with the state space S and the action space A, where the state is 
+
+{ht, ut}, and the action is the agent control at.However, it is inefficient to learn the policy directly from the fractional return-per-bit objective in (4). Since the objective increases when the communication cost is reduced, early-stage training may bias the selector toward transmitting too few semantic tokens, even when these tokens are still needed for reliable belief updates and control learning. To obtain an additive objective suitable for AC learning, we use a Dinkelbach-inspired transformation of the fractional objective. For a given per-bit price α, we define the shaped reward as 
+
+˜rt ≜ ˆrt − α ℓ (ct), (9) where ˆrt is the reward prediction by the RSSM model at time slot t. The shaped reward penalizes communication cost while preserving the long-horizon task objective, thereby aligning both control learning and token selection with return-per-bit maximization. Theorem 1 characterizes the optimal return-per-bit policy through priced additive subproblems as follows. 
+
+Theorem 1. Let Π be a nonempty feasible policy set. Assume that the discounted communication cost is strictly positive for every feasible policy, i.e., C(π) > 0 for all π ∈ Π. Assume that the suprema are attained over Π. Define the return-per-bit objective η(π) ≜ R(π)/C (π) and its optimal value η∗ ≜
+
+max π∈Π η(π). For any α ∈ R, define 
+
+F (α) ≜ sup 
+
+> π∈Π
+
+ R(π) − αC (π). (10) 
+
+Then η∗ is the unique scalar satisfying F (η∗) = 0 , and any ratio-optimal policy π∗ maximizes the priced objective at α =
+
+η∗ and achieves zero gap: 
+
+π∗ ∈ arg max 
+
+> π∈Π
+
+ R(π)−η∗C(π), R (π∗)−η∗C(π∗) = 0 . (11) 
+
+Proof. See the Appendix. Theorem 1 shows that the fractional return-per-bit objective can be represented through an additive priced objective at the optimal communication price α = η∗. Hence, optimizing the cumulative shaped reward ˆrt − αℓ (ct) in (9) allows AC learning to trade off task return and communication cost while remaining consistent with the original return-per-bit objective. Based on the shaped reward ˜rt, we optimize the control policy with AC learning in the latent space of the causal digital twin, where the actor model is represented by at ∼ π2 
+
+> θ
+
+(· | 
+
+ht, ut) and the critic model with the parameter ψ estimates the discounted return: 
+
+Vψ (ht, ut) ≈ Eπ
+
+" TX 
+
+> τ=t
+
+γτ −t ˜rτ ht, ut
+
+#
+
+. (12) The actor model and the critic model are trained over the imagined rollouts generated by the learned world model. In particular, at each imagined step τ , an action is sampled from 
+
+π2 
+
+> θ
+
+(· | hτ , ˜uτ ), the RSSM dynamics propagates the latent belief to (hτ +1 , ˜uτ +1 ), and the reward model predicts the corresponding shaped reward ˜rτ . Then, an imagined trajec-tory ˜J = {(hτ , ˜uτ , aτ , ˜rτ )}t+H−1  
+
+> τ=t
+
+with horizon size H is obtained, which is used for control learning without requiring costly trial-and-error interaction in the real system. To stabilize long-horizon value estimation, we adopt a λ-return target from the imagined rollout. The k-step bootstrapped return is 
+
+G(k) 
+
+> t
+
+≜
+
+> k−1
+
+X
+
+> j=0
+
+γj ˜rt+j + γkVψ (ht+k, ˜ut+k), k = 1 , . . . , H, (13) and the corresponding λ-return target is 
+
+Vλ(ht, ˜ut) ≜ (1 − λ)
+
+> H−1
+
+X
+
+> k=1
+
+λk−1G(k) 
+
+> t
+
++ λH−1G(H) 
+
+> t
+
+, (14) where λ ∈ [0 , 1] . The critic is updated by minimizing 
+
+Lcritic (ψ) = E
+
+h Vψ (ht, ˜ut) − Vλ(ht, ˜ut)2i
+
+. (15) The actor is trained to maximize the predicted long-horizon return along imagination: 
+
+Lactor (θ) = −E
+
+"t+H−1X 
+
+> τ=t
+
+γτ −tVλ(hτ , ˜uτ )
+
+#
+
+− βEH πθ 
+
+> 2
+
+(· | hτ , ˜uτ ) ,
+
+(16) where H(·) represents the policy entropy and β ≥ 0 is the exploration regularization. In this way, the edge server learns a control policy that is optimized not only for immediate task reward, but also for its long-horizon impact on future closed-loop performance under communication cost. 7
+
+E. Semantic Token Selection by Counterfactual Reasoning 
+
+We next optimize the semantic token selection policy π1 
+
+> ϖ
+
+(· | 
+
+zt) at the physical agent. At time t, the agent extracts a set of candidate semantic tokens zt ≜ {zt, 1, . . . , zt,N }, where token n has code length ℓt,n bits. Due to bit budget Ut,the selected token subset must satisfy the per-slot uplink bit budget PNn=1 bt,n ℓt,n ≤ Ut. The key challenge is that semantic tokens are not independent under shared resource constraints. Their utility depends on the other retained tokens due to redundancy, complementarity, and their coupled impact on future belief evolution and action decisions. To address this issue, we develop a gate network-based selection policy with counterfactual reverse pruning as follows. 
+
+1) Estimated CIV: Given a candidate subset Bt ⊆{1, . . . , N }, the subset-conditioned CIV of token n defined in (5) measures the marginal long-horizon contribution of a semantic token under the same semantic context. By using the causal digital twin, the CIV can be approximated by using imagined rollouts. In particular, we define 
+
+ˆQt(Bt) ≜ E
+
+"t+H−1X 
+
+> τ=t
+
+γτ −t ˆrτ Bt
+
+#
+
+(17) as the digital-twin-predicted long-horizon return after updating the belief with the token subset Bt and rolling out future actions by using π2 
+
+> θ
+
+. Then, the subset-conditioned CIV can be estimated as 
+
+dCIV t,n (Bt) ≜ ˆQt(Bt) − ˆQt(Bt \ { n}). (18) To account for communication efficiency, we further define the estimated CIV-per-bit of token n under subset Bt as 
+
+ˆρt,n (Bt) ≜ dCIV t,n (Bt)
+
+ℓt,n + ϵρ
+
+, (19) where ϵρ > 0 is a small constant for numerical stability. While 
+
+dCIV t,n (Bt) measures absolute long-horizon utility, ˆρt,n (Bt)
+
+measures how efficiently that utility is delivered per bit. Similar to Theorem 1, under the Dinkelbach price α, we define the priced marginal contribution: 
+
+ˆΓt,n (Bt) ≜ dCIV t,n (Bt) − αℓ t,n , (20) which characterizes whether retaining token n is beneficial after taking into account its communication cost. 
+
+2) Gate prediction and causal reverse pruning: The selec-tor π1 
+
+> ϖ
+
+(· | zt) is parameterized by a gate network that predicts a retention score and probability for each candidate token: 
+
+st,n = gϖ (zt,n ), pt,n = σ(st,n ), (21) where gϖ (·) is the gate model and σ(·) is the sigmoid function. During the training stage, instead of using these probabilities as final independent transmission decisions, we use them to construct an over-complete initial proposal set: 
+
+B(0)  
+
+> t
+
+≜ TopM  {pt,n }Nn=1 ; Mt
+
+ , (22) where TopM( {pt,n }Nn=1 ; Mt) is the operator that returns the indices of the Mt tokens with the largest gate probabilities among {pt,n }Nn=1 , and Mt is the maximum number of se-mantic tokens that satisfies the bit budget Ut. Starting from 
+
+B(0)  
+
+> t
+
+, the final transmitted subset is obtained by counterfactual reverse pruning. In particular, let B(m) 
+
+> t
+
+be the subset at pruning step m. For each token n ∈ B (m) 
+
+> t
+
+, the digital twin computes its contextual contribution through (20). Then, we remove the token with the lowest priced marginal contribution: 
+
+n(m) 
+
+> t, rm
+
+= arg min 
+
+> n∈B (m)
+> t
+
+ˆΓt,n 
+
+
+
+B(m)
+
+> t
+
+
+
+, (23) and update B(m+1)  
+
+> t
+
+= B(m) 
+
+> t
+
+\ { n(m)
+
+> t, rm
+
+}. This pruning procedure is repeated until the bit-budget constraint is satisfied and all retained tokens have a positive priced marginal contribution. The final selected subset is denoted by B∗ 
+
+> t
+
+, and the hard selection mask is thus given by b∗ 
+
+> t,n
+
+= I(n ∈ B ∗ 
+
+> t
+
+). The above reverse-pruning strategy repeatedly deletes the token with the smallest contextualized long-horizon contribution, while CIV-per-bit and the priced contribution further improve communication efficiency. To align the gate network with the reverse-pruning solution, we use the hard pruning decisions as self-supervised targets for CTDE, and, thus, the final selector loss is 
+
+Lsel (ϖ) = −
+
+> N
+
+X
+
+> n=1
+
+b∗ 
+
+> t,n
+
+log pt,n +(1 −b∗
+
+> t,n
+
+) log(1 −pt,n ) , (24) where the gate network π1 
+
+> ϖ
+
+first assigns an initial retention probability pt,n to each semantic token and forms a high-recall candidate set. The causal digital twin then refines this candidate set through subset-conditioned CIV evaluation, CIV-per-bit-aware reverse pruning, and priced contribution testing. Inspired by Dinkelbach’s method, at each policy-update stage, the adaptive price is updated by the clipped empirical ratio between the discounted return and communication cost as α ← max 
+
+n
+
+0, ˆR(π)ˆC(π)+ ϵ
+
+o
+
+, where ϵ > 0 is a small constant for numerical stability, and ˆR(π) and ˆC(π) are computed from the latest batch of trajectories. The clipping operation prevents unstable pricing when the empirical discounted return is negative, it is an implementation heuristic. 
+
+F. Optimality, Complexity, and Implementation 
+
+The proposed framework learns a feasible suboptimal policy that improves the empirical return-per-bit while satisfying the bit-budget constraint, thus providing an approximate solution to the return-per-bit maximization problem in (4). Let Cnet 
+
+be the average computational cost of one neural-network forward/backward step for the world model, selector, and AC modules. For each training step, world-model learning over a sampled sequence of length L requires O(LCnet ), AC learning over imagination of horizon H requires O(HCnet ), and CIV-guided reverse pruning over N candidate tokens requires 
+
+O(N 2HCnet ) because counterfactual rollouts are evaluated for different token-removal decisions. Thus, the total training complexity over I iterations is O(I(L + H + N 2H)Cnet ).Let Cinf be the one-step forward inference cost per time slot. The online complexity is O(Cinf + N log N ) per slot, which has near-linear complexity and can support real-time online inference for physical AI systems. The proposed WM-CDT can be deployed in an edge-assisted cellular architecture, where the physical AI agent operates as a wireless user equipment (UE) and the digital twin is hosted at an edge server co-located with the serving base sta-tion. The physical agent needs to only execute lightweight on-device modules, including sensing, semantic encoding, token 8
+
+Algorithm 1 Training of the Proposed WM-CDT Framework                                                                                                    
+
+> Input: Initialize model parameters ω,ϖ,ϕ,θ,ψ, and α
+> // Stage 1: Self-supervised semantic encoder pretraining
+> 1: for each local transition (ot,at,ot+1 )do
+> 2: Update ωby minimizing the TD loss
+> 3: end for
+> // Stage 2: Training of digital twin, control, and selector
+> 4: for training iteration i= 1 ,2, . . . , I do
+> // Real Environment Interaction & Data Collection
+> 5: for each environment step tdo
+> 6: Observe local sensing data otat the physical agent
+> 7: Extract candidate semantic tokens using fω(·)
+> 8: Form a transmitted token subset Btby using π1
+> ϖ
+> 9: Encode the selected tokens into message ctand transmit it over the wireless uplink
+> 10: Decode semantic tokens ytat the decision maker
+> 11: Update the latent belief by using Ψϕ,qϕand pϕ
+> 12: Select the control action by using π2
+> θ
+> 13: Feed the control action back to the physical agent
+> 14: Store (ot,yt,at, r t)to the replay buffer D
+> 15: end for
+> 16: Sample sequences {(ot,yt,at, r t)}k+Lt=k∼ D .
+> 17: Update ωand χby minimizing Lenc (ω, χ )
+> 18: Update the world model ϕby maximizing Lwm (ϕ)
+> // Training of Control and Selection by imagination
+> 19: Compute the optimal subset B∗
+> tby counterfactual reasoning from zt=fω(ot)
+> (Imagination over {pt,n })
+> 20: Update the selector by minimizing Lsel (ϖ)
+> 21: Imagine {( ˜ uτ, a τ)}t+Hτ=tover actions from the AC
+> 22: Compute λ-return targets, update critic ψby using Lcritic and actor θby using
+> Lactor , and update α
+> 23: end for
+
+selection, and transmission, whereas computationally intensive modules, such as RSSM training, CIV-based counterfactual evaluation, and actor-critic policy optimization, are performed at the edge server. This separation follows a CTDE principle. During centralized training, the edge server builds the replay buffer D and requires access to the full semantic token set 
+
+zt at each training slot. Hence, the training-stage uplink overhead scales with the full candidate-token description, i.e., PNn=1 ℓt,n bits per slot, together with low-dimensional records such as the executed action at, reward rt, and wireless reception outcome. For the simulation setting with N = 32 
+
+candidate tokens and 8 bits per token, this corresponds to 256 
+
+bits transmission cost per slot. This overhead is incurred only during centralized training. During online execution, at each slot, given available bit budget Ut, the local selector π1 
+
+> ϖ
+
+chooses a subset Bt of seman-tic tokens whose encoded packet length satisfies ℓ(ct) ≤ Ut.The selected tokens are then quantized by a shared semantic codebook [41], channel-coded, and transmitted over the cel-lular network’s uplink to the edge server. After physical-layer decoding, the base station forwards the recovered semantic tokens yt to the edge server-hosted digital twin, which updates the latent belief using Ψϕ, qϕ, and pϕ, computes the control action using π2 
+
+> θ
+
+, and returns only a low-dimensional control command through the downlink control/data channel. Thus, the online system requires no real-time counterfactual rollout on the agent and introduces only one semantic-packet uplink transmission and one compact control downlink feedback per closed-loop decision slot. The overall training procedure is summarized in Algorithm 1. V. S IMULATION RESULTS AND ANALYSIS 
+
+A. AirSim-Sionna-Based Realistic Simulator 
+
+To evaluate semantic communications in closed-loop physi-cal AI systems under realistic interactions, we develop a novel AirSim-Sionna-based simulator that jointly models physical  
+
+> Fig. 2. The proposed AirSim-Sionna-based simulator for semantic commu-nications in closed-loop physical AI systems.
+
+agent dynamics, visual sensing, semantic transmission, wire-less channel effects, remote inference, and control, as shown in Fig. 2. The proposed simulator is designed to reproduce the sensing-communication-inference-control loop considered in our system whereby a physical agent interacts with a three-dimensional environment, extracts task-relevant semantic tokens from local observations, transmits a selected subset of tokens over a wireless uplink, and receives control commands generated by an edge server. The simulator consists of two coupled modules. The first module is the physical environment module, imple-mented in AirSim [42]. AirSim provides a high-fidelity three-dimensional environment in which the physical agent moves according to realistic kinematics. The second module is the Sionna-based wireless communication module [43]. Particu-larly, the Sionna-based channel module simulates the uplink transmission from the physical agent to the edge server. In particular, the channel state is generated according to the relative geometry between the mobile agent and the receiver, together with propagation effects such as path loss, fading, multipath propagation, and additive noise. The AirSim and Sionna modules are synchronized at the time-slot level. Each simulation step corresponds to one closed-loop interaction round. Particularly, the simulator first builds the physical environment in AirSim, where the agent collects the local observation, extracts candidate semantic tokens, and transmits selected tokens. The selected message is then passed through the Sionna wireless channel, decoded at the edge server, and used to update the digital twin. Finally, the control policy generates the control command, which is applied to the AirSim agent in the next physical step. 
+
+B. Parameter and System Settings 
+
+We consider a wireless semantic UAV navigation task in the AirSim-Sionna-based simulator. The UAV flies in a 
+
+200 m × 200 m three-dimensional environment with randomly placed obstacles. For each episode, the UAV starts from the center of the environment, and the destination is randomly generated on a circle with radius 70 m . An episode is suc-cessful if the UAV reaches the destination when it is within a 5 m radius of the target location, and it fails if a collision with obstacles occurs. If neither success nor collision occurs, the episode is truncated at the maximum horizon T = 200 . At each time slot, the UAV observes an RGB image and extracts 
+
+N = 32 candidate semantic tokens. Each semantic token is represented by a 64 -dimensional continuous embedding, which is quantized to 8 bits by using a codebook-based vector quantizer before transmission [41]. Hence, the communication cost of the selected semantic message is ℓ(ct) = 8|B t|,where Bt is the selected token subset. The selected tokens 9                                                    
+
+> TABLE I SIMULATION PARAMETERS AND LEARNING HYPERPARAMETERS .
+> Variable Value / Setting
+> Environment size 200 m ×200 m
+> Success radius 5 m
+> Maximum horizon T200 Control action [vf
+> t, v z
+> t, ω t]
+> Number of semantic tokens N= 32
+> Token embedding dimension 64
+> Quantization bits per token 8bits Bit budget Ut(bits/slot) {64 ,96 ,128 ,160 ,192 }
+> Success reward Rsucc 10
+> Collision penalty Rcol 10
+> Step penalty βr0.01
+> Discount factor γ0.99
+> GAE parameter λ0.95
+> Trajectory length L32
+> Hidden layer dimension 128
+> Optimizer Adam Learning rate 3×10 −4
+> Batch size 128
+> Replay buffer size 5×10 4
+> Encoder pretraining samples 5×10 4
+> PPO clipping coefficient 0.2
+> Rollout horizon 10
+> Training steps 1×10 6
+> Random seeds 10
+
+must satisfy the per-slot bit-budget constraint ℓ(ct) ≤ Ut,where Ut ∈ { 64 , 96 , 128 , 160 , 192 } bits/slot. The convergence experiment uses Ut = 96 bits/slot. The remote server generates the continuous UAV control command at = [ vf 
+
+> t
+
+, v z 
+
+> t
+
+, ω t], where 
+
+vf 
+
+> t
+
+is the forward velocity, vz 
+
+> t
+
+is the vertical velocity, and ωt
+
+is the steering angular velocity. The task reward is defined as rt = dt−1 − dt + Rsucc Isucc − Rcol Icol − βr , where dt is the distance between the UAV and the target, and Isucc and 
+
+Icol indicate successful arrival and collision, respectively. We set Rsucc = 10 , Rcol = 10 , and βr = 0 .01 . All training hyperparameters are summarized in Table I. We compare the proposed WM-CDT scheme with four baselines. First, AC-RRL [20] is a model-free recurrent AC baseline that uses the same TD-pretrained semantic encoder and budget-aware semantic token selector as WM-CDT, but it neither learns a world model nor performs counterfactual rea-soning. Instead, it directly optimizes semantic token selection and UAV control from real AirSim-Sionna interactions using the Dinkelbach-shaped reward. Second, MBPO is a model-based RL baseline that learns a latent dynamics model and uses short imagined rollouts for policy optimization. Third, AC [5] is a feedforward AC baseline. It generates control actions based only on the currently received semantic tokens, without accumulating historical semantic information. Fourth, PPO is a model-free RL baseline that updates the semantic selection and control policies using the clipped PPO objective under the same semantic bit-budget constraint. 
+
+C. Convergence Performance 
+
+Fig. 3 shows the training losses of the proposed WM-CDT approach. From Fig. 3, we can observe that the TD loss decreases rapidly at the beginning and then gradually converges, which indicates that the semantic encoder can learn temporally predictive token representations from UAV observations. The value loss and reward loss remain small after the initial training stage, which shows that the learned latent  
+
+> Fig. 3. The training losses of different components in WM-CDT.
+> Fig. 4. The convergence of different methods with limited environment steps.
+
+dynamics and reward prediction become stable. Meanwhile, the actor loss first fluctuates due to exploration and then becomes more stable as the policy improves. Fig. 3 shows that the world model can be jointly trained toward convergence in a stable manner under limited interactions. Fig. 4 compares the convergence to a final return-per-kbit for different approaches under limited environment steps. From Fig. 4, the proposed WM-CDT scheme reaches the 1
+
+return-per-kbit level at 79 k environment steps, while MBPO, AC-RRL, and AC reach the same level at 126 k, 144 k, and 
+
+264 k steps, respectively. Hence, WM-CDT achieves significant improvements of 37 .3% , 45 .1% , and 70 .1% in terms of data efficiency compared to MBPO, AC-RRL, and AC, respec-tively. Moreover, WM-CDT achieves the highest return-per-kbit among all methods in terms of final performance, WM-CDT achieves about 13 .8% higher return-per-kbit than AC-RRL, 39 .8% higher than MBPO, 66 .7% higher than AC, and 
+
+71 .9% higher than PPO. This improvement comes from two key components. First, the RSSM-based world model enables long-horizon imagined rollouts, which improves planning effi-ciency compared with purely model-free methods. Second, the counterfactual token valuation mechanism allows WM-CDT to select semantic tokens according to their long-horizon causal contribution rather than their instantaneous relevance. 
+
+D. Computational Complexity 
+
+Table II shows the computational overhead and online latency of different approaches. The proposed WM-CDT has the largest model size and training time because it jointly maintains the semantic encoder, RSSM-based world model, AC controller, and counterfactual semantic token evaluation module. As shown in Fig. 4, this additional training overhead 10                     
+
+> TABLE II COMPUTATIONAL OVERHEAD AND INFERENCE LATENCY RESULTING FROM WM-CDT AND BASELINES .
+> Method Parameters (M) Training Time (ms/step) Online Latency (ms/slot)
+> WM-CDT 8.6 28.4 6.4 AC-RRL 5.9 16.8 5.8 MBPO 7.3 27.6 6.2 AC 5.4 14.9 5.1 PPO 6.6 15.7 5.3
+> Fig. 5. The return-per-kbit of different approaches under bit budgets.
+
+leads to return-per-kbit gains and high data efficiency. We note that the training overhead is only incurred offline at the edge server during centralized training. For decentralized online execution, the latency of WM-CDT remains close to that of the model-free baselines because all methods make a single-step decision at each control slot. In particular, after training, the learned encoder and selector are directly deployed at the physical agent, which only needs one forward pass to extract semantic tokens and select the transmitted subset. At the edge server, WM-CDT performs one RSSM belief update using the received semantic tokens and then one actor forward pass to generate the control action. Hence, although WM-CDT introduces additional computation during training, its online latency remains close to that of the model-free baselines. WM-CDT achieves an online latency of 6.4 ms/slot, which is only slightly higher than MBPO, AC-RRL, AC, and PPO, whose online latencies are 6.2, 5.8, 5.1, and 5.3 ms/slot, respectively. The small additional latency of WM-CDT mainly comes from the RSSM belief update before the actor generates the control action. Overall, Table II and Figs. 3-4 show that WM-CDT introduces moderate computational overhead in exchange for improved convergence, higher return-per-kbit, and better long-horizon semantic control. 
+
+E. Task Performance 
+
+Fig. 5 shows the return-per-kbit of different methods under different bit budgets, while Fig. 6 shows the corresponding navigation success rate. From Fig. 5, the proposed WM-CDT scheme achieves the highest return-per-kbit across all bit budgets. Particularly, WM-CDT achieves up to 17 .3% higher return-per-kbit than AC-RRL, 55 .4% higher than MBPO, 
+
+30 .7% higher than AC, and 33 .7% higher than PPO. It shows that the WM-CDT approach can more efficiently convert transmitted semantic tokens into long-horizon task return. Fig. 6 further shows that WM-CDT can achieve both high communication efficiency and navigation success rate. As the bit budget increases, the success rate of all methods  
+
+> Fig. 6. The navigation success rate of different approaches under bit budgets.
+> Fig. 7. Return-per-kbit resulting from the studied schemes under different packet error rates.
+
+improves because more semantic tokens can be transmitted to support obstacle awareness and goal-directed control. It is observed that WM-CDT achieves the highest success rate. Compared with AC-RRL, MBPO, AC, and PPO, WM-CDT achieves up to 9.6% , 26 .3% , 16 .1% , and 18 .0% improvement in navigation success rate, respectively, which indicates that WM-CDT improves both semantic communication efficiency and closed-loop task performance. Figs. 5 and 6 jointly show the tradeoff between task perfor-mance and communication efficiency. In Fig. 6, the success rate increases with the bit budget since more semantic tokens provide the edge server with richer task-related information. In contrast, Fig. 5 shows that the return-per-kbit reaches its maximum around 96 bits/slot and then gradually decreases as the bit budget increases. This is because, after the most task-critical tokens have been transmitted, additional tokens provide diminishing long-horizon control benefit while still increasing the communication cost. It can be also observed that AC-RRL outperforms AC since the recurrent state allows the edge server to accumulate historical semantic information under partial observability. However, AC-RRL still optimizes semantic selection directly from real interactions and cannot explicitly evaluate the counterfactual long-horizon contribution of each token. In contrast, WM-CDT uses the learned world model to perform imagined rollouts and estimate token-level CIV, thereby suppressing redundant tokens and preserving those that are more useful for future control. MBPO also uses model-based rollouts, but it lacks the RSSM-based be-lief update and counterfactual token valuation of WM-CDT, which limits its performance under coupled dynamics of token selection, wireless transmission, and UAV control. Fig. 7 shows the robustness of different approaches under 11  
+
+> Fig. 8. Correlation between different token-importance metrics and the true counterfactual return gain.
+
+packet errors. As the packet error rate increases, the return-per-kbit of all methods decreases since some transmitted semantic tokens are corrupted or lost. We can observe that WM-CDT achieves up to 19 .6% , 77 .4% , 46 .2% , and 32 .5% improve-ments in return-per-kbit compared to AC-RRL, MBPO, AC, and PPO, respectively, under 20% packet error rate. This gain comes from two factors. First, the RSSM-based belief state allows WM-CDT to compensate for missing tokens by using historical semantic information. Second, the CIV-guided selector prioritizes tokens with larger long-horizon causal impact, thus making the transmitted message less redundant and more control-relevant. AC-RRL is more robust than AC and PPO due to its recurrent memory, but it lacks counter-factual token valuation. MBPO also degrades under packet errors because its dynamics model is sensitive to corrupted semantic observations. In contrast, WM-CDT combines belief prediction and causal token selection, thus, it has stronger robustness under unreliable wireless transmission. 
+
+F. CIV Effectiveness 
+
+Fig. 8 compares different token-importance metrics against the true counterfactual return gain. The proposed CIV metric shows the strongest positive correlation, and its fitted line is closest to the ideal monotonic trend. In other words, Fig. 8 shows that CIV can better identify semantic tokens that have large long-horizon impact on future control performance. In contrast, myopic VoI, saliency score, and confidence score show weaker correlations. Myopic VoI captures only short-term value changes, while saliency and confidence mainly re-flect instantaneous visual or detection relevance. These metrics may select tokens that appear important at the current time step but have limited effect on long-horizon navigation. Hence, Fig. 8 shows the effectiveness of counterfactual CIV estima-tion for communication-efficient token selection in closed-loop physical AI systems. 
+
+G. Ablation Studies 
+
+Figs. 9-11 evaluate three key components of WM-CDT: latent dynamics modeling, semantic encoder design, and token-selection strategy. For the dynamics ablation in Fig. 9, “MBPO latent” replaces the RSSM model with a latent dynamics model, “deterministic latent” removes probabilistic belief modeling, “w/o stochastic latent” removes the stochastic latent variable while keeping the recurrent transition, “w/o recurrent dynamics” removes the recurrent state transition,   
+
+> Fig. 9. Ablation study of the latent dynamics design under different imagi-nation horizons.
+> Fig. 10. Ablation study of the semantic encoder design under different imagination horizons.
+
+and “one-step dynamics” only uses one-step prediction with-out long-horizon latent rollout. For the encoder ablation in Fig. 10, “reconstruction-based” uses reconstruction-oriented representation learning, “w/o TD prediction” removes the TD latent prediction objective, “w/o control-conditioned” removes action-conditioned prediction, and “frozen encoder” keeps the encoder fixed during training. For the selection ablation in Fig. 11, “w/o CIV” removes CIV estimation, “myopic VoI” uses only short-term value change, “saliency Top-K” and “confidence Top-K” select tokens by instantaneous saliency or confidence, “random” selects feasible tokens randomly, “w/o per-bit norm” uses CIV without bit normalization, “w/o reverse pruning” removes subset-conditioned pruning, and “fixed Top-
+
+K” transmits a fixed number of tokens. Fig. 9 studies the impact of the latent dynamics design. The proposed method achieves the highest return-per-kbit over all imagination horizons. At the best horizon, the pro-posed method achieves about 12 .0% higher return-per-kbit than the MBPO-style latent model, and 13 .9% , 15 .9% , and 
+
+19 .1% higher return-per-kbit than the one-step dynamics, w/o stochastic latent, and deterministic latent variants, respectively. These results show that both the stochastic latent state and the recurrent dynamics update are important for modeling the uncertainty and temporal dependency in semantic com-munication and control. In contrast, one-step dynamics and deterministic latent transitions are less effective in capturing the long-horizon closed-loop evolution. Fig. 10 evaluates different semantic encoder designs. The proposed TD-based encoder outperforms the reconstruction-based encoder, the w/o TD prediction variant, the w/o control-conditioned variant, and the frozen encoder. At horizon H =10 , the proposed method improves the return-per-kbit by about 12  
+
+> Fig. 11. Ablation study of token-selection strategies under different imagi-nation horizons.
+
+9.2% over the reconstruction-based encoder and by 10 .1% 
+
+over the w/o control-conditioned variant. The gap becomes larger at long horizons, where the proposed encoder achieves up to 23 .1% improvement over the frozen encoder. It indi-cates that temporally predictive and control-aware semantic representations are more suitable than purely reconstruction-oriented or static features for long-horizon semantic control. In Fig. 11, we show return-per-kbit versus different token-selection mechanisms. The proposed CIV-based selector achieves the highest return-per-kbit across all imagination horizons. At horizon H = 10 , it achieves up to 7.4% , 10 .1% ,
+
+12 .9% , 14 .9% improvements in return-per-kbit compared to the w/o per-bit normalization variant, the w/o reverse pruning variant, the w/o CIV variant, and the myopic VoI baseline. The proposed CIV-based selector also shows significant im-provements in return-per-kbit compared to saliency-based, confidence-based, fixed Top-K, and random selection. This is because counterfactual CIV estimation of the proposed approach identifies tokens with high long-horizon contribution, per-bit normalization avoids bias toward long tokens, and reverse pruning improves subset refinement under the bit budget. Overall, Figs. 9-11 show that the gains of the proposed WM-CDT approach come from the joint effect of the RSSM-based dynamics model, the TD-based semantic encoder, and the CIV-guided budget-aware token selector. VI. C ONCLUSION 
+
+In this paper, we have studied goal-oriented semantic com-munications for closed-loop physical AI systems, where trans-mitted semantic tokens affect not only current inference but also future belief updates, control actions, and long-horizon task performance. We have formulated the problem as a return-per-bit maximization under wireless bit-budget constraints, thereby jointly capturing task efficiency and communication efficiency. To evaluate the long-horizon utility of semantic to-kens, we have introduced a CIV metric based on counterfactual transmission interventions. We then have proposed a WM-CDT framework, which learns an RSSM-based latent model at the edge server, performs imagined rollouts for long-horizon control, and guides semantic token selection through CIV-based counterfactual reasoning. Extensive simulation results on the AirSim-Sionna-based UAV navigation environment have shown that the proposed WM-CDT achieves up to 17 .3% ,
+
+55 .4% , 30 .7% , and 33 .7% higher return-per-kbit than AC-RRL, MBPO, AC, and PPO, respectively, and improves the navigation success rate by up to 9.6% , 26 .3% , 16 .1% , and 
+
+18 .0% . Moreover, simulation results have also shown that WM-CDT achieves the highest return-per-kbit under unreli-able wireless transmission, and counterfactual CIV is more aligned with the true long-horizon return gain than myopic VoI, saliency score, and confidence score. APPENDIX 
+
+PROOF OF THEOREM 1For any policy π ∈ Π and any scalar α ∈ R, we define the α-priced objective gap ∆α(π) ≜ R(π) − αC (π), where 
+
+R(π) = Eπ
+
+hPTt=0 γtrt
+
+i
+
+and C(π) = Eπ
+
+hPTt=0 γtℓ(ct)
+
+i
+
+. By assumption, C(π) > 0 for all π ∈ Π, and, thus, we can divide by C(π) and rewrite ∆α(π) exactly as 
+
+∆α(π) = R(π) − αC (π) = C(π) η(π) − α, (25) where η(π) ≜ R(π)/C (π). Since C(π) > 0, (25) implies that 
+
+∆α(π) > 0 ⇐⇒ η(π) > α, 
+
+∆α(π) = 0 ⇐⇒ η(π) = α, 
+
+∆α(π) < 0 ⇐⇒ η(π) < α. 
+
+(26) We define F (α) ≜ max π∈Π ∆α(π) = max π∈Π
+
+ R(π) −
+
+αC (π). We can now prove the theorem statements. First, we prove the sign of F (α) for α below and above η∗.Let η∗ ≜ max π∈Π η(π). There are two cases. 
+
+Case 1: α < η ∗. By the definition of maximum, α < 
+
+max π η(π) means that there exists at least one policy ¯π ∈ Π
+
+such that η(¯ π) > α . Applying (26) yields ∆α(¯ π) > 0. Since 
+
+F (α) is the maximum over all ∆α(π), we have 
+
+F (α) = max  
+
+> π∈Π
+
+∆α(π) ≥ ∆α(¯ π) > 0. (27) 
+
+Case 2: α > η ∗. For every π ∈ Π, we have η(π) ≤ η∗ < α .Using (26) again gives ∆α(π) < 0 for every π ∈ Π. Since 
+
+F (α) is the maximum over all ∆α(π), we have 
+
+F (α) = max  
+
+> π∈Π
+
+∆α(π) < 0. (28) Then, we prove the value of F (α) at α = η∗.
+
+Upper bound. We first show F (η∗) = 0 . Since η(π) ≤ η∗
+
+for all π ∈ Π, (26) implies ∆η∗ (π) ≤ 0 for all π ∈ Π. Taking the maximum over π preserves the inequality: 
+
+F (η∗) = max  
+
+> π∈Π
+
+∆η∗ (π) ≤ 0. (29) 
+
+Lower bound. By the definition of η∗ = max π∈Π η(π), there exists a policy π† ∈ Π such that η(π†) = η∗. We substitute 
+
+π† into (25) at α = η∗: ∆η∗ (π†) = C(π†) η(π†) − η∗ = 0 .
+
+Since F (η∗) is a maximum, it dominates each element of the set: F (η∗) ≥ ∆η∗ (π†). Hence, 
+
+F (η∗) ≥ ∆η∗ (π†) = 0 . (30) Combining (29) and (30), then we have F (η∗) = 0 .
+
+Uniqueness. From (27) and (28), F (α) > 0 for all α < η ∗
+
+and F (α) < 0 for all α > η ∗. Therefore no α̸ = η∗ can satisfy 
+
+F (α) = 0 , and η∗ is the unique root. 
+
+Ratio-optimal π∗. Assume π∗ is ratio-optimal, i.e., η(π∗) = 
+
+η∗. Substituting π∗ into (25) with α = η∗ gives 
+
+∆η∗ (π∗) = C(π∗) η(π∗) − η∗ = 0 . (31) For any π ∈ Π, η(π) ≤ η∗ implies ∆η∗ (π) ≤ 0 by (26). Hence 
+
+0 = ∆ η∗ (π∗) ≥ ∆η∗ (π) for all π, meaning that π∗ maximizes 
+
+R(π)−η∗C(π) and attains the maximum value 0. Conversely, suppose π∗ ∈ arg max π∈Π ∆η∗ (π) and ∆η∗ (π∗) = 0 . Then (25) with α = η∗ yields C(π∗) η(π∗) − η∗ = 0 . Since 
+
+C(π∗) > 0, we must have η(π∗) = η∗, so π∗ is ratio-optimal. Hence, Theorem 1 is proved. 13 
+
+REFERENCES [1] W. Saad, O. Hashash, C. K. Thomas, C. Chaccour, M. Debbah, N. Man-dayam, and Z. Han, “Artificial general intelligence (AGI)-native wireless systems: A journey beyond 6G,” Proceedings of the IEEE , vol. 113, no. 9, pp. 849–887, Sept. 2025. [2] J. Yao, W. Xu, G. Zhu, K. Huang, and S. Cui, “Energy-efficient edge inference in integrated sensing, communication, and computation networks,” IEEE J. Sel. Areas Commun. , vol. 43, no. 10, pp. 3580–3595, Oct. 2025. [3] X. Wang, F. Zhu, Z. Yang, C. Huang, X. Chen, Z. Zhang, S. Muhaidat, and M. Debbah, “Bridging physical and digital worlds: embodied large ai for future wireless systems,” arXiv preprint arXiv:2506.24009 , 2025. [4] C. Chaccour, W. Saad, M. Debbah, Z. Han, and H. V. Poor, “Less data, more knowledge: Building next-generation semantic communication networks,” IEEE Commun. Surveys Tuts. , vol. 27, no. 1, pp. 37–76, Feb. 2024. [5] L. Wang, W. Wu, F. Zhou, Z. Yang, Z. Qin, and Q. Wu, “Adaptive resource allocation for semantic communication networks,” IEEE Trans. Commun. , vol. 72, no. 11, pp. 6900–6916, Nov. 2024. [6] P. Zhang, W. Xu, Y. Liu, X. Qin, K. Niu, S. Cui, G. Shi, Z. Qin, X. Xu, F. Wang et al. , “Intellicise wireless networks from semantic communications: A survey, research issues, and challenges,” IEEE Commun. Surveys Tuts. , vol. 27, no. 3, pp. 2051–2084, Jun. 2024. [7] X. Fang, C. Lei, W. Feng, Y. Chen, M. Xiao, N. Ge, and C.-X. Wang, “Sensing-communication-computing-control closed-loop opti-mization for 6G digital twin-empowered robotic systems,” IEEE J. Sel. Areas Commun. , vol. 43, no. 10, pp. 3330–3346, Oct. 2025. [8] Y. Wang, S. Han, X. Xu, H. Liang, R. Meng, C. Dong, and P. Zhang, “Feature importance-aware task-oriented semantic transmission and op-timization,” IEEE Trans. on Cogn. Commun. Netw. , vol. 10, no. 4, pp. 1175–1189, Aug. 2024. [9] O. Ayan, M. Vilgelm, M. Kl¨ ugel, S. Hirche, and W. Kellerer, “Age-of-information vs. value-of-information scheduling for cellular networked control systems,” in Proc. ACM/IEEE Int. Conf. Cyber-Phys. Syst. (ICCPS) , Montreal, Canada, Apr. 2019, pp. 109–117. [10] T. Soleymani, J. S. Baras, and S. Hirche, “Value of information in feedback control: Quantification,” IEEE Trans. Autom. Control , vol. 67, no. 7, pp. 3730–3737, Jul. 2022. [11] Z. Wang, M.-A. Badiu, and J. P. Coon, “On the value of information and mean squared error for noisy gaussian models,” IEEE Commun. Lett. ,vol. 26, no. 9, pp. 2023–2026, Sept. 2022. [12] Q. Li, Y. Hong, B. Lv, and R. Wang, “A dynamic programming frame-work for vehicular task offloading with successive action improvement,” 
+
+IEEE Trans. Commun. , vol. 73, no. 12, pp. 14 048–14 062, Dec. 2025. [13] Y. Long, S. Gong, S. Sun, G. C. F. Lee, L. Li, and D. Niyato, “Lyapunov-guided deep reinforcement learning for semantic-aware AoI minimization in UAV-assisted wireless networks,” IEEE Trans. Wireless Commun. , vol. 24, no. 8, pp. 6351–6364, Aug. 2025. [14] B. Zhu, L. Huang, K. Chi, A. Alharbi, K. Yu, and M. Guizani, “Enhancing energy efficiency in wireless-powered MEC systems through lyapunov-guided deep reinforcement learning,” IEEE Trans. Wireless Commun. , vol. 24, no. 9, pp. 7563–7580, Sept. 2025. [15] Z. Li, C. Su, Z. Su, H. Peng, Y. Wang, W. Chen, and Q. Wu, “Model predictive control enabled UAV trajectory optimization and secure resource allocation,” IEEE Trans. Commun. , vol. 73, no. 11, pp. 12 652–12 665, Nov. 2025. [16] L. Wang, W. Wu, F. Zhou, Z. Qin, and Q. Wu, “IRS-enhanced secure semantic communication networks: Cross-layer and context-awared re-source allocation,” IEEE Trans. Wireless Commun. , vol. 24, no. 1, pp. 494–508, Jan. 2025. [17] W. Jin, J. Zhang, C.-K. Wen, S. Jin, and F.-C. Zheng, “Joint beam-forming in RIS-assisted multi-user transmission design: A model-driven deep reinforcement learning framework,” IEEE Trans. Commun. , vol. 73, no. 5, pp. 3184–3198, May 2025. [18] X. Chen, J. Xu, W. Ni, S. Hu, Z. Qin, and S. Zhang, “Energy-efficient resource allocation for multi-user semantic communications: A deep reinforcement learning approach,” IEEE Wireless Commun. Lett. , vol. 14, no. 5, pp. 1541–1545, May 2025. [19] M. Parvini, M. R. Javan, N. Mokari, B. Abbasi, and E. A. Jorswieck, “AoI-aware resource allocation for platoon-based C-V2X networks via multi-agent multi-task reinforcement learning,” IEEE Trans. Veh. Technol. , vol. 72, no. 8, pp. 9880–9896, Aug. 2023. [20] L. Wang, T. Shui, W. Saad, and P. Adjakple, “Semantic communications for closed-loop physical AI systems,” submitted to Proc. IEEE Global Commun. Conf. (GLOBECOM) , 2026. [21] E. Eldeeb, M. Shehab, and H. Alves, “A multi-task oriented semantic communication framework for autonomous vehicles,” IEEE Wireless Commun. Lett. , vol. 13, no. 12, pp. 3469–3473, Dec. 2024. [22] Z. Weng, Z. Qin, and G. Y. Li, “Robust semantic communications for speech transmission,” in Proc. IEEE Int. Conf. Acoust., Speech, Signal Process. (ICASSP) , Hyderabad, India, Apr. 2025, pp. 1–5. [23] R. Gu, W. Xu, Z. Yang, D. Niyato, and A. Yener, “Task-oriented low-label semantic communication with self-supervised learning,” IEEE Trans. Wireless Commun. , vol. 24, no. 11, pp. 9629–9644, Nov. 2025. [24] B. Wang, R. Gu, W. Xu, F. Jiang, M. Li, and S. Wang, “Channel-aware deep joint source-channel coding for multi-task oriented semantic communication,” IEEE Wireless Commun. Lett. , vol. 14, no. 5, pp. 1521– 1525, May 2025. [25] S. Liu, N. Li, Y. Deng, and T. Q. S. Quek, “Goal-oriented semantic communication for wireless visual question answering,” IEEE J. Sel. Areas Commun. , vol. 43, no. 12, pp. 4247–4261, Dec. 2025. [26] S. Gao, X. Qin, L. Chen, Y. Chen, K. Han, and P. Zhang, “Importance of semantic information based on semantic value,” IEEE Trans. Commun. ,vol. 72, no. 9, pp. 5443–5457, Sept. 2024. [27] V.-P. Bui, D. Abode, P. M. de Sant Ana, K. Muthineni, S. R. Pandey, and P. Popovski, “Digital twin of industrial networked control system based on value of information,” in Proc. IEEE Global Commun. Conf. (GLOBECOM) , Cape Town, South Africa, Dec. 2024, pp. 770–775. [28] L. Lei, K. Zheng, J. Mei, and X. Shen, “Voi-driven joint optimization of control and communication in vehicular digital twin network,” IEEE Netw. , vol. 39, no. 5, pp. 155–164, Sept. 2025. [29] L. Wang, R. Shelim, W. Saad, and N. Ramakrishnan, “DMWM: Dual-mind world model with long-term imagination,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 38, San Diego, CA, USA, Dec. 2025, pp. 4911–4945. [30] T. Saanum, P. Dayan, and E. Schulz, “Simplifying latent dynamics with softly state-invariant world models,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 37, Vancouver, Canada, Dec. 2024, pp. 38 355– 38 382. [31] L. Barcellona, A. Zadaianchuk, D. Allegro, S. Papa, S. Ghidoni, and E. Gavves, “Dream to manipulate: Compositional world models em-powering robot imitation learning with imagination,” in Proc. Int. Conf. Learn. Represent. (ICLR) , Singapore, Apr. 2025. [32] D. Hafner, T. Lillicrap, I. Fischer, R. Villegas, D. Ha, H. Lee, and J. Davidson, “Learning latent dynamics for planning from pixels,” in 
+
+International conference on machine learning (ICML) , Long Beach, CA, USA, Jun. 2019, pp. 2555–2565. [33] D. Hafner, J. Pasukonis, J. Ba, and T. Lillicrap, “Mastering diverse control tasks through world models,” Nature , vol. 640, no. 8059, pp. 647–653, Apr. 2025. [34] H. Lai, J. Cao, J. Xu, H. Wu, Y. Lin, T. Kong, Y. Yu, and W. Zhang, “World model-based perception for visual legged locomotion,” in Proc. IEEE Int. Conf. Robot. Autom. (ICRA) , Atlanta, GA, USA, May 2025, pp. 11 531–11 537. [35] L. Wang, R. Shelim, W. Saad, and N. Ramakrishnan, “World model-based learning for long-term age of information minimization in vehic-ular networks,” arXiv preprint arXiv:2505.01712 , 2025. [36] ——, “Dual-mind world models: A general framework for learning in dynamic wireless networks,” arXiv preprint arXiv:2510.24546 , 2025. [37] K. Meng, R. Li, Y. Deng, Z. Zhao, and H. Zhang, “Networld: Communication-based diffusion world model for multi-agent reinforce-ment learning in wireless networks,” arXiv preprint arXiv:2602.00558 ,2026. [38] H. Chai, Y. Yuan, and Y. Li, “Mobiworld: World models for mobile wireless network,” arXiv preprint arXiv:2507.09462 , 2025. [39] C. Zhao, R. Zhang, J. Wang, G. Zhao, D. Niyato, G. Sun, S. Mao, and D. I. Kim, “World models for cognitive agents: Transforming edge intelligence in future networks,” arXiv preprint arXiv:2506.00417 , 2025. [40] N. Hansen, H. Su, and X. Wang, “Td-mpc2: Scalable, robust world models for continuous control,” in International Conference on Learning Representations (ICLR) , Vienna, Austria, May 2024. [41] L. Wang, R. Shelim, W. Saad, and N. Ramakrishnan, “A theoretically-grounded codebook for digital semantic communications,” in Proc. IEEE Consum. Commun. Netw. Conf. (CCNC) , Las Vegas, NV, USA, Jan. 2026, pp. 1–6. [42] S. Shah, D. Dey, C. Lovett, and A. Kapoor, “Airsim: High-fidelity visual and physical simulation for autonomous vehicles,” in Field and Service Robotics , Zurich, Switzerland, Sept. 2017, pp. 621–635. [43] J. Hoydis, S. Cammerer, F. Ait Aoudia, M. Nimier-David, L. Maggi, G. Marcus, A. Vem, and A. Keller, “Sionna,” 2022, https://nvlabs.github.io/sionna/.

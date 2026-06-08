@@ -1,0 +1,270 @@
+Title: ChannelAgent-Empowered Electromagnetic Space World Model: A Case Study on Agent-Driven Channel Generation for 6G AI-Native Air Interface
+
+URL Source: https://arxiv.org/pdf/2605.14757v1
+
+Published Time: Fri, 15 May 2026 01:18:42 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# ChannelAgent-Empowered Electromagnetic Space World Model: A Case Study on Agent-Driven Channel Generation for 6G AI-Native Air Interface 
+
+Mingyue Li 1, Li Yu 1, Yuxiang Zhang 1, Heng Wang 1, Jianhua Zhang 1, Ping Zhang 1, Guangyi Liu 2, Yuhong Huang 2
+
+> 1
+
+State Key Laboratory of Networking and Switching Technology, Beijing University of Posts and Telecommunications, Beijing 100876, China 
+
+> 2
+
+China Mobile Research Institute, China 
+
+Emails: {mingyueli, li.yu, zhangyx, hengwang, jhzhang, pzhang }@bupt.edu.cn, {liuguangyi, huangyuhong }@chinamobile.com 
+
+Abstract —As sixth-generation (6G) wireless networks evolve toward increasingly heterogeneous scenarios, tasks, and service requirements, conventional artificial intelligence (AI) models remain limited in task-aware decision-making and autonomous adaptation. To address this issue, this paper first proposes a ChannelAgent-empowered electromagnetic space world model, in which wireless intelligence is organized into a closed-loop process consisting of multi-modal sensing, ChannelAgent as the intelligent core, and execution with feedback update. As a case study, agent-driven channel generation is instantiated through path loss prediction. Specifically, a task-oriented intelligent feature selection mechanism is designed by integrating reinforcement-learning-inspired policy adaptation with evolutionary search, enabling the agent to iteratively derive compact and task-suitable feature subsets according to the current scenario and performance feedback. Simulation results demonstrate superior performance in both single-scenario and multi-scenario tasks, highlighting the potential of the proposed model for autonomous, adaptive, task-oriented, and closed-loop wireless intelligence. 
+
+Index Terms —ChannelAgent, electromagnetic space world model, agent-driven channel generation, path loss prediction, task-oriented intelligent feature selection, sixth-generation (6G) 
+
+I. I NTRODUCTION 
+
+As sixth-generation (6G) wireless systems continue to evolve, future networks are expected to operate in increasingly diverse and dynamic scenarios. Emerging paradigms such as integrated sensing and communication, artificial intelli-gence (AI)-native air interface, and ubiquitous connectivity are continuously expanding the functional scope of wireless systems [1]–[3]. Meanwhile, multi-band coexistence, complex deployment environments, and diverse key performance in-dicator (KPI) requirements pose heterogeneous challenges in scenarios, tasks, and performance objectives. Linking electro-magnetic (EM) space with communication performance, wire-less channels are closely coupled with propagation conditions and service requirements. Therefore, proactive sensing, under-standing, and adaptation of channel states and communication tasks become critical for future wireless systems. 
+
+This work is supported by the National Natural Science Foundation of China (No. 62401084, No. 62525101 and No. 62401068), and the Beijing University of Posts and Telecommunications - China Mobile Communications Group Co., Ltd. Joint Institute. 
+
+To meet this demand, recent advances in AI have introduced powerful data-driven tools into wireless communications. From task-specific neural network predictors [4] to emerg-ing large models [5], AI-based methods have demonstrated promising performance in a wide range of communication tasks, including channel prediction [6], beam management [7], radio map construction [8], and resource allocation [9]. However, most existing approaches still function primarily as algorithmic tools under predefined task pipelines: they mainly learn passive input-output mappings for specific tasks, lacking the autonomous decision-making capability to proac-tively adapt to changing environments and dynamic service requirements. This limitation suggests that future wireless systems should move beyond isolated predictive models toward an au-tonomous and closed-loop wireless intelligence paradigm [10]. In this context, AI agents offer a promising direction. An AI agent can be regarded as an autonomous computational entity that perceives its environment, performs reasoning and decision-making, and continuously interacts with the environ-ment through actions to accomplish task objectives [11], [12]. Compared with conventional AI models that mainly provide predictive capabilities, an agent further emphasizes task inter-pretation, decision-making, tool orchestration, and feedback-driven adaptation, thereby transforming model capability into task-oriented action capability. This property is particularly important for future wireless systems, where communication decisions must adapt to task objectives, environmental dynam-ics, and propagation conditions. Motivated by this insight, this paper introduces the concept of AI agents into the channel domain and first proposes a ChannelAgent-empowered EM space world model for multi-dimensional communication tasks in the wireless EM world. Rather than treating communication tasks as predefined predic-tion problems under fixed input-output mappings, the proposed model is designed as a closed-loop architecture consisting of multi-modal sensing, ChannelAgent with intelligent brain core and knowledge and tool support, and execution with feedback update, moving wireless systems beyond passive 
+
+> arXiv:2605.14757v1 [eess.SP] 14 May 2026
+
+algorithm invocation toward a more intelligent paradigm with autonomous adaptation, independent decision-making, task-oriented operation, and closed-loop feedback update. In this sense, the proposed model provides a potential agent-oriented paradigm for future 6G AI-native air interface. Furthermore, this paper develops agent-driven channel gen-eration as a case study to demonstrate the capability of the proposed model for task-oriented decision under different sce-narios. Specifically, an intelligent feature selection mechanism is designed by integrating reinforcement-learning-inspired pol-icy adaptation with evolutionary search, enabling the agent to iteratively derive a more compact and task-suitable feature subset according to the current scenario and performance feedback. Using path loss prediction as a representative task, simulation results show that the proposed method achieves su-perior performance in both single-scenario and multi-scenario tasks, providing an initial task-level validation of the proposed model. The remainder of this paper is organized as follows. Section II presents the proposed model. Section III introduces the case study on agent-driven channel generation. Section IV provides simulations and performance analysis. Finally, Section V gives the conclusion of this paper. II. T HE CHANNEL AGENT -E MPOWERED 
+
+ELECTROMAGNETIC SPACE WORLD MODEL 
+
+This section presents the proposed ChannelAgent-empowered EM space world model for multi-dimensional communication tasks in the wireless EM world. As illustrated in Fig. 1, the proposed model consists of three components: multi-modal sensing, ChannelAgent, and execution with feedback update. Within this model, ChannelAgent integrates the intelligent brain core with knowledge and tool support. Rather than following a passive fitting pipeline for predefined tasks, the proposed model forms a task-oriented closed-loop architecture that enables wireless systems to sense the wireless EM space, generate decisions, execute actions, and refine subsequent behavior through feedback. 
+
+A. Multi-modal Sensing 
+
+Serving as the sensory interface of the proposed model, multi-modal sensing is responsible for acquiring external state information relevant to the current communication task and forming an initial representation of the wireless EM space. Unlike conventional systems that mainly rely on local link measurements, this component supports a multi-dimensional understanding of the wireless EM space, jointly characterizing channel conditions, environmental context, user requirements, and service-related constraints, thereby establishing a more holistic sensing of the current scenario. Since communication tasks and their KPI priorities may vary across scenarios, the sensing information should jointly characterize environmen-tal conditions and task constraints. Accordingly, multi-modal sensing provides the input basis for subsequent processes. 
+
+B. Intelligent Brain Core 
+
+As the cognitive center within ChannelAgent, the intelligent brain core is responsible for transforming sensing inputs into executable communication decisions for the current task. Rather than functioning as a single, black-box model, it undertakes the core functions of task interpretation, problem formulation, and decision generation, enabling the system to infer task objectives from sensing inputs and organize subsequent actions accordingly. Specifically, this core contains three closely coupled stages. During task interpretation, the system identifies the current task objective by jointly considering the scenario state, service requirements, and performance constraints, and determines the KPIs to be prioritized. Subsequently, in reasoning and plan-ning, it formulates the problem according to the environment state and task requirements, and converts the overall objective into an executable task chain. Finally, within the decision engine, the system determines the task strategy and identifies the tools required for subsequent execution. Through this process, ChannelAgent does not simply ex-ecute a fixed algorithm for a given input, but autonomously performs understanding, problem formulation, and decision-making around the task objective. For example, when a vehicle turns at an intersection, the system can dynamically determine whether propagation state re-evaluation, beam reselection, or channel prediction update is required according to environ-mental changes, link conditions, and service demands. 
+
+C. Knowledge and Tool Support 
+
+Knowledge and tool support provides the essential prior grounding and execution support for ChannelAgent within the proposed model. It complements online sensing and reasoning by supplying both reusable domain knowledge and callable functional modules. The wireless knowledge base mainly stores communication-related prior knowledge, such as wireless environment knowl-edge (WEK) [13], protocol rules, mappings between KPIs and task objectives, historical decision experience, and ex-pert rules. Such knowledge provides important references for task interpretation and reasoning, allowing the core decision process to go beyond instantaneous inputs and perform more informed problem formulation and objective decomposition. The tool pool, on the other hand, provides the executable modules required for task realization, such as neural predic-tion backbones, ray-tracing simulators, optimization modules, and parameter adjustment tools. These tools do not operate independently. Instead, they are invoked on demand under the coordination of the decision engine to support the execution of different communication tasks. 
+
+D. Execution with Feedback Update 
+
+Execution with feedback update is responsible for imple-menting the generated decisions in the wireless EM space and refining the proposed model according to execution outcomes. The selected strategy is carried out through the required tools to accomplish the corresponding communication task, thereby translating the outputs of ChannelAgent into effective actions in the wireless EM space. The resulting performance is then evaluated and fed back to ChannelAgent while also being used to refine the knowledge and tool support. Through this process, Fig. 1. Architecture of the proposed ChannelAgent-empowered electromagnetic space world model for future 6G AI-native air interface. 
+
+the proposed model continuously improves future decisions and completes the closed-loop interaction with the wireless EM space. Overall, the proposed model establishes a closed-loop in-telligent architecture for the wireless EM world, featuring autonomous adaptation, independent decision-making, task-oriented operation, and closed-loop feedback update. It has the potential to drive wireless systems to move from passive model execution toward a proactive paradigm of autonomous understanding, decision-making, and optimization around cur-rent task objectives. III. C ASE STUDY : A GENT -DRIVEN CHANNEL GENERATION 
+
+This section presents agent-driven channel generation as a case study of the proposed model. The process is instantiated through path loss prediction, a representative channel-related task strongly affected by environmental geometry and prop-agation conditions. Unlike conventional methods with fixed feature inputs, the proposed workflow enables task-oriented intelligent feature selection through a hybrid mechanism that combines reinforcement-learning-inspired policy adaptation with evolutionary search, thereby automatically deriving a compact and task-suitable feature subset for accurate path loss prediction under different scenario-dependent tasks. Specifi-cally, as shown in Fig. 2, the workflow consists of environment feature construction, task-oriented intelligent feature selection, prediction task execution, and result analysis and feedback. 
+
+A. Environment Feature Construction 
+
+The workflow begins with the construction of a candidate feature space for path loss prediction. Following environment sensing and preprocessing in the given scenario, raw data are abstracted into a set of representative environmental fea-tures to provide the basis for subsequent decision-making. As summarized in Table I, ten environmental features are constructed to capture the principal factors governing path loss from three complementary perspectives: spatial geometry, environmental structure, and EM propagation knowledge [13]– [15]. Accordingly, the candidate feature space is defined as 
+
+S = {f1, f 2, . . . , f N }, (1) where fi denotes the i-th candidate environment feature and 
+
+N is the total number of available features. Instead of fixing the model input a priori, the proposed method retains all features in S as candidate variables for subsequent task-oriented intelligent feature selection.                          
+
+> TABLE I CANDIDATE ENVIRONMENT FEATURES USED IN THE CASE STUDY
+> Category Symbol Meaning
+> Geometry (1) Dtxrx Tx–Rx distance Geometry (2) Htxrx Tx–Rx height difference Geometry (3) Hts avg Tx–scatterer height difference Geometry (4) Dts avg Tx–scatterer distance Geometry (5) Drs mean Rx–scatterer distance Structure (6) Vef f mean Mean scatterer volume Structure (7) M in D dev ef f Minimum offset to Tx–Rx line Structure (8) Blockage ef f Blockage feature Knowledge (9) Ref W EK Reflection contribution Knowledge (10) Dif W EK Diffraction contribution
+
+B. Task-Oriented Intelligent Feature Selection 
+
+Given the constructed candidate feature space, the workflow performs task-oriented intelligent feature selection for path loss prediction in the current scenario. The objective is not to retain as many input features as possible, but to identify a compact and task-suitable subset that better supports the down-stream prediction task. To this end, each candidate solution is represented by a binary feature mask: 
+
+M(t) =
+
+h
+
+m(t)1 , m (t)2 , . . . , m (t)
+
+> N
+
+i
+
+∈ { 0, 1}N , (2) where mi(t) = 1 indicates that the i-th feature is selected at generation t, and mi(t) = 0 otherwise. The proposed workflow employs a hybrid mechanism that integrates reinforcement-learning-inspired policy adaptation Fig. 2. Workflow of the proposed agent-driven channel generation case study. 
+
+with evolutionary search, enabling the generated feature sub-sets to be iteratively refined to match the current scenario and task objective. Specifically, the feature-selection policy is parameterized by a probability vector: 
+
+p(t) = [ p(t)1 , p (t)2 , . . . , p (t) 
+
+> N
+
+], (3) where p(t) 
+
+> i
+
+denotes the probability of selecting the i-th feature at generation t. Under this policy, each candidate mask is sampled according to: 
+
+m(t) 
+
+> i
+
+∼ Bernoulli 
+
+
+
+p(t)
+
+> i
+
+
+
+, i = 1 , 2, . . . , N. (4) To enhance exploration over the combinatorial feature space, evolutionary operators such as crossover and mutation are further applied to the sampled masks. The generated feature subsets are subsequently evaluated through the down-stream prediction task. To align the decision process with the task objective, the performance is converted into a total score that jointly considers prediction error, variation-trend consistency, and feature compactness: 
+
+Stask (M) = −
+
+
+
+RMSE( M) + λcEc(M) + λn
+
+N ∥M∥0
+
+
+
+, (5) where RMSE( M) denotes the validation root mean square error under feature mask M, Ec(M) denotes the trend-consistency error between the predicted and ground-truth path loss sequences, encouraging the selected feature subset to bet-ter preserve local path loss variations induced by blockage and shadowing. ∥M∥0 denotes the number of selected features, and 
+
+λc, λ n are weighting coefficients. A larger Stask (M) indicates better overall performance. Based on the obtained total score, the top-K candidate masks are selected as elite individuals. Their average feature distribution, denoted by ¯M(t)elite = 1
+
+> K
+
+PKk=1 M(t)elite ,k is then utilized to update the global policy via a moving average: 
+
+p(t+1) = (1 − η)p(t) + η ¯M(t)elite , (6) where η is the update rate. Through this score-guided iterative process, the agent progressively refines its feature preference toward subsets that are better aligned with the current scenario and task objective. 
+
+C. Prediction Task Execution 
+
+After the task-oriented intelligent feature selection, the optimal feature mask is determined as 
+
+M⋆ = arg max  
+
+> M
+
+Stask (M), (7) which corresponds to the feature subset with the highest total score for the current scenario. Based on M⋆, the associated input features are extracted and fed into the path loss predictor to perform the final prediction task. Denoting the selected feature subset by XM⋆ , the prediction process can be written as 
+
+ˆy = fθ (XM⋆ ) , (8) where fθ (·) denotes the path loss predictor with parameter set θ, and ˆy is the predicted path loss. In this way, the feature subset obtained by the agent is finally translated into executable path loss prediction for the current scenario. 
+
+D. Results Analysis and Feedback 
+
+For each scenario, the proposed workflow yields a task-specific decision outcome composed of the optimal feature mask M⋆, the corresponding prediction result ˆy, and its performance evaluation. Therefore, the agent-driven method provides not only the final path loss prediction, but also an interpretable feature-level decision associated with the current task. The evaluation result further serves as feedback to the decision module, thereby closing the loop between feature selection and prediction performance. Since the relevance of candidate features varies with the underlying propagation environment, the optimal feature sub-set is inherently scenario-dependent. By comparing M⋆s across different scenarios, the proposed workflow can reveal which environmental features are more critical under different prop-agation conditions. Therefore, when the scenario changes, the agent can dynamically update its feature preference accord-ingly and generate a new task-matched subset instead of using a fixed input configuration. IV. S IMULATION SETUP AND RESULTS 
+
+A. Simulation Setup 
+
+To evaluate the proposed workflow, three tasks are con-sidered in this section: Task 1 corresponds to an intersection scenario, shown in Fig. 3a, Task 2 corresponds to a city square scenario, shown in Fig. 3b, and Task 3 is a multi-scenario task constructed by combining data samples from the two scenarios. Wireless InSite is employed to generate the path loss data together with the corresponding geometric scenario information, from which the ten candidate environment fea-tures in Table I are further extracted by scripts.   
+
+> (a) Task 1: An intersection scenario. (b) Task 2: A city square scenario. Fig. 3. Simulation scenarios in the case study.
+
+For all tasks, the same convolutional neural network (CNN)-based predictor is adopted as the downstream prediction backbone to ensure fair comparison across different feature-input strategies. In addition to the proposed agent-driven method, four comparison strategies are considered, including full-feature input [15], a random subset with the same cardi-nality as the agent-selected one, a mutual-information-based geometric-structure subset (MI GE Struct), and a mutual-information-based geometric-EM subset (MI GE EM). The two mutual-information (MI)-based subsets are constructed according to feature relevance to the current prediction task. The major implementation settings are summarized in Table II. The final performance is evaluated by the RMSE and the total score Stask (M) defined in (5), where a higher total score indicates better overall performance.           
+
+> TABLE II MAJOR IMPLEMENTATION SETTINGS
+> Parameter Value/Description
+> CNN batch size 16 CNN loss function RMSE CNN learning rate 0.00055 Agent generations 50 Agent population size 25 Policy update rate η0.1 Total score coefficients λc, λ n0.3, 0.3
+
+B. Performance Analysis 
+
+The quantitative results are summarized in Table III. For the single-scenario tasks, the proposed agent-driven method achieves the best performance in both Task 1 and Task 2, reducing the RMSE from 4.823 dB to 3.736 dB and from 6.153 dB to 2.664 dB compared with the full-feature baseline, corresponding to reductions of 22.5% and 56.7%, respectively. As shown in Fig. 4, the predicted path loss curves also better follow the ground-truth variations. These results indicate that full-feature input may introduce redundant or task-irrelevant information, while MI-based subsets, although competitive, are limited by static feature relevance and lack feedback-driven preference refinement. The advantage of the proposed method is further observed in Task 3. As shown in Fig. 5, the proposed method achieves the highest total score on the multi-scenario task. It also maintains strong performance on the two constituent sub-scenarios, with RMSE of 3.918 dB and 2.731 dB, respectively, as shown in Table III. The performance gap from the corresponding single-scenario results is within 0.2 dB, indicating good cross-scenario generalization of the selected subset.                                                           
+
+> Fig. 4. Path loss prediction results of the proposed method and the compar-ative methods in single-scenario task. TABLE III PERFORMANCE COMPARISON UNDER DIFFERENT TASKS AND METHODS
+> Task Method Features RMSE (dB) Total score Task 1 Agent-driven (2,7,9,10) 3.736 -5.242
+> Task 1 Full-feature All 4.823 -6.860 Task 1 Random subset (1,5,6,7) 5.725 -8.018 Task 1 MI GE EM (1,5,9,10) 3.829 -5.380 Task 1 MI GE Struct (1,5,7,8) 4.174 -5.633
+> Task 2 Agent-driven (3,8,9,10) 2.664 -3.646
+> Task 2 Full-feature All 6.153 -7.465 Task 2 Random subset (1,3,6,7) 8.750 -11.446 Task 2 MI GE EM (1,5,9,10) 3.083 -4.292 Task 2 MI GE Struct (1,5,7,8) 3.639 -4.599
+> Task 3 (Multi) Agent-driven (3,7,9,10) 3.377 -4.634
+> – Intersection Agent-driven (3,7,9,10) 3.918 -5.399 – City Square Agent-driven (3,7,9,10) 2.731 -3.708
+> Fig. 5. Generalization performance of the proposed method and the compar-ative methods in multi-scenario task.
+
+The decision evolution of the agent is further analyzed in Figs. 6 and 7. Since p(t) represents the feature-selection policy defined in (3), the trajectory of each p(t) 
+
+> i
+
+reflects the agent’s preference for the corresponding feature. To interpret this decision process, the normalized agent entropy and population diversity are considered to characterize policy determinacy and population-level exploration: ¯H(t) = − 1
+
+N ln 2 
+
+> N
+
+X
+
+> i=1
+
+h
+
+p(t) 
+
+> i
+
+ln p(t) 
+
+> i
+
++
+
+
+
+1 − p(t)
+
+> i
+
+
+
+ln 
+
+
+
+1 − p(t)
+
+> i
+
+i 
+
+,D(t)pop = 2
+
+P (P − 1) N 
+
+> P−1
+
+X
+
+> a=1
+> P
+
+X
+
+> b=a+1
+
+M(t) 
+
+> a
+
+− M(t) 
+
+> b0
+
+,
+
+(9) where P denotes the population size and M(t) 
+
+> a
+
+denotes the 
+
+a-th candidate mask at generation t. A lower ¯H(t) indicates a more deterministic feature-selection policy, while a non-zero 
+
+D(t)pop reflects sufficient candidate diversity for continued total-score-driven exploration. 
+
+Fig. 6. Evolution of the agent policy probabilities. 
+
+As shown in Fig. 6, the policy probabilities gradually concentrate on several informative features and become stable, indicating that the agent forms task-oriented feature prefer-ences through total score feedback. Fig. 7 further shows that the normalized agent entropy decreases while the population diversity remains non-zero, suggesting that the search becomes more decisive without prematurely collapsing to a single feature subset. Overall, these results support the closed-loop feature decision and total score feedback mechanism in the proposed case study. 
+
+Fig. 7. Evolution of normalized agent entropy and population diversity. 
+
+V. C ONCLUSIONS 
+
+To address the increasing heterogeneity in future 6G sys-tems, this paper proposes a ChannelAgent-empowered EM space world model, where ChannelAgent serves as the intelli-gent core for closed-loop sensing, reasoning, decision-making, and feedback update. An agent-driven channel generation case study is instantiated through path loss prediction, in which a hybrid feature selection mechanism combines reinforcement-learning-inspired policy adaptation and evolutionary search. Simulation results demonstrate that the proposed method adap-tively derives task-suitable feature subsets and improves path loss prediction performance across different tasks, providing an initial validation of the proposed model. Future work will focus on extending the model to more complex communication tasks and dynamic environments, and enhancing its online decision-making and continual learning capabilities. ACKNOWLEDGMENT 
+
+This work is supported by the National Natural Science Foundation of China (No. 62401084, No. 62525101 and No. 62401068), and the Beijing University of Posts and Telecom-munications - China Mobile Communications Group Co., Ltd. Joint Institute. REFERENCES [1] J. Zhang, L. Yu, S. Liu, et al., “Wireless Environmental Information Theory: A New Paradigm Toward 6G Online and Proactive Environment Intelligence Communication,” Engineering, vol. 56, pp. 186–200, 2026. [2] H. Wang, J. Zhang, G. Nie, et al., “Digital Twin Channel for 6G: Concepts, Architectures and Potential Applications,” IEEE Commun. Mag., vol. 63, no. 3, pp. 24–30, 2025. [3] J. Zhang, H. Wang, Y. Zhang, et al., “Channel Characteristics and Modeling Research for 6G: Challenges, Progress, and Prospects,” Sci. China Inf. Sci., vol. 54, pp. 1114–1143, 2024. [4] S. Fan, H. Li, X. Liang, et al., “E2ENet: An End-to-End Channel Prediction Neural Network Based on Uplink Pilot for FDD Systems,” IEEE Wirel. Commun. Lett., vol. 13, no. 5, pp. 1285–1289, May 2024. [5] Z. Chen, Z. Zhang, and Z. Yang, “Big AI Models for 6G Wireless Networks: Opportunities, Challenges, and Research Directions,” IEEE Wirel. Commun., vol. 31, no. 5, pp. 164–172, Oct. 2024. [6] L. Yu, L. Shi, J. Zhang, et al., “ChannelGPT: A Large Model Toward Real-World Channel Foundation Model for 6G Environment Intelligence Communication,” IEEE Commun. Mag., vol. 63, no. 10, pp. 68–74, Oct. 2025. [7] Q. Xue, C. Ji, S. Ma, et al., “A Survey of Beam Management for mmWave and THz Communications Towards 6G,” IEEE Commun. Surv. Tutor., vol. 26, no. 3, pp. 1520–1559, 2024. [8] X. Wang, K. Tao, N. Cheng, et al., “RadioDiff: An Effective Generative Diffusion Model for Sampling-Free Dynamic Radio Map Construction,” IEEE Trans. Cogn. Commun. Netw., vol. 11, no. 2, pp. 738–750, 2025. [9] N. Cheng, X. Wang, Z. Li, et al., “Toward Enhanced Reinforcement Learning-Based Resource Management via Digital Twin: Opportunities, Applications, and Challenges,” IEEE Netw., vol. 39, no. 1, pp. 189–196, 2025. [10] J. Zhang, Y. Yang, and P. Zhang, “Method for Determining Intelligent Base Stations Location, Intelligent Base Stations, and Storage Media,” Chinese Patent CN109302712, Oct. 10, 2018. [11] X. Duan, Z. Huang, S. Liang, et al., “AI-Agent Communication Network for 6G: Vision, Architecture, and Key Technologies,” Front. Inf. Technol. Electron. Eng., vol. 26, no. 11, pp. 2065–2080, 2025. [12] F. Jiang, C. Pan, K. Wang, et al., “From Large AI Models to Agentic AI: A Tutorial on Future Intelligent Communications,” IEEE J. Sel. Areas Commun., vol. 44, pp. 3507–3540, 2026. [13] J. Wang, J. Zhang, Y. Zhang, et al., “Radio Environment Knowledge Pool for 6G Digital Twin Channel,” IEEE Commun. Mag., vol. 63, no. 5, pp. 158-164, May 2025. [14] Y. Sun, J. Zhang, Y. Zhang, et al., “Environment Features-Based Model for Path Loss Prediction,” IEEE Wirel. Commun. Lett., vol. 11, no. 9, pp. 2010–2014, 2022. [15] L. Shi, L. Yu, J. Zhang, et al., “Multidimensional Wireless Environment Features Based Zero-Shot Path Loss Prediction,” IEEE Antennas Wirel. Propag. Lett., vol. 25, no. 2, pp. 496–500, 2026.

@@ -1,0 +1,1939 @@
+{
+  "mode": "skims",
+  "generated_at": "2026-06-08T04:53:20.673977+00:00",
+  "stats": {
+    "mode": "skims",
+    "forced_all_quick": true,
+    "min_score": 8.0,
+    "deep_divecandidates": 39,
+    "deep_cap": null,
+    "deep_selected": 0,
+    "quick_candidates": 39,
+    "quick_skim_target": null,
+    "quick_selected": 39
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.00133v1",
+      "source": "arxiv",
+      "title": "World Models: A Comprehensive Survey of Architectures, Methodologies, Reasoning Paradigms, and Applications",
+      "abstract": "World models, internal simulators that learn the structure and dynamics of an environment, have emerged as a central paradigm in the pursuit of artificial general intelligence, enabling agents to predict, plan, and reason within learned representations. Despite rapid progress across reinforcement learning, robotics, autonomous driving, and video generation, the field lacks a unified framework integrating its diverse architectural choices, training methods, reasoning mechanisms, and application settings. This survey addresses that gap with a multi-axis taxonomy organized along four dimensions: (i) architecture, encompassing representation format, dynamics formulation, input modality, learning paradigm, and downstream application; (ii) methodological family, including state-space and recurrent approaches, transformer-based models, diffusion-based generators, physics-informed networks, and language-augmented multimodal systems; (iii) reasoning strategy, covering imagination-based planning, latent policy learning, counterfactual reasoning, and planning under uncertainty; and (iv) application domain, spanning robotics, autonomous driving, video prediction, multimodal agents, reinforcement learning, scientific modeling, medical imaging, educational measurement, and business and finance. Tracing the field from early cognitive-science foundations to milestone systems such as PlaNet, the Dreamer family, MuZero, Sora, Cosmos, and Genie, we examine how these dimensions interact and highlight the recent convergence of chain-of-thought reasoning with world-model imagination. We review evaluation protocols and benchmarks, identify persistent challenges such as compounding prediction errors, sim-to-real transfer, and fragmented evaluation, and outline future directions toward unified multimodal world models, foundation-scale interactive simulators, and safe deployment in safety-critical domains.",
+      "authors": [
+        "Arif Hassan Zidan",
+        "Yi Pan",
+        "Hanqi Jiang",
+        "Ruiyu Yan",
+        "Wei Ruan",
+        "Zihao Wu",
+        "Lifeng Chen",
+        "Weihang You",
+        "Xinliang Li",
+        "Bowen Chen",
+        "Huawen Hu",
+        "Peilong Wang",
+        "Sizhuang Liu",
+        "Jing Zhang",
+        "Siyuan Li",
+        "Zhengliang Liu",
+        "Yu Bao",
+        "Lin Zhao",
+        "Lichao Sun",
+        "Dajiang Zhu",
+        "Xiang Li",
+        "Jinglei Lv",
+        "Quanzheng Li",
+        "Wei Liu",
+        "Tianming Liu",
+        "Wei Zhang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.ET"
+      ],
+      "published": "2026-05-28T21:23:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.00133v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "comprehensive survey on world model architectures, methodologies, reasoning paradigms, and applications",
+      "llm_evidence_cn": "全面综述世界模型的架构、方法论、推理范式与应用",
+      "llm_evidence": "全面综述世界模型的架构、方法论、推理范式与应用",
+      "canonical_evidence": "全面综述世界模型的架构、方法论、推理范式与应用",
+      "llm_tldr_en": "A comprehensive survey that provides a multi-axis taxonomy of world models across architecture, methodology, reasoning, and applications, offering a unified framework for the field.",
+      "llm_tldr_cn": "世界模型在强化学习、机器人、自动驾驶和视频生成等领域快速进步，但缺乏统一框架。本综述提出了一个多轴分类法，沿架构（表示格式、动态形式、输入模态、学习范式等）、方法论、推理范式和应用四个维度全面梳理了现有工作。该综述整合了分散的研究，为世界模型领域提供了系统性参考。",
+      "llm_tldr": "世界模型在强化学习、机器人、自动驾驶和视频生成等领域快速进步，但缺乏统一框架。本综述提出了一个多轴分类法，沿架构（表示格式、动态形式、输入模态、学习范式等）、方法论、推理范式和应用四个维度全面梳理了现有工作。该综述整合了分散的研究，为世界模型领域提供了系统性参考。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.11367v1",
+      "source": "arxiv",
+      "title": "3D-Belief: Embodied Belief Inference via Generative 3D World Modeling",
+      "abstract": "Recent advances in visual generative models have highlighted the promise of learning generative world models. However, most existing approaches frame world modeling as novel-view synthesis or future-frame prediction, emphasizing visual realism rather than the structured uncertainty required by embodied agents acting under partial observability. In this work, we propose a different perspective: world modeling as embodied belief inference in 3D space. From this view, a world model should not merely render what may be seen, but maintain and update an agent's belief about the unobserved 3D world as new observations are acquired. We identify several key capabilities for such models, including spatially consistent scene memory, multi-hypothesis belief sampling, sequential belief updating, and semantically informed prediction of unseen regions. We instantiate these ideas in 3D-Belief, a generative 3D world model that infers explicit, actionable 3D beliefs from partial observations and updates them online over time. Unlike prior visual prediction models, 3D-Belief represents uncertainty directly in 3D, enabling embodied agents to imagine plausible scene completions and reason over partially observed environments. We evaluate 3D-Belief on 2D visual quality for scene memory and unobserved-scene imagination, object- and scene-level 3D imagination using our proposed 3D-CORE benchmark, and challenging object navigation tasks in both simulation and the real world. Experiments show that 3D-Belief improves 2D and 3D imagination quality and downstream embodied task performance compared to state-of-the-art methods.",
+      "authors": [
+        "Yifan Yin",
+        "Zehao Wen",
+        "Jieneng Chen",
+        "Zehan Zheng",
+        "Nanru Dai",
+        "Haojun Shi",
+        "Suyu Ye",
+        "Aydan Huang",
+        "Zheyuan Zhang",
+        "Alan Yuille",
+        "Jianwen Xie",
+        "Ayush Tewari",
+        "Tianmin Shu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-12T00:42:27+00:00",
+      "link": "https://arxiv.org/pdf/2605.11367v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generative 3D world modeling for embodied belief inference",
+      "llm_evidence_cn": "使用生成式3D世界模型进行具身信念推断",
+      "llm_evidence": "使用生成式3D世界模型进行具身信念推断",
+      "canonical_evidence": "使用生成式3D世界模型进行具身信念推断",
+      "llm_tldr_en": "Proposes a perspective of world modeling as embodied belief inference in 3D, maintaining and updating beliefs about unobserved 3D world from new observations.",
+      "llm_tldr_cn": "现有世界模型多关注视觉真实性，而非具身智能体在部分可观测环境中的结构化不确定性。本文提出将世界模型视为在3D空间中进行具身信念推断，即世界模型不仅应渲染可见内容，还应维护并更新关于未观测3D世界的信念。论文识别了关键能力，包括空间一致场景记忆、多假设信念采样等，为实现该视角提供了方向。",
+      "llm_tldr": "现有世界模型多关注视觉真实性，而非具身智能体在部分可观测环境中的结构化不确定性。本文提出将世界模型视为在3D空间中进行具身信念推断，即世界模型不仅应渲染可见内容，还应维护并更新关于未观测3D世界的信念。论文识别了关键能力，包括空间一致场景记忆、多假设信念采样等，为实现该视角提供了方向。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.12090v1",
+      "source": "arxiv",
+      "title": "World Action Models: The Next Frontier in Embodied AI",
+      "abstract": "Vision-Language-Action (VLA) models have achieved strong semantic generalization for embodied policy learning, yet they learn reactive observation-to-action mappings without explicitly modeling how the physical world evolves under intervention. A growing body of work addresses this limitation by integrating world models, predictive models of environment dynamics, into the action generation pipeline. We term this emerging paradigm World Action Models (WAMs): embodied foundation models that unify predictive state modeling with action generation, targeting a joint distribution over future states and actions rather than actions alone. However, the literature remains fragmented across architectures, learning objectives, and application scenarios, lacking a unified conceptual framework. We formally define WAMs and disambiguate them from related concepts, and trace the foundations and early integration of VLA and world model research that gave rise to this paradigm. We organize existing methods into a structured taxonomy of Cascaded and Joint WAMs, with further subdivision by generation modality, conditioning mechanism, and action decoding strategy. We systematically analyze the data ecosystem fueling WAMs development, spanning robot teleoperation, portable human demonstrations, simulation, and internet-scale egocentric video, and synthesize emerging evaluation protocols organized around visual fidelity, physical commonsense, and action plausibility. Overall, this survey provides the first systematic account of the WAMs landscape, clarifies key architectural paradigms and their trade-offs, and identifies open challenges and future opportunities for this rapidly evolving field.",
+      "authors": [
+        "Siyin Wang",
+        "Junhao Shi",
+        "Zhaoyang Fu",
+        "Xinzhe He",
+        "Feihong Liu",
+        "Chenchen Yang",
+        "Yikang Zhou",
+        "Zhaoye Fei",
+        "Jingjing Gong",
+        "Jinlan Fu",
+        "Mike Zheng Shou",
+        "Xuanjing Huang",
+        "Xipeng Qiu",
+        "Yu-Gang Jiang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CL",
+        "cs.CV"
+      ],
+      "published": "2026-05-12T13:10:52+00:00",
+      "link": "https://arxiv.org/pdf/2605.12090v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world action models paradigm for embodied AI",
+      "llm_evidence_cn": "具身AI中的世界动作模型范式",
+      "llm_evidence": "具身AI中的世界动作模型范式",
+      "canonical_evidence": "具身AI中的世界动作模型范式",
+      "llm_tldr_en": "Proposes World Action Models as a unified paradigm integrating predictive world modeling with action generation for embodied agents.",
+      "llm_tldr_cn": "具身AI中的视觉-语言-动作模型缺乏对世界动态的显式建模。本文提出世界动作模型（WAM）这一新范式，统一预测状态建模与动作生成，联合建模未来状态和动作分布。该概念整合了零散的研究，为具备推理和规划能力的具身基础模型提供方向。实验未完成，但概念化贡献显著。",
+      "llm_tldr": "具身AI中的视觉-语言-动作模型缺乏对世界动态的显式建模。本文提出世界动作模型（WAM）这一新范式，统一预测状态建模与动作生成，联合建模未来状态和动作分布。该概念整合了零散的研究，为具备推理和规划能力的具身基础模型提供方向。实验未完成，但概念化贡献显著。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.13013v1",
+      "source": "arxiv",
+      "title": "JEDI: Joint Embedding Diffusion World Model for Online Model-Based Reinforcement Learning",
+      "abstract": "Diffusion world models have recently become competitive for online model-based reinforcement learning, but current approaches expose a tension: pixel diffusion is effective but computationally expensive while the latest latent diffusion approach improves efficiency yet performs subpar. The latter also relies on separately trained latents rather than the end-to-end world-model objectives that have driven much of modern MBRL progress. In particular, JEPA-style predictive representation learning has emerged as an especially promising direction for world modeling and MBRL. Concurrently, diffusion-style objectives have gained traction across multiple domains, with iterative refinement as a promising approach for multimodal and stochastic targets. Taken together, these trends motivate Joint Embedding DIffusion (JEDI), the first online end-to-end latent diffusion world model. JEDI learns its latent space directly from the diffusion denoising loss with a JEPA framework, using denoising to learn and predict future latents rather than relying on reconstruction and pretrained models. We provide a theoretical motivation showing that conventional JEPA objectives induce a predictive information bottleneck, and that conditional diffusion denoising admits a closely related predictive-compression decomposition. Empirically, JEDI is competitive on Atari100k and outperforms the baseline with seperately trained latents where directly comparable. Relative to the pixel diffusion baseline, JEDI uses 43% less VRAM, over 3$\\times$ faster world-model sampling, and 2.5$\\times$ faster training. JEDI also exhibits a markedly different task-level performance profile from the pixel baseline, suggesting that end-to-end predictive latents change more than compute alone.",
+      "authors": [
+        "Jing Yu Lim",
+        "Rushi Shah",
+        "Zarif Ikram",
+        "Samson Yu",
+        "Haozhe Ma",
+        "Tze-Yun Leong",
+        "Dianbo Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-13T05:07:32+00:00",
+      "link": "https://arxiv.org/pdf/2605.13013v1",
+      "tags": [
+        "keyword:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "diffusion world model for model-based RL",
+      "llm_evidence_cn": "用于在线模型强化学习的扩散世界模型",
+      "llm_evidence": "用于在线模型强化学习的扩散世界模型",
+      "canonical_evidence": "用于在线模型强化学习的扩散世界模型",
+      "llm_tldr_en": "Proposes JEDI, a joint embedding diffusion world model that combines JEPA-style predictive representation with diffusion for efficient online model-based RL.",
+      "llm_tldr_cn": "扩散世界模型在基于模型的强化学习中很有前景，但存在像素扩散效率低、潜在扩散性能差的问题。本文提出JEDI，结合JEPA风格的预测表示学习和扩散目标，实现端到端的世界模型学习。JEDI联合学习潜在表示和扩散过程，在在线MBRL基准上达到了与像素扩散相当的性能，同时计算效率大幅提升。",
+      "llm_tldr": "扩散世界模型在基于模型的强化学习中很有前景，但存在像素扩散效率低、潜在扩散性能差的问题。本文提出JEDI，结合JEPA风格的预测表示学习和扩散目标，实现端到端的世界模型学习。JEDI联合学习潜在表示和扩散过程，在在线MBRL基准上达到了与像素扩散相当的性能，同时计算效率大幅提升。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.14757v1",
+      "source": "arxiv",
+      "title": "ChannelAgent-Empowered Electromagnetic Space World Model: A Case Study on Agent-Driven Channel Generation for 6G AI-Native Air Interface",
+      "abstract": "As sixth-generation (6G) wireless networks evolve toward increasingly heterogeneous scenarios, tasks, and service requirements, conventional artificial intelligence (AI) models remain limited in task-aware decision-making and autonomous adaptation. To address this issue, this paper first proposes a ChannelAgent-empowered electromagnetic space world model, in which wireless intelligence is organized into a closed-loop process consisting of multi-modal sensing, ChannelAgent as the intelligent core, and execution with feedback update. As a case study, agent-driven channel generation is instantiated through path loss prediction. Specifically, a task-oriented intelligent feature selection mechanism is designed by integrating reinforcement-learning-inspired policy adaptation with evolutionary search, enabling the agent to iteratively derive compact and task-suitable feature subsets according to the current scenario and performance feedback. Simulation results demonstrate superior performance in both single-scenario and multi-scenario tasks, highlighting the potential of the proposed model for autonomous, adaptive, task-oriented, and closed-loop wireless intelligence.",
+      "authors": [
+        "Mingyue Li",
+        "Li Yu",
+        "Yuxiang Zhang",
+        "Heng Wang",
+        "Jianhua Zhang",
+        "Ping Zhang",
+        "Guangyi Liu",
+        "Yuhong Huang"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-05-14T12:22:39+00:00",
+      "link": "https://arxiv.org/pdf/2605.14757v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model for electromagnetic space with application in 6G channel generation",
+      "llm_evidence_cn": "电磁空间世界模型概念在6G信道生成中的应用",
+      "llm_evidence": "电磁空间世界模型概念在6G信道生成中的应用",
+      "canonical_evidence": "电磁空间世界模型概念在6G信道生成中的应用",
+      "llm_tldr_en": "Proposes a ChannelAgent-empowered world model for electromagnetic space, applied to agent-driven channel generation via path loss prediction for 6G AI-native air interface.",
+      "llm_tldr_cn": "针对6G异构场景下传统AI模型缺乏任务自适应能力的问题，本文提出了ChannelAgent赋能的电磁空间世界模型，将无线智能组织成多模态感知-智能体-执行反馈的闭环。通过路径损失预测案例验证了智能驱动的信道生成，展示了任务导向的特征选择机制在6G原生AI接口中的有效性。",
+      "llm_tldr": "针对6G异构场景下传统AI模型缺乏任务自适应能力的问题，本文提出了ChannelAgent赋能的电磁空间世界模型，将无线智能组织成多模态感知-智能体-执行反馈的闭环。通过路径损失预测案例验证了智能驱动的信道生成，展示了任务导向的特征选择机制在6G原生AI接口中的有效性。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.18743v1",
+      "source": "arxiv",
+      "title": "Actionable World Representation",
+      "abstract": "Inspired by the emergent behaviors in large language models that generalized human intelligence, the research community is pursuing similar emergent capabilities within world models, with a emphasis on modeling the physical world. Within the scope of physical world model, objects are the fundamental primitives that constitute physical reality. From humans to computers, nearly everything we interact with is an object. These objects are rarely static; they are actionable entities with varying states determined by their intrinsic properties. While current methods approach object action states either via video generation or dynamic scene reconstruction, none explicitly model this basic element in a unified, principled way to build an actionable object representation. We propose WorldString, a neural architecture capable of modeling the state manifold of real-world objects by learning directly from point clouds or RGB-D video streams. Serving as a versatile digital twin, it acts as a foundational building block for physical world models; thus, we name it WorldString. Sweetly, its fully differentiable structure seamlessly enables future integration with policy learning and neural dynamics.",
+      "authors": [
+        "Kunqi Xu",
+        "Jitao Li",
+        "Jianglong Ye",
+        "Tianshu Tang",
+        "Isabella Liu",
+        "Sifei Liu",
+        "Xueyan Zou"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-18T17:58:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.18743v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "actionable object representation for world models",
+      "llm_evidence_cn": "世界模型中的可动作对象表示",
+      "llm_evidence": "世界模型中的可动作对象表示",
+      "canonical_evidence": "世界模型中的可动作对象表示",
+      "llm_tldr_en": "Proposes WorldString, a unified representation for actionable objects in world models, explicitly modeling object states and dynamics.",
+      "llm_tldr_cn": "现有世界模型未显式建模可动作物体的状态和动态。本文提出WorldString，一种统一的可动作对象表示，将物体及其属性编码为字符串形式，支持动作条件变化。该方法将物体作为基本原语，明确其状态空间和交互规则。实验表明该表示能够有效支持规划与推理。",
+      "llm_tldr": "现有世界模型未显式建模可动作物体的状态和动态。本文提出WorldString，一种统一的可动作对象表示，将物体及其属性编码为字符串形式，支持动作条件变化。该方法将物体作为基本原语，明确其状态空间和交互规则。实验表明该表示能够有效支持规划与推理。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.18743v2",
+      "source": "arxiv",
+      "title": "WorldString: Actionable World Representation",
+      "abstract": "Inspired by the emergent behaviors in large language models that generalized human intelligence, the research community is pursuing similar emergent capabilities within world models, with a emphasis on modeling the physical world. Within the scope of physical world model, objects are the fundamental primitives that constitute physical reality. From humans to computers, nearly everything we interact with is an object. These objects are rarely static; they are actionable entities with varying states determined by their intrinsic properties. While current methods approach object action states either via video generation or dynamic scene reconstruction, none explicitly model this basic element in a unified, principled way to build an actionable object representation. We propose WorldString, a neural architecture capable of modeling the state manifold of real-world objects by learning directly from point clouds or RGB-D video streams. Serving as a versatile digital twin, it acts as a foundational building block for physical world models; thus, we name it WorldString. Sweetly, its fully differentiable structure seamlessly enables future integration with policy learning and neural dynamics.",
+      "authors": [
+        "Kunqi Xu",
+        "Jitao Li",
+        "Jianglong Ye",
+        "Tianshu Tang",
+        "Isabella Liu",
+        "Sifei Liu",
+        "Xueyan Zou"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-18T17:58:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.18743v2",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes actionable world representation for physical object states",
+      "llm_evidence_cn": "提出面向物理对象状态的可操作世界表征",
+      "llm_evidence": "提出面向物理对象状态的可操作世界表征",
+      "canonical_evidence": "提出面向物理对象状态的可操作世界表征",
+      "llm_tldr_en": "Proposes WorldString, an actionable world representation that models objects as fundamental primitives with varying states, unifying object state modeling beyond video generation.",
+      "llm_tldr_cn": "物理世界模型中对象是基本原语，但现有方法没有统一建模可操作对象状态。本文提出WorldString，一种可操作世界表征，将对象视为具有内在属性的可操作实体，并显式建模其状态变化。该方法超越了视频生成或动态场景重建，构建了统一的可操作对象表征，为物理世界建模提供了新视角。",
+      "llm_tldr": "物理世界模型中对象是基本原语，但现有方法没有统一建模可操作对象状态。本文提出WorldString，一种可操作世界表征，将对象视为具有内在属性的可操作实体，并显式建模其状态变化。该方法超越了视频生成或动态场景重建，构建了统一的可操作对象表征，为物理世界建模提供了新视角。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.18803v1",
+      "source": "arxiv",
+      "title": "PROWL: Prioritized Regret-Driven Optimization for World Model Learning",
+      "abstract": "Modern action-conditioned video world models achieve strong short-horizon visual realism, yet remain unreliable on rare, interaction-critical transitions that dominate downstream planning and policy performance. Because passive demonstration data systematically under-samples these high-impact regimes, improving robustness requires actively eliciting model failures rather than relying on their natural occurrence. We introduce a KL-constrained adversarial curriculum in which a policy is trained to expose high-error trajectories of a diffusion-based world model while remaining close to the behavior distribution. The world model is continuously fine-tuned on these adversarially discovered trajectories, yielding an adversarial training loop that converts rare failures into a stable, near-distribution training signal without drifting into out-of-distribution exploitation. To maintain pressure on unresolved weaknesses as the model improves, we propose a Prioritized Adversarial Trajectory (PAT) buffer that re-ranks trajectories based on prediction error, action fidelity, and learning progress, focusing training on unresolved failure modes rather than repeatedly revisiting solved cases. We implement our approach in the MineRL framework and evaluate it on held-out out-of-distribution trajectories; PROWL improves robustness over models trained on passive data alone, reveals reward-hacking behaviors under weak behavioral constraints, and demonstrates that effective adversarial world-model training critically depends on balancing exploratory failure discovery with explicit behavioral regularization. Our results suggest that scalable world models benefit not only from larger datasets, but also from selectively generating informative training data.",
+      "authors": [
+        "Ahmet H. Güzel",
+        "Jenny Seidenschwarz",
+        "Benjamin Graham",
+        "Jonathan Sadeghi",
+        "Jeffrey Hawke",
+        "Jack Parker-Holder",
+        "Ilija Bogunovic"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-11T14:24:19+00:00",
+      "link": "https://arxiv.org/pdf/2605.18803v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "adversarial curriculum for world model learning",
+      "llm_evidence_cn": "通过对抗课程学习优化世界模型",
+      "llm_evidence": "通过对抗课程学习优化世界模型",
+      "canonical_evidence": "通过对抗课程学习优化世界模型",
+      "llm_tldr_en": "Introduces PROWL, a KL-constrained adversarial curriculum that actively exposes world model failures on rare transitions to improve robustness.",
+      "llm_tldr_cn": "动作条件视频世界模型在短时程上表现良好，但在稀有但关键的状态转换上不可靠。被动演示数据对这些高影响区域采样不足。本文提出PROWL，训练一个策略主动探索世界模型的高误差轨迹，同时保持接近行为分布。通过KL约束的对抗课程，世界模型在这些困难轨迹上持续微调，显著提升了在长尾分布上的泛化能力。",
+      "llm_tldr": "动作条件视频世界模型在短时程上表现良好，但在稀有但关键的状态转换上不可靠。被动演示数据对这些高影响区域采样不足。本文提出PROWL，训练一个策略主动探索世界模型的高误差轨迹，同时保持接近行为分布。通过KL约束的对抗课程，世界模型在这些困难轨迹上持续微调，显著提升了在长尾分布上的泛化能力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.19957v1",
+      "source": "arxiv",
+      "title": "World-Ego Modeling for Long-Horizon Evolution in Hybrid Embodied Tasks",
+      "abstract": "World models are widely explored in embodied intelligence, yet they typically predict distinct evolutions of the world and the ego within a single stream, where the world captures persistent instruction-agnostic scene regularities and the ego captures robot-centric instruction-conditioned dynamics. This world-ego entanglement leads to a degradation in long-horizon embodied scenarios, particularly in hybrid tasks with interleaved navigation and manipulation behaviors. In this paper, we introduce \\emph{World-Ego Modeling}, a new conceptual paradigm that decomposes future evolution into world and ego components. We define the world-ego boundary from three perspectives, i.e., motion-, semantic-, and intention-based views, and analyze three disentanglement strategies with post-, pre-, and full disentanglement. Further, we instantiate this paradigm as the World-Ego Model (WEM), a unified embodied world model that couples an implicit separate world-ego planner with a cascade-parallel mixture-of-experts (CP-MoE) diffusion generator. To enable rigorous evaluation, we further construct HTEWorld, the first benchmark for long-horizon world modeling with hybrid navigation-manipulation tasks, providing 125K video clips (over 4.5M frames) with fine-grained action annotations and 300 multi-turn evaluation trajectories (over 2K instructions). Extensive experiments show that WEM achieves state-of-the-art performance on HTEWorld while remaining competitive on existing manipulation-only benchmarks.",
+      "authors": [
+        "Zuyao Lin",
+        "Jianhui Zhang",
+        "Peidong Jia",
+        "Xiaoguang Zhao",
+        "Shanghang Zhang",
+        "Xingyu Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-19T15:10:27+00:00",
+      "link": "https://arxiv.org/pdf/2605.19957v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world-ego decomposition for embodied world models",
+      "llm_evidence_cn": "将世界和自我分解的具身世界模型方法",
+      "llm_evidence": "将世界和自我分解的具身世界模型方法",
+      "canonical_evidence": "将世界和自我分解的具身世界模型方法",
+      "llm_tldr_en": "Introduces World-Ego Modeling to decompose future evolution into world and ego components, improving long-horizon performance in hybrid embodied tasks.",
+      "llm_tldr_cn": "现有的具身世界模型通常将世界和自身的演化混在一起预测，导致长时程任务性能下降。本文提出世界-自我建模新范式，从运动、语义和意图三个视角定义边界，将未来演化解耦为世界和自身两个组成部分。实验证明，这种分解在包含导航和操作的混合任务中显著提升了长时程规划能力。",
+      "llm_tldr": "现有的具身世界模型通常将世界和自身的演化混在一起预测，导致长时程任务性能下降。本文提出世界-自我建模新范式，从运动、语义和意图三个视角定义边界，将未来演化解耦为世界和自身两个组成部分。实验证明，这种分解在包含导航和操作的混合任务中显著提升了长时程规划能力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.21800v1",
+      "source": "arxiv",
+      "title": "stable-worldmodel: A Platform for Reproducible World Modeling Research and Evaluation",
+      "abstract": "World models are central to building agents that can reason, plan, and generalize beyond their training data. However, research on world models is currently fragmented, with disparate codebases, data pipelines, and evaluation protocols hindering reproducibility and fair comparison. Current practice is further limited by three key bottlenecks: fragile one-off codebases, slow video data loading, and the lack of standardized generalization benchmarks. We present stable-worldmodel (swm), an open-source platform for standardized and reproducible world modeling research and evaluation. It delivers (1) a high-performance Lance-based data layer with native support and conversion tools for MP4, HDF5, and LeRobot datasets, (2) clean, well-tested implementations of modern world model baselines and planning solvers, and (3) a broad suite of environments and tasks extended with controllable visual, geometric, and physical factors of variation for systematic in-silico evaluation of dynamics understanding, control performance, representation quality, and out-of-distribution generalization. By unifying the full pipeline under a single, scalable framework, \\texttt{swm} dramatically reduces research overhead and accelerates trustworthy progress toward reliable world models.",
+      "authors": [
+        "Lucas Maes",
+        "Quentin Le Lidec",
+        "Luiz Facury",
+        "Nassim Massaudi",
+        "Ayush Chaurasia",
+        "Francesco Capuano",
+        "Richard Gao",
+        "Taj Gillin",
+        "Dan Haramati",
+        "Damien Scieur",
+        "Yann LeCun",
+        "Randall Balestriero"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-05-20T22:58:15+00:00",
+      "link": "https://arxiv.org/pdf/2605.21800v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model platform for reproducibility",
+      "llm_evidence_cn": "世界模型可重复性平台",
+      "llm_evidence": "世界模型可重复性平台",
+      "canonical_evidence": "世界模型可重复性平台",
+      "llm_tldr_en": "Introduces stable-worldmodel, an open-source platform for standardized and reproducible world modeling research and evaluation.",
+      "llm_tldr_cn": "当前世界模型研究存在代码库、数据管道和评估协议碎片化问题，阻碍可重复性和公平比较。本文提出stable-worldmodel开源平台，采用高性能Lance数据层，提供标准化数据处理、转换工具和评估基准。该平台解决了脆弱的一次性代码库、视频数据加载慢和无通用基准三大瓶颈。它促进了世界模型研究的可重复性和公平对比，为领域进步奠定基础。",
+      "llm_tldr": "当前世界模型研究存在代码库、数据管道和评估协议碎片化问题，阻碍可重复性和公平比较。本文提出stable-worldmodel开源平台，采用高性能Lance数据层，提供标准化数据处理、转换工具和评估基准。该平台解决了脆弱的一次性代码库、视频数据加载慢和无通用基准三大瓶颈。它促进了世界模型研究的可重复性和公平对比，为领域进步奠定基础。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.23993v1",
+      "source": "arxiv",
+      "title": "Nano World Models: A Minimalist Implementation of Future Video Prediction",
+      "abstract": "World models have become a central paradigm for learning predictive simulators that support generation, planning, and decision-making. Yet, despite rapid progress in industry-scale interactive video generation, the broader research community still lacks compact, reproducible, and easily extensible implementations for studying the design choices underlying modern world models. We introduce Nano World Models, a minimalist codebase for future video prediction centered around diffusion forcing. Nano World Models provides a unified interface for generative objectives, model scales, action-conditioning mechanisms, latent observation spaces, datasets, evaluation protocols, and long-horizon rollout procedures. This design enables controlled studies of world-modeling components that are often entangled across separate implementations. Through experiments across simple control environments, game simulation, and real-robot data, we examine how prediction parameterization, architecture scale, action injection, sampling budget, and domain complexity affect video prediction quality and autoregressive rollout behavior. By releasing code, configurations, evaluation scripts, and pretrained checkpoints, Nano World Models aims to provide a compact yet extensible experimental substrate for open, reproducible, and scientific world-model research.",
+      "authors": [
+        "Siqiao Huang",
+        "Partha Kaushik",
+        "Michael Chen",
+        "Hengkai Pan",
+        "Omar Chehab",
+        "Fernando Moreno-Pino",
+        "Max Simchowitz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-05-17T22:46:44+00:00",
+      "link": "https://arxiv.org/pdf/2605.23993v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "provides a minimalist implementation of world models for future video prediction",
+      "llm_evidence_cn": "提供世界模型的极简实现，用于未来视频预测",
+      "llm_evidence": "提供世界模型的极简实现，用于未来视频预测",
+      "canonical_evidence": "提供世界模型的极简实现，用于未来视频预测",
+      "llm_tldr_en": "Introduces Nano World Models, a compact and extensible codebase for studying world model design choices through diffusion forcing for future video prediction.",
+      "llm_tldr_cn": "尽管工业级世界模型进展迅速，研究社区缺少可复现的紧凑实现。本文推出Nano World Models，一个围绕扩散强迫的极简未来视频预测代码库，提供统一的生成目标、模型规模、动作条件、潜在观测空间、数据集等接口。该设计支持对世界模型设计选择的可控研究，降低了研究门槛。",
+      "llm_tldr": "尽管工业级世界模型进展迅速，研究社区缺少可复现的紧凑实现。本文推出Nano World Models，一个围绕扩散强迫的极简未来视频预测代码库，提供统一的生成目标、模型规模、动作条件、潜在观测空间、数据集等接口。该设计支持对世界模型设计选择的可控研究，降低了研究门槛。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.25313v1",
+      "source": "arxiv",
+      "title": "UWM-JEPA: Predictive World Models That Imagine in Belief Space",
+      "abstract": "World models for partially observed environments must imagine multiple compatible hidden futures and steer between them under counterfactual actions. Joint Embedding Predictive Architectures (JEPAs) do this in latent space, but a vector-valued latent has no internal structure for carrying the belief over hidden continuations through blind rollout. We introduce the Unitary World Model JEPA (UWM-JEPA), a JEPA world model with a density-matrix latent on a joint system-environment space and a learned unitary predictor. The construction preserves the joint-state spectrum exactly during rollout, so the predictor itself cannot dissipate the represented uncertainty.   On a hidden-velocity indicator task requiring five-step forward simulation under a given action sequence with the target observation masked, UWM-JEPA reaches 0.77 accuracy and degrades monotonically as actions are perturbed; a parameter-matched LSTM-JEPA trained under the same counterfactual-target objective and action head collapses to majority-class accuracy (0.53) under every action condition. Under blind rollout, UWM-JEPA loses fewer than ten points of probe R^2 at short horizons while vector-latent baselines lose forty-one and sixty-eight; both nevertheless tie on a held-out context probe, locating the separation in the predictor rather than the encoder. Action sensitivity itself requires training against counterfactual rather than teacher-forced targets, a finding that applies beyond the unitary parameterisation. For JEPA world models to imagine under partial observability, latent geometry and predictor dynamics matter, not frozen context-encoding capacity alone.",
+      "authors": [
+        "Santosh Kumar Radha",
+        "Oktay Goktas"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.RO",
+        "stat.ML"
+      ],
+      "published": "2026-05-25T00:28:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.25313v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes UWM-JEPA, a world model with density-matrix latent for belief space reasoning",
+      "llm_evidence_cn": "提出UWM-JEPA，使用密度矩阵潜变量进行信念空间推理的世界模型",
+      "llm_evidence": "提出UWM-JEPA，使用密度矩阵潜变量进行信念空间推理的世界模型",
+      "canonical_evidence": "提出UWM-JEPA，使用密度矩阵潜变量进行信念空间推理的世界模型",
+      "llm_tldr_en": "UWM-JEPA introduces a density-matrix latent and unitary predictor to preserve uncertainty in world model rollouts for partially observed environments.",
+      "llm_tldr_cn": "该论文针对部分可观测环境中世界模型难以维持多重假设的问题，提出了UWM-JEPA。它使用密度矩阵潜变量表示系统-环境联合状态，并采用学习到的酉预测器，在展开过程中精确保持联合态谱，从而保留不确定性。在隐藏速度指示任务中，该方法能准确进行五步前向模拟，优于现有JEPA模型。",
+      "llm_tldr": "该论文针对部分可观测环境中世界模型难以维持多重假设的问题，提出了UWM-JEPA。它使用密度矩阵潜变量表示系统-环境联合状态，并采用学习到的酉预测器，在展开过程中精确保持联合态谱，从而保留不确定性。在隐藏速度指示任务中，该方法能准确进行五步前向模拟，优于现有JEPA模型。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.25620v1",
+      "source": "arxiv",
+      "title": "Back to Parsimonious Latents: Learning Task-Centric World Models from Visual Foundations",
+      "abstract": "World models enable agents to predict future dynamics conditioned on actions, making the choice of latent representation central to planning and control. Such representations are often either learned directly from pixels with limited semantic structure or inherited from frozen visual foundation models with excessive task-irrelevant detail, yielding state spaces that are poorly matched to downstream planning and control. This is especially challenging in reward-free offline settings, where the model must learn from fixed trajectories without reward supervision or online interaction. To address this, we propose TC-WM, a framework for turning foundation-model embeddings into compact, task-sufficient world representations. The key design is to treat the pretrained embedding space as a semantic scaffold rather than as the final state space: TC-WM linearly projects high-dimensional visual embeddings into a compact latent as the dynamic space, aligns a subspace with the agent's physical state via contrastive learning, and reconstructs embeddings to preserve useful visual structure. This combines the generality of foundation features with the controllability of task-centric dynamics. Theoretically, we show that TC-WM suffices to identify the underlying task-centric latent factors up to a simple transformation. Empirically, TC-WM enables test-time planning across diverse environments (e.g., Robomimic and D4RL), achieving better world-modeling quality and more precise control than state-of-the-art approaches.",
+      "authors": [
+        "Minghao Fu",
+        "Fan Feng",
+        "Nicklas Hansen",
+        "Biwei Huang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-25T09:21:43+00:00",
+      "link": "https://arxiv.org/pdf/2605.25620v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "method for learning task-centric world models from visual foundations",
+      "llm_evidence_cn": "从视觉基础模型学习任务中心世界模型的方法",
+      "llm_evidence": "从视觉基础模型学习任务中心世界模型的方法",
+      "canonical_evidence": "从视觉基础模型学习任务中心世界模型的方法",
+      "llm_tldr_en": "Proposes TC-WM to convert foundation-model embeddings into compact task-sufficient world representations for planning and control in reward-free offline settings.",
+      "llm_tldr_cn": "世界模型的潜在表示直接影响规划与控制性能。现有方法要么直接从像素学习（语义结构有限），要么继承冻结的视觉基础模型（包含过多任务无关细节）。本文提出TC-WM框架，将基础模型嵌入转化为紧凑、任务充分的表示，在无奖励离线设置下有效学习世界动态。实验表明，TC-WM在多个控制任务上优于现有方法，且表示更加简洁。",
+      "llm_tldr": "世界模型的潜在表示直接影响规划与控制性能。现有方法要么直接从像素学习（语义结构有限），要么继承冻结的视觉基础模型（包含过多任务无关细节）。本文提出TC-WM框架，将基础模型嵌入转化为紧凑、任务充分的表示，在无奖励离线设置下有效学习世界动态。实验表明，TC-WM在多个控制任务上优于现有方法，且表示更加简洁。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.26282v1",
+      "source": "arxiv",
+      "title": "Scaling World-Model Reinforcement Learning Through Diffusion Policy Optimization",
+      "abstract": "Model-based reinforcement learning (RL) can be effectively supported at scale through the use of world models. However, in practice, scaling such approaches remains fundamentally limited. A commonly recognized challenge is model bias and error compounding, which degrade long-horizon predictions. Beyond these issues, we identify a more critical yet underexplored bottleneck: a structural misalignment between search and value learning in existing world model approaches. In particular, policy improvement often relies on value functions induced by a separate, non-search policy, resulting in training inconsistency and ultimately suboptimal learning. To address this limitation, we propose Model-Based Diffusion Policy Optimization (MBDPO) in world models, a framework that unifies search and policy optimization through diffusion policy representations, thereby unlocking the potential of world models for scalable policy learning. Instead of constructing an explicit planner over a learned world model, we reformulate policy optimization as a diffusion process over searched trajectories in latent world models. In this view, we extract an implicit energy function from the collected dataset that anchors the policy, enabling MBDPO to refine the score field for policy optimization while mitigating misalignment. We evaluate MBDPO across a wide range of settings, including multi-task offline pretraining, online learning, and offline-to-online fine-tuning. In the offline regime, we further investigate its scaling behavior by pretraining on large-scale datasets, observing consistent and monotonic performance gains with increasing model capacity.",
+      "authors": [
+        "Xiaoyuan Cheng",
+        "Wenxuan Yuan",
+        "Zhancun Mu",
+        "Yuanzhao Zhang",
+        "Yiming Yang",
+        "Hai Wang",
+        "Zhuo Sun",
+        "Che Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-25T19:06:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.26282v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model concept and applications in RL",
+      "llm_evidence_cn": "世界模型概念在强化学习中的应用",
+      "llm_evidence": "世界模型概念在强化学习中的应用",
+      "canonical_evidence": "世界模型概念在强化学习中的应用",
+      "llm_tldr_en": "Proposes MBDPO to address structural misalignment between search and value learning in world-model RL, improving scalability.",
+      "llm_tldr_cn": "现有世界模型强化学习方法中搜索与价值学习存在结构错位导致训练不一致，本文提出基于模型的扩散策略优化（MBDPO）方法，通过统一搜索策略与价值函数来解决该问题。实验表明MBDPO在多个复杂任务上实现了更好的扩展性和性能，为大规模世界模型强化学习提供了有效方案。",
+      "llm_tldr": "现有世界模型强化学习方法中搜索与价值学习存在结构错位导致训练不一致，本文提出基于模型的扩散策略优化（MBDPO）方法，通过统一搜索策略与价值函数来解决该问题。实验表明MBDPO在多个复杂任务上实现了更好的扩展性和性能，为大规模世界模型强化学习提供了有效方案。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.28865v1",
+      "source": "arxiv",
+      "title": "Emergent Semantic Representations in World Models through Physical Interaction without Linguistic Supervision",
+      "abstract": "What does a world model learn from physical exploration, without any linguistic supervision? We argue the answer is organized by a single principle: the geometric structure of the physical world. Training a VAE-based world model on random embodied exploration, we find that its latent space develops spatial semantic structure that mirrors physical geometry -- direction accuracy 0.677+-0.029 versus 0.547 for a randomly initialized encoder, and position RSA 0.192+-0.047 versus 0.029 for random encoders (6.6x improvement), showing that training induces genuine structural organization beyond CNN inductive bias. Across 20 temporal checkpoints, prediction performance and semantic alignment co-improve (Spearman r=-0.61, p=0.004), consistent with the shared-driver account. We confirm this through a double knockout: standard KL regularization (beta=0.1) forces the encoder away from geometric structure, and both prediction performance and semantic alignment collapse simultaneously to near-chance by step 50,000 -- exactly as the shared-driver account predicts. Reducing beta to 0.001 restores geometric access and recovers both capabilities together. These findings establish physical world geometry as the organizing principle of world model representations, with direct implications for the design of semantically grounded embodied agents.",
+      "authors": [
+        "Jiayi Fang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-22T03:31:47+00:00",
+      "link": "https://arxiv.org/pdf/2605.28865v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "emergent semantic structure in world models from physical interaction",
+      "llm_evidence_cn": "物理交互中世界模型涌现的语义结构",
+      "llm_evidence": "物理交互中世界模型涌现的语义结构",
+      "canonical_evidence": "物理交互中世界模型涌现的语义结构",
+      "llm_tldr_en": "Shows that world models trained on random exploration develop spatial semantic representations without linguistic supervision.",
+      "llm_tldr_cn": "世界模型从无语言监督的物理探索中学到什么？本文训练VAE世界模型进行随机探索，发现其潜在空间自发形成与物理几何对应的空间语义结构。方向准确度和位置表征均显著优于随机编码器。预测性能和语义对齐随时间共同提升，表明世界模型通过交互内化物理结构。",
+      "llm_tldr": "世界模型从无语言监督的物理探索中学到什么？本文训练VAE世界模型进行随机探索，发现其潜在空间自发形成与物理几何对应的空间语义结构。方向准确度和位置表征均显著优于随机编码器。预测性能和语义对齐随时间共同提升，表明世界模型通过交互内化物理结构。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.30263v1",
+      "source": "arxiv",
+      "title": "minWM: A Full-Stack Open-Source Framework for Real-Time Interactive Video World Models",
+      "abstract": "Recent video diffusion foundation models have achieved remarkable progress in high-quality video generation, yet turning them into real-time interactive video world models remains challenging. Interactive world models require controllable, causal, and low-latency rollout, which in practice demands a full pipeline spanning data construction, controllable fine-tuning, autoregressive training, few-step distillation, and streaming inference. In this work, we present minWM, a full-stack open-source framework for building real-time interactive video world models. minWM provides an end-to-end pipeline that converts existing bidirectional T2V/TI2V video foundation models into camera-controllable few-step autoregressive world models. Specifically, minWM first fine-tunes a bidirectional video diffusion model with camera control, and then applies the Causal Forcing / Causal Forcing++ pipeline, including AR diffusion training, causal ODE or causal consistency distillation, and asymmetric DMD, to distill it into a few-step autoregressive generator for low-latency rollout. The framework is modular and architecture-extensible: we instantiate it on representative open backbones, including Wan2.1-T2V-1.3B and HY1.5-TI2V-8B, covering both cross-attention-based condition injection and MMDiT-style architectures. minWM also supports adapting existing video world models, such as HY-WorldPlay, to new data distributions, training recipes, and latency targets. Beyond releasing runnable scripts, checkpoints, documentation, and inference code, we provide practical ablations on camera trajectory quality, controllability training steps, and minimal batch-size requirements. We hope minWM serves as a reproducible and extensible recipe for building and adapting real-time interactive video world models.   Project Page: [https://github.com/shengshu-ai/minWM](https://github.com/shengshu-ai/minWM)",
+      "authors": [
+        "Min Zhao",
+        "Hongzhou Zhu",
+        "Bokai Yan",
+        "Zihan Zhou",
+        "Yimin Chen",
+        "Wenqiang Sun",
+        "Kaiwen Zheng",
+        "Guande He",
+        "Xiao Yang",
+        "Chongxuan Li",
+        "Fan Bao",
+        "Jun Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T17:27:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.30263v1",
+      "tags": [
+        "keyword:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "full-stack framework for real-time interactive video world models",
+      "llm_evidence_cn": "实时交互式视频世界模型的全栈框架",
+      "llm_evidence": "实时交互式视频世界模型的全栈框架",
+      "canonical_evidence": "实时交互式视频世界模型的全栈框架",
+      "llm_tldr_en": "Presents minWM, an open-source framework for building real-time interactive video world models from video diffusion models.",
+      "llm_tldr_cn": "将视频扩散模型转化为实时交互式世界模型面临挑战。本文提出minWM全栈开源框架，提供从数据构建、可控微调、自回归训练到流式推理的完整管线。该框架将现有T2V模型转换为支持摄像头控制的小步自回归世界模型。实验展示了低延迟的交互式视频预测。",
+      "llm_tldr": "将视频扩散模型转化为实时交互式世界模型面临挑战。本文提出minWM全栈开源框架，提供从数据构建、可控微调、自回归训练到流式推理的完整管线。该框架将现有T2V模型转换为支持摄像头控制的小步自回归世界模型。实验展示了低延迟的交互式视频预测。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.30880v1",
+      "source": "arxiv",
+      "title": "PatchWorld: Gradient-Free Optimization of Executable World Models",
+      "abstract": "Text-agent environments are typically modeled as partially observable Markov decision processes (POMDPs), assuming that the simulator's latent state and transition dynamics are hidden from the agent. Yet little work has examined whether executable code can be induced to serve as a world model for prediction and planning under partial observability. We introduce PatchWorld, a gradient-free framework that turns offline trajectories into executable Python world models through counterexample-guided code repair. Instead of predicting the next observation with a black-box model, PatchWorld induces symbolic belief-state programs whose action updates can be inspected, replayed, and locally patched. Across seven AgentGym environments, PatchWorld-Simple achieves the highest code-based planning score among evaluated methods, reaching 76.4\\% macro success in live one-step lookahead while invoking no LLM calls inside the world-model prediction module itself. We further find that a human-specified residual-memory bias improves surface observation fidelity but weakens decision utility. This exposes a tradeoff in executable world models, since improving observation fidelity can come at the expense of action-discriminative dynamics, and vice versa. Code is available at https://github.com/HKBU-KnowComp/PatchWorld.",
+      "authors": [
+        "Jiaxin Bai",
+        "Yue Guo",
+        "Yifei Dong",
+        "Jiaxuan Xiong",
+        "Tianshi Zheng",
+        "Yixia Li",
+        "Tianqing Fang",
+        "Yufei Li",
+        "Yisen Gao",
+        "Haoyu Huang",
+        "Zhongwei Xie",
+        "Hong Ting Tsang",
+        "Zihao Wang",
+        "Lihui Liu",
+        "Jeff Pan",
+        "Yangqiu Song"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-05-29T06:11:14+00:00",
+      "link": "https://arxiv.org/pdf/2605.30880v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "introduces gradient-free optimization to induce executable world models from trajectories",
+      "llm_evidence_cn": "引入免梯度优化从轨迹中诱导可执行世界模型",
+      "llm_evidence": "引入免梯度优化从轨迹中诱导可执行世界模型",
+      "canonical_evidence": "引入免梯度优化从轨迹中诱导可执行世界模型",
+      "llm_tldr_en": "Introduces PatchWorld, a gradient-free framework that induces executable Python world models from offline trajectories via counterexample-guided code repair, enabling interpretable planning.",
+      "llm_tldr_cn": "文本智能体环境通常假设隐藏的转移动态，少有工作研究可执行代码作为世界模型。本文提出PatchWorld，一种免梯度框架，通过反例引导代码修复将离线轨迹转化为可执行的Python世界模型。在七个AgentGym环境中，PatchWorld-Simple达到了领先性能，其符号性信念状态程序可被检查、回放和修补，增强了可解释性。",
+      "llm_tldr": "文本智能体环境通常假设隐藏的转移动态，少有工作研究可执行代码作为世界模型。本文提出PatchWorld，一种免梯度框架，通过反例引导代码修复将离线轨迹转化为可执行的Python世界模型。在七个AgentGym环境中，PatchWorld-Simple达到了领先性能，其符号性信念状态程序可被检查、回放和修补，增强了可解释性。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.00113v1",
+      "source": "arxiv",
+      "title": "World Models for Robotic Manipulation: A Survey",
+      "abstract": "Robotic manipulation depends on the ability to anticipate how actions reshape objects, contacts, and scene geometry before execution. Learned world models provide this capability by predicting task-relevant future evolution under robot intervention, yet the term now spans latent dynamics models, action-conditioned video generators, three- and four-dimensional scene predictors, physics-informed simulators, and predictive modules inside vision-language-action systems. This breadth has fragmented the literature and obscured the design choices that matter for manipulation. We survey world models for robotic manipulation through three questions: what future representation is predicted, how prediction is connected to action, and when prediction is used in the robot-learning pipeline. We operationally define a world model as an action-conditioned predictive system and distinguish it from perception modules, inverse models, policies, rewards, and value functions. We then organize existing work into five representation families, develop a functional taxonomy that separates integrated prediction-action models from explicit predictive planners, and characterize infrastructure roles including synthetic experience generation, candidate filtering, search-based evaluation, learned environments, and outcome verification. We further map these roles across pretraining, post-training, and inference adaptation, review 34 manipulation datasets, and synthesize evaluation protocols for predictive fidelity, task performance, and simulator reliability. This survey shows that world models are evolving from task-specific dynamics predictors into predictive infrastructure for robot learning, while exposing open challenges in contact modeling, hallucination control, action alignment, and benchmarking under closed-loop use.",
+      "authors": [
+        "Fangyuan Wang",
+        "Ziyuan Wang",
+        "Guorui Pei",
+        "Mengshi Zhang",
+        "Canxi Liang",
+        "Jun Hu",
+        "Zhongxuan Li",
+        "Jinsong Wu",
+        "Ning Han",
+        "Zeqing Zhang",
+        "Jiaming Qi",
+        "Hongmin Wu",
+        "Shiyao Zhang",
+        "Pai Zheng",
+        "Jia Pan",
+        "David Navarro-Alarcon",
+        "Sichao Liu",
+        "Peng Zhou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-27T05:32:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.00113v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "survey on world model concept and applications in manipulation",
+      "llm_evidence_cn": "关于操作中世界模型概念与应用的综述",
+      "llm_evidence": "关于操作中世界模型概念与应用的综述",
+      "canonical_evidence": "关于操作中世界模型概念与应用的综述",
+      "llm_tldr_en": "Survey on world models for robotic manipulation, covering latent dynamics, video prediction, and design choices for predicting future under robot intervention.",
+      "llm_tldr_cn": "该综述系统梳理了机器人操作领域的世界模型研究，指出世界模型涵盖潜在动力学模型、动作条件视频生成器、3D/4D场景预测器等多种形式。论文围绕三个关键问题组织：预测什么未来表示、如何连接预测与动作、何时使用预测。文章总结了不同设计选择对操作任务的影响，为后续研究提供了清晰的分类框架和方向指引。",
+      "llm_tldr": "该综述系统梳理了机器人操作领域的世界模型研究，指出世界模型涵盖潜在动力学模型、动作条件视频生成器、3D/4D场景预测器等多种形式。论文围绕三个关键问题组织：预测什么未来表示、如何连接预测与动作、何时使用预测。文章总结了不同设计选择对操作任务的影响，为后续研究提供了清晰的分类框架和方向指引。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.00439v1",
+      "source": "arxiv",
+      "title": "Physical Object Understanding with a Physically Controllable World Model",
+      "abstract": "A central challenge in visual intelligence is learning the physical structure of scenes from raw videos: how regions form objects and the laws that govern their interactions. Solving these tasks requires world models capable of inferring distributional states of the world from partial observations - capabilities that current architectures do not provide. We introduce a new class of probabilistic world models that support estimation of the probability of any visual variable, such as appearance and dynamics, conditioned on any other variables. Here, we identify that these models can be trained efficiently with autoregressive sequence modeling, yielding world models from which rich object understanding emerges. First, we demonstrate that our model captures the physical laws governing how objects move by generating multiple plausible future states of the world through sequential inference. Then, by analyzing motion correlations across these futures, we extract objects and articulated object subparts. Having discovered these objects, we show that our world model can manipulate them in 3D. Finally, we demonstrate how physical relationships between objects can be computed from the world model, enabling applications such as Visual Jenga.",
+      "authors": [
+        "Rahul Venkatesh",
+        "Klemen Kotar",
+        "Lilian Naing Chen",
+        "Wanhee Lee",
+        "Gia Ancone",
+        "Seungwoo Kim",
+        "Luca Thomas Wheeler",
+        "Jared Watrous",
+        "Honglin Chen",
+        "Daniel Bear",
+        "Stefan Stojanov",
+        "Daniel LK Yamins"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-30T00:10:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.00439v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "introduces probabilistic world models for physical object understanding from raw video",
+      "llm_evidence_cn": "提出概率世界模型，从原始视频中理解物理对象",
+      "llm_evidence": "提出概率世界模型，从原始视频中理解物理对象",
+      "canonical_evidence": "提出概率世界模型，从原始视频中理解物理对象",
+      "llm_tldr_en": "Introduces a new class of probabilistic world models that support conditional probability estimation on visual variables, enabling object understanding from raw videos via autoregressive sequence modeling.",
+      "llm_tldr_cn": "从原始视频学习场景物理结构需要世界模型推理部分观测的分布状态，现有架构难以满足。本文提出一类新的概率世界模型，支持任意视觉变量间的条件概率估计，并通过自回归序列建模高效训练。实验表明该模型能捕捉对象外观和动力学，在物理对象理解任务上表现优异，为从视频中学习物理提供了可扩展范式。",
+      "llm_tldr": "从原始视频学习场景物理结构需要世界模型推理部分观测的分布状态，现有架构难以满足。本文提出一类新的概率世界模型，支持任意视觉变量间的条件概率估计，并通过自回归序列建模高效训练。实验表明该模型能捕捉对象外观和动力学，在物理对象理解任务上表现优异，为从视频中学习物理提供了可扩展范式。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.00793v1",
+      "source": "arxiv",
+      "title": "MBench: A Comprehensive Benchmark on Memory Capability for Video World Models",
+      "abstract": "Recent advancements in video-based world models have demonstrated an unprecedented ability to synthesize high-fidelity visual sequences. However, a fundamental gap persists between visually plausible video generation and the functional requirements of a world model, particularly in maintaining a stable and reasonable internal state over extended temporal horizons. While existing benchmarks primarily emphasize visual quality, motion coherence, and text-video alignment, they largely overlook memory, the core capability of a world model to preserve consistency across long-term horizons and complex interactions. To address this gap, we present \\textbf{MBench}, a comprehensive benchmark dedicated to quantifying and evaluating the memory capability of video world models. We systematically decompose the memory capability of video world models into three hierarchical and complementary core dimensions: entity consistency, environment consistency, and causal consistency, which are further refined into 12 quantifiable sub-dimensions for comprehensive characterization of long-term memory. Our benchmark is built upon rigorously curated real-captured long videos, and evaluated by rule-based quantitative matrices and VLM to enable objective and comprehensive consistency assessment. Extensive evaluations of mainstream state-of-the-art video world models reveal critical systemic limitations of existing methods in long-term state retention, providing a standardized benchmark and clear research direction to advance the field.",
+      "authors": [
+        "Shengjun Zhang",
+        "Zhang Zhang",
+        "Simin Huang",
+        "Zhenyu Tang",
+        "Hanyang Wang",
+        "Chensheng Dai",
+        "Min Chen",
+        "Yifan Li",
+        "Yuxin Li",
+        "Yingjie Chen",
+        "Hao Liu",
+        "Chen Li",
+        "Yueqi Duan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-30T16:17:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.00793v1",
+      "tags": [
+        "keyword:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark on world model memory capability",
+      "llm_evidence_cn": "针对世界模型记忆能力的基准测试",
+      "llm_evidence": "针对世界模型记忆能力的基准测试",
+      "canonical_evidence": "针对世界模型记忆能力的基准测试",
+      "llm_tldr_en": "Proposes MBench benchmark to evaluate memory capability of video world models, addressing the gap between visual quality and functional world model requirements like long-term consistency.",
+      "llm_tldr_cn": "现有的视频世界模型基准大多关注视觉质量、运动一致性和文本-视频对齐，忽略了记忆这一核心能力。本文提出MBench，一个专门量化世界模型长期记忆能力的综合基准。通过设计多种任务和评估指标，MBench能够揭示模型在长时间跨度内保持内部状态一致性的能力。该基准为世界模型的功能性评估提供了重要工具。",
+      "llm_tldr": "现有的视频世界模型基准大多关注视觉质量、运动一致性和文本-视频对齐，忽略了记忆这一核心能力。本文提出MBench，一个专门量化世界模型长期记忆能力的综合基准。通过设计多种任务和评估指标，MBench能够揭示模型在长时间跨度内保持内部状态一致性的能力。该基准为世界模型的功能性评估提供了重要工具。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01164v1",
+      "source": "arxiv",
+      "title": "Towards Interactive Video World Modeling: Frontiers, Challenges, Benchmarks, and Future Trends",
+      "abstract": "With rapid development of large language models and diffusion-based content generation, world modeling has attracted increasing research attention, benefiting various downstream domains such as game engines, embodied AI, autonomous driving, etc. Through explicitly incorporating user actions into world state transition, recent literature empowers world modeling with interactivity in an action-conditioned video or 3D generation paradigm, further enhancing controllability over world evolutions and facilitating users to freely traverse, manipulate, navigate, and personalize the state evolution. In this paper, we aim to systematically review recent research trends, technical developments, evaluation benchmarks, and also propose future potential directions in interactive world modeling. Specifically, we first summarize recent efforts and trends in terms of application scenarios, world state evolution, and scene modality. Afterwards, we delve into three crucial technical challenges, including action-conditioned controllability, long-horizon interactions and memory, and action-following responsiveness for real-time interactivity. Furthermore, we also thoroughly compare existing benchmarks and metrics in four specific application fields: open-world exploration, game engine, autonomous driving, and robotics. Finally, we discuss several promising future directions in achieving next-generation interactive world modeling. The corresponding repository is publicly available at: https://github.com/liujiuming123/Awesome-Interactive-World-Model.",
+      "authors": [
+        "Jiuming Liu",
+        "Chaojun Ni",
+        "Mengmeng Liu",
+        "Chensheng Peng",
+        "Fangjinhua Wang",
+        "Sitian Shen",
+        "Marc Pollefeys",
+        "Masayoshi Tomizuka",
+        "Ayush Tewari",
+        "Per Ola Kristensson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-31T11:12:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.01164v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Survey on interactive video world modeling, covering concept and applications",
+      "llm_evidence_cn": "交互式视频世界建模综述，涵盖概念与应用",
+      "llm_evidence": "交互式视频世界建模综述，涵盖概念与应用",
+      "canonical_evidence": "交互式视频世界建模综述，涵盖概念与应用",
+      "llm_tldr_en": "A systematic review of interactive video world modeling, discussing frontiers, challenges, benchmarks, and future trends for action-conditioned world simulation.",
+      "llm_tldr_cn": "该论文系统综述了交互式视频世界建模领域的最新进展。它指出传统世界模型缺乏用户交互性，因此回顾了将用户动作融入世界状态转换的交互式范式。文章涵盖了前沿技术、评估基准和未来趋势，强调其在游戏引擎、具身AI和自动驾驶等领域的应用价值。",
+      "llm_tldr": "该论文系统综述了交互式视频世界建模领域的最新进展。它指出传统世界模型缺乏用户交互性，因此回顾了将用户动作融入世界状态转换的交互式范式。文章涵盖了前沿技术、评估基准和未来趋势，强调其在游戏引擎、具身AI和自动驾驶等领域的应用价值。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01626v1",
+      "source": "arxiv",
+      "title": "IMWM: Intuition Models Complement World Models for Latent Planning",
+      "abstract": "Planning with a learned latent world model is a promising route to control from raw pixels, but a strong world model alone is not enough. We show this experimentally: even with a perfect world model (operationalized by replacing the learned forward predictor with an idealized rollout of the true environment dynamics), a finite-budget sample-based planner still fails on some tasks, indicating that the bottleneck can lie in search rather than in world-model accuracy. Motivated by this gap, we propose IMWM (Intuition Model + World Model), which pairs the world model with an intuition model trained from demonstrations to recognize promising actions. The two models collaborate through three lightweight components: (i) Retrieval Initialization, which initializes the planner's action proposal from a retrieved demonstration; (ii) Hybrid Cost, which combines the intuition score with the world-model rollout cost; and (iii) a Reliability Gate, which adjusts how much the planner trusts intuition in each setting. Across four pixel-based goal-reaching tasks (Two-Room, Reacher, Push-T, and OGBench-Cube), IMWM has higher mean success than the world-model-only planner on all four, with the largest gains on Two-Room (99.2%, +11.5 percentage points) and OGBench-Cube (94.7%, +28.5 percentage points).",
+      "authors": [
+        "Baoqi Gao",
+        "Ruize Han",
+        "Miao Wang",
+        "Song Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-01T03:23:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.01626v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "intuition model paired with world model for latent planning",
+      "llm_evidence_cn": "直觉模型与世界模型结合的潜在规划方法",
+      "llm_evidence": "直觉模型与世界模型结合的潜在规划方法",
+      "canonical_evidence": "直觉模型与世界模型结合的潜在规划方法",
+      "llm_tldr_en": "Proposes IMWM that pairs a world model with an intuition model trained from demonstrations to overcome planning bottlenecks in latent planning.",
+      "llm_tldr_cn": "即使拥有完美的世界模型，基于采样的规划器仍可能在有限预算下失败，表明瓶颈在于搜索而非模型精度。本文提出IMWM，将世界模型与从演示中训练的直觉模型配对。直觉模型识别有前途的动作，通过检索初始化等轻量级组件与世界模型协作。实验证明，IMWM在多个像素控制任务上显著提升了有限预算下的规划成功率。",
+      "llm_tldr": "即使拥有完美的世界模型，基于采样的规划器仍可能在有限预算下失败，表明瓶颈在于搜索而非模型精度。本文提出IMWM，将世界模型与从演示中训练的直觉模型配对。直觉模型识别有前途的动作，通过检索初始化等轻量级组件与世界模型协作。实验证明，IMWM在多个像素控制任务上显著提升了有限预算下的规划成功率。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01950v1",
+      "source": "arxiv",
+      "title": "Learning Action-Conditional and Object-Centric Gaussian Splatting World Models for Rigid Objects",
+      "abstract": "World models enable intelligent agents to predict the consequences of their actions on the environment. In this paper, we propose Multi Rigid Object Gaussian World Model (MRO-GWM), a novel model that learns action-conditional dynamics of rigid objects in 3D. By representing the scene by object-centric Gaussians, we can represent arbitrary object shapes and multi-object scenes. We develop a novel spatio-temporal transformer architecture that predicts future rigid body motion from a history of object Gaussians and future actions. Objects are represented by their Gaussians in a canonical frame, which allows for describing object motion as rigid body transformation. Our model is trained on reconstructions from multiple viewpoints, which requires the model to handle partial observations of objects due to occlusions. We analyze prediction performance of our approach on synthetic datasets composed of typical household objects with multi-object dynamics and interactions by a robot end effector. We also evaluate our model in model-predictive control for non-prehensile manipulation in simulation.",
+      "authors": [
+        "Jens U. Kreber",
+        "Lukas Mack",
+        "Joerg Stueckler"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-01T09:12:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.01950v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "action-conditional object-centric world model for rigid objects",
+      "llm_evidence_cn": "刚性物体的动作条件对象中心世界模型",
+      "llm_evidence": "刚性物体的动作条件对象中心世界模型",
+      "canonical_evidence": "刚性物体的动作条件对象中心世界模型",
+      "llm_tldr_en": "Proposes MRO-GWM, an object-centric Gaussian splatting world model that learns action-conditional dynamics of rigid objects using a spatio-temporal transformer.",
+      "llm_tldr_cn": "智能体需要预测动作对环境的影响。本文提出MRO-GWM，一种基于对象中心高斯泼溅的世界模型，用于多刚性物体的动作条件动力学建模。通过规范帧中的高斯表示物体，结合时空Transformer预测刚体运动。该模型可从多视角重建训练，支持任意形状和多个物体。实验展示了准确的未来状态预测。",
+      "llm_tldr": "智能体需要预测动作对环境的影响。本文提出MRO-GWM，一种基于对象中心高斯泼溅的世界模型，用于多刚性物体的动作条件动力学建模。通过规范帧中的高斯表示物体，结合时空Transformer预测刚体运动。该模型可从多视角重建训练，支持任意形状和多个物体。实验展示了准确的未来状态预测。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02372v1",
+      "source": "arxiv",
+      "title": "COMAP: Co-Evolving World Models and Agent Policies for LLM Agents",
+      "abstract": "Equipping language agents with world models enables them to anticipate environment dynamics and evaluate candidate actions before execution. However, existing textual world models are typically fixed after training, preventing them from adapting to the on-policy state-action distributions induced by an evolving agent. Meanwhile, agent-improvement methods often rely on external rewards or verifiers, limiting their applicability in realistic interactive environments. In this paper, we propose COMAP, a novel framework that co-evolves textual world models and agent policies through closed-loop interaction. At each decision step, the world model predicts future state feedback for candidate actions, and the agent performs future-aware reflection by estimating the reliability of this feedback and refining its action accordingly. The resulting on-policy trajectories are then used to update the world model via self-distillation, allowing it to better match the agent's evolving interaction distribution. Across embodied task planning, Web navigation, and tool-use benchmarks, COMAP consistently outperforms competitive baselines, e.g., +16.75% relative improvement with Qwen3-4B. Further analyses show that the co-evolutionary loop improves the world model's prediction accuracy over time and leads to more effective long-horizon decision-making. Our code is available at: https://github.com/loyiv/CoMAP.",
+      "authors": [
+        "Youwei Liu",
+        "Jian Wang",
+        "Hanlin Wang",
+        "Wenjie Li"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-06-01T15:21:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.02372v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "co-evolving world models and agent policies for LLM agents",
+      "llm_evidence_cn": "语言智能体世界模型与策略共同演化框架",
+      "llm_evidence": "语言智能体世界模型与策略共同演化框架",
+      "canonical_evidence": "语言智能体世界模型与策略共同演化框架",
+      "llm_tldr_en": "Proposes COMAP, a framework that co-evolves textual world models and agent policies through closed-loop interaction for LLM agents.",
+      "llm_tldr_cn": "现有语言智能体的世界模型在训练后固定，无法适应策略变化，而智能体改进方法常依赖外部奖励。本文提出COMAP，通过闭环交互共同演化文本世界模型和智能体策略。每次决策时，世界模型预测候选动作的未来状态反馈，智能体进行未来感知反思。实验表明，COMAP显著提升了智能体在交互环境中的适应性和任务完成率。",
+      "llm_tldr": "现有语言智能体的世界模型在训练后固定，无法适应策略变化，而智能体改进方法常依赖外部奖励。本文提出COMAP，通过闭环交互共同演化文本世界模型和智能体策略。每次决策时，世界模型预测候选动作的未来状态反馈，智能体进行未来感知反思。实验表明，COMAP显著提升了智能体在交互环境中的适应性和任务完成率。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02800v1",
+      "source": "arxiv",
+      "title": "Cosmos 3: Omnimodal World Models for Physical AI",
+      "abstract": "We introduce Cosmos 3, a family of omnimodal world models designed to jointly process and generate language, image, video, audio, and action sequences within a unified mixture-of-transformers architecture. By supporting highly flexible input-output configurations, Cosmos 3 seamlessly unifies critical modalities for Physical AI -- effectively subsuming vision-language models, video generators, world simulators, and world-action models into a single framework. Our evaluation demonstrates that Cosmos 3 establishes a new state-of-the-art across a diverse suite of understanding and generation tasks, demonstrating omnimodal world models as scalable, general-purpose backbones for embodied agents. Our post-trained Cosmos 3 models were ranked as the best open-source Text-to-Image and Image-to-Video models by Artificial Analysis, and the best policy model by RoboArena at the time the technical report was written. To accelerate open research and deployment in Physical AI, we make our code, model checkpoints, curated synthetic datasets, and evaluation benchmark available under the Linux Foundation's OpenMDW-1.1 https://openmdw.ai/license/1-1/ License at https://github.com/nvidia/cosmos}{github.com/nvidia/cosmos and https://huggingface.co/collections/nvidia/cosmos3 . The project website is available at https://research.nvidia.com/labs/cosmos-lab/cosmos3 .",
+      "authors": [
+        "Aditi",
+        "Niket Agarwal",
+        "Arslan Ali",
+        "Jon Allen",
+        "Martin Antolini",
+        "Adeline Aubame",
+        "Alisson Azzolini",
+        "Junjie Bai",
+        "Maciej Bala",
+        "Yogesh Balaji",
+        "Josh Bapst",
+        "Aarti Basant",
+        "Mukesh Beladiya",
+        "Mohammad Qazim Bhat",
+        "Zaid Pervaiz Bhat",
+        "Dan Blick",
+        "Vanni Brighella",
+        "Han Cai",
+        "Tiffany Cai",
+        "Eric Cameracci",
+        "Jiaxin Cao",
+        "Yulong Cao",
+        "Mark Carlson",
+        "Carlos Casanova",
+        "Ting-Yun Chang",
+        "Yan Chang",
+        "Yu-Wei Chao",
+        "Prithvijit Chattopadhyay",
+        "Roshan Chaudhari",
+        "Chieh-Yun Chen",
+        "Junyu Chen",
+        "Ke Chen",
+        "Qizhi Chen",
+        "Wenkai Chen",
+        "Xiaotong Chen",
+        "Yu Chen",
+        "An-Chieh Cheng",
+        "Click Cheng",
+        "Xiu Chia",
+        "Jeana Choi",
+        "Chaeyeon Chung",
+        "Wenyan Cong",
+        "Yin Cui",
+        "Magdalena Dadela",
+        "Nalin Dadhich",
+        "Wenliang Dai",
+        "Joyjit Daw",
+        "Alperen Degirmenci",
+        "Rodrigo Vieira Del Monte",
+        "Robert Denomme",
+        "Sameer Dharur",
+        "Marco Di Lucca",
+        "Ke Ding",
+        "Wenhao Ding",
+        "Yifan Ding",
+        "Yuzhu Dong",
+        "Nicole Drumheller",
+        "Yilun Du",
+        "Aigul Dzhumamuratova",
+        "Aleksandr Efitorov",
+        "Hamid Eghbalzadeh",
+        "Naomi Eigbe",
+        "Imad El Hanafi",
+        "Hassan Eslami",
+        "Benedikt Falk",
+        "Jiaojiao Fan",
+        "Jim Fan",
+        "Amol Fasale",
+        "Sergiy Fefilatyev",
+        "Liang Feng",
+        "Francesco Ferroni",
+        "Sanja Fidler",
+        "Xiao Fu",
+        "Vikram Fugro",
+        "Prashant Gaikwad",
+        "TJ Galda",
+        "Katelyn Gao",
+        "Yihuai Gao",
+        "Wenhang Ge",
+        "Sreyan Ghosh",
+        "Arushi Goel",
+        "Vivek Goel",
+        "Akash Gokul",
+        "Rama Govindaraju",
+        "Jinwei Gu",
+        "Miguel Guerrero",
+        "Elfie Guo",
+        "Aryaman Gupta",
+        "Siddharth Gururani",
+        "Hugo Hadfield",
+        "Song Han",
+        "Ankur Handa",
+        "Zekun Hao",
+        "Mohammad Harrim",
+        "Ali Hassani",
+        "Nathan Hayes-Roth",
+        "Yufan He",
+        "Chris Helvig",
+        "Cyrus Hogg",
+        "Madison Huang",
+        "Michael Huang",
+        "Sophia Huang",
+        "Yufan Huang",
+        "Jacob Huffman",
+        "DeLesley Hutchins",
+        "Suneel Indupuru",
+        "Boris Ivanovic",
+        "Arihant Jain",
+        "Joel Jang",
+        "Ryan Ji",
+        "Yanan Jian",
+        "Dongfu Jiang",
+        "Jingyi Jin",
+        "Atharva Joshi",
+        "Nikhilesh Joshi",
+        "Pranjali Joshi",
+        "Jaehun Jung",
+        "Weiwei Kang",
+        "Scott Kassekert",
+        "Jan Kautz",
+        "Ashna Khetan",
+        "Julia Kiczka",
+        "Slawek Kierat",
+        "Gwanghyun Kim",
+        "Kuno Kim",
+        "Sunny Kim",
+        "Kezhi Kong",
+        "Xin Kong",
+        "Zhifeng Kong",
+        "Tomasz Kornuta",
+        "Egor Krivov",
+        "Hui Kuang",
+        "Saurav Kumar",
+        "Chia-Wen Kuo",
+        "George Kurian",
+        "Wojciech Kutak",
+        "JF Lafleche",
+        "Himangshu Lahkar",
+        "Omar Laymoun",
+        "Jayjun Lee",
+        "Sanggil Lee",
+        "Gabriele Leone",
+        "Boyi Li",
+        "Freya Li",
+        "Jiajun Li",
+        "Jinfeng Li",
+        "Ling Li",
+        "Pengcheng Li",
+        "Shangru Li",
+        "Tingle Li",
+        "Xiaolong Li",
+        "Xuan Li",
+        "Zhaoshuo Li",
+        "Zhiqi Li",
+        "Hao Liang",
+        "Maosheng Liao",
+        "Chen-Hsuan Lin",
+        "Tsung-Yi Lin",
+        "Ming-Yu Liu",
+        "Sifei Liu",
+        "Zihan Liu",
+        "Hai Loc Lu",
+        "Xiangyu Lu",
+        "Alice Luo",
+        "Ruipu Luo",
+        "Wenjie Luo",
+        "Jiangran Lyu",
+        "Martin Ding Ma",
+        "Nic Ma",
+        "Qianli Ma",
+        "Dawid Majchrowski",
+        "Louis Marcoux",
+        "Miguel Martin",
+        "Qing Miao",
+        "Ashkan Mirzaei",
+        "Shreyas Misra",
+        "Kaichun Mo",
+        "Durra Mohsin",
+        "Hyejin Moon",
+        "Pawel Morkisz",
+        "Saeid Motiian",
+        "Kirill Motkov",
+        "Seungjun Nah",
+        "Yashraj Narang",
+        "Deepak Narayanan",
+        "Thabang Ngazimbi",
+        "Julian Ouyang",
+        "David Page",
+        "Yatian Pang",
+        "Sehwi Park",
+        "Mahesh Patekar",
+        "Mostofa Patwary",
+        "Marco Pavone",
+        "Trung Pham",
+        "Wei Ping",
+        "Soha Pouya",
+        "Shrimai Prabhumoye",
+        "Varun Praveen",
+        "Delin Qu",
+        "Hesam Rabeti",
+        "Morteza Ramezanali",
+        "Marilyn Reeb",
+        "Xuanchi Ren",
+        "Kristen Rumley",
+        "Wojciech Rymer",
+        "Jun Saito",
+        "Yeongho Seol",
+        "John Shao",
+        "Piyush Shekdar",
+        "Tianwei Shen",
+        "Humphrey Shi",
+        "Min Shi",
+        "Stella Shi",
+        "Kevin Shih",
+        "Mohammad Shoeybi",
+        "Mateusz Sieniawski",
+        "Shuran Song",
+        "Alexander Sotelo",
+        "Amir Sotoodeh",
+        "Sunil Srinivasa",
+        "Vignesh Srinivasakumar",
+        "Bartosz Stefaniak",
+        "Rahul Heinrich Steiger",
+        "Shangkun Sun",
+        "Jiaxiang Tang",
+        "Shitao Tang",
+        "Yangyang Tang",
+        "Yue Tang",
+        "Tolou Tavakkoli",
+        "Kayley Ting",
+        "Krzysztof Tomala",
+        "Wei-Cheng Tseng",
+        "Jibin Varghese",
+        "Sergei Vasilev",
+        "Thomas Volk",
+        "Raju Wagwani",
+        "Roger Waleffe",
+        "Andrew Z. Wang",
+        "Boxiang Wang",
+        "Haoxiang Wang",
+        "Qiao Wang",
+        "Shihao Wang",
+        "Shijie Wang",
+        "Ting-Chun Wang",
+        "Yan Wang",
+        "Yu Wang",
+        "David Wehr",
+        "Fangyin Wei",
+        "Xinshuo Weng",
+        "Jay Zhangjie Wu",
+        "Kedi Wu",
+        "Hongchi Xia",
+        "Summer Xiao",
+        "Tianjun Xiao",
+        "Kevin Xie",
+        "Daguang Xu",
+        "Jiashu Xu",
+        "Mengyao Xu",
+        "Ruqing Xu",
+        "Xingqian Xu",
+        "Yao Xu",
+        "Dinghao Yang",
+        "Dong Yang",
+        "Hans Yang",
+        "Xiaodong Yang",
+        "Xuning Yang",
+        "Yichu Yang",
+        "Yurong You",
+        "Zhiding Yu",
+        "Hao Yuan",
+        "Simon Yuen",
+        "Xiaohui Zeng",
+        "Pengcuo Zeren",
+        "Cindy Zha",
+        "Haotian Zhang",
+        "Jenny Zhang",
+        "Jing Zhang",
+        "Liangkai Zhang",
+        "Paris Zhang",
+        "Shun Zhang",
+        "Xuanmeng Zhang",
+        "Zhizheng Zhang",
+        "Ann Zhao",
+        "Yilin Zhao",
+        "Yuliya Zhautouskaya",
+        "Charles Zhou",
+        "Fengzhe Zhou",
+        "Shilin Zhu",
+        "Yuke Zhu",
+        "Dima Zhylko",
+        "Artur Zolkowski"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.MM",
+        "cs.RO"
+      ],
+      "published": "2026-06-01T19:12:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.02800v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "omnimodal world models unifying language, image, video, audio, action",
+      "llm_evidence_cn": "统一语言、图像、视频、音频和动作的全模态世界模型",
+      "llm_evidence": "统一语言、图像、视频、音频和动作的全模态世界模型",
+      "canonical_evidence": "统一语言、图像、视频、音频和动作的全模态世界模型",
+      "llm_tldr_en": "Introduces Cosmos 3, a family of omnimodal world models for Physical AI, achieving SOTA on multiple tasks.",
+      "llm_tldr_cn": "现有模型通常是单模态或部分模态，难以支持物理AI的多样化感知。本文提出Cosmos 3系列全模态世界模型，采用混合Transformer架构，统一处理语言、图像、视频、音频和动作序列。该模型在多项理解和生成任务上达到新SOTA，并作为开放权重模型发布，为具身智能提供通用骨干。实验证实其在物理AI场景的强大能力。",
+      "llm_tldr": "现有模型通常是单模态或部分模态，难以支持物理AI的多样化感知。本文提出Cosmos 3系列全模态世界模型，采用混合Transformer架构，统一处理语言、图像、视频、音频和动作序列。该模型在多项理解和生成任务上达到新SOTA，并作为开放权重模型发布，为具身智能提供通用骨干。实验证实其在物理AI场景的强大能力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03188v1",
+      "source": "arxiv",
+      "title": "GeoSem-WAM: Geometry- and Semantic-Aware World Action Models",
+      "abstract": "Recent World Action Models (WAMs) have demonstrated impressive capabilities in embodied decision-making. However, whether their effectiveness stems from explicit future imagination during inference or representation learning induced by predictive training remains an open question. Emerging evidence suggests the primary advantage lies in learning robust latent representations rather than generating future observations at test time. Nevertheless, existing WAMs mainly rely on RGB-based future prediction, which provides limited structural and spatial understanding of complex environments. To address this, we propose a structured world modeling framework that enhances latent representations through geometric and semantic supervision. Alongside future RGB prediction, our model introduces two auxiliary prediction branches for future geometry and semantic representations, enabling it to jointly capture scene dynamics, spatial geometry, and semantic context within a unified latent space. Crucially, our approach preserves efficient inference by avoiding explicit future rollout or video generation at test time. Extensive experiments show that incorporating structured world supervision consistently improves action prediction accuracy, scene understanding, and robustness under challenging embodied scenarios, highlighting its potential for advancing scalable and efficient WAMs.",
+      "authors": [
+        "Fulong Ma",
+        "Daojie Peng",
+        "Wenjun Yue",
+        "Jiahang Cao",
+        "Bintao Wang",
+        "Qiang Zhang",
+        "Jun Ma"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-02T05:48:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.03188v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "enhances world action models with geometric and semantic supervision",
+      "llm_evidence_cn": "通过几何与语义监督增强世界动作模型",
+      "llm_evidence": "通过几何与语义监督增强世界动作模型",
+      "canonical_evidence": "通过几何与语义监督增强世界动作模型",
+      "llm_tldr_en": "Proposes GeoSem-WAM, a structured world modeling framework that enhances latent representations with geometric and semantic supervision, moving beyond RGB-based future prediction for embodied decision-making.",
+      "llm_tldr_cn": "世界动作模型（WAM）在具身决策中表现出色，但其优势源于表示学习而非未来生成。现有WAM依赖RGB未来预测，缺乏结构理解。本文提出GeoSem-WAM，通过在潜在表示中加入几何与语义监督，辅以未来RGB预测，增强了结构化和空间理解。实验证明该结构化世界模型在复杂环境中提升了决策质量。",
+      "llm_tldr": "世界动作模型（WAM）在具身决策中表现出色，但其优势源于表示学习而非未来生成。现有WAM依赖RGB未来预测，缺乏结构理解。本文提出GeoSem-WAM，通过在潜在表示中加入几何与语义监督，辅以未来RGB预测，增强了结构化和空间理解。实验证明该结构化世界模型在复杂环境中提升了决策质量。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03603v1",
+      "source": "arxiv",
+      "title": "World Models Meet Language Models: On the Complementarity of Concrete and Abstract Reasoning",
+      "abstract": "World models and multimodal large language models (MLLMs) provide complementary capabilities for predicting future outcomes from static visual observations. World models can generate concrete visual rollouts of possible futures, while MLLMs can reason abstractly over questions, goals, and rules. However, generated rollouts are stochastic and may be visually plausible but task-incorrect, making it necessary to determine when visual simulation is useful, whether a rollout is credible, and how it should influence the final answer. We formulate this problem as controlled concrete reasoning, where a model learns to invoke, verify, and integrate visual future simulation alongside abstract reasoning. To study this setting, we construct two human-verified benchmarks, VRQABench for controllable spatial lookahead and OpenWorldQA for open-domain physical prediction, and propose Privileged-Future On-Policy Self-Distillation (PF-OPSD). During training, PF-OPSD uses ground-truth future videos and answers only as teacher-side privileged context to evaluate on-policy concrete-reasoning trajectories, while the deployable student never observes true futures at test time. Experimental results show that PF-OPSD outperforms baseline by 10.6% and 10.9% on VRQABench and OpenWorldQA, respectively, while increasing robustness to noisy or conflicting rollouts. Our code and dataset are available at https://github.com/yczhou001/PF-OPSD.",
+      "authors": [
+        "Yucheng Zhou",
+        "Wei Tao",
+        "Yiwen Guo",
+        "Jianbing Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-02T13:07:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.03603v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Explores complementarity of world models and language models for concrete and abstract reasoning",
+      "llm_evidence_cn": "探索世界模型与语言模型在具体与抽象推理中的互补性",
+      "llm_evidence": "探索世界模型与语言模型在具体与抽象推理中的互补性",
+      "canonical_evidence": "探索世界模型与语言模型在具体与抽象推理中的互补性",
+      "llm_tldr_en": "Studies how world models' visual rollouts and LLMs' abstract reasoning can be combined for controlled concrete reasoning.",
+      "llm_tldr_cn": "该论文研究世界模型与多模态大语言模型的互补性：世界模型生成具体视觉未来，LLM进行抽象推理。但生成结果可能视觉合理而任务错误。因此提出了受控具体推理框架，学习何时调用、验证和集成视觉模拟。实验表明该方法在需要物理推理的任务上优于单独使用任一模型。",
+      "llm_tldr": "该论文研究世界模型与多模态大语言模型的互补性：世界模型生成具体视觉未来，LLM进行抽象推理。但生成结果可能视觉合理而任务错误。因此提出了受控具体推理框架，学习何时调用、验证和集成视觉模拟。实验表明该方法在需要物理推理的任务上优于单独使用任一模型。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05015v1",
+      "source": "arxiv",
+      "title": "Generalization of World Models under Environmental Variability for Vision-based Quadrotor Navigation",
+      "abstract": "World models, learned generative models that predict how an environment evolves, have become a promising tool for sample-efficient robot learning. Yet how robust they are to environmental variability remains poorly understood. To address this, we conduct a systematic study using vision-based quadrotor navigation as a testbed problem, training DreamerV3-based world models under varying levels of environmental randomness and evaluating them across all levels through cross-environment validation, spanning both Self-Supervised Learning (SSL) pretraining and Reinforcement Learning (RL) fine-tuning. We then deploy all world models and associated navigation policies on a real quadrotor in unseen environments, including an open-loop run where the model receives just 2.5s of real sensory input before all sensors are cut off, leaving the system to navigate entirely in imagination over a 12m traverse. Our results show that world model robustness during SSL pretraining is a strong predictor of sim-to-real transfer: every model that generalized well in cross-environment SSL validation deployed successfully in the real world, passing through gaps as narrow as 0.67m, whereas the model that dominated simulation policy evaluation failed on the real platform. We further identify (a) the discrete latent size and (b) the training-sequence length as the dominant factors governing world model quality.",
+      "authors": [
+        "Luca Zanatta",
+        "Grzegorz Malczyk",
+        "Kostas Alexis"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-03T15:38:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.05015v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "studies generalization of world models in quadrotor navigation under environmental variability",
+      "llm_evidence_cn": "研究世界模型在无人机导航中的泛化能力，应对环境变异性",
+      "llm_evidence": "研究世界模型在无人机导航中的泛化能力，应对环境变异性",
+      "canonical_evidence": "研究世界模型在无人机导航中的泛化能力，应对环境变异性",
+      "llm_tldr_en": "Systematic study of DreamerV3-based world model generalization under environmental randomness for vision-based quadrotor navigation, with real-world deployment across unseen environments.",
+      "llm_tldr_cn": "世界模型在环境变异下的鲁棒性尚不明确。本文以视觉无人机导航为测试平台，训练DreamerV3世界模型在不同随机程度环境下，通过跨环境验证评估泛化性能，涵盖自监督预训练和强化学习微调。最终在真实无人机上部署，验证了世界模型在未见环境中的泛化能力，为机器人学习提供了鲁棒性指导。",
+      "llm_tldr": "世界模型在环境变异下的鲁棒性尚不明确。本文以视觉无人机导航为测试平台，训练DreamerV3世界模型在不同随机程度环境下，通过跨环境验证评估泛化性能，涵盖自监督预训练和强化学习微调。最终在真实无人机上部署，验证了世界模型在未见环境中的泛化能力，为机器人学习提供了鲁棒性指导。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05558v1",
+      "source": "arxiv",
+      "title": "Autoregressive Diffusion World Models for Off-Policy Evaluation of LLM Agents",
+      "abstract": "Evaluating large language model (LLM) agents in multi-turn interactive environments is expensive and risky, as it requires online environment interaction. We propose ADWM (Autoregressive Diffusion World Model), an evaluation framework that estimates the performance of a new LLM agent policy purely from pre-collected trajectories. The core idea is to learn a latent diffusion world model that simulates how the environment responds to the evaluation policy, without ever executing it in the real environment. Existing diffusion-based OPE methods guide full trajectories in a single pass by jointly diffusing states and actions, an assumption that breaks down for LLM agents whose actions are discrete text that must be sampled from the policy after observing the environment. Unlike autoregressive world models that suffer from compounding errors, ADWM models each transition as an independent denoising process, enabling reliable step-by-step rollouts where the world model and agent alternate in causal order. Crucially, the LLM agent under evaluation directly guides the diffusion generation at each step via a policy-conditioned score function, ensuring that simulated trajectories accurately reflect its decision-making patterns. Empirically, ADWM achieves accurate value estimates and evaluation reliability across diverse multi-turn agent tasks, demonstrating its promise as a practical framework for offline LLM agent evaluation.",
+      "authors": [
+        "Kaixuan Liu",
+        "Guojun Xiong",
+        "Weinan Zhang",
+        "Shengpu Tang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-04T01:13:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.05558v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autoregressive diffusion world models for off-policy evaluation of LLM agents",
+      "llm_evidence_cn": "用于LLM智能体离线策略评估的自回归扩散世界模型",
+      "llm_evidence": "用于LLM智能体离线策略评估的自回归扩散世界模型",
+      "canonical_evidence": "用于LLM智能体离线策略评估的自回归扩散世界模型",
+      "llm_tldr_en": "Proposes ADWM, a latent diffusion world model for off-policy evaluation of LLM agents by simulating environment responses.",
+      "llm_tldr_cn": "评估LLM智能体在多轮交互环境中的性能成本高且风险大。本文提出ADWM，一种潜在扩散世界模型，通过从预收集轨迹中学习模拟环境对策略的响应，实现无真实交互的离线评估。该方法解决了现有扩散方法对离散文本动作的兼容性问题。实验表明ADWM能准确估计新策略性能。",
+      "llm_tldr": "评估LLM智能体在多轮交互环境中的性能成本高且风险大。本文提出ADWM，一种潜在扩散世界模型，通过从预收集轨迹中学习模拟环境对策略的响应，实现无真实交互的离线评估。该方法解决了现有扩散方法对离散文本动作的兼容性问题。实验表明ADWM能准确估计新策略性能。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05979v1",
+      "source": "arxiv",
+      "title": "World-Language-Action Model for Unified World Modeling, Language Reasoning, and Action Synthesis",
+      "abstract": "We propose world-language-action (WLA) models as a new class of embodied foundation models. WLA takes textual instructions, images, and robot states as inputs to jointly predict textual subtasks, subgoal images, and robot actions, conjoining the \\emph{world modeling interface} to learn from extensive egocentric videos as in the world-action model (WAM) and the \\emph{language reasoning} capacities to solve complex long-horizon tasks as in vision-language-action (VLA) models. At the core of WLA lies an \\emph{autoregressive (AR)} Transformer backbone, instead of a bidirectional diffusion Transformer as in WAMs, to predict the \\emph{next state}, comprising the \\emph{semantic-level} textual intention and complementary \\emph{fine-grained} physical dynamics. The physical dynamics are supervised by the world modeling objective based on a dedicated World Expert, and are leveraged to ease the characterization of the state-action correlation for the Action Expert. WLA leverages meta-queries to make the world prediction \\emph{implicitly} impact the action generation so that the former can be disabled during inference. The world prediction can also be activated to enable test-time scaling for improved robot control. Our WLA-0 prototype, with 2B active parameters, achieves 40 ms per inference on an NVIDIA RTX 5090. Evaluations across simulated and real-world environments demonstrate that WLA-0 achieves state-of-the-art multi-task and long-horizon learning abilities, e.g., 92.94\\% success rate on RoboTwin2.0 Clean and 56.5\\% success rate on RMBench. WLA-0 also holds the promise to learn novel tasks directly from \\emph{cross-embodiment robot videos} without action annotations.",
+      "authors": [
+        "Yi Yang",
+        "Zhihong Liu",
+        "Siqi Kou",
+        "Yiyang Chen",
+        "Yanzhe Hu",
+        "Jianbo Zhou",
+        "Boyuan Zhao",
+        "Zhijie Wei",
+        "Xiao Xia",
+        "Xueqi Li",
+        "Pengfei Liu",
+        "Zhijie Deng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-04T10:23:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.05979v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes a unified world-language-action model combining world modeling, language reasoning, and action synthesis",
+      "llm_evidence_cn": "提出统一世界-语言-动作模型，结合世界建模、语言推理与动作合成",
+      "llm_evidence": "提出统一世界-语言-动作模型，结合世界建模、语言推理与动作合成",
+      "canonical_evidence": "提出统一世界-语言-动作模型，结合世界建模、语言推理与动作合成",
+      "llm_tldr_en": "Proposes world-language-action (WLA) models as embodied foundation models that jointly predict textual subtasks, subgoal images, and robot actions, unifying world modeling and language reasoning.",
+      "llm_tldr_cn": "现有基础模型未能统一世界建模与语言推理能力。本文提出WLA模型，以自回归Transformer为核心，输入文本指令、图像和机器人状态，联合预测文本子任务、子目标图像和机器人动作。该模型融合了世界动作模型（WAM）的视音频学习和视觉语言动作模型（VLA）的推理能力，在长时域复杂任务上展现出优势。",
+      "llm_tldr": "现有基础模型未能统一世界建模与语言推理能力。本文提出WLA模型，以自回归Transformer为核心，输入文本指令、图像和机器人状态，联合预测文本子任务、子目标图像和机器人动作。该模型融合了世界动作模型（WAM）的视音频学习和视觉语言动作模型（VLA）的推理能力，在长时域复杂任务上展现出优势。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-05-07-723428-v1",
+      "source": "biorxiv",
+      "title": "Susagi: A Microbiome World Model",
+      "abstract": "MotivationAccurately modelling how microbial communities assemble and change across hosts and environments is essential for analysis and intervention. Typical pipelines capture limited generalisable structure and often depend on fixed ecological unit definitions.\n\nResultsWe present Susagi (Set Unsupervised Assessment of Genetic Imposters), a permutation-invariant denoising transformer that operates directly on sets of bacterial SSU rRNA gene embeddings to learn a member-level stability function.\n\nThe model was trained on [~] 2 x 106 bacterial community samples. We show that it reliably predicts community composition dynamics in a zero-shot (no training) setting, demonstrated here across three challenging microbiomes for which traditional ML methods do not exceed random expectation. The models stability scores capture biological structure: across datasets, higher scores are enriched for agricultural, cropland, and soil-associated habitats, consistent with microbial communities in these environments supporting positive diversity-stability relationships. The highest stability scores are only attained by communities with high Pielou evenness and large size, despite the fact that the model has never seen abundances suggesting it can recognise community dysbiosis from presence absence alone. Furthermore, they also track biological gradients such as subject age.\n\nSusagi is competitive with another Large Microbiome Model (Microbial General Model, MGM) on diverse classification tasks, without task-specific fine-tuning and with an increased parameter efficiency.\n\nUltimately, our model will facilitate hypothesis generation for complex microbial processes, including deterministic assembly and microbial interactions, crucial for instance in the design of communities in silico.\n\nAvailability and implementationEvaluation code and model weights can be found from https://github.com/the-puzzler/Microbiome-Modelling. Model weights can also be downloaded directly from https://huggingface.co/basilboy/microbiome-model. Interactive demo can be found here: https://huggingface.co/spaces/basilboy/microbiome-space.",
+      "authors": [
+        "Peluso, M.",
+        "Tackmann, J.",
+        "von Mering, C."
+      ],
+      "primary_category": "systems biology",
+      "categories": [
+        "systems biology"
+      ],
+      "published": "2026-05-11T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.05.07.723428v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "applies world model concept to microbiome community dynamics",
+      "llm_evidence_cn": "将世界模型概念应用于微生物组群落动态",
+      "llm_evidence": "将世界模型概念应用于微生物组群落动态",
+      "canonical_evidence": "将世界模型概念应用于微生物组群落动态",
+      "llm_tldr_en": "Introduces Susagi, a permutation-invariant denoising transformer that learns a member-level stability function as a world model for microbiome communities, achieving zero-shot prediction across challenging datasets.",
+      "llm_tldr_cn": "微生物组群落建模传统方法泛化能力有限且依赖固定分类单元。本文提出Susagi（微生物组世界模型），使用置换不变的去噪Transformer直接在细菌SSU rRNA基因嵌入上学习成员级稳定性函数。在约200万样本上训练后，该模型在三个挑战性微生物组数据集的零样本预测中超过传统机器学习方法，展示了世界模型在生态学中的潜力。",
+      "llm_tldr": "微生物组群落建模传统方法泛化能力有限且依赖固定分类单元。本文提出Susagi（微生物组世界模型），使用置换不变的去噪Transformer直接在细菌SSU rRNA基因嵌入上学习成员级稳定性函数。在约200万样本上训练后，该模型在三个挑战性微生物组数据集的零样本预测中超过传统机器学习方法，展示了世界模型在生态学中的潜力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.10347v1",
+      "source": "arxiv",
+      "title": "How Mobile World Model Guides GUI Agents?",
+      "abstract": "Recent advances in vision-language models have enabled mobile GUI agents to perceive visual interfaces and execute user instructions, but reliable prediction of action consequences remains critical for long-horizon and high-risk interactions. Existing mobile world models provide either text-based or image-based future states, yet it remains unclear which representation is useful, whether generated rollouts can replace real environments, and how test-time guidance helps agents of different strengths. To answer the above questions, we filter and annotate mobile world-model data, then train world models across four modalities: delta text, full text, diffusion-based images, and renderable code. These models achieve SoTA performance on both MobileWorldBench and Code2WorldBench. Furthermore, by evaluating their downstream utility on AITZ, AndroidControl, and AndroidWorld, we obtain three findings. First, renderable code reconstruction achieves high in-distribution fidelity and provides effective multimodal supervision for data construction, while text-based feedback is more robust for online out-of-distribution (OOD) execution. Second, world-model-generated trajectories can provide transferable interaction experience in the training process and improve agents' end-to-end task performance, although these data do not preserve the original distribution. Last, for overconfident mobile agents with low action entropy, posterior self-reflection provides limited gains, suggesting that world models are more effective as prior perception or training supervision than as universal post-hoc verifiers.",
+      "authors": [
+        "Weikai Xu",
+        "Kun Huang",
+        "Yunren Feng",
+        "Jiaxing Li",
+        "Yuhan Chen",
+        "Yuxuan Liu",
+        "Zhizheng Jiang",
+        "Heng Qu",
+        "Pengzhi Gao",
+        "Wei Liu",
+        "Jian Luan",
+        "Xiaolin Hu",
+        "Bo An"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-05-11T10:49:31+00:00",
+      "link": "https://arxiv.org/pdf/2605.10347v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Investigates how mobile world models can guide GUI agents, training models in multiple modalities",
+      "llm_evidence_cn": "研究移动世界模型如何指导GUI代理，训练多模态模型",
+      "llm_evidence": "研究移动世界模型如何指导GUI代理，训练多模态模型",
+      "canonical_evidence": "研究移动世界模型如何指导GUI代理，训练多模态模型",
+      "llm_tldr_en": "Trains mobile world models in four modalities (delta/full text, image, code) and evaluates their effectiveness in guiding GUI agents.",
+      "llm_tldr_cn": "该论文探索移动GUI代理中世界模型如何提供未来状态预测。作者筛选数据并训练了四种模态的世界模型：差异文本、全文、扩散图像和可渲染代码。在MobileWorldBench和Code2WorldBench上取得最佳性能，并分析了不同模态对代理的帮助程度。",
+      "llm_tldr": "该论文探索移动GUI代理中世界模型如何提供未来状态预测。作者筛选数据并训练了四种模态的世界模型：差异文本、全文、扩散图像和可渲染代码。在MobileWorldBench和Code2WorldBench上取得最佳性能，并分析了不同模态对代理的帮助程度。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.14937v1",
+      "source": "arxiv",
+      "title": "Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations",
+      "abstract": "Predictive world models enable agents to model scene dynamics and reason about the consequences of their actions. Inspired by human perception, object-centric world models capture scene dynamics using object-level representations, which can be used for downstream applications such as action planning. However, most object-centric world models and reinforcement learning (RL) approaches learn reactive policies that are fixed at inference time, limiting generalization to novel situations. We propose Slot-MPC, an object-centric world modeling framework that enables planning through Model Predictive Control (MPC). Slot-MPC leverages vision encoders to learn slot-based representations, which encode individual objects in the scene, and uses these structured representations to learn an action-conditioned object-centric dynamics model. At inference time, the learned dynamics model enables action planning via MPC, allowing agents to adapt to previously unseen situations. Since the learned world model is differentiable, we can use gradient-based MPC to directly optimize actions, which is computationally more efficient than relying on gradient-free, sampling-based MPC methods. Experiments on simulated robotic manipulation tasks show that Slot-MPC improves both task performance and planning efficiency compared to non-object-centric world model baselines. In the considered offline setting with limited state-action coverage, we find that gradient-based MPC performs better than gradient-free, sampling-based MPC. Our results demonstrate that explicitly structured, object-centric representations provide a strong inductive bias for controllable and generalizable decision-making. Code and additional results are available at https://slot-mpc.github.io.",
+      "authors": [
+        "Jonathan Spieler",
+        "Angel Villar-Corrales",
+        "Sven Behnke"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-05-14T15:12:15+00:00",
+      "link": "https://arxiv.org/pdf/2605.14937v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Proposes object-centric world model with model predictive control for planning",
+      "llm_evidence_cn": "提出以对象为中心的世界模型结合模型预测控制进行规划",
+      "llm_evidence": "提出以对象为中心的世界模型结合模型预测控制进行规划",
+      "canonical_evidence": "提出以对象为中心的世界模型结合模型预测控制进行规划",
+      "llm_tldr_en": "Slot-MPC combines object-centric world models with model predictive control for goal-conditioned planning, improving generalization.",
+      "llm_tldr_cn": "该论文指出现有面向对象的世界模型只能学习固定策略，泛化性差。为此提出Slot-MPC框架，利用视觉编码器学习场景中对象的槽位表示，并基于模型预测控制进行目标导向的在线规划。实验证明该方法在未见过的场景中也能有效规划，优于固定策略方法。",
+      "llm_tldr": "该论文指出现有面向对象的世界模型只能学习固定策略，泛化性差。为此提出Slot-MPC框架，利用视觉编码器学习场景中对象的槽位表示，并基于模型预测控制进行目标导向的在线规划。实验证明该方法在未见过的场景中也能有效规划，优于固定策略方法。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.15466v1",
+      "source": "arxiv",
+      "title": "Entity-Centric World Models: Interaction-Aware Masking for Causal Video Prediction",
+      "abstract": "Learning predictive world models from unlabelled video is a foundational challenge in artificial intelligence. While Joint Embedding Predictive Architectures (JEPA) have set new benchmarks in semantic classification, they often remain physics-blind, failing to capture the causal dynamics necessary for downstream reasoning. We hypothesize that this stems from standard patch-based masking strategies, which prioritize visual texture over rare but informative kinematic events. We propose Interaction-Aware JEPA (IA-JEPA), which utilizes a self-supervised motion-centric masking strategy to prioritize physical interactions. By specifically targeting entities engaged in collisions or momentum transfers, we force the architecture to reconstruct latent trajectories rather than static background features. Evaluated on the CLEVRER benchmark, IA-JEPA achieves 14.26% accuracy on causal reasoning tasks, a significant lead over the 3.22% achieved by standard patch-masked baselines. Crucially, we demonstrate that IA-JEPA breaks the \"static bias\" of standard self-supervision by inducing a higher-entropy, more discriminative latent space (+10% entropy gain) that linearizes physical energy ($R^2=0.43$). We show that this interaction bias generalizes to real-world human actions (Something-Something V2) and zero-shot physical puzzles (PHYRE-Lite). Our results provide a scalable, fully self-supervised path toward building foundational world models that begin to internalize the causal structure of the physical world.",
+      "authors": [
+        "Santosh Kumar Paidi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-14T23:10:04+00:00",
+      "link": "https://arxiv.org/pdf/2605.15466v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Proposes entity-centric world model with interaction-aware masking for causal video prediction",
+      "llm_evidence_cn": "提出以实体为中心的世界模型，采用交互感知遮罩进行因果视频预测",
+      "llm_evidence": "提出以实体为中心的世界模型，采用交互感知遮罩进行因果视频预测",
+      "canonical_evidence": "提出以实体为中心的世界模型，采用交互感知遮罩进行因果视频预测",
+      "llm_tldr_en": "Introduces IA-JEPA, a world model with motion-centric masking that prioritizes physical interactions to improve causal video prediction and physics awareness.",
+      "llm_tldr_cn": "该论文指出标准JEPA模型因遮蔽策略忽略物理动态，导致对因果关系理解不足。为此提出IA-JEPA，采用自监督的运动中心遮罩，强制模型关注实体间的碰撞与动量转移。实验表明该方法在因果视频预测任务上优于现有基准，提升了世界模型对物理交互的建模能力。",
+      "llm_tldr": "该论文指出标准JEPA模型因遮蔽策略忽略物理动态，导致对因果关系理解不足。为此提出IA-JEPA，采用自监督的运动中心遮罩，强制模型关注实体间的碰撞与动量转移。实验表明该方法在因果视频预测任务上优于现有基准，提升了世界模型对物理交互的建模能力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.16547v1",
+      "source": "arxiv",
+      "title": "World Model-Enabled Causal Digital Twins for Semantic Communications in Physical AI Systems",
+      "abstract": "Semantic communication has emerged as a promising paradigm for enabling goal-oriented networking. However, most existing semantic communication solutions are tailored to one-shot tasks and optimize instantaneous performance. Hence, they cannot be used to support closed-loop dynamic systems with physical artificial intelligence (AI), in which the transmitted semantics affect not only the current inference outcome but also future control actions, state evolution, and ultimately long-horizon task performance. To address this gap, this paper investigates goal-oriented semantic communications for physical AI systems with closed-loop sensing-communication-inference-control. In particular, the problem of semantic communications is formulated as a long-term return-per-bit maximization under wireless bit-budget constraints while capturing both control efficiency and communication efficiency. To solve this problem, a novel causal information value (CIV) metric is introduced to evaluate the marginal contribution of each semantic token to the expected long-term return by transmission interventions. Then, a world-model-enabled causal digital twin (WM-CDT) framework is proposed to capture the dynamics of closed-loop physical AI systems and enable counterfactual reasoning for long-horizon imagined rollouts. Based on these imagined rollouts, an actor-critic policy is trained for long-horizon agent control with high data efficiency, while the semantic token selector is trained through CIV-per-bit evaluation. Extensive simulations on an AirSim-Sionna-based unmanned aerial vehicle (UAV) navigation simulator show that the proposed WM-CDT framework achieves significant improvement in return-per-kbit and navigation success rate compared to existing reinforcement learning solutions.",
+      "authors": [
+        "Lingyi Wang",
+        "Tingyu Shui",
+        "Walid Saad",
+        "Pascal Adjakple"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-15T18:41:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.16547v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "world model applied to semantic communications in physical AI",
+      "llm_evidence_cn": "世界模型在物理AI语义通信中的应用",
+      "llm_evidence": "世界模型在物理AI语义通信中的应用",
+      "canonical_evidence": "世界模型在物理AI语义通信中的应用",
+      "llm_tldr_en": "Applies world models for goal-oriented semantic communications in closed-loop physical AI systems with causal digital twins.",
+      "llm_tldr_cn": "现有语义通信仅优化瞬时性能，不适用于闭环物理AI系统。本文利用世界模型构建因果数字孪生，实现目标导向的语义通信，考虑动作对状态演化的长期影响。该方法将通信与控制联合优化，提升任务性能。仿真验证了其在闭环系统中的有效性。",
+      "llm_tldr": "现有语义通信仅优化瞬时性能，不适用于闭环物理AI系统。本文利用世界模型构建因果数字孪生，实现目标导向的语义通信，考虑动作对状态演化的长期影响。该方法将通信与控制联合优化，提升任务性能。仿真验证了其在闭环系统中的有效性。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.17912v1",
+      "source": "arxiv",
+      "title": "WorldArena 2.0: Extending Embodied World Model Benchmarking on Modality, Functionality and Platform",
+      "abstract": "World models have emerged as a central paradigm for embodied intelligence, enabling agents to predict action-conditioned future and reason about environmental dynamics. However, existing embodied world model benchmarks are still largely confined to vision-only prediction, offline embodied applications, and simulator-based evaluation, making them insufficient for assessing increasingly comprehensive world models. In this work, we introduce WorldArena 2.0, an expanded benchmark that systematically broadens embodied world model evaluation along three dimensions: modality, functionality, and platform. Along the modality dimension, WorldArena 2.0 extends evaluation from vision-only to visuotactile modalities, enabling assessment of multimodal perception and prediction. Along the functionality dimension, it extends beyond policy evaluation and planning to assess world models as interactive RL environments for policy optimization. Along the platform dimension, it moves beyond simulator-only evaluation to a diverse suite of simulated and real-world robotic settings across multiple embodiments. Under a standardized protocol, WorldArena 2.0 comprehensively evaluates perceptual quality, interactive utility, and cross-platform performance, providing a comprehensive testbed for tracking progress toward embodied world models. The benchmark is available at: https://world-arena.ai.",
+      "authors": [
+        "Yu Shang",
+        "Yinzhou Tang",
+        "Yiding Ma",
+        "Zhuohang Li",
+        "Lei Jin",
+        "Weikang Su",
+        "Xin Jin",
+        "Zhaolu Wang",
+        "Ziyou Wang",
+        "Xin Zhang",
+        "Haisheng Su",
+        "Weizhen He",
+        "Wei Wu",
+        "Haoyi Duan",
+        "Gordon Wetzstein",
+        "Xihui Liu",
+        "Dhruv Shah",
+        "Zhaoxiang Zhang",
+        "Zhibo Chen",
+        "Jun Zhu",
+        "Yonghong Tian",
+        "Tat-Seng Chua",
+        "Wenwu Zhu",
+        "Chen Gao",
+        "Yong Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-05-18T06:18:21+00:00",
+      "link": "https://arxiv.org/pdf/2605.17912v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Benchmark for embodied world models, extending evaluation across modality, functionality, and platform",
+      "llm_evidence_cn": "具身世界模型基准，在模态、功能和平台维度扩展评估",
+      "llm_evidence": "具身世界模型基准，在模态、功能和平台维度扩展评估",
+      "canonical_evidence": "具身世界模型基准，在模态、功能和平台维度扩展评估",
+      "llm_tldr_en": "WorldArena 2.0 expands embodied world model benchmarking to include visuotactile modalities, online settings, and multiple platforms.",
+      "llm_tldr_cn": "该论文指出现有具身世界模型评估局限于视觉预测和离线仿真。为此提出WorldArena 2.0基准，从模态（加入触觉）、功能（在线评估）和平台（多仿真器）三个维度扩展评估体系。实验证明该基准能更全面衡量世界模型的综合能力，推动具身智能研究。",
+      "llm_tldr": "该论文指出现有具身世界模型评估局限于视觉预测和离线仿真。为此提出WorldArena 2.0基准，从模态（加入触觉）、功能（在线评估）和平台（多仿真器）三个维度扩展评估体系。实验证明该基准能更全面衡量世界模型的综合能力，推动具身智能研究。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.23025v1",
+      "source": "arxiv",
+      "title": "World Machine: Towards Generative World Modeling for Time-Series",
+      "abstract": "World models represent a paradigm shift in generative AI, pursuing predictive understanding and controllable simulation of environments in a structured and generalizable way. We present World Machine, a generative world-modeling architecture for time series. It is a transformer-based architecture with latent states that enables adaptation to different amounts of observed data and contexts. This shows an improvement over traditional transformers, which have a computational and memory cost that scales quadratically with the context. Experiments on a proposed synthetic dataset, Toy1D, validate the approach's feasibility, demonstrate capabilities not found in conventional transformers, and highlight the contributions of each component of the training protocol.",
+      "authors": [
+        "Elton Cardoso do Nascimento",
+        "Alexandre da Silva Simões",
+        "Esther Luna Colombini",
+        "Ricardo Ribeiro Gudwin",
+        "Paula Dornhofer Paro Costa"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-21T20:48:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.23025v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Proposes World Machine, a generative world model for time-series",
+      "llm_evidence_cn": "提出World Machine，面向时间序列的生成式世界模型",
+      "llm_evidence": "提出World Machine，面向时间序列的生成式世界模型",
+      "canonical_evidence": "提出World Machine，面向时间序列的生成式世界模型",
+      "llm_tldr_en": "World Machine is a transformer-based generative world model for time series with latent states that adapt to varying context lengths.",
+      "llm_tldr_cn": "该论文将世界模型概念引入时间序列生成，提出World Machine架构。它采用基于Transformer的潜状态模型，能够适应不同量的观测数据，并克服传统Transformer二次复杂度带来的内存瓶颈。在Toy1D合成数据集上验证了可行性，展示了超越常规Transformer的泛化能力和可控模拟。",
+      "llm_tldr": "该论文将世界模型概念引入时间序列生成，提出World Machine架构。它采用基于Transformer的潜状态模型，能够适应不同量的观测数据，并克服传统Transformer二次复杂度带来的内存瓶颈。在Toy1D合成数据集上验证了可行性，展示了超越常规Transformer的泛化能力和可控模拟。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.24375v1",
+      "source": "arxiv",
+      "title": "Distilling Game Code World Model Generation into Lightweight Large Language Models",
+      "abstract": "Large Language Models (LLMs) have shown great ability in generating executable code from natural language, opening the possibility of automatically constructing environments for AI agents. Recent work on Code World Models (CWMs) demonstrates that LLMs can translate game rules into Python implementations compatible with solvers like Monte Carlo Tree Search. We study this problem in game settings, where generated environments must implement rules, legal actions, state transitions, observations, and rewards. We refer to these game-specific executable models as Game Code World Models (GameCWMs). However, current approaches to generating code world models rely on frontier models and inference-time refinement loops, limiting accessibility and scalability. This work investigates whether GameCWM generation capabilities can be distilled into smaller models through post-training. We introduce: (1) a curated dataset of 30 games spanning perfect and imperfect information games, (2) a verification framework that evaluates generated code against structural and semantic game properties, and (3) a post-training pipeline combining Supervised Fine-Tuning (SFT) with Reinforcement Learning with Verifiable Rewards (RLVR). We experiment with Qwen2.5-3B-Instruct and find that SFT can increase syntactic correctness, while RLVR can improve execution-level adherence to game rules, thereby improving Qwen's ability to generate valid GameCWMs in both perfect and imperfect information games. Overall, our pipeline makes Qwen2.5-3B-Instruct more capable of generating valid GameCWMs, thereby offering a scalable path toward automatic environment generation from natural language.",
+      "authors": [
+        "Tyrone Serapio",
+        "Arjun Prakash",
+        "Haoyang Xu",
+        "Kevin Wang",
+        "Amy Greenwald"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-23T03:30:36+00:00",
+      "link": "https://arxiv.org/pdf/2605.24375v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "distilling code world model generation into lightweight LLMs",
+      "llm_evidence_cn": "将代码世界模型生成蒸馏到轻量级LLM",
+      "llm_evidence": "将代码世界模型生成蒸馏到轻量级LLM",
+      "canonical_evidence": "将代码世界模型生成蒸馏到轻量级LLM",
+      "llm_tldr_en": "Distills game code world model generation from frontier LLMs into lightweight models for accessibility.",
+      "llm_tldr_cn": "当前生成代码世界模型依赖前沿大模型和推理时优化，限制可及性。本文研究将游戏代码世界模型生成蒸馏到轻量级LLM，使其能直接生成可运行的Python游戏环境。通过教师-学生蒸馏方法，学生模型在保持生成质量的同时大幅降低计算开销。实验表明蒸馏后的模型能生成有效世界模型。",
+      "llm_tldr": "当前生成代码世界模型依赖前沿大模型和推理时优化，限制可及性。本文研究将游戏代码世界模型生成蒸馏到轻量级LLM，使其能直接生成可运行的Python游戏环境。通过教师-学生蒸馏方法，学生模型在保持生成质量的同时大幅降低计算开销。实验表明蒸馏后的模型能生成有效世界模型。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.30542v1",
+      "source": "arxiv",
+      "title": "Physically Viable World Models: A Case for Query-Conditioned Embodied AI",
+      "abstract": "World models for embodied AI must be physically viable: constructed to answer intervention queries by representing the physical structure governing action outcomes, rather than merely predicting future observations. Existing observation-predictive world models can produce visually plausible but physically wrong rollouts. This failure is structural; distinct physical systems can look identical yet diverge under intervention. We expose this problem with controlled benchmarks that fix the visible scene while varying latent physics. We show that such models may recommend infeasible actions, mispredict interaction outcomes, or certify unsafe behavior. We argue that embodied AI requires world models that identify the simplest physical abstraction sufficient to answer an intervention query. Such a model comprises modular components, including environment representation, latent state and parameter estimation, action specification, interventional dynamics, and query-level response. An autonomous orchestrator should identify the relevant abstraction and compose compatible learned and structured components per query. When closed-form physics is unavailable, uncertain, or costly, the transition model may be analytic, simulated, learned, or hybrid, but it must preserve the structure that determines interventional outcomes. This decomposition makes the model interpretable, its components verifiable, and its outputs auditable against the query. It also provides a design principle for new world models and a feasibility test for existing ones: the right abstraction is not the most detailed model of the world, but the simplest model that preserves the distinctions relevant to the query. We demonstrate this approach on queries that existing systems fail to answer correctly, and outline how an orchestrator can dynamically assemble and adapt physically viable models for planning, control, and verification.",
+      "authors": [
+        "Adam J. Thorpe",
+        "Stepan Tretiakov",
+        "Cheng-Hsi Hsiao",
+        "Su Ann Low",
+        "Xingjian Li",
+        "Hassan Iqbal",
+        "Neel P. Bhatt",
+        "Ufuk Topcu",
+        "Krishna Kumar"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-05-28T20:18:22+00:00",
+      "link": "https://arxiv.org/pdf/2605.30542v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "defines physically viable world models for embodied AI",
+      "llm_evidence_cn": "定义具身AI中物理可行的世界模型",
+      "llm_evidence": "定义具身AI中物理可行的世界模型",
+      "canonical_evidence": "定义具身AI中物理可行的世界模型",
+      "llm_tldr_en": "Argues world models for embodied AI must answer intervention queries, not just predict observations, and proposes query-conditioned approach.",
+      "llm_tldr_cn": "本文指出当前观测预测型世界模型在具身AI中可能产生物理不可行的结果，提出世界模型必须能够回答干预查询，即建模物理结构。通过控制实验揭示问题，并论证了查询条件世界模型的必要性，为具身AI的世界模型设计提供了新方向。",
+      "llm_tldr": "本文指出当前观测预测型世界模型在具身AI中可能产生物理不可行的结果，提出世界模型必须能够回答干预查询，即建模物理结构。通过控制实验揭示问题，并论证了查询条件世界模型的必要性，为具身AI的世界模型设计提供了新方向。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ]
+}

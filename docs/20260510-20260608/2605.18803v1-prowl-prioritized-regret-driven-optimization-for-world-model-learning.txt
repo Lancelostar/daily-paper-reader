@@ -1,0 +1,442 @@
+Title: PROWL: Prioritized Regret-Driven Optimization for World Model Learning
+
+URL Source: https://arxiv.org/pdf/2605.18803v1
+
+Published Time: Wed, 20 May 2026 00:04:16 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# PROWL: Prioritized Regret-Driven Optimization for World Model Learning 
+
+Ahmet H. Güzel ∗
+
+University College London AI Centre Odyssey 
+
+Jenny Seidenschwarz 
+
+Odyssey 
+
+Benjamin Graham 
+
+Odyssey 
+
+Jonathan Sadeghi 
+
+Odyssey 
+
+Jeffrey Hawke 
+
+Odyssey 
+
+Jack Parker-Holder 
+
+University College London AI Centre 
+
+Ilija Bogunovic 
+
+University College London AI Centre 
+
+# Abstract 
+
+Modern action-conditioned video world models achieve strong short-horizon visual realism, yet remain unreliable on rare, interaction-critical transitions that dominate downstream planning and policy performance. Because passive demonstration data systematically under-samples these high-impact regimes, improving robustness requires actively eliciting model failures rather than relying on their natural occur-rence. We introduce a KL-constrained adversarial curriculum in which a policy is trained to expose high-error trajectories of a diffusion-based world model while remaining close to the behavior distribution. The world model is continuously fine-tuned on these adversarially discovered trajectories, yielding an adversarial training loop that converts rare failures into a stable, near-distribution training signal without drifting into out-of-distribution exploitation. To maintain pressure on unresolved weaknesses as the model improves, we propose a Prioritized Adver-sarial Trajectory (PAT) buffer that re-ranks trajectories based on prediction error, action fidelity, and learning progress, focusing training on unresolved failure modes rather than repeatedly revisiting solved cases. We implement our approach in the MineRL framework and evaluate it on held-out out-of-distribution trajectories; PROWL improves robustness over models trained on passive data alone, reveals reward hacking behaviors under weak behavioral constraints, and demonstrates that effective adversarial world-model training critically depends on balancing exploratory failure discovery with explicit behavioral regularization. Our results suggest that scalable world models benefit not only from larger datasets, but also from selectively generating informative training data. 
+
+# 1 Introduction 
+
+World models aim to learn environment dynamics by predicting future observations conditioned on past states and actions. Recent diffusion-based latent dynamics models achieve impressive visual realism over long rollouts [Brooks et al., 2024, Bruce et al., 2024, Li et al., 2025], yet such evaluations often obscure a critical failure mode: models can produce visually plausible trajectories while failing to correctly respond to actions at short horizons. For downstream tasks such as planning and control, reliable long-horizon behavior depends on accurate local action-conditioned dynamics, and even 
+
+> ∗Corresponding author. Preprint.
+> arXiv:2605.18803v1 [cs.LG] 11 May 2026
+
+small errors in early transitions can propagate into significant rollout divergence [Hafner et al., 2025, Güzel et al., 2025, Alonso et al., 2024]. Maintaining high fidelity over short horizons is therefore foundational to long-term robustness, and improving the former is the most direct path to the latter. Improving short-horizon fidelity exposes a core limitation of passive training. Human demonstration datasets systematically under-sample rare, interaction-critical transitions, as they are dominated by common and successful behaviors. As a result, world models trained purely on passive data exhibit unpredictable errors precisely in the regimes where accuracy matters most. Addressing this limitation requires not merely more data, but the ability to actively identify and target the model’s failure modes. This issue compounds as action spaces grow: in richer environments and playable interactive systems, the combinatorial coverage of any fixed dataset thins, and mechanisms that selectively generate training data for under-covered regimes become correspondingly more valuable. In this work, we introduce Prioritized Regret-Driven Optimization for World Model Learning (PROWL ), a constrained adversarial curriculum that transforms model errors into a structured training signal. We formulate training as a co-evolved min–max process in which an adversarial policy is optimized to expose high-error trajectories of a diffusion-based world model [Dennis et al., 2020, Parker-Holder et al., 2022, Pinto et al., 2017], while a Kullback–Leibler (KL) constraint anchors the policy to a behavioral prior, preventing exploration from drifting into unrealistic out-of-distribution action sequences. The world model is continuously fine-tuned on these adversarially discovered trajectories, converting rare failure cases into stable supervision. This formulation induces a co-evolutionary dynamic between the policy and the world model. As the adversary searches for failure-inducing trajectories, it explores underrepresented regions of the action-state space — compositional action patterns absent from both the passive dataset and the reference policy’s rollouts. In response, the world model adapts to these newly exposed patterns, expanding its coverage toward interaction-critical transitions. Rather than relying on passive data collection, PROWL actively generates targeted training data that tracks the model’s current weaknesses. To sustain learning pressure as the model improves, we introduce a Prioritized Adversarial Trajectory (PAT) buffer, building on the principles of Prioritized Level Replay (PLR) [Jiang et al., 2021], but adapted to prioritize trajectories based on world-model prediction error, action fidelity, and learning progress. This mechanism focuses training on unresolved failure modes while avoiding repeated exposure to already-solved cases, forming an adaptive curriculum over action-conditioned transitions. We evaluate PROWL in the MineRL framework [Guss et al., 2019], using BASALT human demon-strations [Shah et al., 2021] and a VPT-pretrained reference policy [Baker et al., 2022]. Our primary held-out evaluation uses three BASALT tasks ( MakeWaterfall , BuildVillageHouse , and CreateVil-lageAnimalPen ) disjoint from Phase 1 training (which used FindCave ) and from any adversarial buffer. We additionally evaluate on adversarially discovered failure cases and on strictly novel composite action modes; together these stress the failure-discovery loop directly. To test whether short-horizon improvements compound through autoregressive rollout, we also evaluate at long horizons. Through-out, we compare against a matched-compute Phase 2 fine-tuning baseline that uses the frozen VPT reference policy in place of the adversarial policy, isolating the contribution of adversarial discovery from that of additional fine-tuning compute. Our results show that PROWL improves over both passive pretraining and the matched-compute baseline across all four evaluations, that these gains transfer to longer rollouts, and that the framework reveals reward hacking [Skalse et al., 2025] under insufficient behavioral constraints. These findings highlight that effective adversarial world-model training depends critically on balancing failure discovery with behavioral regularization. Our contributions are summarized as follows: • Constrained adversarial curriculum for robust world-model training. We propose a co-evolved min–max framework in which a KL-anchored policy actively discovers failure-inducing trajectories, while the world model is iteratively refined on these examples. Unlike prior world-model exploration methods that use ensemble disagreement [Sekar et al., 2020, Ball et al., 2020], PROWL uses direct prediction regret against ground-truth rollouts as the exploration signal, requiring no ensemble and directly targeting where the world model is wrong. • Prioritized failure-driven curriculum. We introduce a Prioritized Adversarial Trajectory (PAT) buffer that ranks trajectories using a structured scoring objective combining latent prediction error, pixel-space action fidelity, and learning progress, enabling a dynamic curriculum focused on unresolved world-model failures. • Co-evolutionary expansion of interaction regimes. We show that adversarial training induces a co-evolutionary process in which the policy discovers novel, interaction-critical action compositions 2absent from both the passive BASALT dataset and a matched-compute Phase 2 fine-tuning loop using the frozen VPT reference policy. This expands the effective training distribution of the world model toward hard-to-learn regimes while remaining constrained by a behavioral prior. • Empirical analysis of behavioral anchoring. We demonstrate that improvements depend on maintaining a sufficient behavioral constraint, and characterize the trade-off between meaningful failure discovery and reward hacking [Skalse et al., 2025]. 
+
+# 2 Background 
+
+Diffusion-Forcing World Models. Action-conditioned world models predict future observations from past states and actions. We follow latent video diffusion approaches [He et al., 2023], operating in the latent space of a frozen VAE encoder [Xing et al., 2024] and employing a diffusion transformer (DiT) backbone for sequence modeling [Peebles and Xie, 2023]. Diffusion forcing [Chen et al., 2024] extends standard diffusion by allowing different noise levels across time steps, enabling a unified formulation of teacher-forced prediction and full-sequence generation. The training objective is applied to target frames: 
+
+LDF = X
+
+> i
+
+∥vθ (zσi 
+
+> i
+
+, σ i, c) − (ϵi − zi)∥22 , (1) where the noisy latent is defined as zσi 
+
+> i
+
+= (1 − σi)zi + σiϵi, with ϵi ∼ N (0 , I ), and c denotes action conditioning. Under this interpolation, the target velocity is ddσ i zσi 
+
+> i
+
+= ϵi − zi. We assign low noise to history frames and higher noise to target frames, enforcing causal prediction while retaining diffusion-based training stability. 
+
+Prioritized Replay. Prioritized Level Replay (PLR) [Jiang et al., 2021] constructs curricula by sampling instances according to both difficulty and recency: 
+
+P (i) = (1 − ρ) Pscore (i) + ρ P stale (i), (2) where Pscore favors high-error samples and Pstale promotes diversity by revisiting older instances. This mechanism focuses training on informative examples while avoiding overfitting to a static subset. We adopt this principle to construct a curriculum over trajectories, using world-model prediction error as the notion of difficulty. 
+
+KL-Regularized Policy Optimization. We train the adversarial policy using PPO [Schulman et al., 2017]. To prevent the adversary from exploiting unrealistic actions, we regularize it toward a frozen behavioral reference policy πref using a forward-KL penalty: 
+
+ckl Es∼dπϕ [KL( πϕ(· | s) ∥ πref (· | s))] , (3) where ckl controls the strength of the constraint. This penalty limits policy drift from the behavioral prior, helping ensure that discovered failures remain learnable rather than arising from unrealistic action sequences. 
+
+# 3 PROWL Framework 
+
+PROWL is a two-phase framework that improves action-conditioned world models by actively discovering and learning from failure cases. Phase 1 trains a diffusion-transformer (DiT) world model on passive BASALT demonstrations [Milani et al., 2023]. Phase 2 introduces an adversarial curriculum in which a policy searches for trajectories that expose model failures, and the world model is iteratively refined on these trajectories via prioritized replay. Figure 1 shows the two-phase pipeline and the data/update flow between the policy, world model, and PAT buffer in Phase 2. 
+
+Asymmetric min–max formulation. PROWL can be viewed as an asymmetric two-player game between a world model θ and adversarial policy πϕ:
+
+θ∗ = arg min  
+
+> θ
+
+(1 − r)Eτ ∼ppassive [LFM (τ ; θ)] + rEτ ∼pB [LFM (τ ; θ)] ,ϕ∗ = arg max  
+
+> ϕ
+
+Eτ ∼πϕ [score( τ ; θ)] − ckl Es∼dπϕ [KL( πϕ(· | s) ∥ πref (· | s))] . (4) 3Figure 1: PROWL framework overview. Phase 1 pretrains the world model on the passive human-collected dataset; Phase 2 runs the adversarial curriculum, in which the agent policy acts in the game environment, the world model predicts the resulting trajectory, and per-trajectory score( τ )
+
+is computed from the discrepancy between predicted and ground-truth rollouts, driving both PPO updates to the policy and insertion into the PAT buffer, which then supplies a prioritized mixture (with passive data, mixture ratio r) for fine-tuning the world model. Here pB is the sampling distribution induced by the Prioritized Adversarial Trajectory (PAT) buffer, which couples the two players through a shared memory of failure cases. This objective summarizes an alternating, memory-mediated procedure rather than a simultaneous saddle-point optimization: the policy discovers failures against a fixed model, after which the model is fine-tuned on a prioritized mixture of past failures and passive data. Algorithm 1 summarizes this loop; the matched-compute Phase 2 (VPT-frozen) baseline used in our experiments corresponds to setting πϕ = πref throughout and skipping the PPO update at line 5. The score function score( τ ; θ) aggregates per-trajectory measures of world-model prediction error, action-following fidelity, and learning progress; it is defined formally in Eq. 7 after the underlying error metrics (Eqs. 5–6) are introduced. 
+
+Chunk-level diffusion forcing. We train an action-conditioned DiT world model on BASALT 
+
+FindCave demonstrations using the diffusion-forcing objective (Section 2). Frames x1: T are encoded by a frozen VAE into latents grouped into fixed-size chunks of K=3 latent frames, corresponding to 
+
+12 pixel frames at 20 fps ( 0.6 s) under the VAE’s temporal compression ratio of 4. History frames receive low noise, target frames higher noise, and the loss is applied only on the target chunk, yielding a causal chunk-level prediction objective. 
+
+Backbone and action conditioning. The backbone is the publicly released Wan2.1-T2V-1.3B diffusion transformer [Wan et al., 2025], originally a text-to-video model whose cross-attention pathway we repurpose for action conditioning: each chunk’s per-frame actions are serialized into short text tokens fed through the frozen UMT5-XXL encoder [Chung et al., 2023] (full scheme in Appendix E). Phase 1 fits all ∼1.3B Wan2.1 parameters with the VAE and UMT5 encoder frozen; Phase 2 (Section 3.1) restricts updates to the action-conditioning subset. 
+
+3.1 Phase 2: Adversarial Curriculum 
+
+The adversary is initialized from the pretrained VPT-2 × foundation model [Baker et al., 2022] and operates in the MineRL action space; the same checkpoint remains frozen throughout Phase 2 as the behavioral reference πref . For autoregressive rollout , the policy generates actions a0: S+H ; the first S chunks form a ground-truth seed and the remaining H define the rollout. The world model predicts autoregressively at the chunk level over a fixed Wan2.1-shaped context window of max t=21 
+
+latent slots ( ≤ 7 chunks), with K=3 target slots updated per denoising pass and the window sliding forward by K after each chunk. Full rollout mechanics are presented in Appendix B. 
+
+Prediction-error score. We compute latent regret in the VAE latent space: 
+
+ℓregret (τ ) = 
+
+vuut 1
+
+HCN lat 
+
+> S+H−1
+
+X
+
+> t=S
+
+zpred  
+
+> t
+
+− zreal 
+
+> t
+> 22
+
+, (5) 4and the Action-Follow Score (AFS) on decoded pixel frames at native MineRL resolution: 
+
+ℓAFS (τ ) = 1
+
+N · Hraw  
+
+> N−1
+
+X
+
+> t=0
+> Hraw
+
+X
+
+> i=1
+
+F pred  
+
+> t,i
+
+− F real  
+
+> t,i 2
+
+, (6) where flows are computed using SEA-RAFT [Wang et al., 2024]. In Eq. 6, Hraw = Hpix ·Wpix =480 ·832 is the per-frame pixel count (distinct from the latent-space height H in Eq. 5), N = Tpred −1
+
+is the number of consecutive pixel-frame pairs over which optical flow is computed (distinct from the latent-frame count Nlat in Eq. 5), and F pred  
+
+> t,i
+
+, F real  
+
+> t,i
+
+∈ R2 are the predicted and ground-truth flow vectors at pixel i for the t-th consecutive frame pair. The trajectory score is: 
+
+score( τ ) = zB(ℓregret ) + λAFS zB(ℓAFS ) + ∆ ℓregret . (7) Here zB(·) denotes z-score normalization over the current PAT buffer. The term ∆ℓregret is the signed change in the same trajectory’s latent regret across consecutive buffer rescore cycles, so trajectories that have been solved lose priority while stagnant or regressing trajectories remain emphasized. The two error terms are complementary: ℓregret penalizes global latent-plausibility errors, while ℓAFS 
+
+penalizes pixel-space motion-fidelity errors that latent agreement may not capture. The weight λAFS 
+
+controls which failure mode the adversary preferentially hunts, and is one of the two axes that defines the regime spectrum analyzed in Section 4. We motivate the choice of optical-flow over direct pixel differences in Appendix G. 
+
+Policy optimization. We optimize πϕ with PPO using score( τ ) as a terminal reward. The loss includes a forward-KL penalty: 
+
+LPPO = Lclip + cv Lvalue − ceH(πϕ) + ckl Es∼dπϕ [KL( πϕ(· | s) ∥ πref (· | s))] . (8) The KL term constrains the adversary to remain near the frozen behavioral reference, preventing high-error trajectories from degenerating into unrealistic action sequences. 
+
+World-model update. During Phase 2 fine-tuning, we freeze the Wan2.1 spatial-temporal backbone and update only the cross-attention layers and the UMT5 action-text adapter — the action-conditioning subset, ∼280M of the ∼1.3B parameters trained in Phase 1. This targets the architectural locus of action conditioning and preserves the visual prior built during pretraining; we revisit this choice in Section 6. Updates occur every Twm iterations using a mixture of PAT-buffer and passive samples drawn per-sample with probability r=0 .5, and the buffer is rescored after each update. 
+
+Sweep configurations. We train six PROWL configurations along two axes: ckl ∈ { 0.5, 1.0, 1.5}
+
+at λAFS =0 .25 (varying the KL anchor at the default action-follow weight) and λAFS ∈ { 0.05 , 0.10 }
+
+at ckl =1 .0 (varying the action-follow weight at the default anchor). The two productive operating points referenced throughout — lam010 (ckl =1 .0, λAFS =0 .10 ) and kl150 (ckl =1 .5, λAFS =0 .25 )— share the ckl =1 .0/λAFS =0 .25 anchor; their regime structure is analyzed in Section 4. 
+
+# 4 Experiments 
+
+We evaluate whether PROWL improves action-conditioned prediction where passive training is weakest. We compare three world-model checkpoints: (i) the Phase 1 pretrained model (trained on BASALT FindCave only); (ii) a matched-compute Phase 2 fine-tuning baseline that uses the same loop, optimizer, passive-data mixture ratio r=0 .5, and total update budget as PROWL, but generates rollouts from the frozen VPT reference policy rather than the KL-anchored adversarial policy (denoted Phase 2 (VPT-frozen) ); and (iii) PROWL. The Phase 2 (VPT-frozen) baseline isolates adversarial discovery from additional fine-tuning compute. 
+
+A regime spectrum across (ckl , λ AFS ). The two curriculum-design parameters of PROWL define a principled axis: ckl controls how far the adversary may drift from the behavioral reference, and λAFS 
+
+biases the trajectory score toward motion-sensitive failures. Sweeping this axis (Section 3.1) exposes three qualitatively distinct regimes.(i) An unanchored regime ( ckl =0 .5) in which the adversary reward-hacks via camera-thrashing rather than discovering learnable failures (Section 4.1). (ii) A 
+
+broad-exploration regime, lam010 (ckl =1 .0, λAFS =0 .10 ): moderate anchor, latent-regret-weighted score; predicted to expose the widest variety of action compositions and therefore to improve where coverage matters most — generalization to held-out tasks and strictly novel composite modes. (iii) A 
+
+focused-specialist regime, kl150 (ckl =1 .5, λAFS =0 .25 ): tighter anchor, motion-emphasized score; predicted to concentrate on behaviorally valid hard cases, improving cross-buffer adversarial transfer, 5in-distribution stability, and long-horizon predictions where local-dynamics errors compound. We test each regime on the evaluations its design predicts: lam010 on Tables 1 and 3, kl150 on Table 2. 
+
+Cross-buffer evaluation protocol. Each checkpoint θ(a) is evaluated on the off-diagonal buffers 
+
+B(b), b ̸=a, and averaged. Off-diagonal gains thus reflect transfer to failures discovered by other adversaries rather than memorization. Metrics and evaluation sets. We report latent regret (Eq. 5), AFS-EPE (Eq. 6), and LPIPS; lower is better. Short-horizon evaluation uses Nseed =2 , Npred =2 
+
+(2.4 s); long-horizon extends to Npred =18 (10 .8 s). Per-table sample sizes and dataset details appear in each caption. Since PROWL targets rare high-error regimes, we report both full-holdout means and the hardest tertile by Phase 1 latent regret. 
+
+4.1 Adversarial Policy Dynamics 
+
+We ask whether the adversary discovers useful failures or collapses into reward hacking. Since the reward is the world model’s prediction error, return is non-stationary by construction; we therefore interpret it jointly with two diagnostics relative to the frozen VPT reference: the Schulman-k3 KL estimator [Schulman, 2020, Schulman et al., 2017], and camera action velocity (rollout-mean absolute change in the discretized camera bin), which acts as a tripwire for motion-saturation reward hacking. Figure 2 shows the result: the weakly constrained ckl =0 .5 arm separates from the stable arms on KL and rebounds late in training to roughly twice their camera velocity — camera-thrashing that is technically learnable but displaces capacity from useful regimes and surfaces as visual artifacts rather than improved dynamics. Stronger KL constraints suppress this failure mode, confirming that high prediction error alone is not a useful reward signal: the adversary must expose failures the world model can productively incorporate. This matches the novelty-and-learnability criterion of [Hughes et al., 2024]: KL-anchored regimes deliver both, while the unanchored regime delivers only novelty. 
+
+Figure 2: Adversarial policy dynamics. (a) Episodic return (sanity check; non-stationary by con-struction). (b) KL divergence to the frozen VPT reference separates weakly constrained exploration from stable adversarial exploration. (c) Camera-action velocity, a tripwire for motion-saturation reward hacking. (d) Filmstrip from the ckl =0 .5 arm showing camera rotation reward hacking. 
+
+4.2 Zero-Shot Generalization to Held-Out BASALT Tasks 
+
+We evaluate generalization on three BASALT tasks held out from Phase 1 training (which used 
+
+FindCave only): MakeWaterfall , BuildVillageHouse , and CreateVillageAnimalPen . None is in-distribution for any of our training data sources, including the VPT-frozen baseline’s rollout source. PROWL ( lam010 ) improves over both Phase 1 and the matched-compute baseline on every metric, with the gap widening on the hardest subsets — confirming the broad-exploration prediction that wider action-space coverage transfers to held-out tasks. 
+
+4.3 Focused-specialist regime: cross-buffer, stability, and long-horizon transfer 
+
+The focused-specialist regime, PROWL (kl150) , predicts gains on behaviorally valid hard cases and on long-horizon predictions where local-dynamics errors compound. This regime delivers the largest gains over the matched-compute baseline of any evaluation in this paper, with up to 8.9% reduction in AFS-EPE on cross-buffer adversarial trajectories. Table 2 tests this prediction on three evaluations: cross-buffer adversarial trajectories drawn from all six PAT buffers , held-out FindCave clips testing 6Table 1: Held-out generalization across three disjoint BASALT tasks. Cross-task mean over 
+
+n=300 human clips ( 100 /task). The Top 25% ( n=75 ) and Top 10% ( n=30 ) subsets contain the clips with the highest Phase 1 latent regret within each task — the hardest cases for the pretrained world model. PROWL ( lam010 ) improves over both baselines on every metric, with gains widening on the harder subsets; lower is better.                                                                      
+
+> Mean Top 25% Top 10% Method Lat ↓AFS ↓LPIPS ↓Lat ↓AFS ↓LPIPS ↓Lat ↓AFS ↓LPIPS ↓
+> Phase 1 WM 0.6514 28.16 0.5089 0.8804 32.39 0.6270 0.9888 37.14 0.6717 Phase 2 (VPT-frozen) 0.6446 25.61 0.4990 0.8182 27.87 0.5935 0.9173 31.56 0.6414 PROWL ( lam010 )0.6288 24.60 0.4952 0.8102 26.07 0.5880 0.9026 29.38 0.6333
+> ∆%lam010 vs Phase 1 −3.5%−12 .6%−2.7%−8.0%−19 .5%−6.2%−8.7%−20 .9%−5.7%∆%lam010 vs VPT-frozen −2.5%−3.9%−0.8%−1.0%−6.5%−0.9%−1.6%−6.9%−1.3%
+
+in-distribution stability, and an 18-chunk autoregressive rollout to 10.8 s. PROWL (kl150) improves over the matched-compute baseline on every panel, confirming all three predictions. The cross-buffer protocol rules out self-buffer memorization on the adversarial panel; the FindCave gains confirm that the r=0 .5 passive mixture prevents catastrophic forgetting; and the long-horizon panel shows that local-dynamics improvements compound through autoregressive rollout, where the matched-compute baseline alone barely improves over Phase 1. Table 2: Focused-specialist regime: hard-case transfer, in-distribution stability, and long-horizon compounding. Three evaluations test whether kl150 ’s tighter anchor delivers the predicted gains. 
+
+Left: cross-buffer adversarial transfer — mean over 384 trajectories ( 64 from each of six PAT buffers, evaluated off-diagonal so each checkpoint is scored only on buffers it did not train on). Middle: FindCave pretraining stability — n=64 held-out clips from the Phase 1 training distribution. Right: 
+
+long-horizon compounding — LPIPS and SSIM at frame 200 of an 18-chunk autoregressive rollout (n=30 held-out BASALT clips). PROWL ( kl150 ) improves over the matched-compute baseline on all three panels; lower is better except SSIM.                                                      
+
+> Cross-buffer adv. ( n=384 )Held-out FindCave (n=64 )Long-horizon ( n=30 )Method Lat ↓AFS ↓LPIPS ↓Lat ↓AFS ↓LPIPS ↓LPIPS ↓SSIM ↑
+> Phase 1 WM 0.8261 39.87 0.5589 0.5566 28.96 0.4385 0.7432 0.4226 VPT-frozen 0.7265 35.26 0.5484 0.5444 28.17 0.4298 0.7447 0.4491 PROWL kl150 0.6846 32.13 0.5344 0.5255 26.09 0.4245 0.6947 0.4685
+> ∆% vs Phase 1 −17 .1−19 .4−4.4−5.6−9.9−3.2−6.5+10 .9∆% vs VPT-frozen −5.8−8.9−2.6−3.5−7.4−1.2−6.7+4.3
+
+4.4 Curriculum Dynamics and Novel Interaction Modes 
+
+Figure 3(a) visualizes the min–max curriculum: buffer latent regret rises early as the adversary expands into higher-error regions, then falls as the world model incorporates the discovered trajec-tories. The ckl =0 .5 arm deviates — its regret stays high, driven by camera-thrashing that inflates error without yielding learnable dynamics — separating useful adversarial exploration from reward hacking. We then ask whether adversarial generation produces action compositions that passive and non-adversarial fine-tuning never reach. We summarize each rollout window by a deterministic action fingerprint (full definition in Appendix D) and apply identical thresholds to BASALT, the VPT-frozen Phase 2 buffer, and all PROWL buffers. A composite mode is strictly novel if it has zero occurrences in both the BASALT/VPT data and the VPT-frozen buffer; by construction, gains on these modes are attributable to adversarial discovery rather than additional fine-tuning compute. Across the 27 strictly novel modes (Table 3), PROWL ( lam010 ) improves the cross-mode mean by 5.5% /11 .5% /3.4% 
+
+over Phase 1 and 4.5% /9.1% /3.5% over the matched-compute baseline. Figure 3(b) shows the per-arm decomposition for the most populated modes: lam010 dominates discovery, while ckl =1 .5
+
+contributes less than ckl =1 .0 — consistent with a tighter KL anchor reducing behavioral drift, the trade-off that defines the focused-specialist regime. Together with Table 1, this confirms the 7broad-exploration prediction: lam010 ’s moderate anchor and latent-regret-weighted score bias the adversary toward motion-sensitive failures that both expose novel composites and transfer across held-out distributions. 
+
+Figure 3: Curriculum formation and novel interaction discovery. (a) Mean PAT-buffer latent regret. Successful arms first increase regret by discovering hard cases, then reduce it as the world model learns; the ckl =0 .5 arm remains high because it exploits camera-thrashing shortcuts. (b) Trajectory counts for the 5 most populated of 27 strictly novel composite modes, aggregated across all PROWL PAT buffers; the ckl =0 .5 arm contributes zero entries (zero contribution to novel composites). Table 3: Mean improvement across 27 unique combination of strictly novel composite action modes. Mean ∆% for PROWL ( lam010 ) against Phase 1 and the matched-compute baseline; negative is better.                
+
+> ∆% Latent ∆% AFS-EPE ∆% LPIPS
+> nvs P1 vs P2 vs P1 vs P2 vs P1 vs P2 Mean across novel modes 27 −5.5−4.5−11 .5−9.1−3.4−3.5
+
+Figure 4 shows representative rollouts under identical action sequences. The Phase 1 world model often freezes, lags behind camera motion, or predicts visually plausible but action-inconsistent transitions. PROWL better preserves the intended rotation and locomotion, supporting the quantitative finding that lower latent regret and AFS-EPE correspond to improved action following rather than only better frame appearance. 
+
+Figure 4: Qualitative comparison on held-out and novel regimes. Top: high-error held-out trajectory from the VPT reference policy. Remaining rows: novel composite modes discovered by PROWL, ordered by active button count. Each row shows ground truth, Phase 1, and PROWL (lam010 ) under identical actions; per-mode statistics in Table 3. 85 Related Work 
+
+World models for reinforcement learning. World models serve as learned simulators for plan-ning and sample-efficient RL [Oh et al., 2015, Ha and Schmidhuber, 2018], with the Dreamer family [Hafner et al., 2020, 2021, 2023, 2025] and transformer/diffusion variants [Robine et al., 2023, Micheli et al., 2023, Alonso et al., 2024] training policies on imagined rollouts. PROWL inverts this relationship: the policy is not trained to solve a downstream task inside the model, but to expose the model’s predictive failures so the world model itself can improve. 
+
+Action-conditioned video world models. Recent work treats world models as action-conditioned video generators for games, driving, and robotics [Decart and Etched, 2024, Guo et al., 2025, Wang et al., 2023, Gao et al., 2024, Wu et al., 2022, Yang et al., 2023], often addressing long-horizon consistency via memory or context mechanisms [Chen et al., 2024, Yu et al., 2025, Xiao et al., 2025, Lian et al., 2025]. Our focus is complementary: we target short-horizon action-response failures directly through adversarial discovery. 
+
+Active data acquisition. Plan2Explore [Sekar et al., 2020] and Ready Policy One [Ball et al., 2020] actively collect data via ensemble disagreement or model variance. PROWL differs in signal, constraint, and scale: it uses realized prediction regret against ground-truth rollouts (no ensemble), KL-anchors the adversary to a behavioral prior so failures remain learnable, and operates at 1.3B parameters where exhaustive action-space coverage is infeasible. 
+
+Adversarial curricula and prioritized replay. Curriculum learning selects examples by difficulty or learning progress [Bengio et al., 2009, Graves et al., 2017]; PLR samples levels by learning potential and staleness [Jiang et al., 2021]; UED and adversarial RL generate challenging environments to improve agent robustness [Pinto et al., 2017, Dennis et al., 2020, Parker-Holder et al., 2022, Güzel et al., 2025]. PROWL adapts these to the world model itself: the prioritized buffer trains the simulator, not the agent inhabiting it. 
+
+# 6 Limitations 
+
+First, not all adversarial data is useful. The unanchored regime ( ckl =0 .5) discovers high-error trajectories primarily through camera-thrashing shortcuts, yielding weak transfer despite high buffer regret — prediction error alone is not a sufficient training signal, and the adversary must remain within behaviorally meaningful regimes for improvements to generalize. Second, single-seed runs per configuration: a deliberate trade-off. Given the cost of full PROWL runs, we allocated compute to mapping the (ckl , λ AFS ) axis rather than to point-estimate variance. Multi-seed evaluation remains future work. Third, the long-horizon evaluation lies outside the training horizon where PROWL applies pressure. The long-horizon panel of Table 2 should therefore be read as evidence that local-dynamics improvements compound through autoregressive rollout rather than as a direct optimization target; extending adversarial pressure to longer horizons without inducing instability remains open. Cross-environment generalization beyond MineRL/BASALT is also untested. We see this as a step toward world-model training that complements dataset scaling with selective data generation, and a natural next step is scale itself: as backbones grow and action spaces expand toward embodied and open-world settings, targeted failure discovery should become more valuable rather than less, since passive coverage thins precisely where adversarial pressure concentrates. 
+
+# 7 Conclusion 
+
+We introduce PROWL, an adversarial training framework that improves action-conditioned world models by actively discovering and replaying high-error trajectories. A KL-anchored policy exposes prediction failures, the world model is fine-tuned on them, and a prioritized buffer keeps the curricu-lum focused on what the model has not yet learned. Across four evaluations — held-out BASALT tasks (Table 1), cross-buffer adversarial failures, pretraining stability, and long-horizon prediction (all in Table 2), and strictly novel composites (Table 3) — PROWL improves over both passive pretraining and a matched-compute non-adversarial baseline. The matched-compute comparison is 9what makes the contribution legible: the gap between the two Phase 2 checkpoints is what adversarial discovery adds beyond additional fine-tuning compute. As action spaces grow combinatorially toward playable game systems and embodied agents, static datasets cover an ever smaller slice. Our results suggest that adversarial discovery is one mechanism for selectively generating the data that matters — provided it is properly anchored: weakly constrained adversaries surface trajectories the model cannot productively learn from, while KL-anchored adversaries expose failures that are both hard and behaviorally valid. 
+
+# References 
+
+Eloi Alonso, Adam Jelley, Vincent Micheli, Anssi Kanervisto, Amos Storkey, Tim Pearce, and François Fleuret. Diffusion for world modeling: Visual details matter in atari. In Advances in Neural Information Processing Systems , 2024. Bowen Baker, Ilge Akkaya, Peter Zhokhov, Joost Huizinga, Jie Tang, Adrien Ecoffet, Brandon Houghton, Raul Sampedro, and Jeff Clune. Video pretraining (VPT): Learning to act by watching unlabeled online videos. In Advances in Neural Information Processing Systems , volume 35, pages 24639–24654, 2022. URL https://papers.neurips.cc/paper_files/paper/2022/ hash/9c7008aff45b5d8f0973b23e1a22ada0-Abstract-Conference.html .Philip J. Ball, Jack Parker-Holder, Aldo Pacchiano, Krzysztof Choromanski, and Stephen Roberts. Ready policy one: World building through active learning. arXiv preprint arXiv:2002.02693 , 2020. Yoshua Bengio, Jérôme Louradour, Ronan Collobert, and Jason Weston. Curriculum learning. In 
+
+Proceedings of the 26th Annual International Conference on Machine Learning (ICML) , pages 1–8, 2009. doi: 10.1145/1553374.1553380. Tim Brooks, Bill Peebles, Connor Holmes, Will DePue, Yu Guo, Li Jing, et al. Video generation models as world simulators. OpenAI Technical Report , 2024. Jake Bruce, Michael Dennis, Ashley Edwards, Jack Parker-Holder, Yuge (Jimmy) Shi, Edward Hughes, Matthew Lai, Aditi Mavalankar, Richie Steigerwald, Chris Apps, Yusuf Aytar, Sarah Bechtle, Feryal Behbahani, Stephanie Chan, Nicolas Heess, Lucy Gonzalez, Simon Osindero, Sherjil Ozair, Scott Reed, Jingwei Zhang, Konrad Zolna, Jeff Clune, Nando De Freitas, Satinder Singh, and Tim Rocktäschel. Genie: generative interactive environments. In Proceedings of the 41st International Conference on Machine Learning , ICML’24. JMLR.org, 2024. Boyuan Chen, Diego Martí Monsó, Yilun Du, Max Simchowitz, Russ Tedrake, and Vincent Sitzmann. Diffusion forcing: next-token prediction meets full-sequence diffusion. In Proceedings of the 38th International Conference on Neural Information Processing Systems , NIPS ’24, Red Hook, NY, USA, 2024. Curran Associates Inc. ISBN 9798331314385. Hyung Won Chung, Xavier Garcia, Adam Roberts, Yi Tay, Orhan Firat, Sharan Narang, and Noah Constant. Unimax: Fairer and more effective language sampling for large-scale multilingual pretraining. In The Eleventh International Conference on Learning Representations , 2023. URL 
+
+https://openreview.net/forum?id=kXwdL1cWOAi .Decart and Etched. Oasis: Real-time world models. https://decart.ai/ , 2024. Michael Dennis, Natasha Jaques, Eugene Vinitsky, Alexandre Bayen, Stuart Russell, Andrew Critch, and Sergey Levine. Emergent complexity and zero-shot transfer via unsupervised environment design. In Proceedings of the 34th International Conference on Neural Information Processing Systems , NIPS ’20, Red Hook, NY, USA, 2020. Curran Associates Inc. ISBN 9781713829546. Shenyuan Gao, Jiazhi Yang, Li Chen, Kashyap Chitta, Yihang Qiu, Andreas Geiger, Jun Zhang, and Hongyang Li. Vista: A generalizable driving world model with high fidelity and versatile controllability. In The Thirty-eighth Annual Conference on Neural Information Processing Systems ,2024. URL https://openreview.net/forum?id=Tw9nfNyOMy .Alex Graves, Marc G. Bellemare, Jacob Menick, Rémi Munos, and Koray Kavukcuoglu. Automated curriculum learning for neural networks. In Proceedings of the 34th International Conference on Machine Learning (ICML) , volume 70, pages 1311–1320, 2017. doi: 10.48550/arxiv.1704.03003. 10 Junliang Guo, Yang Ye, Tianyu He, Haoyu Wu, Yushu Jiang, Tim Pearce, and Jiang Bian. Mineworld: a real-time and open-source interactive world model on minecraft, 2025. URL https://arxiv. org/abs/2504.08388 .William H Guss, Brandon Codel, Katja Hofmann, Brandon Liu, Nicholay Gotta, Stefano Milani, Oskar Song, Christin Forgy, Sam Devlin, Max Rosenfeld, et al. Minerl: A large-scale dataset of Minecraft demonstrations. In Proceedings of the IEEE/CVF International Conference on Computer Vision Workshops , 2019. Ahmet H. Güzel, Matthew Thomas Jackson, Jarek Luca Liesen, Tim Rocktäschel, Jakob Nicolaus Foerster, Ilija Bogunovic, and Jack Parker-Holder. Imagined autocurricula, 2025. URL https: //arxiv.org/abs/2509.13341 .David Ha and Jürgen Schmidhuber. World models. arXiv preprint arXiv:1803.10122 , 2018. Danijar Hafner, Timothy Lillicrap, Jimmy Ba, and Mohammad Norouzi. Dream to control: Learning behaviors by latent imagination. In International Conference on Learning Representations , 2020. Danijar Hafner, Timothy Lillicrap, Mohammad Norouzi, and Jimmy Ba. Mastering atari with discrete world models. In International Conference on Learning Representations , 2021. Danijar Hafner, Jurgis Pasukonis, Jimmy Ba, and Timothy Lillicrap. Mastering diverse domains through world models. arXiv preprint arXiv:2301.04104 , 2023. Danijar Hafner, Wilson Yan, and Timothy Lillicrap. Training agents inside of scalable world models, 2025. URL https://arxiv.org/abs/2509.24527 .Yingqing He, Tianyu Yang, Yong Zhang, Ying Shan, and Qifeng Chen. Latent video diffusion models for high-fidelity long video generation, 2023. URL https://arxiv.org/abs/2211.13221 .Edward Hughes, Michael Dennis, Jack Parker-Holder, Feryal Behbahani, Aditi Mavalankar, Yuge Shi, Tom Schaul, and Tim Rocktaschel. Open-endedness is essential for artificial superhuman intelligence, 2024. URL https://arxiv.org/abs/2406.04268 .Minqi Jiang, Edward Grefenstette, and Tim Rocktäschel. Prioritized level replay. In Marina Meila and Tong Zhang, editors, Proceedings of the 38th International Conference on Machine Learning ,volume 139 of Proceedings of Machine Learning Research , pages 4940–4950. PMLR, 18–24 Jul 2021. URL https://proceedings.mlr.press/v139/jiang21b.html .Jiaqi Li, Junshu Tang, Zhiyong Xu, Longhuang Wu, Yuan Zhou, Shuai Shao, Tianbao Yu, Zhiguo Cao, and Qinglin Lu. Hunyuan-gamecraft: High-dynamic interactive game video generation with hybrid history condition. arXiv preprint arXiv:2506.17201 , 2025. URL https://arxiv.org/ abs/2506.17201 .Kewei Lian, Shaofei Cai, Yilun Du, and Yitao Liang. Toward memory-aided world models: Bench-marking via spatial consistency. arXiv preprint arXiv:2505.22976 , 2025. Vincent Micheli, Eloi Alonso, and François Fleuret. Transformers are sample efficient world models. In International Conference on Learning Representations , 2023. Stephanie Milani, Anssi Kanervisto, Karolis Ramanauskas, Sander Schulhoff, Brandon Houghton, and Rohin Shah. Bedd: The minerl basalt evaluation and demonstrations dataset for training and benchmarking agents that solve fuzzy tasks, 2023. URL https://arxiv.org/abs/2312. 02405 .Junhyuk Oh, Xiaoxiao Guo, Honglak Lee, Richard L Lewis, and Satinder Singh. Action-conditional video prediction using deep networks in atari games. In Advances in Neural Information Processing Systems , volume 28, 2015. Jack Parker-Holder, Minqi Jiang, Michael D Dennis, Mikayel Samvelyan, Jakob Nicolaus Foerster, Edward Grefenstette, and Tim Rocktäschel. Evolving curricula with regret-based environment design. arXiv preprint arXiv:2203.01302 , 2022. 11 William Peebles and Saining Xie. Scalable diffusion models with transformers. In 2023 IEEE/CVF International Conference on Computer Vision (ICCV) , pages 4172–4182, 2023. doi: 10.1109/ ICCV51070.2023.00387. Lerrel Pinto, James Davidson, Rahul Sukthankar, and Abhinav Gupta. Robust adversarial reinforce-ment learning. CoRR , abs/1703.02702, 2017. URL http://arxiv.org/abs/1703.02702 .Jan Robine, Marc Höft, Bastian Tanneberg, and Jan Peters. Transformer-based world models are happy with 100k interactions. In International Conference on Learning Representations , 2023. John Schulman. Approximating KL divergence. http://joschu.net/blog/kl-approx.html ,2020. John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. CoRR , abs/1707.06347, 2017. URL http://arxiv.org/abs/1707. 06347 .Ramanan Sekar, Oleh Rybkin, Kostas Daniilidis, Pieter Abbeel, Danijar Hafner, and Deepak Pathak. Planning to explore via self-supervised world models. In Proceedings of the 37th International Conference on Machine Learning (ICML) , 2020. Rohin Shah, Vikrant Varma, Ram Kumar, William H Guss, Stefano Milani, and Sam Devlin. The Min-eRL BASALT competition on learning from human feedback. arXiv preprint arXiv:2107.01969 ,2021. Joar Skalse, Nikolaus H. R. Howe, Dmitrii Krasheninnikov, and David Krueger. Defining and characterizing reward hacking, 2025. URL https://arxiv.org/abs/2209.13085 .Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu, Haiming Zhao, Jianxiao Yang, Jianyuan Zeng, Jiayu Wang, Jingfeng Zhang, Jingren Zhou, Jinkai Wang, Jixuan Chen, Kai Zhu, Kang Zhao, Keyu Yan, Lianghua Huang, Mengyang Feng, Ningyi Zhang, Pandeng Li, Pingyu Wu, Ruihang Chu, Ruili Feng, Shiwei Zhang, Siyang Sun, Tao Fang, Tianxing Wang, Tianyi Gui, Tingyu Weng, Tong Shen, Wei Lin, Wei Wang, Wei Wang, Wenmeng Zhou, Wente Wang, Wenting Shen, Wenyuan Yu, Xianzhong Shi, Xiaoming Huang, Xin Xu, Yan Kou, Yangyu Lv, Yifei Li, Yijing Liu, Yiming Wang, Yingya Zhang, Yitong Huang, Yong Li, You Wu, Yu Liu, Yulin Pan, Yun Zheng, Yuntao Hong, Yupeng Shi, Yutong Feng, Zeyinzi Jiang, Zhen Han, Zhi-Fan Wu, and Ziyu Liu. Wan: Open and advanced large-scale video generative models, 2025. URL https://arxiv.org/abs/2503.20314 .Xiaofeng Wang, Zheng Zheng, Chenxi Zhang, et al. Drivedreamer: Towards real-world-driven world models for autonomous driving. arXiv preprint arXiv:2309.09777 , 2023. Yihan Wang, Lahav Lipson, and Jia Deng. Sea-raft: Simple, efficient, accurate raft for optical flow, 2024. URL https://arxiv.org/abs/2405.14793 .Philipp Wu, Alejandro Escontrela, Danijar Hafner, Pieter Abbeel, and Ken Goldberg. Daydreamer: World models for physical robot learning. In Conference on Robot Learning , 2022. Zeqi Xiao, Yushi Lan, Shuai Yang, and Xingang Pan. Worldmem: Long-term consistent world simulation with memory. arXiv preprint arXiv:2504.12369 , 2025. Yazhou Xing, Yang Fei, Yingqing He, Jingye Chen, Jiaxin Xie, Xiaowei Chi, and Qifeng Chen. Large motion video autoencoding with cross-modal video vae, 2024. URL https://arxiv.org/abs/ 2412.17805 .Mengjiao Yang et al. Unisim: A neural closed-loop sensor simulator. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2023. Bangzheng Yu, Jialin Li, Yilin Zhang, et al. Forcevla: Enhancing vla models with a force-aware moe for contact-rich manipulation. In Advances in Neural Information Processing Systems (NeurIPS) ,2025. 12 A Implementation Details and Hyperparameters 
+
+Table 4 reports the hyperparameters used across all PROWL runs. All sweep arms share these values; only ckl and λAFS differ across arms, as described in the sweep configuration paragraph in Section 3.1. The Phase 1 initialization checkpoint was selected by scanning checkpoints at 2k, 4k, 6k, 8k, and 10k steps using latent regret, AFS-EPE, and LPIPS; we used the 10k-step checkpoint, which achieved the best LPIPS. 
+
+# B Autoregressive Rollout Mechanics 
+
+The window length max t=21 is structural: it is fixed by the Wan2.1 backbone’s positional em-beddings and attention shape (set during pretraining) and by the diffusion-forcing-aware loss the model was trained against. At inference, the window is filled with history latents followed by the 
+
+K=3 target slots; any unused slots after the target are padded with pure Gaussian noise ( σ=1 .0), matching the “unmasked future” conditioning seen during training. Only the target slots are updated by the diffusion sampler at each denoising step; the padding remains inert and is never used as a prediction. After denoising, the predicted target chunk is appended to the history latents, the window slides forward by K slots, and the next chunk is generated by repeating this procedure — yielding chunk-level autoregressive rollout over H predicted chunks. 
+
+# C On the Asymmetric Form of the Trajectory Score 
+
+The first two terms of Eq. 7 are z-normalized to make them dimensionless and balanced regardless of metric units, with λAFS controlling their relative weight. The third term, ∆ℓregret , is left in raw latent-regret units. We adopt this asymmetric form for two reasons. First, ∆ℓregret is a per-trajectory temporal signal rather than a population statistic: z-normalizing it would require maintaining a separate ∆-buffer of recent rescore deltas (additional state that does not change the rank ordering induced by the leading zB term). Second, in pilot runs (200 iterations) the empirical standard deviation of ∆ℓregret across active buffer entries matched that of λAFS zB(ℓAFS ) within a factor of two; the three terms therefore contribute on similar empirical scales despite the formal asymmetry. 
+
+# D Action Fingerprint Definition 
+
+Tag assignment. A trajectory is labeled by concatenating an exclusive camera tier with any number of button tags: • Camera tier (at most one): rot if ¯θ(τ ) > 8◦; else look if ¯θ(τ ) > 3◦; else no camera tag. • Button tags (independent, multi-set): fwd , sprint , atk , use , back , strafe fire if the corre-sponding mean exceeds 0.3; jump fires if its mean exceeds 0.2 (jump presses are typically more bursty at 20 FPS). The label is then the concatenation of the camera tier and the active button tags in a fixed order, e.g. 
+
+rot+fwd+sprint+strafe , or still if no tag fires. 
+
+Design rationale. Camera and buttons are kept on separate channels because they stress the world model in different ways (view-frustum motion vs. scene-state changes). The camera tier is exclusive because a single rollout window has one dominant camera regime; button tags are independent because Minecraft players combine button presses freely. The 0.3/0.2 button thresholds correspond to sustained presses ( ≥ 30% / ≥ 20% of the window) rather than single-frame taps, which we found to be the natural granularity for behavioral modes at our 24 -frame, 20 FPS window. We deliberately use hard thresholds instead of clustering or a learned classifier: the rule has no tunable degrees of freedom, every tag has a literal definition, and the same constants are used across all buffers. 
+
+# E Action Serialization for Cross-Attention Conditioning 
+
+We serialize each chunk’s per-frame MineRL action vector to a short text token (e.g., forward jump look(up,left) ), run-length-encode consecutive identical tokens (e.g., forward x3 | jump | 
+
+13 Table 4: PROWL hyperparameters. All sweep arms share these values; only ckl and λAFS differ across arms. 
+
+Component Hyperparameter Value 
+
+World model: frozen backbone, trainable cross-attention + text-embedding adapter 
+
+Architecture WanModel, causal blockwise 1.3B parameters dim / num_layers / num_heads 1536 / 30 / 12 ffn_dim / chunk_size / num_frames 8960 / 3 / 21 VAE compression (T, H, W ) (4 , 8, 8) 
+
+WM fine-tune learning rate 1×10 −5
+
+batch size 1precision bfloat16 gradient clip 1.0 CFG dropout probability 0.1 PAT epochs per cycle 7steps per cycle [500 , 1024] 
+
+PAT : passive replay ratio 0.5 : 0.5 cycle cadence every 24 adversarial iterations training hardware 7×H200, DDP 
+
+PAT buffer: Prioritized Adversarial Trajectories 
+
+Capacity number of trajectories K = 256 
+
+Composite priority z(ℓregret ) + λAFS z(ℓAFS ) + βprog ∆ℓregret 
+
+λAFS default value 0.25 
+
+ρstale staleness mixture weight 0.1 Rescore frequency after every WM update —
+
+PPO adversarial policy: Phase 2, reference = frozen VPT-2x 
+
+Reference policy VPT-2x rl-from-early-game-2x frozen Update cadence PPO update frequency every 16 episodes PPO epochs / minibatch optimization setting 4 / 256 Learning rate policy optimizer 3×10 −5
+
+Clip ϵ PPO clipping parameter 0.2 Value coefficient value loss weight 0.5 Entropy coefficient entropy bonus weight 0.05 KL anchor ckl default, kl150 1.5 
+
+γ / GAE λ return estimation 0.99 / 0.95 Reward distribution reward placement terminal, one-shot Max grad norm policy gradient clipping 0.5 
+
+Rollout / inference 
+
+Seed chunks / horizon chunks rollout setting 2 / 2, i.e. 12 + 12 pixel frames 
+
+max t context window latent context length 21 latent frames History noise σ history corruption level 0.05 CFG scale classifier-free guidance 1.5 Inference steps sampler 20, DPM Action window action-conditioning window 64 frames Image size pixel resolution 480 × 832 px 
+
+Sweep arms: six total, two-axis design 
+
+KL anchor sweep ckl ∈ { 0.5, 1.0, 1.5} at λAFS = 0 .25 
+
+λAFS sweep λAFS ∈ { 0.05 , 0.10 } at ckl = 1 .0
+
+Holdout, static evaluation rollouts 32 frozen-VPT trajectories, seeds 2003–2034 Adversarial seeds rollout seed rule seed = 5000 + iter 
+
+idle ), and feed the resulting string through the frozen UMT5-XXL encoder. The cross-attention pathway then ingests these action embeddings as it would text embeddings in the original Wan2.1 text-to-video pretraining. Across both phases the VAE and UMT5-XXL encoder remain frozen; Phase 1 updates all ∼1.3B Wan2.1 parameters — the spatial-temporal self-attention and MLP blocks, 14 the cross-attention layers, and the linear adapter projecting UMT5 action-text embeddings into the diffusion-transformer’s hidden dimension. 
+
+# F PROWL Training Loop 
+
+Algorithm 1 formalizes the coordinator loop summarized in Section 3: the alternating procedure by which the explorer policy πϕ, the world model Wθ , and the PAT buffer B co-evolve over the course of Phase 2. Each adversarial iteration follows a six-step cycle. (1) Explore: the current explorer rolls out one episode in the environment, generating a candidate trajectory τ . (2) Score: the current world model predicts τ autoregressively, and three error signals are computed against the ground-truth rollout — latent regret Rlat , action-follow score Rafs , and LPIPS — which combine into the composite priority 
+
+s(τ ) (Eq. 7). (3) Curate: τ is inserted into B, evicting the lowest-priority entry if |B| > K , so the buffer holds the K most informative discoveries seen so far. (4) Reward: the latent regret is assigned as the terminal episode reward for PPO. (5) PPO update: every E episodes, the explorer is updated against this regret signal under a forward-KL anchor to the frozen reference policy πref , with weight 
+
+ckl (Eq. 8). (6) World-model cycle: every Twm iterations, the world model is fine-tuned on a 50/50 mixture of buffer trajectories (priority-weighted) and passive BASALT samples; afterwards, every trajectory in B is rescored under the updated model so that solved cases lose priority and unresolved ones rise. This decoupling between high-frequency policy updates (every E episodes) and lower-frequency world-model updates (every Twm iterations) is what makes the loop tractable: the explorer searches against an approximately fixed model, while the model absorbs failures in batches and the buffer maintains a moving curriculum of unresolved weaknesses. The matched-compute Phase 2 (VPT-frozen) baseline corresponds to disabling step (5), pinning πϕ = πref throughout while keeping the world-model update schedule identical. 
+
+Algorithm 1 PROWL coordinator loop (one adversarial iteration). 
+
+Require: world model Wθ (Phase-1 init), explorer πϕ (init = πref ), PAT buffer B, sweep weights ckl ,
+
+λAFS  
+
+> 1:
+
+repeat  
+
+> 2:
+
+(1) Explore. τ ← rollout πϕ in environment for one episode  
+
+> 3:
+
+(2) Score. Run Wθ on τ ; compute Rlat (τ ), R afs (τ ) 
+
+> 4:
+
+composite priority s(τ ) ← z(Rlat ) + λAFS z(Rafs ) + β ∆Rlat  
+
+> 5:
+
+(3) Curate. Insert τ into B; evict lowest-priority entry if |B| > K  
+
+> 6:
+
+(4) Reward. Episode reward r(τ ) = Rlat (τ ) (terminal); store (τ, r ) for PPO  
+
+> 7:
+
+(5) PPO update (every E episodes):  
+
+> 8:
+
+ϕ ← ϕ + ηπ ∇ϕ
+
+ E [ ˆA] − ckl KL( πref ∥πϕ)  
+
+> 9:
+
+(6) WM cycle (every Twm iterations):  
+
+> 10:
+
+sample D = 50% from B (priority-weighted) + 50% passive replay  
+
+> 11:
+
+fine-tune Wθ on D for S steps (cross-attention only)  
+
+> 12:
+
+rescore every τ ∈ B under the new Wθ and refresh priorities  
+
+> 13:
+
+until iteration budget exhausted  
+
+> 14:
+
+return Wθ
+
+# G AFS-EPE vs. Appearance Metrics: When Motion Fidelity Hides 
+
+A natural question is whether the optical-flow term in our trajectory score (Eq. 7) is necessary, given that predicted frames can be compared to ground truth using standard appearance-based metrics — latent regret in VAE space, perceptual similarity via LPIPS, or structural similarity via SSIM. This appendix shows empirically that on action-heavy held-out frames, all three appearance metrics can remain tied or near-tied between checkpoints while AFS-EPE shows a 2–3× gap that corresponds visually to incorrect motion. The flow term is therefore not redundant: it captures a class of failures invisible to appearance. 
+
+Setup. We evaluate one held-out trajectory from the VPT reference policy containing a heavy combined-action sequence: forward+left locomotion combined with sustained camera rotation 15 (cam (−40 , −21) → cam (−22 , −15) ) over frames 22–24, marked as the yellow band in Figure 5. This kind of compound motion is where action-conditioning is most stressed: the model must produce the correct view-frustum motion on top of the correct scene-relative motion. Frames 25–32 release into smaller camera-only motion. We compare the Phase 1 VPT Base checkpoint against PROWL ( lam010 ) under identical actions. 
+
+Result. Across all three appearance metrics (Figure 5b–d), the two checkpoints are nearly tied during the heaviest action frames 22–24, with divergence appearing only afterward. AFS-EPE (Figure 5a), in contrast, shows a sharp and immediate gap during exactly the action-heavy frames: VPT Base reaches motion errors of 60+ pixels per frame while PROWL stays around 20 –30 . The qualitative filmstrip in Figure 6 confirms this visually: VPT Base’s predicted optical flow during frames 22–24 is incoherent (red/magenta blobs, AFS=37–61), while PROWL’s predicted flow tracks the ground-truth flow direction (blue/teal gradients, AFS=21–32). 
+
+Why this happens. Appearance metrics aggregate over the full frame and reward visually plausible reconstructions even when the direction of motion is wrong. A predicted frame that contains the right textures and roughly correct geometry will score well on LPIPS and SSIM even if it represents the result of a wrong action — a model that “freezes” or “lags” under heavy motion can still produce visually plausible static-looking content. Latent regret has the same blind spot in latent space: the latent can lie in a plausible region without corresponding to the correct motion. AFS-EPE penalizes this directly by computing per-pixel optical-flow disagreement, which is sensitive to both magnitude and direction of motion. 
+
+Implication for the trajectory score. The two error terms in Eq. 7 are complementary by design: 
+
+ℓregret catches global latent-plausibility errors while ℓAFS catches motion-fidelity errors that all three appearance metrics miss. Removing ℓAFS would leave the adversary blind to a substantial class of failures during exactly the action-heavy regimes that PROWL is designed to expose — and hence blind to the failure mode that distinguishes a model that follows actions from one that merely produces plausible-looking video. 
+
+Figure 5: AFS-EPE catches motion failures invisible to appearance metrics. Same trajectory as Figure 6. Yellow band: action-heavy frames (forward+left + camera rotation, frames 22–24). (a) Per-frame AFS-EPE shows a 2–3× gap between VPT Base and PROWL throughout the action-heavy frames. (b) Latent regret (one value per VAE-latent frame, hence step-shaped) is nearly tied during the action-heavy frames and only diverges later. (c) LPIPS shows the two checkpoints nearly tied through frame 24, with the gap appearing only as early motion errors compound. (d) SSIM shows the two checkpoints nearly tied (and even VPT Base briefly higher at frames 23–24) during action-heavy frames despite the large AFS-EPE gap. 16 Figure 6: Qualitative comparison: VPT Base vs. PROWL under identical actions. Frames 22–32 of a held-out VPT-reference trajectory containing forward+left + camera rotation through frames 22– 24 (action-heavy region). Each group shows ground-truth frames, predicted frames, ground-truth optical flow, and predicted flow. VPT Base’s predicted flow during the action-heavy frames is incoherent (red/magenta blobs); PROWL’s tracks the GT flow direction (blue/teal gradients). Per-frame AFS values are inset in the predicted-flow row. 17
