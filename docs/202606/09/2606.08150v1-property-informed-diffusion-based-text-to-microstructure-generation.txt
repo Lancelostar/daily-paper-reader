@@ -1,0 +1,662 @@
+Title: Property-Informed Diffusion-Based Text-to-Microstructure Generation
+
+URL Source: https://arxiv.org/pdf/2606.08150v1
+
+Published Time: Tue, 09 Jun 2026 00:40:55 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Property-Informed Diffusion-Based Text-to-Microstructure Generation 
+
+## Bingxuan Dai 1 † , Hongsong Wang 2,3 †* , Jie Gui 1,4,5 * 
+
+1School of Cyber Science and Engineering, Southeast University, Nanjing 210096, China 
+
+2School of Computer Science and Engineering, Southeast University, Nanjing 210096, China 
+
+3Key Laboratory of New Generation Artificial Intelligence Technology and Its Interdisciplinary Applications (Southeast University), Ministry of Education, China 
+
+4Purple Mountain Laboratories, Nanjing 210000, China 
+
+5Engineering Research Center of Blockchain Application, Supervision And Management (Southeast University), Ministry of Education, China 
+
+{220245799, hongsongwang, guijie }@seu.edu.cn 
+
+## Abstract 
+
+Designing 3D metamaterial microstructures that meet the intended functions remains a major challenge, as it typi-cally requires domain expertise, iterative simulations, and extensive manual tuning. Existing work on inverse design that automatically generates microstructures based on de-sired target properties often suffers from limited design di-versity and faces challenges in ensuring the physical fea-sibility of the generated structures. To address this issue, a property-informed diffusion-based network is proposed that enables the generation of 3D microstructures directly from textual descriptions. Unlike traditional property con-ditioning methods, our approach leverages rich guidance in terms of semantics and physical properties in the text input to support diverse structure synthesis. To enforce consistency between the generated structures and the tar-get textual prompts, a dual alignment strategy is adopted, including contrastive text-structure alignment and test-time reward-guided alignment. Experimental results show that the model is capable of generating semantically meaning-ful and physically plausible structures across a wide range of material categories. Our approach has good potential for interactive microstructure design and opens up new di-rections for combining language-based interfaces with in-verse material discovery. Code is available at: https:// github.com/hongsong-wang/PropDiff-TMG .
+
+## 1. Introduction 
+
+Emerging materials [6, 12, 18, 52], characterized by dis-tinctive microstructures, enhanced performance, and novel 
+
+> *
+
+Corresponding Authors. †Equal Contribution Physical Properties     
+
+> Textual Description
+> "Voronoi tessellation results in
+> disorder"
+> User Input
+> Phi: 0.18
+> E: 3.59
+> Ani: 0.72
+> (Volume Fraction)
+> (Young ’s Modulus)
+> (Anisotropy)
+> Generative
+> Diffusion
+> Time Step t
+> Simulation or
+> Mechanical Testing
+> Refinement
+> Gaussian Noise Structure
+> Refined Structure
+> 0
+> 1000
+> 2000
+> 3000
+> 4000
+> -0.3 -0.2 -0.1 0
+
+Figure 1. Overview of our approach: A diffusion-based frame-work can generate metamaterial microstructures according to the textual description and physical properties. 
+
+functionalities, have garnered increasing attention due to the rapid advancement of scientific research and engineer-ing innovation. Their integration into high-technology sec-tors such as aerospace [31], environmental protection [32], and biomedical engineering [43] has substantially expanded both the functionality and application potential of materi-als. The properties of these materials are predominantly governed by their internal microstructures rather than their constituent substances. Consequently, the design and engi-neering of microstructures have assumed a central role in the development of novel materials, enabling the optimiza-tion of performance and the customized realization of spe-cific functionalities. Inverse design has emerged as a powerful paradigm in materials science, shifting the traditional trial-and-error process toward a goal-driven approach [17, 18, 49, 60]. In mechanical metamaterials research, phase-field model-ing [56] and topology optimization [39, 51] have been used 
+
+> arXiv:2606.08150v1 [cs.CV] 6 Jun 2026
+
+to inversely design architectures with extraordinary charac-teristics such as extreme stiffness or auxetic behavior [20]. Meanwhile, data-driven and machine learning techniques have accelerated inverse design by enabling rapid explo-ration of vast microstructural design spaces [18, 26, 29]. Given the specific physical properties of the microstruc-ture, experienced material scientists can inversely design the corresponding microstructures using computational ap-proaches such as phase-field modeling [27], mathematical modeling [59], and topology optimization [62]. Although these traditional methods are highly interpretable and fol-low physical principles, they often rely on extensive domain expertise, hand-crafted design spaces, and computationally expensive iterative solvers. Although recent advances in deep learning have made data-driven material structure de-sign possible, most existing methods [9, 38, 60] still rely on expert-defined conditions or parameter controls. In con-trast, the ability to generate metamaterial microstructures directly from textual descriptions remains underexplored, limiting the accessibility of such models. To address these problems, we propose a property-informed diffusion-based text-to-microstructure generation (PropDiff-TMG), a fully automated, robust, and general-izable framework for the generation of metamaterial mi-crostructures. As shown in Figure 1, our method accepts text as input and generates high-quality microstructures. To achieve stable and targeted microstructure generation based on structural text feature descriptions, we adopt a self-conditional diffusion framework to gradually guide the generation results to approach the semantic target during the denoising process. On this basis, we further introduce the random injection of physical properties to modulate the generation process to improve the consistency and control-lability of the structure in terms of mechanical properties. Specifically, we adopt the feature-wise linear modulation (FiLM) [34] to jointly encode physical and semantic infor-mation into a dynamic adjustment signal at the feature level, thereby achieving finer-grained generation control. After training, the model can generate diverse and physically con-sistent 3D microstructures based on material properties and structural text descriptions. To enhance the semantic and physical consistency of the generated structures, a dual alignment optimization strategy is proposed. During training, a contrastive text-structure alignment is introduced to align the text encoder with the visual encoder through contrastive learning to alleviate the semantic shift of the general language model [3, 36] in the material domain. During testing, a reward-guided align-ment strategy is employed to enhance the synergy between semantics and physics by constructing a composite reward function that combines CLIP similarity and discriminator authenticity, and performing normalization. To further im-prove local fidelity, we introduce a multi-round local edit-ing mechanism, where candidate regions are sampled and refined based on reward signals in each iteration, making high-scoring regions easier to retain and enhance, thereby optimizing the physical rationality of the structure while maintaining global consistency. Together, these components enable our framework to generate high-quality, diverse, and physically meaningful 3D microstructures from natural language descriptions. To train and evaluate the model, we conduct experiments on a dataset of paired text descriptions and voxelized microstruc-tures comprising multiple types of materials. Both quan-titative evaluations and simulation experiments show that our approach achieves promising results in terms of both semantic alignment and physical plausibility. In summary, our contributions are as follows: • Innovative inverse design paradigm: We introduce a self-conditional diffusion framework for generating meta-material microstructures from textual descriptions and physical properties. • Effective cross-modal alignment mechanism: We pro-pose a dual alignment mechanism integrating cross-modal contrastive training and reward-guided optimiza-tion to enforce semantic and physical consistency. 
+
+## 2. Related Work 
+
+Inverse Design of Microstructure: Traditional meth-ods [15, 41, 48, 55] rely on established physical principles and empirical trial-and-error processes to design 3D struc-tures, but often suffer from long design cycles, high com-putational costs, and considerable algorithmic complex-ity [13, 19]. To address these limitations, data-driven mi-crostructure generation [25, 28, 42], which is based on gen-erative artificial intelligence, has emerged. For example, inverse design of metamaterials based on diffusion mod-els [2, 53] enables end-to-end generation conditioned on mechanical properties. However, these approaches typi-cally depend on domain-specific priors and require expert-driven condition design. While substantial progress has been made in text-guided 3D object generation [45, 50, 57], the design of metama-terial microstructures poses greater challenges due to their intricate physical, mechanical, and functional characteris-tics. Current works [4, 23, 54] typically employ textual conditions to generate 2D representations of material struc-tures, which are subsequently transformed into 3D struc-tures via post-processing, rather than an end-to-end gen-erative framework. Txt2Microstruct-Net [61] leverages a variational autoencoder (VAE) to generate 3D voxels and a CLIP-based module to align textual prompt with 3D vox-els in the latent space. However, aligning textual prompts with 3D voxels using simple multi-layer perceptrons is challenging, and this approach requires multi-stage train-ing. ChatMetamaterials [18] enables efficient exploration of mechanical metamaterials by introducing a large language model–driven design engine. 
+
+Diffusion-Based Material Generation: Recently, diffu-sion models have made breakthrough progress in multi-ple generation tasks [1, 16, 47, 58], significantly improv-ing the quality and controllability of material generation. The condition-guided joint diffusion framework can effec-tively generate materials with complex structures and high fidelity. TGDMat [10] is proposed as a text-guided joint dif-fusion model to achieve synchronous generation of atomic types, coordinates, and lattice structures in periodic ma-terials. On the other hand, in response to the problems of multi-view consistency and illumination changes, Ma-terialMVP [21] effectively generates multi-view physical rendering textures with invariant illumination through the attention mechanism and consistency regularization. Mate-rial Anything [24] generates physically based materials on any 3D object based on an end-to-end diffusion network. Diffusion-based methods provide an efficient and versa-tile framework for material generation, enabling integration of multimodal conditions like text, geometry, and physical properties beyond traditional approaches. Our work focuses on diffusion-based microstructure generation, aiming to op-timize material performance through structural design. 
+
+Physically-Based Material Generation: Enforcing phys-ical constraints in 3D generation ensures material proper-ties follow real-world principles. 3DTopia-XL [8] generates high-resolution 3D geometry and Physically-Based Render-ing (PBR) materials via diffusion for property optimiza-tion. Diffusion Renderer [30] ensures consistent lighting by jointly estimating material and illumination. MatFuse [46] and Alchemist [40] enable precise control of material prop-erties under varying viewpoints and lighting. RichDreamer [35] enhances geometric detail and lighting consistency by jointly generating normals and depth maps. MaterialMVP [21] and SViM3D [14] improve multi-view consistency and lighting invariance. Inspired by recent material generation research, we incorporate physical property constraints into text prompts to ensure structural integrity and functionality. 
+
+## 3. Approach 
+
+PropDiff-TMG is a unified diffusion-based framework for the inverse design of 3D metamaterial microstructures con-ditioned on semantic text and physical properties, as shown in Figure 2. The entire design process is divided into three key stages to ensure controllability, generalization, and fi-delity. First, we adopt a self-conditional diffusion model to generate microstructures from semantic descriptions. Sec-ond, we propose a random conditional injection mechanism based on physical knowledge, in which physical property descriptors are incorporated as auxiliary text prompts to re-fine the generative process for better consistency with spec-ified physical properties. Third, we introduce a dual align-ment strategy to enforce semantic and structural consistency further. This includes: (1) a CLIP-based contrastive en-coder to align textual and structural representations during pre-training; and (2) a reward-guided sampling module that optimizes the diffusion process using a learned evaluator based on semantic and geometric alignment scores. 
+
+3.1. Diffusion-Based Text-to-Microstructure 
+
+This section introduces a diffusion-based inverse design framework that constitutes the foundation of our methodol-ogy. The framework is designed to generate 3D microstruc-tures that align with high-level semantic descriptions while maintaining structural plausibility, thereby enabling precise and controllable mapping between structural geometry and functional performance, where each 3D microstructure is represented as a voxel grid capturing material occupancy in space. Initially, the model is based on the denoising diffu-sion probabilistic model (DDPM) [22], where the forward process Gaussian denoising scheme, gradually perturbs the clean samples x0 into noisy samples xt, defined as: 
+
+xt = √γt x0 + p1 − γtϵ, (1) where ϵ ∼ N (0 , I ) and γt decreases steadily from 1 to 0. In the reverse process, a U-Net-like 3D network is employed to reconstruct x0 from the noisy input xt.To improve reconstruction quality and stability, a self-conditional diffusion model [7] is adopted, which recur-sively incorporates the previous prediction of the model as an auxiliary input ˆx′ 
+
+> 0
+
+at each denoising step. By leverag-ing contextual information beyond the current noisy input, the model iteratively refines its estimations to achieve more accurate reconstruction. To mitigate excessive dependence on prior outputs and reduce cumulative errors, the auxiliary input is randomly replaced with zero during training with a fixed probability, thereby improving robustness. Specifi-cally, the network outputs: 
+
+ˆx0 = f (xt, ˆx′
+
+> 0
+
+, t, z di ), (2) where ˆx′ 
+
+> 0
+
+= f (xt, 0, t, z di ) is either the previous prediction of the model (with 50% probability) or zero. The text condi-tion zdi is encoded using a pretrained text encoder, followed by sinusoidal time embeddings, and integrated into the de-noising network via classifier-free guidance. The model is optimized by minimizing the reconstruction loss: 
+
+Lcon = Eϵ,t ∥ˆx0 − x0∥22 , (3) which encourages the alignment of text semantics with ge-ometric structures through iterative denoising. 
+
+3.2. Property-Informed Stochastic Conditioning 
+
+To effectively incorporate physical property guidance into the inverse design process, we represent quantitative mate-rial physical property as augmented textual conditions, en-abling seamless integration with semantic prompts. These Time      
+
+> Embedding
+> Contrastive Text–Structure Alignment
+> Prompt
+> 𝐀 0𝐀 𝐀 −1𝐀 𝐀 𝐀 𝐀
+> 𝐀 0,𝐀
+> ’Decoder Encoder
+> Prompt
+> Visual
+> Encoder
+> Similarity
+> tText
+> Encoder
+
+𝐀 𝐀 𝐀 𝐀     
+
+> ...
+> ...
+> ...
+> ...
+> Conv 3D
+> Conv 3D
+> Conv 3D
+> Conv 3D
+> Conv 3D
+> Conv 3D
+> Add Concat
+> Softmax SNormalization N
+> Voronoi tessellation
+> results in disorder .
+> Physical Properties
+> Textual Description
+> Phi: 0.18 , 1/E: 0.28 ,
+> Anisotropy: 0.72
+> Stochastic
+> Injection
+> Test-Time Reward-
+> Guided Alignment
+> Text
+> Encoder
+> Test-Time Reward-Guided Alignment
+> Prompt
+> ...
+> Sample Pool
+> SContrastive
+> Text–Structure
+> Alignment
+> Discriminator
+> N
+
+Figure 2. Pipeline of the proposed PropDiff-TMG: Our method is based on a self-conditional diffusion model, guided by textual descriptions and optionally injected physical properties. During training, a contrastive text–structure alignment strategy aligns text and structure representations via a contrastive loss. At inference, we further refine generations via reward-guided sampling using a CLIP and a discriminator, achieving dual alignment from both pretraining and optimization perspectives. 
+
+enriched conditions are embedded and injected into the dif-fusion model using a FiLM-based modulation mechanism, which adaptively modulates intermediate network features to robustly guide microstructure generation toward satisfy-ing both semantic and physical constraints. 
+
+Physical Property Text Encoding: To enable inverse de-sign optimized by quantitative physical properties, we aug-ment the textual description T with explicit material prop-erties such as Young’s modulus E, isotropy index I, and volume fraction Vf , represented in descriptive textual form. The combined conditioning ˜T = {T, E, I, V f } guides the diffusion model G to generate microstructures x that not only adhere to semantic constraints but are also optimized to meet the specified physical targets: x ∼ G ( ˜T ). we ap-ply random masking to the physical property condition-ing P = {E, I, V f } during training. Each property p ∈{E, I, V f } is retained independently with probability rp,enabling the model to learn from both fully and partially specified prompts. This stochastic injection strategy allows the model to flexibly handle various conditioning scenar-ios, both with and without property constraints, and better align generation with physical targets. To assess the phys-ical fidelity of generated structures, we train a regression network R using paired data {(xi, P i)}Ni=1 , where xi de-notes the i-th material structure and Pi is the corresponding physical properties. The trained regressor is then used to predict properties ˆP = ( ˆE, ˆI, ˆVf ) from a generated struc-ture: ˆP = R(X). The prediction accuracy provides a quan-titative measure of how well the generated microstructure conforms to the target physical properties embedded in the conditioning prompt. 
+
+FiLM-Based Text Embedding Integration: To further strengthen conditioning, a FiLM module [34] modulates in-termediate denoising features based on the text embedding. Given noisy input xt, let F ∈ RC×D×H×W be an interme-diate feature tensor and e ∈ RD the text embedding. FiLM applies an affine transformation: 
+
+F ′ = γ · F + β, (4) where γ, β are generated by linear projections of e. This feature-wise modulation allows the model to adaptively op-timize microstructure generation according to both seman-tic descriptions and quantitative physical property guidance. 
+
+3.3. Dual Alignment of 3D Structure and Text 
+
+We propose a dual alignment strategy to enhance the con-sistency between generated 3D microstructures and their corresponding textual descriptions and physical properties. First, two separate encoders aligns the structure and text embeddings during pre-training. Second, at test time, reward-guided sampling is used to optimize the structure based on the feedback from the learned reward model. These steps jointly enhance the fidelity of both semantics and structure. Contrastive Text–Structure Alignment: Inspired by pre-vious work [5, 33, 37], we employ two separate en-coders [11, 44] pretrained to align textual and structural representations within a shared embedding space via con-trastive learning. Let di denote a textual description of the 
+
+i-th material and xi ∈ RD×H×W be the corresponding 3D material structure. The text encoder fθ maps di into a text embedding zdi = fθ (di) ∈ RD , while the visual en-coder gϕ encodes the structure xi into a structure embed-ding zxi = gϕ(xi) ∈ RD .We adopt a symmetric contrastive alignment objective inspired by cross-modal similarity distribution matching. For each training sample, the similarity logits between modalities are computed as Si,j = ⟨zdi , z xj ⟩/τ, where τ is a temperature parameter. To provide soft supervision tar-gets, we further construct intra-modal similarity matrices 
+
+Sdd i,j , Sxx i,j for both modalities and average them to obtain a target similarity distribution. The soft targets are defined as: 
+
+Sdd i,j = ⟨zdi , z dj ⟩, Sxx i,j = ⟨zxi , z xj ⟩, (5) 
+
+Ti,j = softmax 2( Sdd i,j + Sxx i,j )
+
+τ
+
+!
+
+. (6) Based on these targets, we compute the final alignment loss in a bidirectional manner across modalities: 
+
+Lf orward = −
+
+> N
+
+X
+
+> i=1
+> N
+
+X
+
+> j=1
+
+Ti,j log softmax( Si,j ), (7) 
+
+Lbackward = −
+
+> N
+
+X
+
+> i=1
+> N
+
+X
+
+> j=1
+
+Tj,i log softmax( Sj,i ), (8) 
+
+Lalign = 12N (Lf orward + Lbackward ) . (9) This loss aligns material descriptions with 3D structures by matching cross-modal similarities to the average of intra-modal similarity patterns. 
+
+Test-Time Reward-Guided Alignment: To improve the semantic relevance and structural fidelity of generated mi-crostructures, we propose test-time reward-guided align-ment. Starting from initial diffusion-based samples, this method iteratively edits local regions using reward feed-back. In each round, multiple candidates are sampled, eval-uated, and the best edits are retained. Then, a soft resam-pling step selects the next input from the reward-weighted pool of best structures. To balance semantic consistency and structural plausibility, we design two reward models: • Contrastive reward: This reward is computed as the co-sine similarity between text and structure embeddings ex-tracted by a visual and text encoders pre-training with CLIP-style text-structure alignment. • Discriminative reward: This reward indicates the score reflecting the authenticity of generated microstructures. We design a discriminator network with 3D convolutional layers, batch normalization, and fully connected layers to distinguish between real and generated structures. This network is trained with binary cross-entropy loss using voxels of both real and generated 3D structures. Dur-ing testing, it generates a score which represents the fine-grained structural plausibility. To adapt to the scales of the two rewards, we design a weighted normalization to evaluate the quality of the gen-erated structure. For the k-th candidate structure of the i-th textual prompt, the final reward score is computed as: 
+
+Ri,k = ˜Rci,k + w · ˜Rdi,k , (10) where w is the weight hyperparameter, ˜Rci,k and ˜Rdi,k are the normalized contrastive and discriminative rewards, respec-tively. Normalization is carried out by subtracting the mean and dividing by the standard deviation within each batch. 
+
+## 4. Experiment 
+
+4.1. Datasets and Evaluation Metrics 
+
+To evaluate the text-guided diffusion model for material structure generation, we conduct comprehensive experi-ments using the Geometries 2000 dataset comprising 2000 text-structure pairs of various types of materials [61]. Due to the limited scale of the Geometries 2000, we construct GenText-Microstruct with textual descriptions, a large text–to-microstructure dataset derived from mechan-ical metamaterials [53]. Descriptions are first generated by GPT based on conditions including properties, and then manually verified. The dataset contains over 14,000 sam-ples for training and 2,000 for evaluation, covering wide ranges of modulus and Poisson’s ratio. Representative structural examples are illustrated in Figure 3. We perform a quantitative analysis using four comple-mentary metrics: classification accuracy, Fr´ echet Inception Distance (FID), CLIP score, and Chamfer Distance (CD). These metrics respectively measure semantic consistency, distributional fidelity, text-to-structure alignment, and geo-metric accuracy of the generated microstructures. 
+
+4.2. Results of Text-to-Microstructure Generation 
+
+We conduct both qualitative and quantitative evaluations to assess the ability of model to generate microstructures un-der various textual conditions. 
+
+Evaluation on Geometries 2000: Table 1 shows mi-crostructure generation results on the Geometries 2000. Our method achieves superior accuracy, suggesting that the gen-erated structures exhibit a stronger correspondence with the intended target labels. Besides, the lower FID indicates that the generated microstructures more closely match the fea-ture distribution of real samples. Table 1. Quantitative comparisons on the Geometries 2000 [61]: The first four metrics are calculated using 200 random samples from the 2000 datasets, after setting a random seed. For comparison with Txt2Microstruct-Net, the FID score is calculated using 200 prompts that generate 10 prompts with 2000 data. R 2-square is used to assess the goodness of fit between the properties of the 2000 true structure and the predicted properties of the generated structure. Our baseline framework first aligns textual and structural semantics, and then performs direct unconstrained diffusion-based generation of 3D structures. 
+
+Method Accuracy ↑ FID ↓ CLIP ↑ CD ↓ R2-square ↑ Input Method Txt2Microstruct-Net [61] 0.8695 72.08 0.5599 0.0932 0.773 0.795 0.771 Text VAE Baseline 0.8959 186.54 0.5856 0.0694 0.849 0.772 0.886 Text Diffusion PropDiff-TMG (ours) 0.9100 70.81 0.6936 0.0395 0.961 0.928 0.956 Text Diffusion GenText-Micro struct Example 
+
+Figure 3. Sample 3D structures from GenText-Microstruct: 
+
+The dataset comprises metamaterials spanning a broad range of physical properties, distinguishing it from Geometries 2000 [61]. 
+
+Furthermore, with property-conditioned constraints, the structures exhibit more accurate predicted properties. The higher coefficient of determination and improved linear re-gression performance, as illustrated in Figure 5, demon-strate that our approach is more effective in inverse design that satisfies specified physical constraints. Meanwhile, property error is calculated to verify the mechanical feasi-bility of the generated structures, as shown in Table 2. Ad-ditionally, we incorporate the CLIP score to evaluate the quantitative alignment between input conditions and gener-ated structures. The data shows that the generated results are semantically coherent with their descriptions. 
+
+Qualitative Analysis: Rather than relying on design tem-plates, the model autonomously constructs diverse struc-tures guided by natural text. As shown in Figure 4, for a single textual prompt, the model is able to generate multi-ple outputs with different structures, reflecting the inherent one-to-many nature of text-to-structure mapping. This gen-eration diversity under consistent semantic constraints helps expand the material design space and promotes the discov-ery of novel or unconventional microstructures. Further-more, the high consistency between textual and structural semantics allows the model to effectively capture textual se-mantics and improve manufacturing feasibility. In addition, visual results generated from GPT-based text prompts are provided in the supplementary material. 
+
+Table 2. Property error results.             
+
+> Method Young’s modulus ↓Anisotropy ↓Volume fraction ↓
+> Txt2Microstruct-Net 0.0118 0.0163 0.0348 PropDiff-TMG (ours) 0.0175 0.0106 0.0103
+
+Table 3. Quantitative comparisons on the GenText-Microstruct: The baseline is based on properties prompt to gen-erate structures, which follows the strategies used in previous study [53]. Reward-Guided Align denotes the module of Test-Time Reward-Guided Alignment. Since CLIP measures the se-mantic correspondence between the text description and the gen-erated structure, the baseline performs poorly on this metric. 
+
+Method FID ↓ CLIP ↑ CD ↓
+
+Baseline [53] 84.46 0.3281 0.0666 PropDiff-TMG (ours) 47.74 0.6463 0.0442 
+
+w/o Property Condition 52.94 0.5210 0.0482 w/o Reward-Guided Align 49.02 0.5164 0.0468 
+
+Table 4. Ablation studies: Contrastive Align and Reward-Guided Align denote Contrastive Text–Structure Alignment and Test-Time Reward-Guided Alignment, respectively. 
+
+Method FID ↓ CLIP ↑ CD ↓
+
+1⃝ PropDiff-TMG (ours) 70.81 0.6936 0.0395 
+
+2⃝ w/o Property Condition 105.35 0.6816 0.0651 3⃝ w/o Contrastive Align 264.63 0.5161 0.0579 4⃝ w/o Reward-Guided Align 81.68 0.6078 0.0412 5⃝ w/o Discriminator 73.51 0.7038 0.0396 6⃝ w/o Normalization 77.52 0.7189 0.0394 
+
+Evaluation on GenText-Microstruct: Table 3 showcases our performance on the GenText-Microstruct dataset. It shows that our method significantly reduces FID and CD scores relative to baseline, reflecting improvements in fi-delity and distribution realism, and further demonstrating the robustness and effectiveness of the proposed framework. Furthermore, both property-informed stochastic condition-ing and test-time reward-guided alignment improved the performance of each metric, demonstrating the effective-ness and robustness of each module. "Microstructure with finely spaced perforations. It has pentagon 
+
+pores." 
+
+Ground Truth 
+
+"Composite material with nanoparticle reinforcement, it has same 
+
+sphere size and random distribution of spheres. "
+
+"Carbon threads woven into the polymer. It has random fibre size 
+
+distribution." 
+
+"Triply periodic minimal surface structure." 
+
+"Intricate, complex aluminum oxide structure." 
+
+"Structure featuring octet lattices in an ordered design." 
+
+Generated Structure s Ground Truth Generated Structure sFigure 4. Qualitative visualizations: Voxel-based microstructures generated by our model using textual prompts. 0.0 0.2 0.4 0.6 0.8    
+
+> True Phi
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> Predicted  Phi
+> Data
+> Fit: y=0.93 x+0.03, R2=0.961
+
+(a) Volume score comparison 0.0 0.2 0.4 0.6 0.8 1.0     
+
+> True E
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Predicted  E
+> Data
+> Fit: y=0.94 x+0.01, R2=0.928
+
+(b) Young’s modulus comparison 0.2 0.4 0.6 0.8 1.0     
+
+> True Anisotropy
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Predicted  Anisotropy
+> Data
+> Fit: y=0.96 x+0.01, R2=0.956
+
+(c) Anisotropy comparison 
+
+Figure 5. Comparison of structural physical properties: Linear regression plots between the true values and the generated physical properties for 2,000 generated microstructures with property conditions. Each subplot compares one property: (a) volume fraction, (b) Young’s modulus, and (c) anisotropy score. Higher linearity and lower deviation from the fitted line indicate higher generated accuracy. 
+
+4.3. Ablation Studies 
+
+To comprehensively evaluate the contributions of different components in our method, we conduct ablation studies on different modules, as shown in Table 5. 
+
+Effectiveness of Property-Informed Stochastic Condi-tioning: To evaluate the effect of conditioning on phys-ical properties, we trained the model with additional su-pervision using property values such as Young’s modulus, volume fraction, and anisotropy. It found that even with-out providing any physical properties during inference, the model trained with these conditionings produced higher quality structures than the baseline model trained without these conditionings, with the CD score dropping signifi-cantly from 0.0651 to 0.0395. This suggests that incorporat-ing physical property information during training can help guide the model to learn more physically meaningful and structurally consistent representations. 
+
+Effectiveness of Contrastive Text-Structure Alignment: 
+
+To evaluate the effectiveness of contrastive text-structure alignment, we directly use the self-conditional diffusion model for training instead of pre-aligning the text and struc-ture. It found that incorporating contrastive text-structure alignment during pre-training significantly improved per-formance across multiple metrics, with the FID score ex-hibiting a substantial reduction from 264.63 to 70.81, and the CLIP score significantly increased from 0.5161 to 0.6936. This is primarily due to the incorporation of spe-cialized representations of the material domain during pre-training. This effectively mitigated the semantic bias of general language models in understanding material-related text and enhanced the semantic consistency between struc-ture and description. 
+
+Effectiveness of Test-Time Reward-Guided Alignment: 
+
+To evaluate the effectiveness of test-time reward-guided alignment, which refines the generated structure by itera-tively updating random regions with candidate regions that have higher rewards. This strategy significantly improves various metrics, demonstrating its ability to guide the model towards the desired semantic and structural goals without additional training. In addition, we conduct ablation experiments on each component in this module. When there is only a reward model for text-structure alignment, the CLIP metric is sig-nificantly improved to 0.7038. The normalized combined Strain = -0.1 Strain = -0.2 Strain = -0.3 Strain = -0.1 Strain = -0.2 Strain = -0.3       
+
+> Generated metamaterial Reference metamaterial
+> z
+> x
+> z
+> yFigure 6. Qualitative results of simulations: Qualitative comparison of mechanical properties of generated metamaterial with those of the reference. Gradual deformed shapes at different compressive strains obtained from finite element simulations.
+> (a) Poisson’s-strain curve (b) Stress-strain curve
+> Figure 7. Mechanical properties by simulation: Quantitative comparison of (a) Poisson’s ratio strain curve and (b) stress-strain curve between the generated material and the reference material obtained from finite element simulation.
+
+reward model, after adding the discriminator reward model, not only improves the CLIP metric to 0.6936, but also sig-nificantly reduces the FID score to 70.81. This shows that the reward model for text-structure alignment acts on se-mantic consistency, while the discriminator reward model acts on structural rationality. 
+
+4.4. Finite Element Method Simulation 
+
+Finite element method simulations are performed using ABAQUS to investigate the large-deformation behavior of the generated metamaterial structure and a reference meta-material. The large-deformation response of the auxetic metamaterial is investigated using a geometrically nonlin-ear static analysis. The material is modeled using a nearly incompressible neo-Hookean hyperelastic model with a Young’s modulus set to 0.6615 MPa. To capture buckling-related behavior, a linear eigenvalue buckling analysis is first performed. subsequently, a postbuckling simulation is performed, gradually compressing the structure along the axial direction (z) by a prescribed displacement, terminat-ing the analysis when contact is detected between opposing boundaries. The postbuckling stress-strain response and the evolution of the Poisson’s ratio are extracted by tracking the reaction forces and displacements on the loaded surface and the lateral surfaces, respectively. Figure 6 shows a sequence of the progressively deformed metamaterial generated under four different levels of com-pressive engineering stress, obtained from the finite element results. Compared with the reference material, the gener-ated metamaterial exhibits favorable negative Poisson ratio properties in both the x- and y-directions, although the de-formation process is relatively distorted. Figure 7 provides a detailed comparison of the Poisson’s ratio-strain and stress-strain curves obtained from simula-tions. The results show that the Poisson’s ratio of the gener-ated structure decreases with increasing compressive strain. Some fluctuations in the curve may be due to the simulation setup, which also affects the stress-strain curve. Although the generated structure may have defects that cause stress to drop, it still exhibits a mechanical trend similar to that of the reference structure during deformation. Experimental results demonstrate that the generative model based on the diffusion model can produce structures that are consistent with the semantic and physical properties targets. 
+
+## 5. Conclusion 
+
+In this work, we propose PropDiff-TMG, a unified diffu-sion framework for inverse design of 3D metamaterial mi-crostructures from textual descriptions and physical prop-erties. To optimize the microstructure, we introduce quan-titative properties in addition to feature description. Fur-thermore, a dual alignment strategy is proposed to eliminate cross-domain knowledge differences through text–structure alignment and to strengthen the alignment of semantic and physical structures through a test-time reward-guided align-ment. Extensive experiments show that PropDiff-TMG is able to generate diverse, physically plausible, and seman-tically consistent microstructures, achieving moderate im-provement over existing microstructure methods. Conv(3,3,3) 
+
+> Conv(3,3,3)
+> Conv(3,3,3)
+> BatchNorm
+> Conv(1,1,1) Global Pool
+> Feat
+> 𝐀𵀀𝐀𱀀𝐀 𝐀 𝐀𵀀𝐀𱀀𝐀 𝐀
+> 𝐀𵀀𝐀𱀀𝐀 𝐀
+> sigmoid
+> sigmoid
+> Visual
+> Encoder
+> Text
+> Encoder
+> Reward Model
+> 𝐀𵀀𝐀𱀀𝐀 𵀀
+> 𝐀𵀀𝐀𱀀𝐀 𝐀𰠀𰠀
+> Sample Pool
+> ······
+> User Input
+> Augment Prompt
+> "Voronoi tessellation
+> results in disorder .
+> Phi:0.18 E:3.59 Ani:0.72 "
+> Candidate Structure
+> BatchNorm
+> Conv(3,3,3)
+> BatchNorm
+> BatchNorm
+> Importance Sample
+
+Figure 8. Overview of Test-Time Reward-Guided Alignment: 
+
+Given an initial material structure and a target textual description, the proposed module performs localized optimization of random regions guided by metric scores derived from two reward models: a contrastive reward and a discriminative reward, thereby progres-sively refining the 3D material structure toward the target. 
+
+## A. Test-Time Reward-Guided Alignment 
+
+In the reward model, we employ a pre-trained CLIP-style dual encoder and discriminator to jointly evaluate the se-mantic alignment and structural plausibility of the gener-ated microstructures, which is illustrated in Figure 8. The discriminator is trained to distinguish high-quality text-aligned structures from generated samples. The discrimina-tor’s local structure score is denoted as sp, the discrimina-tor’s global structure score is denoted as sg , and the overall score sf is obtained by averaging the patch-level and global probabilities. The weights of CLIP and the discriminator are 1.0 and 0.4, respectively. Detailed process of test-time reward-guided alignment is shown in Algorithm 1. The initial sample undergoes R = 5 
+
+iterative optimization steps. In each iteration, E = 4 local patches of size 32 × 32 × 32 are randomly selected as can-didate editing regions. For each patch, K = 8 candidate structures are generated. These candidates are evaluated using a reward model that weights the semantic similarity score from CLIP and the structural realism score from the discriminator. For each local region, the candidate with the highest reward score replaces the original patch. After each round of optimization, the current best reward is normal-ized using a softmax function, and the structure from the pool of best resampled samples is used as the starting point for the next round. This iterative process continues until a predetermined number of rounds is reached. 
+
+## B. Evaluation Metrics 
+
+To evaluate the performance of our generated microstruc-ture, we conduct a quantitative analysis using four comple-mentary metrics: classification accuracy, Fr´ echet Inception 
+
+Algorithm 1 Test-Time Reward-Guided Local Sampling 
+
+1: Input: Diffusion model G, prompt T , batch size B,diffusion steps S, guidance scaling factor w, edits per round E, candidates per edit K, total rounds N , tem-perature λ
+
+2: Output: Optimized structures X∗
+
+3: Initialize X from the diffusion model G(T, B, S, w )
+
+4: Set X∗ ← X, and compute initial rewards R∗
+
+5: for n = 1 to N do 
+
+6: Sample E patch locations 
+
+7: for e = 1 to E do 
+
+8: for k = 1 to K do 
+
+9: Local edit X with half-step sampling ˆX(k)
+
+10: Replace patch e with a new sample 
+
+11: end for 
+
+12: Evaluate the combined rewards of K candidates 
+
+13: Update X with the highest reward 
+
+14: end for 
+
+15: Compute current rewards R
+
+16: if Reward enhancement then 
+
+17: Update X∗ and R∗
+
+18: end if 
+
+19: Compute probabilities p = softmax( λR ∗)
+
+20: Sample indices s ∼ Multinomial( p, B )
+
+21: Set X ← X∗[s]
+
+22: end for 
+
+23: return X∗
+
+Distance (FID), CLIP score, and Chamfer Distance (CD). These metrics respectively assess the semantic consistency, distributional fidelity, text-to-structure alignment, and geo-metric accuracy of the generated microstructures. Further-more, we used the R-squared coefficient to evaluate the cor-relation between the predicted properties of the generated structure and the predicted properties of the real structure. 
+
+B.1. Classification Accuracy 
+
+It can evaluate the ability of the model to generate mi-crostructures that are recognizable and distinguishable across predefined categories. To perform this evaluation, a 3D convolutional neural network classifier is trained using 2,000 labeled microstructures distributed over 20 semantic classes. The high accuracy achieved by the classifier on the generated samples indicates strong semantic alignment be-tween the structures and the textual prompt. 
+
+B.2. FID Score 
+
+To evaluate the generation quality of 3D microstructure, we adopt the Fr´ echet Inception Distance (FID) metric by ex-tracting feature embeddings from the penultimate layer of a pre-trained 3D classifier. We compute the FID score be-tween 2,000 real and 2,000 generated microstructures using the standard formulation: 
+
+F ID = || μx − μy || 2 + T r (Cx + Cy − 2( CxCy )1/2) (11) where x and y represent the feature vectors of real and gen-erated structures, respectively, μx and μy are the mean vec-tors, Cx and Cy are the covariance matrices, and T r denotes the matrix trace. A lower FID indicates that the distribution of generated structures is closer to that of real samples, sug-gesting higher generation fidelity. 
+
+B.3. CLIP Score 
+
+It can measure the degree of semantic alignment between the input text and the corresponding microstructure gener-ated. A pretrained dual encoder from the first stage of train-ing is employed to embed both the text description and the generated microstructure into a shared representation space. Semantic alignment is subsequently assessed by computing the cosine similarity between their corresponding embed-dings. A high similarity score indicates that the model ef-fectively captures and preserves the semantic content of the input prompt in the generated output. 
+
+B.4. CD Score 
+
+It is computed between point clouds sampled from the gen-erated and ground-truth material structures, serving as a measure of geometric similarity. To compute the CD score, the material structures, both generated and ground-truth, are first converted into surface point clouds, typically by sam-pling the coordinates of boundary voxels or using isosurface extraction methods. Let P = {pi}Ni=1 and Q = {qj }Mj=1 
+
+represent the two point clouds sampled from the generated and ground-truth structures, respectively. The CD score is written as: 
+
+CD = 1
+
+|P |
+
+X
+
+> p∈P
+
+min  
+
+> q∈Q
+
+∥p−q∥22 + 1
+
+|Q|
+
+X
+
+> q∈Q
+
+min  
+
+> p∈P
+
+∥q−p∥22 (12) which ensures that each point in one set is close to at least one point in the other. The first term evaluates how much of the generated structure is relevant to the target geome-try, while the second term captures how well the generated structure covers the target. The lower CD score corresponds to higher shape fidelity and more accurate reconstructions. 
+
+B.5. R-Squared Coefficient 
+
+It can evaluate the ability of the model to generate mi-crostructures that closely match the target physical prop-erties. For this evaluation, we train a solver with the same convolutional architecture as the classifier using 2000 properties-labeled microstructures. A higher R-squared co-efficient, approaching one, indicates stronger physical con-sistency in the generated structures. 
+
+## C. Implementation Details 
+
+During the pre-training phase, PropDiff-TMG trains a property-informed dual encoder using a contrastive text-structure pre-training approach to align text-structure em-beddings. The dataset contains N = 2000 microstructures, with 80% used for training and 20% for validation. Each text description is accompanied by the physical properties of its corresponding microstructure, including volume frac-tion, effective Young’s modulus, and isotropy. To improve generalization, the physical property is randomly masked during training. A pre-trained 3D-ResNet model [44] serves as the structure encoder, and a pre-trained BERT model [11] serves as the text encoder. The two encoders are jointly trained to optimize the similarity matrices of structure and text embeddings. The model trains within a self-conditional diffusion framework, processing input microstructures at a resolution of 64 × 64 × 64 voxels. Training is performed using the Adam optimizer with a learning rate of 1 × 10 −4,a batch size of 64, and a temperature parameter of 0.1. Attention mechanisms operate at spatial resolutions of 4 and 8, utilizing 4 attention heads and a dropout rate of 0.1. Training incorporates an exponential moving average (EMA) with a decay rate of 0.999 to stabilize parameter up-dates. Training runs for 2000 epochs on a single NVIDIA GeForce RTX 4090 GPU. The inference time is approxi-mately 5 seconds per sample with 100 diffusion steps on a single RTX 4090 GPU, while the optimized testing-time inference takes 110.4 seconds. 
+
+## D. Experiment 
+
+D.1. Dataset Construction 
+
+GenText-Microstructure is a text-structure pair dataset based on automatically generated microstructure physical descriptions from 3D voxels [53] as prompts. Over 14,000 metamaterial structures spanning a broad spectrum of mod-ulus and Poisson’s ratio are utilized for training, while an-other 2,000 randomly generated structures are used for eval-uation. For each binary voxel, we extract geometric features such as connectivity, Euler number, surface area to volume ratio, symmetry, and internal porosity. In addition, the cor-responding stiffness tensor provides mechanical properties, including C11 , C12 , C44 , and the derived bulk modulus V .All data are normalized using a pre-trained scaler. Subse-quently, GPT is employed to generate descriptive text con-ditioned on the properties and features, and a rule-based text generator converts the quantitative properties into a coher-ent, scientifically styled natural-language description, cov-ering volumetric stiffness, axial stiffness, Poisson’s ratio, shear strength, and structural topology. "Microstructure with finely spaced perforations. It has pentagon 
+
+pores. phi:0.7358, 1/E:0.0196, Anisotropy:0.5270 "
+
+Ground Truth 
+
+"Composite material with nanoparticle reinforcement, it has 
+
+same sphere size and random distribution of spheres. phi:0.0507, 
+
+1/E:0.8834, Anisotropy:0.9878 "
+
+"Carbon threads woven into the polymer. It has random fibre size 
+
+distribution. phi:0.2701, 1/E:0.2745, Anisotropy:0.3760 "
+
+"Triply periodic minimal surface structure. phi:0.4177, 1/E:0.1303, 
+
+Anisotropy:0.6525 "
+
+"Intricate, complex aluminum oxide structure. phi:0.1888, 
+
+1/E:0.2913, Anisotropy:0.7735" 
+
+"Structure featuring octet lattices in an ordered design. phi:0.3370, 
+
+1/E:0.1749, Anisotropy:0.7455" 
+
+Generated Structure s Ground Truth Generated Structure sFigure 9. More qualitative visualizations: Voxel-based microstructures generated by our model using textual prompts with properties. "This engineered microarchitecture. showing reasonable 
+
+structural integrity under pressure. demonstrates balanced axial 
+
+stiffness. with typical lateral contraction as seen in most solids. 
+
+providing balanced resistance to torsion. Structurally, it is fully 
+
+connected without separation. with internal cavities and porous 
+
+features. "
+
+"The designed structure. with low volumetric stiffness, prone to 
+
+compression. shows compliant axial behavior. with near-zero 
+
+lateral expansion indicating auxeticity. but relatively weak 
+
+under shear. that reveal perforations or foam-like internal 
+
+structure. "
+
+Ground Truth Generated Structure s
+
+Figure 10. Qualitative visualizations of GenText-Microstruture without physical properties: Voxel-based mechanical metamate-rial structures are generated in response to text prompts produced by a rule-based text generator. "This engineered microarchitecture. showing reasonable 
+
+structural integrity under pressure. demonstrates balanced axial 
+
+stiffness. with typical lateral contraction as seen in most solids. 
+
+providing balanced resistance to torsion. Structurally, it is fully 
+
+connected without separation. with internal cavities and porous 
+
+features. phi:0.7197 E:0.4525 v:0.3265 "
+
+"The designed structure. with low volumetric stiffness, prone to 
+
+compression. shows compliant axial behavior. with near-zero 
+
+lateral expansion indicating auxeticity. but relatively weak under 
+
+shear. that reveal perforations or foam-like internal structure. 
+
+phi:0.6722 E:-0.5787 v:-0.9840 "
+
+Ground Truth Generated Structure s
+
+Figure 11. Qualitative visualizations of GenText-Microstruture with physical properties: Voxel-based mechanical metamaterial structures are generated based on attributed text prompts generated by a rule-based text generator. D.2. Visualizations and Simulations 
+
+Qualitative Analysis on Geometries 2000: Figure 9 shows the visualization of qualitative results generated based on properties-driven text. The introduction of property con-straints makes the generated results more targeted while still meeting the target physical properties, but this also reduces structural diversity. 
+
+Qualitative Analysis on GenText-Microstructure: To evaluate the model capacity to interpret and translate struc-tured textual descriptions into diverse material geometries, we conducted qualitative visualization experiments using the GenText-Microstructure. As shown in Figure 10, the visualization results demonstrate that the model effectively captures the underlying structural semantics while exhibit-ing diverse results. As shown in Figure 11, the gener-ated structures after adding properties maintain the overall form while exhibiting local diversity. This indicates that the model not only learns deterministic text-structure mappings but can also generalize to generate different structures under the same text semantics. 
+
+Visualization of Simulation: Simulation results are pre-sented in the videos included in the supplementary mate-rials. The compression process of the resulting metamate-rial structure is visually recorded via video contour plots extracted from a series of nonlinear finite element simula-tions. These contour plots illustrate the gradual evolution of deformation as the axial compressive displacement is in-crementally applied along the z-axis, starting from 0 to 0.3. The video begins with the undeformed configuration and proceeds through successive loading stages. Throughout the simulation, the displacement field distribution is color-mapped to emphasize regions of high deformation gradi-ents. The progression demonstrates that the generated struc-ture consistently exhibits auxetic behavior, as indicated by lateral compression in the x- and y-directions under axial compression. Compared to the reference metamaterial, the generated structure maintains a pronounced negative Pois-son’s ratio effect across a wide range of compressive strains. Furthermore, the contour plots reveal localized stress con-centrations and deformation distortions. Overall, the results confirm that the generated structures maintain the desired mechanical behavior. 
+
+D.3. Visualization under Diverse Prompts 
+
+To evaluate model generalization and text–structure align-ment beyond the training distribution, we conduct a quali-tative visualization experiment using newly generated and diverse text prompts created by GPT. The Geometries 2000 [61] includes four types of materials: metals and al-loys, polymers and composites, ceramics, building mate-rials, and metamaterials. For each material category, we select a representative target structure and textual descrip-tions generated by GPT describing its morphology and spa-                            
+
+> Table 5. Ablation studies: Contrastive Align and Reward-Guided Align denote Contrastive Text–Structure Alignment and Test-Time Reward-Guided Alignment, respectively. In evaluating the FID metric, we select the visual encoder from Contrastive Text-Structure Alignment as the feature extractor.
+> Method FID ↓CLIP ↑CD ↓
+> 1⃝Ours 47.74 0.6463 0.0442
+> 2⃝w/o Property condition 52.94 0.5210 0.0482 3⃝w/o Reward-Guided Align 49.02 0.5164 0.0468 5⃝w/o Discriminator 51.89 0.6396 0.0404
+> 6⃝w/o Normalization 51.94 0.6396 0.0454
+
+tial distribution. The model then generates 3D structures based on each textual prompt. As shown in Figure 12, the generated samples demonstrate that the model can ac-curately capture structural semantics from various textual descriptions. This confirms that the model can generalize beyond memorized training samples and align textual se-mantics with structure generation in an interpretable man-ner. 
+
+D.4. Ablation Experiment 
+
+To comprehensively evaluate the contribution and general-ization ability of different components in our method, we conduct ablation studies on different modules on GenText-Microstruture, as shown in Table 5. 
+
+Effectiveness of Property-Informed Stochastic Condi-tioning: To verify the effectiveness of property-informed stochastic conditioning, we conduct additional ablation ex-periments on our constructed text-structure dataset. As shown in Table 5, the results show that adding physical properties further improves the model across all metrics, indicating higher consistency in semantics among the gen-erated structures. Furthermore, this module effectively re-duces ambiguity in structure generation, enabling the model to more accurately align expected physical features while maintaining diversity. 
+
+Effectiveness of Test-Time Reward-Guided Alignment: 
+
+To validate the effectiveness and generalization ability of the test-time reward-guided alignment module, we conduct additional ablation experiments on our constructed text-structure dataset. The text prompts on this dataset are gener-ated using regularized templates, systematically describing different structural features, and differed from the original dataset in text-structure distribution. As shown in Table 5, the results show that the proposed reward-guided align-ment still significantly improves performance across mul-tiple metrics, further confirming that this module can guide the model to generate structures that are more functionally and physically consistent without additional training. Furthermore, additional ablation experiments are con-"Closed-cell foam with spherical pores of varying diameters and  
+
+> homogeneous wall material distribution. phi:0.8205 "
+> "Powder-consolidated metal lattice, with spherical particles fused
+> into a continuous yet porous matrix. phi:0.8500 "
+> "Porous ceramic network, material density decreases from the
+> center to the edges. phi:0.6744 "
+> Ground Truth Generated Structure sTarget Label
+> Metals and
+> alloys
+> Architected
+> materials
+> Ceramics
+> "Cellulose composite with interwoven fibrous networks and
+> layered reinforcement structure. phi:0.2751 "
+> Ground Truth
+> "An auxetic metallic lattice with re-entrant cell geometry,
+> exhibiting a negative Poisson's ratio. phi:0.4566 "
+> "Wood microstructure featuring layered cell arrangements
+> and uniform fiber distribution. phi:0.4065 "
+> Generated Structure sTarget Label
+> Architected
+> materials
+> Polymers and
+> composites
+> Polymers and
+> composites
+
+Figure 12. Qualitative visualizations of GPT-generated textual descriptions: 3D structure generation was conducted based on GPT-generated textual descriptions across different material categories. The figure presents representative target structures, the corresponding GPT-generated text prompts, and the resulting generated 3D structures. 
+
+ducted on each component of the module to validate the effectiveness of the discriminator and the normalized com-bined reward function. As shown in Table 5, the results demonstrate that incorporating the discriminator slightly in-creases the CD score but improves FID and CLIP, indicating enhanced diversity and semantic fidelity instead of target memorization. Meanwhile, the normalized combined re-ward function balances the contributions of the two reward metrics, avoiding a single factor dominating the optimiza-tion process, thereby improving all metrics. This further demonstrates the effectiveness of these two modules. 
+
+## Acknowledgments 
+
+This work was supported by National Science Foundation of China (52441503, 62302093), Jiangsu Province Nat-ural Science Fund (BK20230833), the CIPS-SMP-Zhipu Large Model Fund, the Fundamental Research Funds for the Central Universities (2242025K30024), the Open Research Fund of the State Key Laboratory of Multimodal Artificial Intelligence Systems (E5SP060116) and the Big Data Com-puting Center of Southeast University. 
+
+## References 
+
+[1] Titas Anciukeviˇ cius, Zexiang Xu, Matthew Fisher, Paul Hen-derson, Hakan Bilen, Niloy J Mitra, and Paul Guerrero. Ren-derdiffusion: Image diffusion for 3d reconstruction, inpaint-ing and generation. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition , pages 12608–12618, 2023. 3 [2] Jan-Hendrik Bastek and Dennis M Kochmann. Inverse de-sign of nonlinear mechanical metamaterials via video de-noising diffusion models. Nature Machine Intelligence , 5 (12):1466–1475, 2023. 2 [3] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-biah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakan-tan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Lan-guage models are few-shot learners. Advances in Neural In-formation Processing Systems , 33:1877–1901, 2020. 2 [4] Markus J Buehler. Generating 3d architectured nature-inspired materials and granular media using diffusion models based on language cues. Oxford Open Materials Science , 2 (1):itac010, 2022. 2 [5] Lianggangxu Chen, Xuejiao Wang, Jiale Lu, Shaohui Lin, Changbo Wang, and Gaoqi He. Clip-driven open-vocabulary 3d scene graph generation via cross-modality contrastive learning. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 27863– 27873, 2024. 5 [6] Shuai Chen, Zachary H Aitken, Subrahmanyam Pattamatta, Zhaoxuan Wu, Zhi Gen Yu, David J Srolovitz, Peter K Liaw, and Yong-Wei Zhang. Simultaneously enhancing the ulti-mate strength and ductility of high-entropy alloys via short-range ordering. Nature Communications , 12(1):4953, 2021. 1[7] Ting Chen, Ruixiang Zhang, and Geoffrey Hinton. Analog bits: Generating discrete data using diffusion models with self-conditioning. arXiv preprint arXiv:2208.04202 , 2022. 3 [8] Zhaoxi Chen, Jiaxiang Tang, Yuhao Dong, Ziang Cao, Fangzhou Hong, Yushi Lan, Tengfei Wang, Haozhe Xie, Tong Wu, Shunsuke Saito, et al. 3dtopia-xl: Scaling high-quality 3d asset generation via primitive diffusion. In Pro-ceedings of the Computer Vision and Pattern Recognition Conference , pages 26576–26586, 2025. 3 [9] Kamal Choudhary, Brian DeCost, Chi Chen, Anubhav Jain, Francesca Tavazza, Ryan Cohn, Cheol Woo Park, Alok Choudhary, Ankit Agrawal, Simon JL Billinge, et al. Recent advances and applications of deep learning methods in ma-terials science. npj Computational Materials , 8(1):59, 2022. 2[10] Kishalay Das, Subhojyoti Khastagir, Pawan Goyal, Seung-Cheol Lee, Satadeep Bhattacharjee, and Niloy Ganguly. Pe-riodic materials generation using text-guided joint diffusion model. arXiv preprint arXiv:2503.00522 , 2025. 3 [11] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. Bert: Pre-training of deep bidirectional trans-formers for language understanding. In Proceedings of the Conference of the North American Chapter of the Associa-tion for Computational Linguistics: Human Language Tech-nologies , pages 4171–4186, 2019. 5, 10 [12] Simon Divilov, Hagen Eckert, David Hicks, Corey Oses, Cormac Toher, Rico Friedrich, Marco Esters, Michael J Mehl, Adam C Zettel, Yoav Lederer, et al. Disordered enthalpy–entropy descriptor for high-entropy ceramics dis-covery. Nature , 625(7993):66–73, 2024. 1 [13] Zongliang Du, Xiao-Yi Zhou, Renato Picelli, and H Alicia Kim. Connecting microstructures for multiscale topology optimization with connectivity index constraints. Journal of Mechanical Design , 140(11):111417, 2018. 2 [14] Andreas Engelhardt, Mark Boss, Vikram Voleti, Chun-Han Yao, Hendrik Lensch, and Varun Jampani. Svim3d: Stable video material diffusion for single image 3d generation. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 28428–28439, 2025. 3 [15] Jie Gao, Mi Xiao, Yan Zhang, and Liang Gao. A comprehen-sive review of isogeometric topology optimization: methods, applications and prospects. Chinese Journal of Mechanical Engineering , 33:1–14, 2020. 2 [16] Ruiqi Gao, Aleksander Holynski, Philipp Henzler, Arthur Brussee, Ricardo Martin-Brualla, Pratul Srinivasan, Jonathan T Barron, and Ben Poole. Cat3d: Create anything in 3d with multi-view diffusion models. arXiv preprint arXiv:2405.10314 , 2024. 3 [17] Zhenyang Gao, Pengyuan Ren, Yifeng Dong, Gengchen Zheng, Min-Son Pham, Xiao Shang, Shaojia Wang, Shuo Yang, Zijue Tang, Yongbing Li, et al. Polymer-inspired me-chanical metamaterials. arXiv preprint arXiv:2512.16732 ,2025. 1 [18] Zhenyang Gao, Gengchen Zheng, Pengyuan Ren, Hongsong Wang, Kun Zhou, Minh-Son Pham, Yi Wu, Yu Zou, Chu Lun Alex Leung, Yuanyuan Tian, et al. Generative meta-materials based on large language models. arXiv preprint arXiv:2601.17997 , 2026. 1, 2 [19] Eric Garner, Helena MA Kolken, Charlie CL Wang, Amir A Zadpoor, and Jun Wu. Compatibility in microstructural op-timization for additive manufacturing. Additive Manufactur-ing , 26:65–75, 2019. 2 [20] Jiacheng Han, Xiaoya Zhai, Lili Wang, Di Zhang, Junhao Ding, Winston Wai Shing Ma, Xu Song, Wei-Hsin Liao, Lig-ang Liu, Jun Wu, et al. Inverse-designed 3d sequential meta-materials achieving extreme stiffness. Materials & Design ,247:113350, 2024. 2 [21] Zebin He, Mingxin Yang, Shuhui Yang, Yixuan Tang, Tao Wang, Kaihao Zhang, Guanying Chen, Yuhong Liu, Jie Jiang, Chunchao Guo, et al. Materialmvp: Illumination-invariant material generation via multi-view pbr diffusion. 
+
+arXiv preprint arXiv:2503.10289 , 2025. 3 [22] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffu-sion probabilistic models. Advances in Neural Information Processing Systems , 33:6840–6851, 2020. 3 [23] Yu-Chuan Hsu, Zhenze Yang, and Markus J Buehler. Gener-ative design, manufacturing, and molecular modeling of 3d architected materials based on natural language input. APL Materials , 10(4), 2022. 2 [24] Xin Huang, Tengfei Wang, Ziwei Liu, and Qing Wang. Ma-terial anything: Generating materials for any 3d object via diffusion. In Proceedings of the Computer Vision and Pat-tern Recognition Conference , pages 26556–26565, 2025. 3 [25] Pengcheng Jiao and Amir H Alavi. Artificial intelligence-enabled smart mechanical metamaterials: advent and fu-ture trends. International Materials Reviews , 66(6):365–393, 2021. 2 [26] Hunter T Kollmann, Diab W Abueidda, Seid Koric, Erman Guleryuz, and Nahil A Sobh. Deep learning for topology optimization of 2d metamaterials. Materials & Design , 196: 109098, 2020. 2 [27] Siddhant Kumar, Stephanie Tan, Li Zheng, and Dennis M Kochmann. Inverse-designed spinodoid metamaterials. npj Computational Materials , 6(1):73, 2020. 2 [28] Doksoo Lee, Wei Chen, Liwei Wang, Yu-Chin Chan, and Wei Chen. Data-driven design for metamaterials and mul-tiscale systems: a review. Advanced Materials , 36(8): 2305254, 2024. 2 [29] Junhyeong Lee, Donggeun Park, Mingyu Lee, Hugon Lee, Kundo Park, Ikjin Lee, and Seunghwa Ryu. Machine learning-based inverse design methods considering data characteristics and design space size in materials design and manufacturing: a review. Materials horizons , 10(12):5436– 5456, 2023. 2 [30] Ruofan Liang, Zan Gojcic, Huan Ling, Jacob Munkberg, Jon Hasselgren, Chih-Hao Lin, Jun Gao, Alexander Keller, Nandita Vijaykumar, Sanja Fidler, et al. Diffusion renderer: Neural inverse and forward rendering with video diffusion models. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 26069–26080, 2025. 3 [31] Kiara L McMillan, Do˘ gacan S ¨ Ozt¨ urk, and Pinar Acar. In-verse design of 2d-mechanical metamaterials with spinodal topologies under uncertainty. In AIAA SCITECH 2022 Fo-rum , page 0811, 2022. 1 [32] Mehrdad Mohsenizadeh, Federico Gasbarri, Michael Munther, Ali Beheshti, and Keivan Davami. Additively-manufactured lightweight metamaterials for energy absorp-tion. Materials & Design , 139:521–530, 2018. 1 [33] Maria Parelli, Alexandros Delitzas, Nikolas Hars, Geor-gios Vlassis, Sotirios Anagnostidis, Gregor Bachmann, and Thomas Hofmann. Clip-guided vision-language pre-training for question answering in 3d scenes. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 5607–5612, 2023. 5 [34] Ethan Perez, Florian Strub, Harm de Vries, Vincent Du-moulin, and Aaron Courville. Film: Visual reasoning with a general conditioning layer. In Proceedings of the AAAI Con-ference on Artificial Intelligence , 2018. 2, 4 [35] Lingteng Qiu, Guanying Chen, Xiaodong Gu, Qi Zuo, Mu-tian Xu, Yushuang Wu, Weihao Yuan, Zilong Dong, Liefeng Bo, and Xiaoguang Han. Richdreamer: A generalizable normal-depth diffusion model for detail richness in text-to-3d. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 9914–9925, 2024. 3 [36] Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever, et al. Improving language understanding by gen-erative pre-training. 2018. 2 [37] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-ing transferable visual models from natural language super-vision. In International Conference on Machine Learning ,pages 8748–8763. PmLR, 2021. 5 [38] Minsik Seo and Seungjae Min. Dl-msto+: A deep learning-based multi-scale topology optimization framework via pos-itive definiteness ensured material representation network. 
+
+Computer Methods in Applied Mechanics and Engineering ,415:116276, 2023. 2 [39] Wei Sha, Mi Xiao, Yihui Wang, Mingzhe Huang, Qishi Li, and Liang Gao. Topology optimization methods for thermal metamaterials: A review. International Journal of Heat and Mass Transfer , 227:125588, 2024. 1 [40] Prafull Sharma, Varun Jampani, Yuanzhen Li, Xuhui Jia, Dmitry Lagun, Fredo Durand, Bill Freeman, and Mark Matthews. Alchemist: Parametric control of material proper-ties with diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pages 24130–24141, 2024. 3 [41] Ole Sigmund. Systematic design of metamaterials by topol-ogy optimization. In IUTAM Symposium on Modelling Nanomaterials and Nanosystems: Proceedings of the IU-TAM Symposium held in Aalborg, Denmark, 19–22 May 2008 , pages 151–159. Springer, 2009. 2 [42] JunHo Song, JaeHoon Lee, Namjung Kim, and Kyoungmin Min. Artificial intelligence in the design of innovative meta-materials: A comprehensive review. International Journal of Precision Engineering and Manufacturing , 25(1):225–244, 2024. 2 [43] P Suhas, Jaimon Dennis Quadros, Yakub Iqbal Mogul, Ma Mohin, Abdul Aabid, Muneer Baig, and Omar Shabbir Ahmed. A review of mechanical metamaterials and addi-tively manufacturing techniques for biomedical applications. 
+
+Materials Advances , 2025. 1 [44] Du Tran, Heng Wang, Lorenzo Torresani, Jamie Ray, Yann LeCun, and Manohar Paluri. A closer look at spatiotemporal convolutions for action recognition. In Proceedings of the IEEE conference on Computer Vision and Pattern Recogni-tion , pages 6450–6459, 2018. 5, 10 [45] Arash Vahdat, Francis Williams, Zan Gojcic, Or Litany, Sanja Fidler, Karsten Kreis, et al. Lion: Latent point dif-fusion models for 3d shape generation. Advances in Neural Information Processing Systems , 35:10021–10039, 2022. 2 [46] Giuseppe Vecchio, Renato Sortino, Simone Palazzo, and Concetto Spampinato. Matfuse: controllable material gen-eration with diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 4429–4438, 2024. 3 [47] Chen Wang, Hao-Yang Peng, Ying-Tian Liu, Jiatao Gu, and Shi-Min Hu. Diffusion models for 3d generation: A survey. 
+
+Computational Visual Media , 11(1):1–28, 2025. 3 [48] Haotian Wang, Chen Pan, Haiyuan Zhao, Tingyu Wang, and Yafeng Han. Design of a metamaterial film with excellent conformability and adhesion for bandage substrates. Jour-nal of the mechanical behavior of biomedical materials , 124: 104799, 2021. 2 [49] Jia Wang, Yingxue Wang, and Yanan Chen. Inverse design of materials by machine learning. Materials , 15(5):1811, 2022. 1[50] Jiacheng Wei, Hao Wang, Jiashi Feng, Guosheng Lin, and Kim-Hui Yap. Taps3d: Text-guided 3d textured shape generation from pseudo supervision. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 16805–16815, 2023. 2 [51] Jun Wu, Ole Sigmund, and Jeroen P Groen. Topology opti-mization of multi-scale structures: a review. Structural and Multidisciplinary Optimization , 63(3):1455–1480, 2021. 1 [52] Yuliang Xia, Yang He, Fenghua Zhang, Yanju Liu, and Jin-song Leng. A review of shape memory polymers and com-posites: mechanisms, materials, and applications. Advanced Materials , 33(6):2000713, 2021. 1 [53] Yanyan Yang, Lili Wang, Xiaoya Zhai, Kai Chen, Wenming Wu, Yunkai Zhao, Ligang Liu, and Xiao-Ming Fu. Guided diffusion for fast inverse design of density-based mechanical metamaterials. arXiv preprint arXiv:2401.13570 , 2024. 2, 5, 6, 10 [54] Zhenze Yang and Markus J Buehler. Words to matter: De novo architected materials design using transformer neural networks. Frontiers in Materials , 8:740754, 2021. 2 [55] Ee Teng Zhang, Hu Liu, and Bing Feng Ng. Mechanics of re-entrant anti-trichiral honeycombs with nature-inspired gradient distributions. International Journal of Mechanical Sciences , 259:108597, 2023. 2 [56] Yuhong Zhao, Hui Xing, Lijun Zhang, Houbing Huang, Dongke Sun, Xianglei Dong, Yongxing Shen, and Jincheng Wang. Development of phase-field modeling in materials science in china: a review. Acta Metallurgica Sinica (En-glish Letters) , 36(11):1749–1775, 2023. 1 [57] Zibo Zhao, Wen Liu, Xin Chen, Xianfang Zeng, Rui Wang, Pei Cheng, Bin Fu, Tao Chen, Gang Yu, and Shenghua Gao. Michelangelo: Conditional 3d shape generation based on shape-image-text aligned latent representation. Advances in neural information processing systems , 36:73969–73982, 2023. 2 [58] Li Zheng, Siddhant Kumar, and Dennis M Kochmann. Dif-fumeta: Algebraic language models for inverse design of metamaterials via diffusion transformers. arXiv preprint arXiv:2507.15753 , 2025. 3 [59] Xiaoyang Zheng, Xiaofeng Guo, and Ikumu Watanabe. Amathematically defined 3d auxetic metamaterial with tunable mechanical and conduction properties. Materials & Design ,198:109313, 2021. 2 [60] Xiaoyang Zheng, Ta-Te Chen, Xiaoyu Jiang, Masanobu Naito, and Ikumu Watanabe. Deep-learning-based inverse design of three-dimensional architected cellular materials with the target porosity and stiffness using voxelized voronoi lattices. Advanced Materials , 24(1):2157682, 2023. 1, 2 [61] Xiaoyang Zheng, Ikumu Watanabe, Jamie Paik, Jingjing Li, Xiaofeng Guo, and Masanobu Naito. Text-to-microstructure generation using generative deep learning. Small , 20(37): 2402685, 2024. 2, 5, 6, 12 [62] Jiaxin Zhou, Ikumu Watanabe, and Takayuki Yamada. Com-putational morphology design of duplex structure consider-ing interface debonding. Composite Structures , 302:116200, 2022. 2

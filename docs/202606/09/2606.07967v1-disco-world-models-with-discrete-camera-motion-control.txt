@@ -1,0 +1,511 @@
+Title: DisCo: World Models with Discrete Camera Motion Control
+
+URL Source: https://arxiv.org/pdf/2606.07967v1
+
+Published Time: Tue, 09 Jun 2026 00:34:38 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# DisCo : World Models with Discrete Camera Motion Control 
+
+## Hongrui Huang 1, Junke Wang 1, Quanhao Li 1, Yu-Gang Jiang 1, Zuxuan Wu 1
+
+> 1
+
+Fudan University 
+
+## Abstract 
+
+Controllable video world models target interactive world exploration, where models must faithfully execute explicit action commands while preserving visual quality and temporal coherence. However, most existing approaches rely on continuous camera trajectories as action conditions, which often lead to unreliable action following, especially under complex motion sequences. In this work, we identify action representation entanglement as a key bottleneck in controllable video generation, and show that continuous camera representations lead to high feature similarity across distinct motion patterns, degrading action controllability. Based on this insight, we propose DisCo, a controllable video world model that conditions generation on a compact set of discrete action primitives to improve action separability. We further introduce DisCoBench, a comprehensive benchmark for evaluating the ability of models in short-term, long-horizon, and highly dynamic exploration scenarios. Extensive experiments demonstrate that DisCo achieves significantly more reliable action following while preserving visual quality. 
+
+## 1 Introduction 
+
+World models learn the dynamics of an environment to forecast future states from past observations and actions [ 12 , 13 , 22 ]. They support model-based decision making by enabling planning and control through imagined rollouts, where an agent evaluates candidate action sequences before execution to improve data efficiency and safety [ 4 , 19 ]. Recently, advances in video diffusion models have made pixel-space world modeling increasingly practical [ 5, 15 , 24 , 26 , 33 , 40 , 44 , 47 , 55 ], with high-fidelity video generators serving as the backbone for high-fidelity simulation. Despite substantial progress in visual quality and temporal consistency, reliable action controllability remains a critical bottleneck in video world models [ 9, 15 , 25 , 26 , 33 , 35 , 37 , 57 ]. Most existing approaches [ 9, 26 , 35 , 37 ]rely on continuous camera trajectories as action conditions. While effective for coarse motion control, this formulation may collapse distinct action patterns into highly similar conditioning features, thus producing ambiguous guidance and degraded adherence when actions change frequently, as illustrated in Fig.1. In this work, we posit that carefully designed discrete action representations provide a stronger foundation for controllable world modeling, as they naturally induce higher separability in the conditional feature space. By partitioning control signals into a compact set of geometrically meaningful action primitives, such representations could offer cleaner supervision for learning complex action compositions and action-conditioned dynamics. Building on this principle, we propose DisCo, a discrete action-conditioned video 1   
+
+> arXiv:2606.07967v1 [cs.CV] 6 Jun 2026 1
+> 2
+> 3
+> Ours Hunyuan -
+> GameCraft
+> Action2
+> Action3
+> Ours - Feature Similarity
+> Hunyuan - Feature Similarity
+> 3
+> 2
+> 1
+> A character in a red tunic and dark pants rides a horse along a dirt path…
+> (a) (b) Figure 1 (a) Comparison between the continuous-action-based Hunyuan-GameCraft and our discrete-action-based approach. Our method successfully executes complex action commands, while Hunyuan-GameCraft fails under the same settings. (b) Heatmaps of pairwise action feature similarity, where darker colors correspond to higher similarity.
+
+diffusion model for highly controllable world modeling. To support robust controllability under dynamic and complex scenarios, we first curate a camera-controlled video dataset that covers a diverse range of dynamic scenes and camera motion patterns. Starting from a pretrained video diffusion model, i.e. , Wan 2.2 [ 40 ], DisCo is fine-tuned for action-conditioned generation with structured motion representations derived from discretized camera controls. To enable efficient long-horizon video generation, we distill DisCo into a four-steps causal model, incorporating windowed attention and attention sinks with rolling KV caches to preserve temporal coherence and long-term consistency. To comprehensively evaluate the proposed approach, we further introduce DisCoBench, a carefully curated benchmark that assesses controllable video generation across various scenarios. Unlike existing evaluations that primarily focus on visual and temporal quality, DisCoBench systematically assesses the ability of models to (i) accurately follow complex and compositional action commands in various scenes, (ii) maintain temporal coherence and visual consistency over long horizons, and (iii) handle scenarios involving highly dynamic elements. The results on DisCoBench show that DisCo exhibits superior controllability on challenging camera conditions, achieving an action following score of 0.633 compared to 0.588 for Matrix-Game2. 
+
+## 2 Related Work 
+
+2.1 Camera Controllable Video Generation 
+
+Camera control plays a central role in interactive video generation as it directly determines the viewpoint dynamics. Existing methods [ 14 , 40 , 44 ] typically encode explicit camera intrinsics and extrinsics as control signals, which are then injected into diffusion models via ControlNet-style [ 54 ] adapters. Building on this paradigm, Gen3C [ 34 ] and AC3D [ 1 ] further incorporate 3D geometric priors to improve scene consistency, while ReCamMaster [ 2] and ReCapture [ 53 ] focus on novel view synthesis by conditioning on relative camera pose trajectories. Instead of using adapters, MagicWorld [ 25 ] leverages intermediate 3D representations, projecting reconstructed 3D structure to the target view and completes unseen regions via generative inpainting. Despite their impressive visual quality, these approaches have two key limitations: (i) their controllability normally degrades when faced with complicated actions. (ii) raw numerical camera parameters are cumbersome and unintuitive for human interaction, limiting practical usability in interactive settings. 22.2 Auto-regressive Video Generation 
+
+Autoregressive generation [ 23 , 36 , 42 ] has emerged as a powerful paradigm for video generation, typically utilizing next-token prediction to capture temporal dynamics [ 41 , 43 , 45 ]. Some works have explored hybrid AR-diffusion architectures [ 6 , 10 , 11 , 20 , 29 ], integrating efficiency of AR with high quality of diffusion. Most recently, Self-forcing [ 17 ], and its following works [ 8, 31 , 32 ] address the train-test gap by simulating inference conditions during training, and distill slow, multi-step teacher model into a fast, few-step AR student. Inspired by this, we develop DisCo and enhance it on controllability and consistency. 
+
+2.3 Video World Models 
+
+Video world models [ 9 , 15 , 26 , 27 , 33 , 35 , 48 , 52 , 55 ] have recently made significant strides by leveraging large-scale transformer architectures. Conditioning generation on actions or camera trajectories, these systems learn to synthesize high-fidelity, temporally coherent environments for interactive exploration. However, their controllability often degrades under complex and compositional action sequences, and the underlying causes of this degradation remain largely unexplored. Both discrete-action-based models [ 15 , 33 ] and continuous-action-based models [ 9, 26 , 35 , 37 ] primarily treat action conditioning as a system-level design choice, with limited analysis of its representation-level implications. 
+
+## 3 Method 
+
+3.1 Overview 
+
+Our goal is to build a video world model that can reliably follow complex camera motion commands. Formally, given an initial frame 𝑥 0, a text prompt 𝜏 , and an action sequence 𝑎 𝑠𝑒 𝑞 ,we aim to generate a video whose dynamics align with both semantic contents and specified actions. To this end, we adopt a pretrained image-to-video diffusion model [ 40 ] as the backbone, which synthesizes videos conditioned on 𝑥 0 and 𝜏 .The overall pipeline consists of three stages: (i) an Action Discretization stage that maps continuous camera trajectories T to discrete action sequences 𝑎 𝑠𝑒 𝑞 , (ii) an Action-Controllable Teacher Model that generates videos conditioned on 𝑎 𝑠𝑒 𝑞 , and (iii) an Action-Guided Distillation procedure that distills the teacher model into an efficient autoregressive student for long-horizon generation. 
+
+3.2 Action Discretization 
+
+Given a camera trajectory T = {T𝑡 }𝑇 𝑡 =0, where each T𝑡 is a 4 × 4 camera-to-world pose for the 𝑡 -th frame, we map it into a discrete sequence 𝑎 𝑠𝑒 𝑞 with the following steps. 
+
+Temporal partitioning. We first divide T into a sequence of short temporal segments to capture locally coherent camera motions. The initial pose T0 is treated as a reference pose, and the remaining poses are partitioned into consecutive segments of fixed length 𝑘 = 4. As a result, the trajectory is divided into 𝑁 
+
+segments, with each summarizing camera motion over a short temporal interval and serving as the basic unit for action extraction. 
+
+Relative pose estimation. 
+
+Let T𝑘 −1 and T𝑘 denote the terminal poses of two adjacent segments, we then calculate their relative transformation to represent the camera action over the segment: 
+
+ΔT = T𝑘 T−1 
+
+> 𝑘 −1
+
+=
+
+ΔR Δt0⊤ 1
+
+
+
+(1) where ΔT ∈ 𝑆𝐸 (3) is a 4 × 4 homogeneous transformation matrix, ΔR ∈ 𝑆𝑂 (3) is the rotation matrix and 
+
+Δt = 𝑑𝑥, 𝑑𝑦, 𝑑𝑧 ⊤ is the translation vector. 3Zvid 
+
+> FFN
+> Cross -Attention
+> Projector
+> Self -Attention
+
+DiT Block x N 
+
+Action Module x N  Trainable frozen 
+
+> Translation Table
+> backward
+
+…
+
+> Translation
+> Embedding
+> Rotation
+> Embedding
+
+1
+
+2
+
+> Rotation Table
+> Turn left
+
+…
+
+2Turn right 
+
+> forward
+
+1
+
+## 𝜀 
+
+2
+
+> Action
+> trans
+> rot
+> text
+
+Zcam Figure 2 Architecture of the action-controllable teacher model. Each discretized action is decomposed into translation and rotation indices, which retrieve embeddings from separate lookup tables. The embeddings are projected and concatenated to form the action feature, and then fused with video latents via element-wise addition. 
+
+Quantization and primitive mapping. 
+
+We follow DeepVerse [ 7] to decompose ΔT into two decoupled motion primitives through a threshold-based quantization process. Specifically, the translation vector Δt = 𝑑𝑥, 𝑑𝑦, 𝑑𝑧 ⊤ and rotation matrix ΔR are separately mapped to a set of symbolic labels in the following manner: 
+
+• Translation ( 𝑁 𝑡 = 9 types): we compute the horizontal displacement 𝑑 = √𝑑𝑥 2 + 𝑑𝑧 2. If 𝑑 is below a predefined threshold 𝜏 𝑡 , the motion is assigned a Stationary label 𝑠 0. Otherwise, the translation is categorized into one of eight directional bins based on the quantized polar angle 𝜙 = arctan2 (𝑑𝑥, 𝑑𝑧 ),representing: Forward (F), Backward ( B), Left (L), Right (R), and their diagonal counterparts ( fL, fR, bL, bR ). 
+
+• Rotation ( 𝑁 𝑟 = 3 types): we extract the yaw angle 𝜓 from ΔR. The rotation is mapped to a discrete state 𝑟 ∈ { N, L, R }, where N represents a Neutral state ( |𝜓 | ≤ 𝜏 𝑟 ), L (Left) and R (Right) represent counter-clockwise and clockwise rotations exceeding the threshold 𝜏 𝑟 , respectively. Combining these primitives, each camera action is represented as an action pair 𝑎 𝑘 =  𝑖 𝑘 , 𝑗 𝑘 
+
+, defined in a discrete action space 𝒜 of size 9 × 3 = 27 , where 𝑖 𝑘 ∈ { 0, . . . , 8} and 𝑗 𝑘 ∈ { 0, . . . , 2} index the corresponding translation category (e.g., S, F, fL) and rotation category (e.g., N, L, R) respectively. In this way, we convert the continuous camera trajectory T into a discrete action sequence 𝑎 𝑠𝑒 𝑞 = {𝑎 1 , 𝑎 2 , . . . , 𝑎 𝑁 }.
+
+3.3 Action-Controllable Teacher Model 
+
+To supply our image-to-video backbone [ 40 ] with action controllability, we introduce an action module that maps 𝑎 seq into a high-dimensional latent space and then fuse it with video latents, as illustrated in Fig. 2. Specifically, we construct two learnable embedding tables, E𝑡𝑟𝑎𝑛𝑠 ∈ ℝ9×𝑑 and E𝑟𝑜𝑡 ∈ ℝ3×𝑑 to obtain the action embedding 𝑒 𝑘 ∈ ℝ𝑑 based on 𝑎 𝑘 =  𝑖 𝑘 , 𝑗 𝑘 
+
+:
+
+e𝑘 =
+
+(
+
+e𝑠𝑡𝑎𝑟𝑡 , 𝑘 = 0
+
+Proj  E𝑡𝑟𝑎𝑛𝑠 [𝑖 𝑘 ] + E𝑟𝑜𝑡 
+
+𝑗 𝑘 
+
+  , 𝑘 > 0 (2) where e𝑠𝑡𝑎𝑟𝑡 ∈ ℝ𝑑 is a learnable parameter representing the initial state. E[·] denotes a lookup operation that retrieves the 𝑖 -th or 𝑗 -th row from the respective embedding tables, indexed by the action categories. 4Proj (·) is a linear projection layer, initialized as zeros to stabilize training by gradually introducing action-conditioned signals. The resulting action embedding can be represented as 𝑒 𝑎𝑐𝑡 = {𝑒 0 , 𝑒 1 , . . . , 𝑒 𝑁 }.The action embedding 𝑒 𝑎𝑐𝑡 is integrated into the video features f𝑣𝑖𝑑 ∈ ℝ𝑏 ×( 𝑡 ×ℎ×𝑤 )× 𝑑 through a structured expansion and fusion process. Specifically, the sequence of action embeddings {e𝑘 }𝑡 −1 
+
+> 𝑘 =0
+
+is stacked along the temporal axis to form a temporal action representation f𝑡𝑒𝑚𝑝 𝑎𝑐𝑡 ∈ ℝ𝑏 ×𝑡 ×𝑑 . To match the resolution of the video features, each temporal embedding is replicated ℎ × 𝑤 times and flattened to the token dimension, resulting in f𝑎𝑐𝑡 ∈ ℝ𝑏 ×( 𝑡 ×ℎ×𝑤 )× 𝑑 . This expanded action feature is combined with the video features via element-wise addition to get the fused feature: 
+
+f 𝑓 𝑢𝑠𝑒 = f𝑣𝑖𝑑 + f𝑎𝑐𝑡 . (3) Following ReCamMaster [ 2 ], f 𝑓 𝑢𝑠𝑒 are further processed by a self-attention layer together with an additional linear projection layer, enabling the action-conditioned signals to modulate the video representation more effectively. The model is then optimized via the following objective: 
+
+ℒ = 𝔼 𝑧, 𝜖 ,𝑡, f𝑎𝑐𝑡 ,𝜏 ,𝑥 0
+
+∥𝜖 − 𝜖 𝜃 (𝑧 𝑡 , 𝑡, f𝑎𝑐𝑡 , 𝜏 , 𝑥 0) ∥ 2 (4) where 𝑡 denotes the diffusion timestep, 𝜏 is the text prompt, 𝑥 0 is the conditional frame, 𝜖 is the added noise, and 𝜖 𝜃 is the denoising network [40]. 
+
+3.4 Action-Guided Distillation 
+
+To enable efficient long video generation, we distill the teacher model 𝐺 𝑡𝑒 𝑎𝑐 ℎ𝑒𝑟 into a four-step autoregressive student 𝐺 𝑠𝑡𝑢𝑑𝑒𝑛𝑡 using self-forcing strategy [ 17 ], which consists of two stages: ode initialization and DMD [ 49 ]-based training. 
+
+Attention pattern. During both training and inference, we adopt a truncated causal attention mechanism consisting of a fixed-size local window and a set of sink tokens[ 35 , 39 , 46 ]. Concretely, each token attends to (i) all preceding sink tokens and (ii) a sliding window of recent tokens. We denote the number of sink tokens as 𝑆 and the local window size as 𝑊 .
+
+Ode initialization. We first construct a dataset 𝒟 comprising ODE trajectories {z𝑖 𝑡 }𝑁 𝑖 =1 generated by 𝐺 𝑡𝑒 𝑎𝑐 ℎ𝑒𝑟 ,where the timesteps 𝑡 are sampled from a 4-step subset of [0, 𝑇 ].Following the initialization protocol from CausVid [ 50 ], the input of 𝑁 noisy latents is partitioned into 𝐿 
+
+non-overlapping chunks {z𝑖 𝑡 𝑖 }𝐿 𝑖 =1 with independent timesteps, and we adopt a causal attention mask 𝑀 that permits the attention pattern we use. Specifically, the mask 𝑀 ∈ { 0, 1}𝑁 ×𝑁 is defined as: 
+
+𝑀 [𝑚, 𝑛 ] =
+
+
+
+1, 𝑛 < 𝑆 ∧ 𝑛 ≤ 𝑚, 
+
+1, 𝑆 ≤ 𝑛 ≤ 𝑚 ∧ 𝑛 ≥ 𝑚 − 𝑊 , 
+
+0, otherwise .
+
+(5) For each chunk 𝑖 , the attention mechanism is constrained to 𝑀 . The final optimizing objective can be formulated as: 
+
+ℒode = 1
+
+𝐿 
+
+> 𝐿
+
+Õ
+
+> 𝑖 =1
+
+𝔼 z,𝑡 𝑖 𝐺 𝑠𝑡𝑢𝑑𝑒𝑛𝑡 
+
+
+
+z𝑖 𝑡 𝑖 , 𝑐 𝑖 , 𝑡 𝑖 , 𝑀 
+
+
+
+− z𝑖 
+
+> 0
+> 2
+
+(6) where 𝑐 𝑖 includes the text 𝜏 and action conditions 𝑎 𝑖 .5DMD-based self-forcing training. Subsequently, we perform self-forcing style distillation leveraging distribution matching distillation (DMD) [ 49 ]. Unlike traditional teacher-forcing, 𝐺 𝑠𝑡𝑢𝑑𝑒𝑛𝑡 autoregressively produces video chunks {z𝑖 
+
+> 0
+
+}𝐿 𝑖 =1 conditioned on its own previous outputs, mitigating the training-inference gap. To balance long-range stability and computational efficiency, we implement a rolling KV-cache mechanism with an anchored attention sink. Specifically, for each chunk 𝑖 , the generative process is conditioned on the corresponding action signals 𝑎 𝑖 , text condition 𝜏 , and contexts 𝒞 𝑖 :
+
+𝒞 𝑖 = {zj0 | 0 ≤ 𝑗 < 𝑆 or max (0, 𝑖 − 𝑊 ) ≤ 𝑗 < 𝑖 } ∪ { zit} (7) The generator is optimized by minimizing the approximate KL-divergence between the synthesized distribu-tion 𝑝 𝜃 and the real data distribution 𝑝 real . An auxiliary distribution 𝑝 fake is utilized to estimate 𝑝 𝜃 , and the gradient for the generator parameters 𝜃 can be formulated as: 
+
+∇𝜃 ℒDMD = −𝔼 𝑡 
+
+ ∇𝜃 KL  𝑝 fake ,𝑡 ∥𝑝 real ,𝑡 
+
+ (8) 
+
+## 4 Experiments 
+
+Training data. To enable our model to handle scenarios with highly dynamic contents, we select around 10k high-quality clips from OmniWorld [56], and re-annotate their camera poses with VIPE [16]. However, We observe a long-tail distribution in action types within this subset, where forward-dominant sequences account for the majority of samples. To relieve this imbalance and improve generalization, we further augment it with synthetic data from a UE simulator [ 51 ]. The final dataset comprises approximately 20k videos of 81 frames, featuring a rich variety of camera motions. 
+
+Implementation Details. We build DisCo based on the Wan2.2-5B image-to-video generation model [ 40 ]. For action discretization, the translation threshold 𝜏 𝑡 is 0.1 and the rotation threshold 𝜏 𝑟 is 1. For the ode initialization, we use 𝐺 𝑡𝑒 𝑎𝑐 ℎ𝑒𝑟 to generate 4k ode pairs with a balanced action distribution as our training data. In the self-forcing distillation stage, 𝐺 𝑠𝑡𝑢𝑑𝑒𝑛𝑡 generates videos chunk-wisely, it takes the first conditional image as the first chunk and splits the remaining video with the chunk size =4. In both ode initialization and self-forcing stage, the sink size is 1 and the local attention window size is 8. More details are in Appendix A 
+
+DisCoBench. To comprehensively evaluate our model, we introduce DisCoBench, which consists of 3 subsets to assess generation capabilities from different perspectives: 
+
+• DisCo-ActionBench : This subset contains 300 initial images from diverse scenes paired with predefined complex action sequences. Each sequence contains at least two kinds of actions from our unified action set 𝒜 . This subset evaluates the controllability and short video generation ability of the model. More details about DisCo-ActionBench can be found in Appendix.B. 
+
+• DisCo-DynamicBench : This subset includes 200 dynamic third-person exploration videos to specifically measure the ability of models to generate videos with highly dynamic elements. 
+
+• DisCo-LongBench : This subset is an extension of the DisCo-ActionBench with prolonged action sequences to evaluate long-horizon stability. Specifically, we extend each action for 3 times, supporting evaluation for long videos with at least 241 frames generation 
+
+4.1 Evaluation on DisCo-Bench 
+
+Evaluation on DisCo-ActionBench. In this section, we mainly evaluate the action-following performance and the visual-temporal quality of the generated videos on DisCo-ActionBench. For the temporal coherence and visual fidelity evaluation, we adopt the widely used VBench++ protocol [ 18 ], including Subject Consistency, Background Consistency, Motion Smoothness, Aesthetic Quality, and Imaging Quality. For the evaluation of action following ability, we use a carefully designed metric, i.e. , Action Score. 6Specifically, we utilize VIPE [ 16 ] to obtain the c2w poses from the generated videos, and then transform the resulting camera trajectories into discrete action sequences with the discretization approach described in 3.2. The Action Score is defined as the proportion of actions that exactly match the ground-truth actions across all samples. We compare our model against two categories of baselines: (1) Continuous-actions-based models: CameraC-trl [ 14 ], MotionCtrl [ 44 ], WanX-Cam [ 40 ], and Hunyuan-GameCraft [ 26 ]. The CameraCtrl and MotionCtrl adopts the image-to-video SVD version. WanX-Cam corresponds to the implementation of VideoX-Fun. (2) Discrete action based models: Matrix-Game2[ 15 ]. As shown in Tab.1, our method achieves the highest action score while maintaining superior visual and temporal quality.                                            
+
+> Table 1 Comparison on DisCo-ActionBench. Bold and underlined indicate the best and second-best results respectively. Model Subject Consistency Background Consistency Motion Smoothness Aesthetic Quality Imaging Quality Action Score Continuous CameraCtrl 0.8265 0.9202 0.9604 0.4536 0.5358 0.5731 MotionCtrl 0.8709 0.9294 0.9797 0.4608 0.5618 0.3636 WanX-Cam 0.8139 0.8977 0.9764 0.5070 0.6351 0.5143 GameCraft 0.8559 0.9169 0.9757 0.5074 0.6792 0.2736 Discrete Matrix-Game2 0.8538 0.9333 0.9824 0.5148 0.6474 0.5880 Ours 0.8869 0.9353 0.9842 0.5308 0.6420 0.6332
+
+Evaluation on DisCo-DynamicBench. The ability to generate exploration videos with dynamic elements is crucial for interactive experiences. To evaluate this capability, we construct DisCo-DynamicBench, a benchmark tailored for assessing dynamic exploration video generation. We adopt two metrics for evaluation: Fréchet Video Distance (FVD) [38] and VQA-Score [30]. FVD measures the distributional similarity between generated videos and reference exploration videos, where a lower score indicates closer alignment with the target video distribution. VQA-Score evaluates whether the generated videos correctly follow the textual prompts. For instance, if a prompt requires a character to perform a running action but the generated video only exhibits camera motion with a static character, the resulting VQA-Score will be penalized. We use Qwen2.5-VL-7B [ 3 ] as the underlying vision-language model for VQA scoring. The results are illustrated in Tab. 2. DisCo achieves the best FVD score and competitive VQA-Score performance, demonstrating its effectiveness in generating exploration videos with dynamic elements. More details on the effectiveness of VQA-Score are provided in Appendix B.                 
+
+> Table 2 Comparison on the DisCo-DynamicBench
+> Model FVD VQAScore CameraCtrl 470.22 0.3321 MotionCtrl 481.19 0.4126 WanX-Cam 285.95 0.5637
+> GameCraft 374.06 0.4033 Matrix-Game2 380.28 0.3884 Ours 220.51 0.5448
+
+Evaluation on DisCo-LongBench. To evaluate the long video generation ability of DisCo, we compare it with two controllable long video generation models: Matrix-Game2 [ 15 ] and Hunyuan-GameCraft [ 26 ]. As shown in Tab.3, DisCo outperforms in consistency, motion smoothness and aesthetic quality, while achieving competitive imaging quality. 
+
+Qualitative Comparison. As shown in Fig. 3, MotionCtrl and Hunyuan-GameCraft struggle with both action following and dynamic content generation. CameraCtrl and Matrix-Game2 follow complex action commands 7Table 3 Comparison with relative baselines on the DisCo-LongBench 
+
+Model Subject Consistency Background Consistency Motion Smoothness Aesthetic Quality Imaging Quality GameCraft 0.7615 0.8842 0.9740 0.4758 0.6441 Matrix-Game2 0.7593 0.8969 0.9814 0.4883 0.6474 
+
+Ours 0.8138 0.9103 0.9846 0.4938 0.6372 Ours 
+
+Action1  Action2  Action3 
+
+1
+
+2 3
+
+1
+
+2
+
+3
+
+Action1  Action2  Action3 
+
+Matrix 
+
+Game2 
+
+WanX -Cam 
+
+Hunyuan 
+
+GameCraft 
+
+MotionCtrl 
+
+CameraCtrl 
+
+Action2 
+
+Action2 
+
+Action2 
+
+Action2 
+
+Action3 
+
+Action3 
+
+Action3 
+
+Action3 
+
+> A majestic bird soars above an ancient Greek
+> city, its wings spread wide as it glides
+> effortlessly through the air. The city below
+> bustles with activity, featuring stone buildings
+> with terracotta roofs, a central plaza, and a
+> temple with grand columns ….
+> A character dressed in a long coat with a hood
+> and carrying a shoulder bag walks steadily along
+> railway tracks. Initially, the character is seen
+> beside the tracks in a lush environment dotted
+> with white flowers and dense trees…
+
+Action1  Action2  Action3 
+
+Action1  Action2  Action3 
+
+Action1 
+
+Action1 
+
+Action1 
+
+Action2 
+
+Action2 
+
+Action2 
+
+Action3 
+
+Action3 
+
+Action3 
+
+Action1 
+
+Action1 
+
+Action1 
+
+Action1  Action2  Action3 
+
+Action 1
+
+Action1 
+
+Figure 3 Comparison with baselines on complicated camera actions. The red box means the dynamic element in the generated video. DisCo is the only model with both great controllability and the ability to generate videos with dynamic elements. 
+
+but fails to generate the required dynamic elements. WanX-cam exhibits noticeable visual inconsistencies. Comparatively, our method achieves accurate action following while maintaining stable generation of dynamic elements. More demos are shown in Appendix E. 
+
+4.2 Continuous versus Discrete Actions 
+
+As discussed in Sec.1, limited separability of action features leads to ambiguous guidance and degraded controllability in continuous-action-based models, whereas carefully designed discrete action features alleviate this issue. In this subsection, we empirically validate this by analyzing the similarity of action features and the resulting controllability. For a direct analysis of action features, we focus on adapter-based models that explicitly extract action features before fusion with visual features. Based on this criterion, we select representative continuous-action-based baselines, including CameraCtrl [ 14 ], WanX-Cam [ 40 ], and Hunyuan-Gamecraft [ 26 ] for further comparison. 
+
+Action feature similarity. To assess whether our method produces more discriminative conditioning features, we analyze the cosine similarity of action features across different motion patterns. Specifically, we define the 8similarity score as the average pairwise cosine similarity: 
+
+𝒮 = 1
+
+𝑁 (𝑁 − 1)
+
+Õ
+
+> 𝑖 ≠𝑗
+
+f⊤ 
+
+> 𝑖
+
+f𝑗 
+
+∥f𝑖 ∥2 ∥f𝑗 ∥2
+
+. (9) where f𝑖 denotes the action feature extracted from the action encoders. Each action pattern is sampled from the unified action set 𝒜 mentioned in 3.2. For models conditioned on continuous camera controls, c2w matrices are used as conditioning inputs, of which different transformations correspond to different discretized actions in 𝒜 .CameraCtrl  WanX -Cam   
+
+> Hunyuan-GameCraft Ours
+> Figure 4 Heatmaps of action feature similarity for different adapter-based models. Darker colors indicate higher cosine similarity.
+
+As illustrated in Fig. 4, our method produces action features with more regular and interpretable similarity structures compared to continuous-action-based meth-ods. Specifically, actions sharing the same rotation pattern form coherent clusters, and actions with the same translation pattern also exhibit certain similarity. In contrast, continuous-action-based models produce highly entangled and less interpretable feature represen-tations, resulting in uniformly higher similarity scores, as quantitatively reflected in Tab. 4. 
+
+Controllability evaluation. As illustrated in Tab.4, Our Method achieves the best action score, while continuous-action-based models with entangled representations exhibit weaker controllability. These findings provide empirical support for our claim that preserving suf-ficient action separability in the conditioning feature space is critical for reliable action control. We further substantiate this with ablation studies in Sec. 4.3.           
+
+> Table 4 Comparison with adapter-based models using continuous action condition Model Similarity Score Action Score CameraCtrl 0.8826 0.5731 WanX-Cam 0.8953 0.5143 GameCraft 0.9913 0.2736 Ours 0.7029 0.6332
+
+4.3 Ablations 
+
+Discrete Action Representation. As analyzed in Sec. 4.2, continuous action representations are associated with higher action feature similarity and degraded controllability. To isolate the effect of action representation from other factors, we conduct an ablation by replacing the discrete action embedding in DisCo with a continuous Plücker embedding derived from camera-to-world matrices, while keeping all other architectures and training settings unchanged.       
+
+> Table 5 Ablation on continuous and discrete representation Action Similarity Score Action Score continuous 0.9201 0.5563 discrete(ours) 0.7029 0.6332
+
+9As shown in Tab. 5, conditioning on continuous Plücker embeddings results in significantly higher feature similarity and lower action-following accuracy compared to the discrete representation. This ablation provides direct evidence that preserving action separability in the conditioning feature space is critical for effective action control. 
+
+Attention Sink. The attention sink is designed to enhance consistency in long video generation. In our setting, we adopt a sink size of 1(take the first frame as the global sink), which aligns with the image-conditioning paradigm used in image-to-video generation. To further investigate the impact of the attention sink, we conduct an ablation study by training models without the attention sink, and evaluate their consistency performance on DisCo-LongBench. The results are summarized in Tab. 6, with qualitative comparisons shown in Fig. 5. Both demonstrate that introducing an attention sink improves the long-horizon consistency.          
+
+> Table 6 Ablation on attention sink, test on the DisCo-LongBench w/wo sink Subject Consistency Background Consistency w/o sink 0.8005 0.9037 w 1 sink 0.8138 0.9103 w/o sink
+> w 1 sink
+> Frame 0 Frame 100 Frame 240
+> Figure 5 Ablation on long video generation with and without attention sink.
+
+Data Ablation. We further conduct ablation exper-iments to analyze the contribution of different com-ponents of our training data. By default, we train DisCo on a 1:1 mixture of motion-intensive explo-ration videos ( 𝐷 ) and camera-stabilized synthetic scenes ( 𝑆 ); the former features complex actions and dynamic elements, while the latter prioritizes smooth motion and static environment. To isolate their respective effects, we consider two alterna-tive settings: (i) training exclusively on 𝐷 , and (ii) training solely on 𝑆 .As shown in Tab. 7, training with 𝐷 enables the model to generate highly dynamic exploration videos. However, the long-tail distribution of its camera actions and the high complexity of such data make it challenging for the model to reliably learn the correct motion patterns. In contrast, 𝑆 provides more structured and balanced motion supervision, and substantially improves action-following performance. Nevertheless, in setting (ii), the model exhibits degraded FVD and VQA-Score, indicating limited capability in generating videos with rich dynamic elements. These results indicate that combining 𝐷 and 𝑆 is crucial for achieving both action controllability and dynamic scene generation.              
+
+> Table 7 Ablation on Dynamic and synthetic ratio D:S FVD VQAScore Action Score 1:0 198.96 0.5779 0.4828 0:1 699.83 0.5237 0.6005 1:1(ours) 220.51 0.5448 0.6332
+
+## 5 Conclusion 
+
+This paper presents DisCo, a video world model with discrete camera motion control. By discretizing camera trajectories into a compact set of predefined action types, DisCo alleviates action representation entanglement, enabling more reliable action following under complex and compositional motion sequences. 10 Combined with self-forcing distillation and attention sinks, DisCo supports efficient controllable long video generation. To facilitate comprehensive evaluation of model performance, we also introduce DisCoBench, which assesses complementary aspects of controllable video generation with different subsets. Extensive experiments demonstrate that DisCo consistently outperforms prior methods in action controllability, while preserving visual consistency and temporal coherence in dynamic and long-horizon video generation. 
+
+## References 
+
+[1] Sherwin Bahmani, Ivan Skorokhodov, Guocheng Qian, Aliaksandr Siarohin, Willi Menapace, Andrea Tagliasacchi, David B Lindell, and Sergey Tulyakov. Ac3d: Analyzing and improving 3d camera control in video diffusion transformers. In CVPR, 2025. [2] Jianhong Bai, Menghan Xia, Xiao Fu, Xintao Wang, Lianrui Mu, Jinwen Cao, Zuozhu Liu, Haoji Hu, Xiang Bai, Pengfei Wan, et al. Recammaster: Camera-controlled generative rendering from a single video. arXiv preprint arXiv:2503.11647, 2025. [3] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shĳie Wang, Jun Tang, et al. Qwen2. 5-vl technical report. arXiv preprint arXiv:2502.13923, 2025. [4] Amir Bar, Gaoyue Zhou, Danny Tran, Trevor Darrell, and Yann LeCun. Navigation world models. In CVPR, 2025. [5] Andreas Blattmann, Tim Dockhorn, Sumith Kulal, Daniel Mendelevitch, Maciej Kilian, Dominik Lorenz, Yam Levi, Zion English, Vikram Voleti, Adam Letts, et al. Stable video diffusion: Scaling latent video diffusion models to large datasets. arXiv preprint arXiv:2311.15127, 2023. [6] Boyuan Chen, Diego Martí Monsó, Yilun Du, Max Simchowitz, Russ Tedrake, and Vincent Sitzmann. Diffusion forcing: Next-token prediction meets full-sequence diffusion. NeurIPS, 2024. [7] Junyi Chen, Haoyi Zhu, Xianglong He, Yifan Wang, Jianjun Zhou, Wenzheng Chang, Yang Zhou, Zizun Li, Zhoujie Fu, Jiangmiao Pang, et al. Deepverse: 4d autoregressive video generation as a world model. arXiv preprint arXiv:2506.01103, 2025. [8] Justin Cui, Jie Wu, Ming Li, Tao Yang, Xiaojie Li, Rui Wang, Andrew Bai, Yuanhao Ban, and Cho-Jui Hsieh. Self-forcing++: Towards minute-scale high-quality video generation. arXiv preprint arXiv:2510.02283, 2025. [9] Jianxiong Gao, Zhaoxi Chen, Xian Liu, Junhao Zhuang, Chengming Xu, Jianfeng Feng, Yu Qiao, Yanwei Fu, Chenyang Si, and Ziwei Liu. Longvie 2: Multimodal controllable ultra-long video world model. arXiv preprint arXiv:2512.13604, 2025. [10] Kaifeng Gao, Jiaxin Shi, Hanwang Zhang, Chunping Wang, and Jun Xiao. Vid-gpt: Introducing gpt-style autoregressive generation in video diffusion models. arXiv preprint arXiv:2406.10981, 2024. [11] Yuwei Guo, Ceyuan Yang, Ziyan Yang, Zhibei Ma, Zhĳie Lin, Zhenheng Yang, Dahua Lin, and Lu Jiang. Long context tuning for video generation. arXiv preprint arXiv:2503.10589, 2025. [12] David Ha and Jürgen Schmidhuber. World models. arXiv preprint arXiv:1803.10122, 2(3), 2018. [13] Danĳar Hafner, Timothy Lillicrap, Jimmy Ba, and Mohammad Norouzi. Dream to control: Learning behaviors by latent imagination. arXiv preprint arXiv:1912.01603, 2019. [14] Hao He, Yinghao Xu, Yuwei Guo, Gordon Wetzstein, Bo Dai, Hongsheng Li, and Ceyuan Yang. Cameractrl: Enabling camera control for video diffusion models. In ICLR, 2025. [15] Xianglong He, Chunli Peng, Zexiang Liu, Boyang Wang, Yifan Zhang, Qi Cui, Fei Kang, Biao Jiang, Mengyin An, Yangyang Ren, et al. Matrix-game 2.0: An open-source, real-time, and streaming interactive world model. arXiv preprint arXiv:2508.13009, 2025. [16] Jiahui Huang, Qunjie Zhou, Hesam Rabeti, Aleksandr Korovko, Huan Ling, Xuanchi Ren, Tianchang Shen, Jun Gao, Dmitry Slepichev, Chen-Hsuan Lin, et al. Vipe: Video pose engine for 3d geometric perception. arXiv preprint arXiv:2508.10934, 2025. [17] Xun Huang, Zhengqi Li, Guande He, Mingyuan Zhou, and Eli Shechtman. Self forcing: Bridging the train-test gap in autoregressive video diffusion. arXiv preprint arXiv:2506.08009, 2025. 
+
+11 [18] Ziqi Huang, Fan Zhang, Xiaojie Xu, Yinan He, Jiashuo Yu, Ziyue Dong, Qianli Ma, Nattapol Chanpaisit, Chenyang Si, Yuming Jiang, et al. Vbench++: Comprehensive and versatile benchmark suite for video generative models. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2025. [19] Zhennan Jiang, Kai Liu, Yuxin Qin, Shuai Tian, Yupeng Zheng, Mingcai Zhou, Chao Yu, Haoran Li, and Dongbin Zhao. World4rl: Diffusion world models for policy refinement with reinforcement learning for robotic manipulation. arXiv preprint arXiv:2509.19080, 2025. [20] Yang Jin, Zhicheng Sun, Ningyuan Li, Kun Xu, Hao Jiang, Nan Zhuang, Quzhe Huang, Yang Song, Yadong Mu, and Zhouchen Lin. Pyramidal flow matching for efficient video generative modeling. arXiv preprint arXiv:2410.05954, 2024. [21] Diederik P Kingma and Jimmy Ba. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980, 2014. [22] Jing Yu Koh, Honglak Lee, Yinfei Yang, Jason Baldridge, and Peter Anderson. Pathdreamer: A world model for indoor navigation. In CVPR, 2021. [23] Dan Kondratyuk, Lĳun Yu, Xiuye Gu, José Lezama, Jonathan Huang, Grant Schindler, Rachel Hornung, Vighnesh Birodkar, Jimmy Yan, Ming-Chang Chiu, et al. Videopoet: A large language model for zero-shot video generation. arXiv preprint arXiv:2312.14125, 2023. [24] Weĳie Kong, Qi Tian, Zĳian Zhang, Rox Min, Zuozhuo Dai, Jin Zhou, Jiangfeng Xiong, Xin Li, Bo Wu, Jianwei Zhang, et al. Hunyuanvideo: A systematic framework for large video generative models. arXiv preprint arXiv:2412.03603, 2024. [25] Guangyuan Li, Siming Zheng, Shuolin Xu, Jinwei Chen, Bo Li, Xiaobin Hu, Lei Zhao, and Peng-Tao Jiang. Magicworld: Interactive geometry-driven video world exploration. arXiv preprint arXiv:2511.18886, 2025. [26] Jiaqi Li, Junshu Tang, Zhiyong Xu, Longhuang Wu, Yuan Zhou, Shuai Shao, Tianbao Yu, Zhiguo Cao, and Qinglin Lu. Hunyuan-gamecraft: High-dynamic interactive game video generation with hybrid history condition. arXiv preprint arXiv:2506.17201, 2025. [27] Quanhao Li, Zhen Xing, Rui Wang, Hui Zhang, Qi Dai, and Zuxuan Wu. Magicmotion: Controllable video generation with dense-to-sparse trajectory guidance. In ICCV, 2025. [28] Zhen Li, Chuanhao Li, Xiaofeng Mao, Shaoheng Lin, Ming Li, Shitian Zhao, Zhaopan Xu, Xinyue Li, Yukang Feng, Jianwen Sun, et al. Sekai: A video dataset towards world exploration. arXiv preprint arXiv:2506.15675, 2025. [29] Zongyi Li, Shujie Hu, Shujie Liu, Long Zhou, Jeongsoo Choi, Lingwei Meng, Xun Guo, Jinyu Li, Hefei Ling, and Furu Wei. Arlon: Boosting diffusion transformers with autoregressive models for long video generation. arXiv preprint arXiv:2410.20502, 2024. [30] Zhiqiu Lin, Deepak Pathak, Baiqi Li, Jiayao Li, Xide Xia, Graham Neubig, Pengchuan Zhang, and Deva Ramanan. Evaluating text-to-visual generation with image-to-text generation. In ECCV, 2024. [31] Kunhao Liu, Wenbo Hu, Jiale Xu, Ying Shan, and Shĳian Lu. Rolling forcing: Autoregressive long video diffusion in real time. arXiv preprint arXiv:2509.25161, 2025. [32] Yunhong Lu, Yanhong Zeng, Haobo Li, Hao Ouyang, Qiuyu Wang, Ka Leong Cheng, Jiapeng Zhu, Hengyuan Cao, Zhipeng Zhang, Xing Zhu, et al. Reward forcing: Efficient streaming video generation with rewarded distribution matching distillation. arXiv preprint arXiv:2512.04678, 2025. [33] Xiaofeng Mao, Shaoheng Lin, Zhen Li, Chuanhao Li, Wenshuo Peng, Tong He, Jiangmiao Pang, Mingmin Chi, Yu Qiao, and Kaipeng Zhang. Yume: An interactive world generation model. arXiv preprint arXiv:2507.17744, 2025. [34] Xuanchi Ren, Tianchang Shen, Jiahui Huang, Huan Ling, Yifan Lu, Merlin Nimier-David, Thomas Müller, Alexander Keller, Sanja Fidler, and Jun Gao. Gen3c: 3d-informed world-consistent video generation with precise camera control. In CVPR, 2025. [35] Joonghyuk Shin, Zhengqi Li, Richard Zhang, Jun-Yan Zhu, Jaesik Park, Eli Shechtman, and Xun Huang. Motionstream: Real-time video generation with interactive motion controls. arXiv preprint arXiv:2511.01266, 2025. 
+
+12 [36] Peize Sun, Yi Jiang, Shoufa Chen, Shilong Zhang, Bingyue Peng, Ping Luo, and Zehuan Yuan. Autoregressive model beats diffusion: Llama for scalable image generation. arXiv preprint arXiv:2406.06525, 2024. [37] Wenqiang Sun, Haiyu Zhang, Haoyuan Wang, Junta Wu, Zehan Wang, Zhenwei Wang, Yunhong Wang, Jun Zhang, Tengfei Wang, and Chunchao Guo. Worldplay: Towards long-term geometric consistency for real-time interactive world modeling. arXiv preprint arXiv:2512.14614, 2025. [38] Thomas Unterthiner, Sjoerd Van Steenkiste, Karol Kurach, Raphael Marinier, Marcin Michalski, and Sylvain Gelly. Towards accurate generative models of video: A new metric & challenges. arXiv preprint arXiv:1812.01717, 2018. [39] Florentina Voboril, Vaidyanathan Peruvemba Ramaswamy, and Stefan Szeider. Streamllm: Enhancing constraint programming with large language model-generated streamliners. In 2025 IEEE/ACM 1st International Workshop on Neuro-Symbolic Software Engineering (NSE), 2025. [40] Team Wan, Ang Wang, Baole Ai, Bin Wen, Chaojie Mao, Chen-Wei Xie, Di Chen, Feiwu Yu, Haiming Zhao, Jianxiao Yang, et al. Wan: Open and advanced large-scale video generative models. arXiv preprint arXiv:2503.20314, 2025. [41] Junke Wang, Yi Jiang, Zehuan Yuan, Binyue Peng, Zuxuan Wu, and Yu-Gang Jiang. Omnitokenizer: A joint image-video tokenizer for visual generation. In NeurIPS, 2024. [42] Junke Wang, Zhi Tian, Xun Wang, Xinyu Zhang, Weilin Huang, Zuxuan Wu, and Yu-Gang Jiang. Simplear: Pushing the frontier of autoregressive visual generation through pretraining, sft, and rl. arXiv preprint arXiv:2504.11455, 2025. [43] Junke Wang, Xun Wang, Qiushan Guo, Peize Sun, Weilin Huang, Zuxuan Wu, and Yu-Gang Jiang. Omnigen-ar: Autoregressive any-to-image generation. In NeurIPS, 2025. [44] Zhouxia Wang, Ziyang Yuan, Xintao Wang, Yaowei Li, Tianshui Chen, Menghan Xia, Ping Luo, and Ying Shan. Motionctrl: A unified and flexible motion controller for video generation. In ACM SIGGRAPH 2024 Conference Papers, 2024. [45] Wilson Yan, Yunzhi Zhang, Pieter Abbeel, and Aravind Srinivas. Videogpt: Video generation using vq-vae and transformers. arXiv preprint arXiv:2104.10157, 2021. [46] Shuai Yang, Wei Huang, Ruihang Chu, Yicheng Xiao, Yuyang Zhao, Xianbang Wang, Muyang Li, Enze Xie, Yingcong Chen, Yao Lu, et al. Longlive: Real-time interactive long video generation. arXiv preprint arXiv:2509.22622, 2025. [47] Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, et al. Cogvideox: Text-to-video diffusion models with an expert transformer. In ICLR, 2025. [48] Deheng Ye, Fangyun Zhou, Jiacheng Lv, Jianqi Ma, Jun Zhang, Junyan Lv, Junyou Li, Minwen Deng, Mingyu Yang, Qiang Fu, et al. Yan: Foundational interactive video generation. arXiv preprint arXiv:2508.08601, 2025. [49] Tianwei Yin, Michaël Gharbi, Taesung Park, Richard Zhang, Eli Shechtman, Fredo Durand, and Bill Freeman. Improved distribution matching distillation for fast image synthesis. NeurIPS, 2024. [50] Tianwei Yin, Qiang Zhang, Richard Zhang, William T Freeman, Fredo Durand, Eli Shechtman, and Xun Huang. From slow bidirectional to fast autoregressive video diffusion models. In CVPR, 2025. [51] Jiwen Yu, Jianhong Bai, Yiran Qin, Quande Liu, Xintao Wang, Pengfei Wan, Di Zhang, and Xihui Liu. Context as memory: Scene-consistent interactive long video generation with memory retrieval. In Proceedings of the SIGGRAPH Asia 2025 Conference Papers, pages 1–11, 2025. [52] Jiwen Yu, Yiran Qin, Xintao Wang, Pengfei Wan, Di Zhang, and Xihui Liu. Gamefactory: Creating new games with generative interactive videos. arXiv preprint arXiv:2501.08325, 2025. [53] David Junhao Zhang, Roni Paiss, Shiran Zada, Nikhil Karnad, David E Jacobs, Yael Pritch, Inbar Mosseri, Mike Zheng Shou, Neal Wadhwa, and Nataniel Ruiz. Recapture: Generative video camera controls for user-provided videos using masked video fine-tuning. In CVPR, 2025. [54] Lvmin Zhang, Anyi Rao, and Maneesh Agrawala. Adding conditional control to text-to-image diffusion models. In CVPR, 2023. 
+
+13 [55] Yifan Zhang, Chunli Peng, Boyang Wang, Puyi Wang, Qingcheng Zhu, Fei Kang, Biao Jiang, Zedong Gao, Eric Li, Yang Liu, et al. Matrix-game: Interactive world foundation model. arXiv preprint arXiv:2506.18701, 2025. [56] Yang Zhou, Yifan Wang, Jianjun Zhou, Wenzheng Chang, Haoyu Guo, Zizun Li, Kaĳing Ma, Xinyue Li, Yating Wang, Haoyi Zhu, et al. Omniworld: A multi-domain and multi-modal dataset for 4d world modeling. arXiv preprint arXiv:2509.12201, 2025. [57] Yixuan Zhu, Jiaqi Feng, Wenzhao Zheng, Yuan Gao, Xin Tao, Pengfei Wan, Jie Zhou, and Jiwen Lu. Astra: General interactive world model with autoregressive denoising. arXiv preprint arXiv:2512.08931, 2025. 
+
+14 Appendix 
+
+## A More Experimental details 
+
+All training stages are conducted on 16 NVIDIA H20 GPUs using the AdamW [21] optimizer. 
+
+Teacher Model. The teacher model is trained for approximately 10k steps with a batch size of 64 and a learning rate of 1 × 10 −5.
+
+ODE Initialization Stage. The ODE initialization stage is trained for approximately 8k steps with a batch size of 64 and a learning rate of 2 × 10 −6.
+
+Self-Forcing DMD Distillation. In this stage, we use a batch size of 32 and train for approximately 2k steps. The learning rates are set to 2 × 10 −6 for the generator and 4 × 10 −7 for the critic (i.e., the fake score function), with an update ratio of 1:5 between the generator and the critic. 
+
+## B Details on DisCoBench and Evaluation 
+
+Design of the DisCo-ActionBench. DisCo-ActionBench is constructed to evaluate models under a wide range of complicated camera action sequences rather than repeated instances of a small number of simple trajectories. Each sample is associated with a structured camera motion sequence composed of discrete motion primitives from our predefined action set 𝒜 , and contains at least two types of actions. Each camera action sequence can be formulated as 𝑠𝑒 𝑞 = (𝑎 1 × 𝑁 1)( 𝑎 2 × 𝑁 2)... where 𝑎 𝑖 ∈ 𝒜 and 𝑁 𝑖 represents the lasting number of action 𝑎 𝑖 . To avoid changing actions too quickly, we set 𝑁 𝑖 ≥ 4.We also provide a visualization to better present the trajectories. As illustrated in 6, DisCo-ActionBench covers a wide range of action sequences structures, offering a strong evaluation suite for the assessment of the controllability of models.  
+
+> Figure 6 Each polyline corresponds to a unique camera motion sequence in the DisCo-ActionBench. All trajectories start from the same origin, and are constructed by sequentially applying discrete camera motion primitives. The visualization highlights the diversity of trajectory structures and directional coverage.
+
+Effectiveness of VQA-Score in DisCo-DynamicBench. In this section, we provide additional details to demonstrate the effectiveness of the VQA-Score used in DisCo-DynamicBench. Since most samples in DisCo-DynamicBench are sourced from OmniWorld-Game [ 56 ], we directly adopt the captions provided by 15 A character clad in armor walks purposefully towards an ancient temple entrance. Starting 
+
+from the base of a set of stone steps, the character ascends steadily, illuminated by the 
+
+flickering flames of two braziers positioned on either side… 
+
+Caption: 
+
+Video1: 
+
+Video2: 
+
+VQA -score: 0. 7
+
+VQA -score: 0.3 Figure 7 Comparison of two generated videos under the same caption with their corresponding VQA-Scores. Video1 aligns well with the caption by exhibiting the required dynamic content and achieves a higher VQA-Score, whereas video2 mainly contains camera motion in a static scene and receives a significantly lower score. 
+
+the dataset for VQA-Score calculation. For the remaining samples, we follow the same caption generation protocol as OmniWorld-Game to produce corresponding textual descriptions. As shown in Fig.7, since the captions explicitly describe the dynamic content expected in the generated videos, VQA-Score is able to effectively assess whether the generated videos contain the required dynamic elements, rather than merely exhibiting camera motion in static scenes. 
+
+## C More Experiments and Discussions 
+
+C.1 Sensitivity Analysis of Action Score 
+
+To examine the sensitivity of the action score, we vary the translation threshold 𝜏 𝑡 and rotation threshold 𝜏 𝑟 
+
+and report the results in Figure 8. We find that the action score remains stable across a reasonably broad range of thresholds: it stays above 0.61 
+
+for 𝜏 𝑟 ∈ [ 0.6, 1.3] and above 0.62 for 𝜏 𝑡 ∈ [ 0.05 , 0.12 ]. This demonstrates the robustness of the metric and the validity of our chosen settings. 
+
+C.2 Trade-off between Discretization and Fine-grained Control 
+
+Discretizing continuous trajectories into 27 bins inevitably introduces some fine-grained information loss. However, continuous camera trajectories, though fully fine-grained, often lead to feature entanglement and degraded controllability. Our discretized actions instead trade off sub-bin precision for a more structured and distinguishable action space, which we validate is fundamental to fine-grained control as complex motions can only be modeled reliably when different actions can be represented in a sufficiently separable manner. We further support this claim with an additional ablation on the number of bins. As shown in Table 8, increasing the number of bins indeed provides a finer-grained action space, but it also leads to worse Action Score. This result further validates our argument that stronger expressiveness alone does not necessarily improve controllability; when the action space becomes overly fine-grained and less distinguishable, control fidelity can instead degrade. 16 Figure 8 Sensitivity Analysis of Action Score      
+
+> Table 8 Effect of number of bins. Number of Bins Action Score 27 (9 ×3) 0.6332
+> 39 (13 ×3) 0.5638 48 (16 ×3) 0.5073
+
+C.3 Human Evaluation 
+
+To mitigate the concern that automatic evaluators may introduce bias, we additionally conduct an independent human evaluation that does not rely on VIPE or symbolic discretization. Specifically, we recruit 30 human evaluators(consisting of 15 researchers with relevant background in computer vision or machine learning, and 15 non-expert participants), and present them with pairs of videos generated by different methods under the same action condition. For each pair, evaluators are asked to make two separate judgments: (1) which video better follows the given action condition, and (2) which video exhibits smoother and more natural motion. The presentation order of videos within each pair is randomized to avoid positional bias. We aggregate the pairwise preferences separately for each criterion across all evaluators. This allows us to independently assess performance along these two dimensions and demonstrate the advantage of our model in both action adherence and motion quality. As shown in Table 9, our model is consistently preferred over baselines.       
+
+> Table 9 Human evaluation results. Method Action Following Motion Smoothness Ours 65.5% 73.7%
+> Baselines 34.5% 26.3%
+
+C.4 Generalization Ability 
+
+To evaluate the generalization capability of DisCo, we randomly select 100 videos from the external Sekai [ 28 ]dataset, and compare our method with Matrix-Game2. As shown in Table 10, our model also exhibits competitive performance on unseen real-world data. 17 Table 10 Performance on unseen real-world data. Method FVD ↓ Action Score ↑    
+
+> Ours 333.93 0.602
+> Matrix-Game2 369.10 0.567
+
+C.5 Multi-seed Results 
+
+To further validate that our gain in controllability is reproducible rather than due to randomness, we evaluate our model over four independent runs with different random seeds on DisCo-ActionBench. As shown in Table 11, the Action Score remains stable with low standard deviations, which reflects genuinely better controllability.                 
+
+> Table 11 Multi-seed results. Method score-r1 score-r2 score-r3 score-r4 Std. Ours 0.6332 0.6315 0.6253 0.6357 0.0044
+> Matrix-Game2 0.5880 0.5863 0.5912 0.5800 0.0047
+
+C.6 Runtime Characteristics 
+
+The runtime characteristics of our method and the comparison with self-forcing are reported in Table 12.Our method is more resource expensive mainly for its larger backbone and higher supporting resolution. This evaluation is conducted on a single 48G 4090.              
+
+> Table 12 Efficiency comparison. Method Frame-rate Latency Resolution Memory Ours (5B) 16 23.4s 1280 ×704 33G Self-forcing (1.3B) 16 13.8s 832 ×480 16G
+
+## D Limitation 
+
+Although DisCo covers most common actions for user interactions, including basic translational movements, diagonal movements, yaw rotations, and their combinations, some actions such as pitch, roll, and variable velocities are currently not supported. This limitation stems mainly from the fact that constructing large-scale, action-balanced datasets that cover all types of action patterns is highly resource-intensive. We leave this to future work. Another limitation arises in applications that require very precise camera placement, as the discretization process inevitably sacrifices some fine-grained information and expressiveness. However, we observe that overly fine-grained action spaces (e.g., continuous actions) lead to feature entanglement and degraded controllability. Therefore, we trade off sub-bin precision for improved controllability. 
+
+## E Demos 
+
+18 Figure 9 Demos 
+
+19

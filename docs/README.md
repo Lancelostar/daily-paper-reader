@@ -6,119 +6,89 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-08
-- 运行时间：2026-06-08 21:14:49 UTC
+- 最新运行日期：2026-06-09
+- 运行时间：2026-06-09 21:51:07 UTC
 - 运行状态：成功
-- 本次总论文数：33
-- 精读区：21
+- 本次总论文数：23
+- 精读区：11
 - 速读区：12
 
 ### 今日简报（AI）
-今日处理33篇论文，精读21篇，速读12篇，重点聚焦视频建模与3D生成。最值得关注：《交互式视频世界建模》(10/10) 和《3D人脸头像生成》(9/10) 两篇高分工作。建议优先精读这两篇，把握视频与3D生成前沿方向。
-- 详情：[/202606/08/README](/202606/08/README)
+今日聚焦物理AI世界模型与LLM智能体文本世界模型两大方向，精读2篇满分论文。速读中交互式3D场景生成、无位姿流式3D高斯泼溅、自回归网格生成也值得关注。建议优先研读《Cosmos 3》和《Bridging the Agent-World Gap》两篇，把握世界模型前沿趋势。
+- 详情：[/202606/09/README](/202606/09/README)
 
 ### 精读区论文标签
-1. [Towards Interactive Video World Modeling: Frontiers, Challenges, Benchmarks, and Future Trends](/202606/08/2606.01164v1-towards-interactive-video-world-modeling-frontiers-challenges-benchmarks-and-future-trends)  
+1. [Cosmos 3: Omnimodal World Models for Physical AI](/202606/09/2606.02800v2-cosmos-3-omnimodal-world-models-for-physical-ai)  
    标签：评分：10.0/10、query:world-model
-   evidence：交互式视频世界建模综述
-2. [Splatshot: 3D Face Avatar Generation from a Single Unconstrained Photo](/202606/08/2606.01493v1-splatshot-3d-face-avatar-generation-from-a-single-unconstrained-photo)  
+   evidence：全模态世界模型统一语言、图像、视频、音频和动作
+2. [Bridging the Agent-World Gap: Text World Models for LLM-based Agents](/202606/09/2606.09032v1-bridging-the-agent-world-gap-text-world-models-for-llm-based-agents)  
+   标签：评分：10.0/10、query:world-model
+   evidence：面向LLM智能体的文本世界模型综述
+3. [Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation](/202606/09/2606.06002v2-global-local-monte-carlo-tree-search-in-vision-language-models-for-text-to-3d-indoor-scene-generation)  
    标签：评分：9.0/10、query:d-gen
-   evidence：从单张照片生成3D面部头像，结合3D高斯溅射和扩散先验
-3. [PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation](/202606/08/2606.01649v1-physcene3d-physically-consistent-interactive-3d-tabletop-scene-generation)  
+   evidence：全局-局部蒙特卡洛树搜索用于文本到三维场景生成
+4. [3DMorph: Single-Image-Guided Local 3D Shape Editing and Morphing](/202606/09/2606.07115v1-3dmorph-single-image-guided-local-3d-shape-editing-and-morphing)  
    标签：评分：9.0/10、query:d-gen
-   evidence：生成物理一致的可交互3D桌面场景
-4. [Learning Action-Conditional and Object-Centric Gaussian Splatting World Models for Rigid Objects](/202606/08/2606.01950v1-learning-action-conditional-and-object-centric-gaussian-splatting-world-models-for-rigid-objects)  
+   evidence：单图像引导的局部3D形状编辑与变形
+5. [DisCo: World Models with Discrete Camera Motion Control](/202606/09/2606.07967v1-disco-world-models-with-discrete-camera-motion-control)  
    标签：评分：9.0/10、query:world-model
-   evidence：刚性物体世界模型
-5. [Geometry-Aware Implicit Memory for Video World Models](/202606/08/2606.02436v1-geometry-aware-implicit-memory-for-video-world-models)  
+   evidence：具有离散相机运动控制的可控视频世界模型
+6. [PRISM: PRior-guided Imagination Sampling in world Models](/202606/09/2606.07974v1-prism-prior-guided-imagination-sampling-in-world-models)  
    标签：评分：9.0/10、query:world-model
-   evidence：提出面向视频世界模型的几何感知隐式记忆，直接解决世界模型记忆问题
-6. [MORPHOS: Autoregressive 4D Generation with Temporal Structured Latents](/202606/08/2606.02491v1-morphos-autoregressive-4d-generation-with-temporal-structured-latents)  
+   evidence：世界模型中的先验引导想象采样
+7. [Light-WAM: Efficient World Action Models with State-Fusion Action Decoding](/202606/09/2606.08242v1-light-wam-efficient-world-action-models-with-state-fusion-action-decoding)  
+   标签：评分：9.0/10、query:world-model
+   evidence：用于机器人操作的轻量级世界动作模型
+8. [SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration](/202606/09/2606.08402v1-sceneconductor-3d-scene-generation-from-single-image-with-multi-agent-orchestration)  
    标签：评分：9.0/10、query:d-gen
-   evidence：从视频生成动态3D资产
-7. [GeoSem-WAM: Geometry- and Semantic-Aware World Action Models](/202606/08/2606.03188v1-geosem-wam-geometry--and-semantic-aware-world-action-models)  
+   evidence：多智能体编排从单张图像生成三维场景
+9. [Unifying Object-Centric World Models and Diffusion Policy: A Hierarchical Framework for Multi-Stage Robotic Tasks](/202606/09/2606.08775v1-unifying-object-centric-world-models-and-diffusion-policy-a-hierarchical-framework-for-multi-stage-robotic-tasks)  
    标签：评分：9.0/10、query:world-model
-   evidence：几何和语义感知的世界动作模型
-8. [World Models Meet Language Models: On the Complementarity of Concrete and Abstract Reasoning](/202606/08/2606.03603v1-world-models-meet-language-models-on-the-complementarity-of-concrete-and-abstract-reasoning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：直接讨论世界模型概念及其与语言模型的互补性
-9. [SymTRELLIS: Symmetry-Enforced Voxel Latents for 3D Generation](/202606/08/2606.04108v1-symtrellis-symmetry-enforced-voxel-latents-for-3d-generation)  
+   evidence：将目标中心世界模型与扩散策略统一用于多阶段机器人任务
+10. [Rethinking 3D Shape Generation: Diffusion over Superquadrics](/202606/09/2606.08957v1-rethinking-3d-shape-generation-diffusion-over-superquadrics)  
    标签：评分：9.0/10、query:d-gen
-   evidence：对称强化的3D生成
-10. [MeshFlow: Efficient Artistic Mesh Generation via MeshVAE and Flow-based Diffusion Transformer](/202606/08/2606.04621v1-meshflow-efficient-artistic-mesh-generation-via-meshvae-and-flow-based-diffusion-transformer)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：基于MeshVAE和流扩散Transformer的高效3D网格生成
-11. [Recent Advances and Trends in Learning-based 3D Representations](/202606/08/2606.04871v1-recent-advances-and-trends-in-learning-based-3d-representations)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：关于包括生成在内的基于学习3D表示的全面综述
-12. [Controllable Dynamic 3D Shape Generation via 3D Trajectories and Text](/202606/08/2606.05162v1-controllable-dynamic-3d-shape-generation-via-3d-trajectories-and-text)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：直接研究基于文本和轨迹的可控动态3D形状生成
-13. [Autoregressive Diffusion World Models for Off-Policy Evaluation of LLM Agents](/202606/08/2606.05558v1-autoregressive-diffusion-world-models-for-off-policy-evaluation-of-llm-agents)  
+   evidence：超二次曲面上的扩散用于高效3D形状生成
+11. [Latent Spatial Memory for Video World Models](/202606/09/2606.09828v1-latent-spatial-memory-for-video-world-models)  
    标签：评分：9.0/10、query:world-model
-   evidence：提出自回归扩散世界模型用于LLM智能体的离策略评估
-14. [Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation](/202606/08/2606.06002v1-global-local-monte-carlo-tree-search-in-vision-language-models-for-text-to-3d-indoor-scene-generation)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：使用蒙特卡洛树搜索和视觉语言模型进行文本到3D室内场景生成
-15. [STRIPS-WM: Learning Grounded Propositional STRIPS-style World Models from Images](/202606/08/2606.06832v1-strips-wm-learning-grounded-propositional-strips-style-world-models-from-images)  
-   标签：评分：9.0/10、query:world-model
-   evidence：从图像学习世界模型用于规划
-16. [GuideCAD: A Lightweight Multimodal Framework for 3D CAD Model Generation via Prefix Embedding](/202606/08/2606.07024v1-guidecad-a-lightweight-multimodal-framework-for-3d-cad-model-generation-via-prefix-embedding)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：从多模态输入生成3D CAD模型
-17. [Dreaming when Necessary: Advancing World Action Models with Adaptive Multi-Modal Reasoning](/202606/08/2606.07089v1-dreaming-when-necessary-advancing-world-action-models-with-adaptive-multi-modal-reasoning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：通过自适应多模态推理推进世界行动模型在具身智能中的应用
-18. [Native3D: End-to-End 3D Scene Generation via Unified Mesh-Texture Modeling and Semantic Alignment](/202606/08/2606.07117v1-native3d-end-to-end-3d-scene-generation-via-unified-mesh-texture-modeling-and-semantic-alignment)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：端到端3D场景生成，无需2D中间表示
-19. [Learning Explicit Behavioral Models with Adaptive Questions and World-Model Probes](/202606/08/2606.07127v1-learning-explicit-behavioral-models-with-adaptive-questions-and-world-model-probes)  
-   标签：评分：9.0/10、query:world-model
-   evidence：用于行为模型的世界模型探针
-20. [AnchorWorld: Embodied Egocentric World Simulation with View-based Evolution Customization](/202606/08/2606.07326v1-anchorworld-embodied-egocentric-world-simulation-with-view-based-evolution-customization)  
-   标签：评分：9.0/10、query:world-model
-   evidence：直接研究交互式世界模拟和第一人称世界建模
-21. [Language Modeling Materializes a World Model of Protein Biology](/202606/08/biorxiv-10-64898-2026-06-03-729735-v1-language-modeling-materializes-a-world-model-of-protein-biology)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出通过语言建模实现蛋白质生物学世界模型
+   evidence：用于视频世界模型的潜在空间记忆
 
 ### 速读区论文标签
-1. [Flexible Control of 3D CT Generation via Text and Semantically-Defined Segmentation Prompts](/202606/08/2606.00967v1-flexible-control-of-3d-ct-generation-via-text-and-semantically-defined-segmentation-prompts)  
+1. [PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation](/202606/09/2606.01649v2-physcene3d-physically-consistent-interactive-3d-tabletop-scene-generation)  
    标签：评分：8.0/10、query:d-gen
-   evidence：利用文本和分割提示灵活控制3D CT生成
-2. [MedSyn2: Flexible Control of 3D CT Generation via Text and Semantically-Defined Segmentation Prompts](/202606/08/2606.00967v2-medsyn2-flexible-control-of-3d-ct-generation-via-text-and-semantically-defined-segmentation-prompts)  
+   evidence：物理一致的3D桌面场景生成
+2. [FreeStreamGS: Online Feed-forward 3D Gaussian Splatting from Unposed Streaming Inputs](/202606/09/2606.03254v1-freestreamgs-online-feed-forward-3d-gaussian-splatting-from-unposed-streaming-inputs)  
    标签：评分：8.0/10、query:d-gen
-   evidence：通过文本和分割提示灵活控制3D CT生成
-3. [Learning Neural Deformation Representation for 4D Dynamic Shape Generation](/202606/08/2606.01021v1-learning-neural-deformation-representation-for-4d-dynamic-shape-generation)  
+   evidence：在线前馈三维高斯泼溅从流式输入
+3. [MeshWeaver: Sparse-Voxel-Guided Surface Weaving for Autoregressive Mesh Generation](/202606/09/2606.04688v1-meshweaver-sparse-voxel-guided-surface-weaving-for-autoregressive-mesh-generation)  
    标签：评分：8.0/10、query:d-gen
-   evidence：生成式4D动态形状模型
-4. [3DCodeBench: Benchmarking Agentic Procedural 3D Modeling Via Code](/202606/08/2606.01057v1-3dcodebench-benchmarking-agentic-procedural-3d-modeling-via-code)  
+   evidence：基于稀疏体素引导的自回归网格生成
+4. [Property-Informed Diffusion-Based Text-to-Microstructure Generation](/202606/09/2606.08150v1-property-informed-diffusion-based-text-to-microstructure-generation)  
    标签：评分：8.0/10、query:d-gen
-   evidence：通过代码进行程序化3D生成的基准测试
-5. [MotionDreamer: Universal Skeletal Motion Generation for 3D Rigged Shapes](/202606/08/2606.01518v1-motiondreamer-universal-skeletal-motion-generation-for-3d-rigged-shapes)  
+   evidence：基于属性引导的扩散模型实现文本到3D微结构生成
+5. [CP4D: Compositional Physics-aware 4D Scene Generation](/202606/09/2606.09187v1-cp4d-compositional-physics-aware-4d-scene-generation)  
    标签：评分：8.0/10、query:d-gen
-   evidence：提出基于扩散的骨架运动生成框架，推动3D生成能力
-6. [DeblurNVS: Geometric Latent Diffusion for Novel View Synthesis from Sparse Motion-Blurred Images](/202606/08/2606.01315v1-deblurnvs-geometric-latent-diffusion-for-novel-view-synthesis-from-sparse-motion-blurred-images)  
+   evidence：4D场景生成，物理感知，动态3D
+6. [Not All Points Are Equal: Uncertainty-Aware 4D LiDAR Scene Synthesis](/202606/09/2606.02510v1-not-all-points-are-equal-uncertainty-aware-4d-lidar-scene-synthesis)  
    标签：评分：7.0/10、query:d-gen
-   evidence：使用生成式扩散模型进行新视角合成
-7. [$\text{VG}^2$GT: Voxel-Gaussian Splatting Visual Geometry Grounded Transformer](/202606/08/2606.01573v1-textvg2gt-voxel-gaussian-splatting-visual-geometry-grounded-transformer)  
+   evidence：不确定性引导的4D激光雷达场景合成
+7. [Thinking in Blender: Staged Executable Inverse Graphics with Vision-Language Models](/202606/09/2606.02580v1-thinking-in-blender-staged-executable-inverse-graphics-with-vision-language-models)  
    标签：评分：7.0/10、query:d-gen
-   evidence：使用高斯泼溅的前馈3D重建与新视角合成
-8. [$\text{VG}^2$GT: Voxel-Gaussian Splatting Visual Geometry Grounded Transformer](/202606/08/2606.01573v2-textvg2gt-voxel-gaussian-splatting-visual-geometry-grounded-transformer)  
+   evidence：通过可执行Blender代码从单图像重建3D场景，与3D生成相关
+8. [MLP Splatting: Object-Centric Neural Fields](/202606/09/2606.03877v1-mlp-splatting-object-centric-neural-fields)  
    标签：评分：7.0/10、query:d-gen
-   evidence：基于体素-高斯溅射的3D重建与新视图合成
-9. [Towards 3D-Aware Video Diffusion Models: Render-Free Human Motion Control with Mesh Tokenization](/202606/08/2606.02000v1-towards-3d-aware-video-diffusion-models-render-free-human-motion-control-with-mesh-tokenization)  
+   evidence：以对象为中心的神经场，3D表示，场景分解
+9. [SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image](/202606/09/2606.03994v1-simuscene-simulation-ready-compositional-3d-scene-reconstruction-from-a-single-image)  
    标签：评分：7.0/10、query:d-gen
-   evidence：使用网格标记化实现3D感知视频扩散的人体运动控制
-10. [Beyond Task Success: Behavioral and Representational Diagnostics for WAM and VLA](/202606/08/2606.01095v1-beyond-task-success-behavioral-and-representational-diagnostics-for-wam-and-vla)  
+   evidence：可仿真3D场景重建，物理在环
+10. [ChronoPhyBench: Do MLLMs Truly Understand the World or Merely Exploit Language Priors?](/202606/09/2606.07962v1-chronophybench-do-mllms-truly-understand-the-world-or-merely-exploit-language-priors)  
    标签：评分：6.0/10、query:world-model
-   evidence：世界动作模型的诊断
-11. [Anchor3R: Streaming 3D Reconstruction with Transient Anchors for Long-Horizon Visual Mapping](/202606/08/2606.05035v1-anchor3r-streaming-3d-reconstruction-with-transient-anchors-for-long-horizon-visual-mapping)  
+   evidence：评估多模态大语言模型世界理解的基准，与世界模型概念相关
+11. [PhysGraph: A Physics-aware 3D Scene Graph for Perception and Reasoning](/202606/09/2606.08655v1-physgraph-a-physics-aware-3d-scene-graph-for-perception-and-reasoning)  
+   标签：评分：6.0/10、query:world-model
+   evidence：物理感知3D场景图作为世界表示
+12. [PhysAgent: Automating Physics-Based 4D Synthesis via Trajectory-Grounded Multi-Agent Feedback](/202606/09/2606.08688v1-physagent-automating-physics-based-4d-synthesis-via-trajectory-grounded-multi-agent-feedback)  
    标签：评分：6.0/10、query:d-gen
-   evidence：流式3D重建用于长时视觉映射
-12. [GeM-NR: Geometry-Aware Multi-View Editing for Nonrigid Scene Changes](/202606/08/2606.05142v1-gem-nr-geometry-aware-multi-view-editing-for-nonrigid-scene-changes)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：多视图图像编辑用于3D内容生成
+   evidence：通过多智能体反馈自动化基于物理的4D合成
 
 
 <div class="dpr-home-promo-card">

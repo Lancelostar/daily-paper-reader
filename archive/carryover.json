@@ -1,215 +1,45 @@
 {
-  "generated_at": "2026-06-08T20:59:10.131193+00:00",
-  "updated_date": "20260608",
+  "generated_at": "2026-06-09T21:36:20.252359+00:00",
+  "updated_date": "20260609",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
-      "updated_date": "20260608",
+      "updated_date": "20260609",
       "carryover_days": 9,
       "items": []
     },
     "d-gen": {
-      "updated_date": "20260608",
+      "updated_date": "20260609",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2606.03254v1",
+          "id": "2606.09273v1",
           "source": "arxiv",
-          "title": "FreeStreamGS: Online Feed-forward 3D Gaussian Splatting from Unposed Streaming Inputs",
-          "abstract": "Feed-forward 3D Gaussian Splatting (3DGS) allows efficient and high-fidelity novel view synthesis (NVS) from an offline recorded image sequence. However, achieving online NVS from streaming and unposed image inputs remains challenging. Although online feed-forward geometric estimation methods have been proposed for streaming depth and point cloud recovery, they cannot be adapted to NVS due to severe rendering artifacts. This is because NVS demands stricter multi-view consistency in Gaussian scales and pose-geometry alignment; even minor deviations would accumulate over time and visibly degrade rendering quality. To this end, we propose FreeStreamGS, a robust online feed-forward framework for efficient and high-quality NVS. We introduce two key mechanisms: a Decoupled Intrinsic Recovery Head that removes cumulative camera intrinsic bias and prevents scene scale jitter during long-term streaming, and a Dynamic Point Refinement Offset strategy that relaxes rigid unprojection to correct coupled pose-depth drift. Extensive experiments show that FreeStreamGS achieves rendering quality competitive with state-of-the-art offline feed-forward 3DGS methods, despite operating without access to future frames.",
+          "title": "EditSSC: Toward Editable Semantic Occupancy Scenes with Unconditional Diffusion Models",
+          "abstract": "3D semantic scene generation is crucial for autonomous driving applications, yet most methods rely on complex 3D-specific architectures such as triplane encoders and adapted diffusion networks, limiting both their simplicity and their editing capabilities. We propose EditSSC, an editing-ready method for 3D semantic scene generation using 2D Bird's Eye View (BEV) representations and off-the-shelf latent diffusion network. Our approach reshapes 3D semantic occupancy grids into multi-channel BEV images and leverages the quantized autoencoder and UNet from Stable Diffusion with minimal modifications. We perform diffusion on the latents after quantization, which enables training-free editing capabilities. By exploiting class-to-code correspondences in the codebook, our method supports sketch-guided generation, inpainting, and outpainting without any retraining. On SemanticKITTI, EditSSC outperforms existing 3D-specific baselines on unconditional generation, demonstrating that well-established 2D architectures can be effectively repurposed for 3D scene generation and editing.",
           "authors": [
-            "Ruiyang Chen",
-            "Feiran Li",
-            "Chu Zhou",
-            "Zonglin Li",
-            "Zhanyu Ma",
-            "Heng Guo"
+            "Fatima Balde",
+            "Raoul de Charette",
+            "Alexandre Boulch"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-06-02T07:16:09+00:00",
-          "link": "https://arxiv.org/pdf/2606.03254v1",
+          "published": "2026-06-08T09:41:37+00:00",
+          "link": "https://arxiv.org/pdf/2606.09273v1",
           "tags": [
             "keyword:d-gen",
             "query:d-gen"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "online feed-forward 3D Gaussian splatting for novel view synthesis",
-          "llm_evidence_cn": "在线前馈3D高斯泼溅新视图合成",
-          "llm_evidence": "在线前馈3D高斯泼溅新视图合成",
-          "canonical_evidence": "在线前馈3D高斯泼溅新视图合成",
-          "llm_tldr_en": "FreeStreamGS proposes a robust online feed-forward framework for efficient and high-quality novel view synthesis from streaming unposed images, addressing accumulation errors in online 3DGS.",
-          "llm_tldr_cn": "FreeStreamGS针对在线新视图合成中流式无位姿图像输入导致的累积误差问题，提出了一种鲁棒的在线前馈3D高斯泼溅框架。该方法通过增强多视图一致性和位姿-几何对齐，实现了高效高质量的新视图合成。实验表明，该方法在保持实时性能的同时显著优于现有在线方法，为实时3D渲染应用提供了可行方案。",
-          "llm_tldr": "FreeStreamGS针对在线新视图合成中流式无位姿图像输入导致的累积误差问题，提出了一种鲁棒的在线前馈3D高斯泼溅框架。该方法通过增强多视图一致性和位姿-几何对齐，实现了高效高质量的新视图合成。实验表明，该方法在保持实时性能的同时显著优于现有在线方法，为实时3D渲染应用提供了可行方案。",
-          "llm_tags": [
-            "query:d-gen"
-          ],
-          "matched_query_tag": "query:d-gen",
-          "matched_query_text": "recent advances in 3D generation",
-          "matched_requirement_id": "req-4",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.03254v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.01649v2",
-          "source": "arxiv",
-          "title": "PhyScene3D: Physically Consistent Interactive 3D Tabletop Scene Generation",
-          "abstract": "Generating physically consistent 3D tabletop scenes is a fundamental yet underexplored problem for interactive and generalist robotic learning. The challenge stems from dense object hierarchies and irregular affordances. Here, an interactive scene denotes a physically valid, collision-free environment directly loadable into physics simulators. Existing methods, ranging from decoupled symbolic solvers to end-to-end regression models, often suffer from error propagation or overfitting to noisy supervision containing widespread physical violations. To address these limitations, we introduce PhyScene3D, a framework that reformulates generation as a Human-Mimetic Constructive Process. The proposed Cognitive Topological Reasoning Chain (CTRC) factorizes scene synthesis into a sequential, anchor-conditioned process. It employs a 3D AABB-based placement scheme that imposes a strong structural inductive bias. To address imperfect supervision and physical infeasibility, we introduce Physics-Aware Denoising Alignment (PADA). It integrates a differentiable Signed Distance Field (SDF) with Test-Time Optimization (TTO) to project generated scenes onto a physics-feasible manifold while preserving semantic intent. Experiments demonstrate that PhyScene3D outperforms state-of-the-art approaches in both semantic accuracy and physical validity, achieving a 40% reduction in scene-wise collision rate relative to the human-annotated training data.",
-          "authors": [
-            "Weixing Chen",
-            "Zhuoqian Feng",
-            "Yang Liu",
-            "Yexin Zhang",
-            "Yifan Wen",
-            "Yinghong Liao",
-            "Weichao Qiu",
-            "Guanbin Li",
-            "Liang Lin"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-01T03:56:32+00:00",
-          "link": "https://arxiv.org/pdf/2606.01649v2",
-          "tags": [
-            "keyword:d-gen",
-            "query:d-gen"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "physically consistent 3D scene generation",
-          "llm_evidence_cn": "物理一致3D场景生成",
-          "llm_evidence": "物理一致3D场景生成",
-          "canonical_evidence": "物理一致3D场景生成",
-          "llm_tldr_en": "Introduces PhyScene3D, a framework for generating physically consistent 3D tabletop scenes using a Cognitive Topological Reasoning Chain that mimics human construction.",
-          "llm_tldr_cn": "该论文针对物理一致3D桌面场景生成问题，提出PhyScene3D框架，通过模仿人类构建过程的认知拓扑推理链，逐步生成无碰撞、可直接加载至物理仿真器的场景。解决了传统方法中误差传播和过拟合问题，实现了高质量物理一致场景生成。",
-          "llm_tldr": "该论文针对物理一致3D桌面场景生成问题，提出PhyScene3D框架，通过模仿人类构建过程的认知拓扑推理链，逐步生成无碰撞、可直接加载至物理仿真器的场景。解决了传统方法中误差传播和过拟合问题，实现了高质量物理一致场景生成。",
-          "llm_tags": [
-            "query:d-gen"
-          ],
-          "matched_query_tag": "query:d-gen",
-          "matched_query_text": "recent advances in 3D generation",
-          "matched_requirement_id": "req-4",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.01649v2",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.06002v2",
-          "source": "arxiv",
-          "title": "Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation",
-          "abstract": "Large Vision-Language Models have achieved significant reasoning performance in various tasks. However, there are few studies on text-to-3D indoor scene generation with LVLMs. The main challenge is that prevailing LVLM-based methods employ chain-of-thought sequential decision mechanisms that cannot revise earlier decisions, causing error propagation. In this paper, we consider the task as a planning problem constrained by spatial and layout commonsense. To solve this problem, we model it as a tree search problem with global and local trees, which differs from existing sequential decision-making approaches. In the global tree, we place each object iteratively and explore multiple attempts like humans furnishing a room, where the problem space is represented as a tree. To effectively search the tree, we propose a hierarchical scene representation and a PRM-guided MCTS method. This representation abstracts a scene into room level, region level, floor object level, and supported object level. The PRM-guided MCTS method uses the PRM to prune unnecessary branches and the MCTS algorithm to balance exploration and exploitation to get an optimal solution with fewer attempts. In the local tree, it further decomposes the placement of each object into finer sub-steps, including the specific placement parameters. To make the whole appearance of the scene consistent, we leverage pre-trained diffusion image generative models to predict textures for all the objects in the scene. As existing benchmarks for text-to-3D indoor scene generation remain limited in scale and diversity, we collect a new large-scale diverse dataset that contains 65 scene types and 3250 instructions with diverse sizes, layouts, and styles, named 3DTindo-bench, to better assess the capability of the state-of-the-art models. Our experiments show that our method generates more realistic 3D scenes than state-of-the-art methods.",
-          "authors": [
-            "Mengshi Qi",
-            "Wei Deng",
-            "Xianlin Zhang",
-            "Huadong Ma"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-04T10:56:21+00:00",
-          "link": "https://arxiv.org/pdf/2606.06002v2",
-          "tags": [
-            "keyword:d-gen",
-            "keyword:world-model",
-            "query:d-gen",
-            "query:world-model"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "text-to-3D indoor scene generation with LVLMs",
-          "llm_evidence_cn": "基于大语言模型的文本到3D室内场景生成",
-          "llm_evidence": "基于大语言模型的文本到3D室内场景生成",
-          "canonical_evidence": "基于大语言模型的文本到3D室内场景生成",
-          "llm_tldr_en": "Formulates text-to-3D indoor scene generation as a global-local tree search using LVLMs, enabling revision of earlier decisions to avoid error propagation.",
-          "llm_tldr_cn": "该论文将文本到3D室内场景生成建模为全局-局部蒙特卡洛树搜索问题，利用大视觉语言模型进行空间布局规划。通过树搜索允许回溯修改早期决策，避免链式推理中的误差累积。相比顺序决策方法，生成了更合理且可编辑的室内场景。",
-          "llm_tldr": "该论文将文本到3D室内场景生成建模为全局-局部蒙特卡洛树搜索问题，利用大视觉语言模型进行空间布局规划。通过树搜索允许回溯修改早期决策，避免链式推理中的误差累积。相比顺序决策方法，生成了更合理且可编辑的室内场景。",
-          "llm_tags": [
-            "query:d-gen"
-          ],
-          "matched_query_tag": "query:d-gen",
-          "matched_query_text": "recent advances in 3D generation",
-          "matched_requirement_id": "req-4",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.06002v2",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.04688v1",
-          "source": "arxiv",
-          "title": "MeshWeaver: Sparse-Voxel-Guided Surface Weaving for Autoregressive Mesh Generation",
-          "abstract": "Autoregressive mesh generation has gained attention by tokenizing meshes into sequences and training models in a language-modeling fashion. However, existing approaches suffer from two fundamental limitations: (i) low tokenization efficiency, which yields long token sequences and prevents scaling to high-poly meshes, and (ii) absence of geometry-aware guidance, as generation is conditioned only on global shape embeddings rather than local surface cues. We introduce MeshWeaver, an autoregressive framework that treats mesh generation as a surface weaving process by directly predicting the next vertex instead of independent coordinates. At its core is a multi-level sparse-voxel encoder that injects geometric context into the generative process in three complementary ways: providing voxel features as vertex representations, guiding token prediction via cross-attention to voxel features, and serving as a structural scaffold that constrains generation around the input surface. Our hierarchical design enables coarse-to-fine vertex prediction in a single decoding step, while tightly coupling the generative model with 3D geometry. Extensive experiments demonstrate that MeshWeaver achieves a state-of-the-art compression ratio of 18%, can generate meshes with up to 16K faces, and significantly improves geometric fidelity over prior approaches.",
-          "authors": [
-            "Jiale Xu",
-            "Wang Zhao",
-            "Ying Shan"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-03T10:15:43+00:00",
-          "link": "https://arxiv.org/pdf/2606.04688v1",
-          "tags": [
-            "keyword:d-gen",
-            "query:d-gen"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "autoregressive mesh generation",
-          "llm_evidence_cn": "自回归网格生成",
-          "llm_evidence": "自回归网格生成",
-          "canonical_evidence": "自回归网格生成",
-          "llm_tldr_en": "Proposes MeshWeaver, an autoregressive mesh generation framework that weaves surfaces by predicting next vertices with a sparse-voxel encoder for geometric guidance.",
-          "llm_tldr_cn": "该论文针对自回归网格生成中低token效率和缺乏几何感知的问题，提出MeshWeaver框架。将网格生成视为表面编织过程，直接预测下一个顶点而非独立坐标，并引入多层级稀疏体素编码器注入几何上下文。实现了高效的高多边形网格生成，在质量上超越前方法。",
-          "llm_tldr": "该论文针对自回归网格生成中低token效率和缺乏几何感知的问题，提出MeshWeaver框架。将网格生成视为表面编织过程，直接预测下一个顶点而非独立坐标，并引入多层级稀疏体素编码器注入几何上下文。实现了高效的高多边形网格生成，在质量上超越前方法。",
-          "llm_tags": [
-            "query:d-gen"
-          ],
-          "matched_query_tag": "query:d-gen",
-          "matched_query_text": "recent advances in 3D generation",
-          "matched_requirement_id": "req-4",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.04688v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.07115v1",
-          "source": "arxiv",
-          "title": "3DMorph: Single-Image-Guided Local 3D Shape Editing and Morphing",
-          "abstract": "Despite recent progress in 3D generation, intuitive editing of existing shapes remains limited. Unlike images, which benefit from well-established inpainting tools, general 3D objects such as meshes still lack simple and effective methods for local shape editing. Existing approaches are often global, domain-specific, require complex user interaction, or focus on appearance (color and texture) rather than geometry. We introduce 3DMorph, a training-free framework for single-image-guided local 3D shape editing and morphing. Given an edited image showing a desired shape modification, our method automatically localizes the relevant 3D region and transfers 2D modifications to 3D while preserving unmodified areas. 3DMorph also enables intermediate shape generation between the original and edited objects, facilitating design exploration. To benchmark editing quality, we introduce Delta3D, an image-guided local 3D editing benchmark with paired ground-truth edits. Experimental results show that 3DMorph translates intuitive 2D edits into 3D, outperforming state-of-the-art generative and editing methods.",
-          "authors": [
-            "Tobias Preintner",
-            "Yunfei Deng",
-            "Phillip Müller",
-            "Sebastian Illing",
-            "Adrian König",
-            "Thomas Bäck",
-            "Elena Raponi",
-            "Niki van Stein"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV",
-            "cs.GR"
-          ],
-          "published": "2026-06-05T10:10:33+00:00",
-          "link": "https://arxiv.org/pdf/2606.07115v1",
-          "tags": [
-            "keyword:d-gen",
-            "query:d-gen"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Single-image-guided local 3D shape editing and morphing",
-          "llm_evidence_cn": "单张图像引导的局部3D形状编辑和变形",
-          "llm_evidence": "单张图像引导的局部3D形状编辑和变形",
-          "canonical_evidence": "单张图像引导的局部3D形状编辑和变形",
-          "llm_tldr_en": "3DMorph enables training-free local 3D shape editing and morphing guided by a single edited image, automatically localizing regions and transferring modifications to 3D.",
-          "llm_tldr_cn": "针对3D形状缺乏直观局部编辑工具的问题，该论文提出3DMorph训练自由框架。给定一张展示所需形状修改的编辑后图像，方法自动定位相关3D区域，将2D修改迁移到3D同时保留未修改部分。还支持中间形状生成。在多种形状上展示出有效且可控的几何编辑能力。",
-          "llm_tldr": "针对3D形状缺乏直观局部编辑工具的问题，该论文提出3DMorph训练自由框架。给定一张展示所需形状修改的编辑后图像，方法自动定位相关3D区域，将2D修改迁移到3D同时保留未修改部分。还支持中间形状生成。在多种形状上展示出有效且可控的几何编辑能力。",
+          "llm_evidence_en": "generative 3D scene generation using diffusion models",
+          "llm_evidence_cn": "使用扩散模型进行生成式3D场景生成",
+          "llm_evidence": "使用扩散模型进行生成式3D场景生成",
+          "canonical_evidence": "使用扩散模型进行生成式3D场景生成",
+          "llm_tldr_en": "EditSSC generates 3D semantic occupancy scenes by reshaping them into 2D BEV images and using off-the-shelf latent diffusion, enabling training-free editing for autonomous driving.",
+          "llm_tldr_cn": "现有3D语义场景生成依赖复杂的三平面编码器等专用架构，编辑困难。本文提出EditSSC，将3D语义占用网格转换为多通道鸟瞰图，利用Stable Diffusion的量化自编码器和UNet进行扩散生成，并实现无需训练的编辑能力。实验表明该方法在生成质量和编辑灵活性上达到新水平，简化了自动驾驶场景生成流程。",
+          "llm_tldr": "现有3D语义场景生成依赖复杂的三平面编码器等专用架构，编辑困难。本文提出EditSSC，将3D语义占用网格转换为多通道鸟瞰图，利用Stable Diffusion的量化自编码器和UNet进行扩散生成，并实现无需训练的编辑能力。实验表明该方法在生成质量和编辑灵活性上达到新水平，简化了自动驾驶场景生成流程。",
           "llm_tags": [
             "query:d-gen"
           ],
@@ -217,39 +47,43 @@
           "matched_query_text": "generative 3D models",
           "matched_requirement_id": "req-3",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.07115v1",
+          "paper_id": "2606.09273v1",
           "carry_days": 1
         },
         {
-          "id": "2606.03877v1",
+          "id": "2606.09738v1",
           "source": "arxiv",
-          "title": "MLP Splatting: Object-Centric Neural Fields",
-          "abstract": "3D representations are fundamental to scene rendering, understanding, and interaction. Recent approaches, such as 3D Gaussian Splatting and Neural Radiance Fields, achieve impressive photorealistic novel-view synthesis, but lack the ability to easily decompose scene elements into a few primitives, requiring additional segmentation or grouping for object-level manipulation. We present MLP-Splatting, a method that enables scene decomposition via a few expressive light-field primitives while providing photorealistic novel-view synthesis.   MLP-Splatting models each primitive as an independent compact MLP with localized spatial support that predicts radiance and opacity. In contrast to low-level Gaussian primitives or a single global radiance field, our neural primitives provide greater expressive capacity while remaining spatially localized. Rendering is performed through efficient sparse volumetric compositing over ray-primitive interactions.   Our primitives are supervised using RGB supervision alone, which yields primitives that represent local scene regions often corresponding to objects or object parts, enabling interactive object-level editing without segmentation masks by selecting a handful of primitives. Our method, augmented with optional semantic feature distillation, enables open-vocabulary scene interaction and open-set instant segmentation. Compared to state-of-the-art methods, we achieve substantially lower memory usage (1/15$\\times$) and faster rendering (3$\\times$), as we show in our experiments compared to semantic 3DGS methods. Project Page: https://shinjeongkim.com/mlp-splatting",
+          "title": "HDSL: A Hierarchical Domain-Specific Language for Structured 3D Indoor Scene Generation and Localized Editing with LLM Agents",
+          "abstract": "Text-driven indoor scene generation and editing require an intermediate representation that language models can both produce and revise. Existing LLM-based systems often rely on scene graphs or global constraint lists, which are compact but underspecify local geometry and make instruction-based edits difficult to localize. We frame this problem as structured program generation and local program repair, and propose Hierarchical Descriptive Scene Language (HDSL), an XML/CSS-style domain-specific language for structured 3D indoor scenes. HDSL represents rooms, regions, objects, and support surfaces as a tree with local coordinates, making complex scenes easier to plan recursively and easier to retrieve for editing. Our pipeline uses LLM agents to generate HDSL subtrees with bounded verification, grounds non-virtual nodes through multimodal asset retrieval, and applies force-directed layout optimization to repair boundary and collision errors. For editing, Hierarchical Retrieval-Augmented Generation retrieves the relevant subtree, asks the LLM to rewrite only that local context, and merges the result back through a deterministic three-way merge. In our reproduced benchmark, HDSL improves average object coverage, text-scene alignment, and generation time over full text-to-scene baselines while remaining competitive with recent layout-only reproductions on geometry metrics; for editing, HRAG reduces token use by $5.22\\times$ and runtime by $6.19\\times$, produces valid DSL for all eight paired edits, and better preserves unrelated scene objects.",
           "authors": [
-            "Shinjeong Kim",
-            "Yuzhou Cheng",
-            "Xin Kong",
-            "Paul H. J. Kelly",
-            "Andrew J. Davison"
+            "Letian Li",
+            "Chao Shen",
+            "Shuzhao Xie",
+            "Chenghao Gu",
+            "ZhengXiao He",
+            "Yu Meng",
+            "Xin Yang",
+            "Wenyuan Jiang",
+            "Zhi Wang"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-06-02T16:46:16+00:00",
-          "link": "https://arxiv.org/pdf/2606.03877v1",
+          "published": "2026-06-08T17:02:36+00:00",
+          "link": "https://arxiv.org/pdf/2606.09738v1",
           "tags": [
             "keyword:d-gen",
             "query:d-gen"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Object-centric neural fields for scene decomposition and view synthesis",
-          "llm_evidence_cn": "以对象为中心的神经场用于场景分解和视图合成",
-          "llm_evidence": "以对象为中心的神经场用于场景分解和视图合成",
-          "canonical_evidence": "以对象为中心的神经场用于场景分解和视图合成",
-          "llm_tldr_en": "Presents MLP-Splatting, which models each scene element as a compact MLP primitive for photorealistic novel-view synthesis and object-level manipulation.",
-          "llm_tldr_cn": "现有神经辐射场和3D高斯泼溅虽能高质量渲染，但缺乏场景元素分解能力。MLP-Splatting将每个场景基元建模为紧凑MLP，具有局部空间支持，独立预测颜色和透明度。该方法在实现光真实感新视角合成的同时，支持对场景进行对象级分解和操控，无需额外分割。",
-          "llm_tldr": "现有神经辐射场和3D高斯泼溅虽能高质量渲染，但缺乏场景元素分解能力。MLP-Splatting将每个场景基元建模为紧凑MLP，具有局部空间支持，独立预测颜色和透明度。该方法在实现光真实感新视角合成的同时，支持对场景进行对象级分解和操控，无需额外分割。",
+          "llm_evidence_en": "3D indoor scene generation, LLM agents, domain-specific language",
+          "llm_evidence_cn": "3D室内场景生成，LLM代理，领域特定语言",
+          "llm_evidence": "3D室内场景生成，LLM代理，领域特定语言",
+          "canonical_evidence": "3D室内场景生成，LLM代理，领域特定语言",
+          "llm_tldr_en": "HDSL provides an XML/CSS-style language for LLM-based structured 3D indoor scene generation and localized editing.",
+          "llm_tldr_cn": "文本驱动的室内场景生成需要中间表示。现有场景图或约束列表缺乏局部几何细节，难以精确定位编辑。HDSL提出一种树状XML/CSS风格语言，表示房间、物体及支撑关系，方便LLM递归规划和局部修改。实验表明，HDSL显著提升了生成场景的结构合理性和编辑准确性，为语言引导的3D创作提供了新范式。",
+          "llm_tldr": "文本驱动的室内场景生成需要中间表示。现有场景图或约束列表缺乏局部几何细节，难以精确定位编辑。HDSL提出一种树状XML/CSS风格语言，表示房间、物体及支撑关系，方便LLM递归规划和局部修改。实验表明，HDSL显著提升了生成场景的结构合理性和编辑准确性，为语言引导的3D创作提供了新范式。",
           "llm_tags": [
             "query:d-gen"
           ],
@@ -257,7 +91,7 @@
           "matched_query_text": "generative 3D models",
           "matched_requirement_id": "req-3",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.03877v1",
+          "paper_id": "2606.09738v1",
           "carry_days": 1
         }
       ]
