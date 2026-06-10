@@ -1,89 +1,91 @@
 {
-  "generated_at": "2026-06-09T21:36:20.252359+00:00",
-  "updated_date": "20260609",
+  "generated_at": "2026-06-10T21:25:22.662034+00:00",
+  "updated_date": "20260610",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
-      "updated_date": "20260609",
-      "carryover_days": 9,
-      "items": []
-    },
-    "d-gen": {
-      "updated_date": "20260609",
+      "updated_date": "20260610",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2606.09273v1",
-          "source": "arxiv",
-          "title": "EditSSC: Toward Editable Semantic Occupancy Scenes with Unconditional Diffusion Models",
-          "abstract": "3D semantic scene generation is crucial for autonomous driving applications, yet most methods rely on complex 3D-specific architectures such as triplane encoders and adapted diffusion networks, limiting both their simplicity and their editing capabilities. We propose EditSSC, an editing-ready method for 3D semantic scene generation using 2D Bird's Eye View (BEV) representations and off-the-shelf latent diffusion network. Our approach reshapes 3D semantic occupancy grids into multi-channel BEV images and leverages the quantized autoencoder and UNet from Stable Diffusion with minimal modifications. We perform diffusion on the latents after quantization, which enables training-free editing capabilities. By exploiting class-to-code correspondences in the codebook, our method supports sketch-guided generation, inpainting, and outpainting without any retraining. On SemanticKITTI, EditSSC outperforms existing 3D-specific baselines on unconditional generation, demonstrating that well-established 2D architectures can be effectively repurposed for 3D scene generation and editing.",
+          "id": "biorxiv-10-64898-2026-06-02-729586-v1",
+          "source": "biorxiv",
+          "title": "Flexible route planning and rapid structure learning by mice in complex environments",
+          "abstract": "Action selection using predictive models of the environment plays a fundamental role in human and animal behaviour, yet is poorly understood at circuit and algorithmic levels. Spatial navigation is an attractive domain for characterising how world models guide action selection. However spatial behaviours are shaped by multiple control systems including habits, vector-navigation using a Euclidean model of spatial relationships, and route planning using models of environment structure. Understanding how world models support navigation requires assays that dissociate control systems and decorrelate behavioural variables, while generating large datasets that allow precise quantification of brain-behaviour relationships. Here we developed and computationally optimised a behavioural assay to quantify flexible navigation using knowledge of environment structure. Mice navigated to visually cued goals in complex mazes, with randomised start and goal locations on each trial, generating thousands of non-repetitive goal-directed navigation trajectories. They navigated efficiently - strongly favouring options on the shortest path-to-goal, and learnt rapidly - demonstrating knowledge of maze structure from their first sessions in new environments. We anticipate the assay will be useful for characterising how world models support flexible behaviour.",
           "authors": [
-            "Fatima Balde",
-            "Raoul de Charette",
-            "Alexandre Boulch"
+            "Pereira, M.",
+            "Godinho, B. S.",
+            "Machens, C. K.",
+            "Costa, R. M.",
+            "Akam, T."
           ],
-          "primary_category": "cs.CV",
+          "primary_category": "animal behavior and cognition",
           "categories": [
-            "cs.CV"
+            "animal behavior and cognition"
           ],
-          "published": "2026-06-08T09:41:37+00:00",
-          "link": "https://arxiv.org/pdf/2606.09273v1",
+          "published": "2026-06-05T00:00:00+00:00",
+          "link": "https://www.biorxiv.org/content/10.64898/2026.06.02.729586v1.full.pdf",
           "tags": [
-            "keyword:d-gen",
-            "query:d-gen"
+            "keyword:world-model",
+            "query:world-model"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "generative 3D scene generation using diffusion models",
-          "llm_evidence_cn": "使用扩散模型进行生成式3D场景生成",
-          "llm_evidence": "使用扩散模型进行生成式3D场景生成",
-          "canonical_evidence": "使用扩散模型进行生成式3D场景生成",
-          "llm_tldr_en": "EditSSC generates 3D semantic occupancy scenes by reshaping them into 2D BEV images and using off-the-shelf latent diffusion, enabling training-free editing for autonomous driving.",
-          "llm_tldr_cn": "现有3D语义场景生成依赖复杂的三平面编码器等专用架构，编辑困难。本文提出EditSSC，将3D语义占用网格转换为多通道鸟瞰图，利用Stable Diffusion的量化自编码器和UNet进行扩散生成，并实现无需训练的编辑能力。实验表明该方法在生成质量和编辑灵活性上达到新水平，简化了自动驾驶场景生成流程。",
-          "llm_tldr": "现有3D语义场景生成依赖复杂的三平面编码器等专用架构，编辑困难。本文提出EditSSC，将3D语义占用网格转换为多通道鸟瞰图，利用Stable Diffusion的量化自编码器和UNet进行扩散生成，并实现无需训练的编辑能力。实验表明该方法在生成质量和编辑灵活性上达到新水平，简化了自动驾驶场景生成流程。",
+          "llm_evidence_en": "world models guiding action selection in mouse navigation",
+          "llm_evidence_cn": "小鼠空间导航中世界模型指导动作选择",
+          "llm_evidence": "小鼠空间导航中世界模型指导动作选择",
+          "canonical_evidence": "小鼠空间导航中世界模型指导动作选择",
+          "llm_tldr_en": "Study on how mice use world models for flexible route planning and rapid structure learning in complex environments.",
+          "llm_tldr_cn": "动物如何利用世界模型进行动作选择在电路和算法层面尚不明确。本文通过开发复杂的空间导航任务，结合行为分析和计算建模，证明小鼠能够利用环境结构模型进行灵活路径规划和快速结构学习。该研究为理解世界模型如何指导行为提供了新的实验范式，有助于揭示空间导航中世界模型的神经机制。",
+          "llm_tldr": "动物如何利用世界模型进行动作选择在电路和算法层面尚不明确。本文通过开发复杂的空间导航任务，结合行为分析和计算建模，证明小鼠能够利用环境结构模型进行灵活路径规划和快速结构学习。该研究为理解世界模型如何指导行为提供了新的实验范式，有助于揭示空间导航中世界模型的神经机制。",
           "llm_tags": [
-            "query:d-gen"
+            "query:world-model"
           ],
-          "matched_query_tag": "query:d-gen",
-          "matched_query_text": "generative 3D models",
-          "matched_requirement_id": "req-3",
+          "matched_query_tag": "query:world-model",
+          "matched_query_text": "world model concept and applications",
+          "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.09273v1",
+          "paper_id": "biorxiv-10-64898-2026-06-02-729586-v1",
           "carry_days": 1
-        },
+        }
+      ]
+    },
+    "d-gen": {
+      "updated_date": "20260610",
+      "carryover_days": 9,
+      "items": [
         {
-          "id": "2606.09738v1",
+          "id": "2606.11152v1",
           "source": "arxiv",
-          "title": "HDSL: A Hierarchical Domain-Specific Language for Structured 3D Indoor Scene Generation and Localized Editing with LLM Agents",
-          "abstract": "Text-driven indoor scene generation and editing require an intermediate representation that language models can both produce and revise. Existing LLM-based systems often rely on scene graphs or global constraint lists, which are compact but underspecify local geometry and make instruction-based edits difficult to localize. We frame this problem as structured program generation and local program repair, and propose Hierarchical Descriptive Scene Language (HDSL), an XML/CSS-style domain-specific language for structured 3D indoor scenes. HDSL represents rooms, regions, objects, and support surfaces as a tree with local coordinates, making complex scenes easier to plan recursively and easier to retrieve for editing. Our pipeline uses LLM agents to generate HDSL subtrees with bounded verification, grounds non-virtual nodes through multimodal asset retrieval, and applies force-directed layout optimization to repair boundary and collision errors. For editing, Hierarchical Retrieval-Augmented Generation retrieves the relevant subtree, asks the LLM to rewrite only that local context, and merges the result back through a deterministic three-way merge. In our reproduced benchmark, HDSL improves average object coverage, text-scene alignment, and generation time over full text-to-scene baselines while remaining competitive with recent layout-only reproductions on geometry metrics; for editing, HRAG reduces token use by $5.22\\times$ and runtime by $6.19\\times$, produces valid DSL for all eight paired edits, and better preserves unrelated scene objects.",
+          "title": "P3D-Bench: Benchmarking MLLMs for Parametric 3D Generation and Structural Reasoning",
+          "abstract": "Multimodal large language models can write code to produce complex programs as well as use programs to do 3D modeling, which opens up a new avenue for 3D generation powered by their priors, world knowledge and reasoning. Yet existing benchmarks rarely evaluate 3D modeling through code. Such modeling demands more than runnable code: from a text or visual specification, a model must generate a parametric 3D program that is geometrically precise, semantically aligned and assembly-consistent. We introduce P3D-Bench, a benchmark for parametric 3D generation. Unlike a 3D mesh, a parametric 3D program exposes explicit dimensions, construction operations and part relations, revealing whether a model recovers a design's structure, not just its appearance. Under a unified protocol, P3D-Bench covers three task families (Text-to-3D, Image-to-3D and Assembly-3D) and scores each output for executability, geometric fidelity, topology, text-grounded constraints, multiview semantic alignment and part-level structure. We evaluate frontier MLLMs and text-only LLMs on 400 text cases, 400 image cases and 203 annotated assemblies, with domain-specific models as reference points. Our extensive evaluation yields three findings. First, assemblies are the hardest setting, where models still fail to compose multiple parts into a coherent structure. Second, models can often recover the global shape and semantic identity of the target object, yet fail to reproduce the precise parametric geometry specified by the input. Third, part-level modeling remains weak on assemblies, where models recover neither the geometry of each part nor the right number of parts. These results position P3D-Bench as a benchmark for evaluating precise parametric geometry and part-level structure in parametric 3D generation.",
           "authors": [
-            "Letian Li",
-            "Chao Shen",
-            "Shuzhao Xie",
-            "Chenghao Gu",
-            "ZhengXiao He",
-            "Yu Meng",
-            "Xin Yang",
-            "Wenyuan Jiang",
-            "Zhi Wang"
+            "Yikang Yang",
+            "Zhanpeng Hu",
+            "Youtian Lin",
+            "Mengqi Zhou",
+            "Jingxi Xu",
+            "Feihu Zhang",
+            "Jiaheng Liu",
+            "Yao Yao"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-06-08T17:02:36+00:00",
-          "link": "https://arxiv.org/pdf/2606.09738v1",
+          "published": "2026-06-09T17:36:34+00:00",
+          "link": "https://arxiv.org/pdf/2606.11152v1",
           "tags": [
             "keyword:d-gen",
             "query:d-gen"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "3D indoor scene generation, LLM agents, domain-specific language",
-          "llm_evidence_cn": "3D室内场景生成，LLM代理，领域特定语言",
-          "llm_evidence": "3D室内场景生成，LLM代理，领域特定语言",
-          "canonical_evidence": "3D室内场景生成，LLM代理，领域特定语言",
-          "llm_tldr_en": "HDSL provides an XML/CSS-style language for LLM-based structured 3D indoor scene generation and localized editing.",
-          "llm_tldr_cn": "文本驱动的室内场景生成需要中间表示。现有场景图或约束列表缺乏局部几何细节，难以精确定位编辑。HDSL提出一种树状XML/CSS风格语言，表示房间、物体及支撑关系，方便LLM递归规划和局部修改。实验表明，HDSL显著提升了生成场景的结构合理性和编辑准确性，为语言引导的3D创作提供了新范式。",
-          "llm_tldr": "文本驱动的室内场景生成需要中间表示。现有场景图或约束列表缺乏局部几何细节，难以精确定位编辑。HDSL提出一种树状XML/CSS风格语言，表示房间、物体及支撑关系，方便LLM递归规划和局部修改。实验表明，HDSL显著提升了生成场景的结构合理性和编辑准确性，为语言引导的3D创作提供了新范式。",
+          "llm_evidence_en": "benchmark for parametric 3D generation using MLLMs",
+          "llm_evidence_cn": "参数化3D生成基准测试",
+          "llm_evidence": "参数化3D生成基准测试",
+          "canonical_evidence": "参数化3D生成基准测试",
+          "llm_tldr_en": "P3D-Bench introduces a benchmark to evaluate multimodal LLMs on parametric 3D generation from text/visual specs, assessing geometric precision and structural consistency.",
+          "llm_tldr_cn": "现有基准缺乏对代码驱动的参数化3D建模的评估。本文提出P3D-Bench，从文本或视觉规范出发，要求模型生成几何精确、语义对齐且装配一致的参数化3D程序。该基准揭示了模型在结构理解上的能力，推动了MLLM在3D生成中的评测。",
+          "llm_tldr": "现有基准缺乏对代码驱动的参数化3D建模的评估。本文提出P3D-Bench，从文本或视觉规范出发，要求模型生成几何精确、语义对齐且装配一致的参数化3D程序。该基准揭示了模型在结构理解上的能力，推动了MLLM在3D生成中的评测。",
           "llm_tags": [
             "query:d-gen"
           ],
@@ -91,7 +93,7 @@
           "matched_query_text": "generative 3D models",
           "matched_requirement_id": "req-3",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.09738v1",
+          "paper_id": "2606.11152v1",
           "carry_days": 1
         }
       ]
