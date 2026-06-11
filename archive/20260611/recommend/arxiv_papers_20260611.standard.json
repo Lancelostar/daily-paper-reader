@@ -1,0 +1,732 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-11T22:03:41.802446+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 11,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 11,
+    "quick_skim_target": 12,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2606.09187v1",
+      "source": "arxiv",
+      "title": "CP4D: Compositional Physics-aware 4D Scene Generation",
+      "abstract": "4D generation (\\textit{i.e.}, dynamic 3D generation) has recently emerged as a rapidly growing research frontier due to its powerful spatiotemporal modeling capabilities. However, despite notable advances, existing approaches typically fail to capture the underlying physical principles, producing results that are both physically inconsistent and visually implausible. To overcome this limitation, we present CP4D, a novel paradigm for photorealistic 4D scene synthesis with faithful adherence to complex physical dynamics. Drawing inspiration from the compositional nature of real-world scenes, where immutable static backgrounds coexist with dynamic, physically plausible foregrounds, CP4D reformulates 4D generation as the integration of a static 3D environment with physically grounded dynamic objects. On this basis, our framework follows a three-stage pipeline: \\textbf{1)} Firstly, we leverage pre-trained expert models to generate high-fidelity 3D representations of the environment and foreground objects respectively. \\textbf{2)} Subsequently, to produce physically plausible trajectories and realistic interactions for these objects, we propose a hybrid motion synthesis strategy that integrates priors from physical simulators with the common sense embedded in video diffusion models. \\textbf{3)} Finally, we develop an automated composition mechanism that seamlessly fuses the static environment and dynamic objects into coherent, physically consistent 4D scenes. Extensive experiments demonstrate that CP4D can generate explorable and interactive 4D scenes with high visual fidelity, strong physical plausibility, and fine-grained controllability, significantly outperforming existing methods. The project page: https://anonymous.4open.science/w/CP4D/.",
+      "authors": [
+        "Hanxin Zhu",
+        "Cong Wang",
+        "Tianyu He",
+        "Long Chen",
+        "Xin Jin",
+        "Chen Gao",
+        "Zhibo Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-08T08:23:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.09187v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "compositional physics-aware 4D scene generation",
+      "llm_evidence_cn": "组合式物理感知4D场景生成",
+      "llm_evidence": "组合式物理感知4D场景生成",
+      "canonical_evidence": "组合式物理感知4D场景生成",
+      "llm_tldr_en": "CP4D proposes a compositional paradigm for photorealistic 4D scene synthesis with physical dynamics adherence.",
+      "llm_tldr_cn": "现有4D生成方法忽略物理规律，结果不真实。本文提出CP4D，受真实场景组成的启发，将4D生成分解为静态3D环境和动态物理前景的组合，融合物理动力学。该方法生成的动态场景既逼真又符合物理规律。实验表明CP4D在视觉质量和物理一致性上优于现有方法。",
+      "llm_tldr": "现有4D生成方法忽略物理规律，结果不真实。本文提出CP4D，受真实场景组成的启发，将4D生成分解为静态3D环境和动态物理前景的组合，融合物理动力学。该方法生成的动态场景既逼真又符合物理规律。实验表明CP4D在视觉质量和物理一致性上优于现有方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.09936v1",
+      "source": "arxiv",
+      "title": "One Lens, Many Worlds : A Capability-Typed Interface for World-Model Interpretability",
+      "abstract": "World models are now built on substantially different computational substrates. Latent recurrent state-space models such as PlaNet and the Dreamer family compress observations into recurrent states; token-based models such as IRIS quantize observations into a learned codebook and predict autoregressively with a transformer; and joint-embedding predictive architectures such as I-JEPA predict in a learned latent space with no pixel decoder. The interpretability methods applied to these models, including probing, activation patching, sparse autoencoders, and surprise analysis, share a common set of primitives, yet they are re-implemented from scratch for each architecture because existing hook-and-cache tooling assumes a transformer language model with no notion of actions, environment steps, or imagined rollouts. We argue that this fragmentation reflects the tooling rather than the models, and that the shared structure of world models is captured by a small typed interface. We present WorldModelLens, an open-source interpretability substrate organized around a capability-typed adapter: every model implements four required methods (encode, transition, initial state, sample) and declares a set of optional heads (decode, reward, continue, actor, critic) through an explicit capability descriptor, so that reinforcement-learning and self-supervised world models are first-class without either imitating the other. A single hook and cache layer exposes time-indexed activations, imagination rollouts, and intervention replay over this interface, allowing each analysis to be written once.",
+      "authors": [
+        "Bhavith Chandra Challagundla",
+        "Sanskar Pandey",
+        "Param Thakkar",
+        "Rishikesh Mallagundla",
+        "Yugandhar Reddy Gogireddy",
+        "Wenhao Lu",
+        "Hindol Roy Choudhury",
+        "Shravani Challagundla",
+        "Mohamed Deraz Nasr",
+        "Spursh Deshpande"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-07T19:27:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.09936v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "interpretability interface for various world model architectures",
+      "llm_evidence_cn": "面向多种世界模型架构的可解释性接口",
+      "llm_evidence": "面向多种世界模型架构的可解释性接口",
+      "canonical_evidence": "面向多种世界模型架构的可解释性接口",
+      "llm_tldr_en": "One Lens, Many Worlds proposes a unified capability-typed interface for interpreting world models across different architectures, reducing reimplementation.",
+      "llm_tldr_cn": "不同世界模型架构（如Dreamer、IRIS、I-JEPA）的可解释性方法被重复实现，缺乏统一框架。本文提出一个能力类型化的接口，将探查、激活修补等原语抽象为通用操作，支持跨架构的模型分析。该接口通过统一钩子与缓存机制，显著降低了世界模型理解工具的重复开发成本，为系统化比较提供了基础。",
+      "llm_tldr": "不同世界模型架构（如Dreamer、IRIS、I-JEPA）的可解释性方法被重复实现，缺乏统一框架。本文提出一个能力类型化的接口，将探查、激活修补等原语抽象为通用操作，支持跨架构的模型分析。该接口通过统一钩子与缓存机制，显著降低了世界模型理解工具的重复开发成本，为系统化比较提供了基础。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10988v1",
+      "source": "arxiv",
+      "title": "AnimaSpark: A Feed-Forward Method for Animating Arbitrary 3D Objects",
+      "abstract": "While recent advancements in generative AI have substantially accelerated static 3D model creation workflows, the synthesis of category-agnostic 3D animations remains a significant bottleneck in 3D asset production. Current methods for category-agnostic animation generation exhibit critical limitations in inference speed, motion quality, and adherence to textual prompts, thereby leaving the process dependent on labor-intensive manual artistry. To address these challenges, this paper introduces AnimaSpark, a novel pipeline for category-agnostic 3D animation generation. Our approach is motivated by the key insight that for many fundamental motions in the 3D world, the corresponding joint transformations can often be effectively modeled within a two-dimensional subspace. The pipeline begins by rendering a rigged static 3D model into multi-layered image representations of its mesh and skeleton, which are subsequently fed into a video generation model. We then employ a keypoint tracking algorithm on the generated video to capture the motion of the skeletal joints projected onto the camera's viewing plane. In the final stage, we distill the planar translations and rotations from these tracked keypoints and lift them from the 2D domain into 3D space to animate the character. Comprehensive evaluations reveal that our method achieves superior performance over existing state-of-the-art techniques across key metrics, including text-motion alignment, quality of motion, and computational efficiency.",
+      "authors": [
+        "Yiming Zhao",
+        "Haoyu Sun",
+        "Aoyu Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-09T15:25:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.10988v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "feed-forward method for animating arbitrary 3D objects",
+      "llm_evidence_cn": "前馈式动画生成任意3D物体",
+      "llm_evidence": "前馈式动画生成任意3D物体",
+      "canonical_evidence": "前馈式动画生成任意3D物体",
+      "llm_tldr_en": "AnimaSpark proposes a feed-forward pipeline for category-agnostic 3D animation generation that models joint transformations in 2D, achieving faster inference and better motion quality with textual prompt adherence.",
+      "llm_tldr_cn": "三维动画生成是3D内容创作中的瓶颈，现有方法推理速度慢、运动质量低、文本对齐差。本文提出AnimaSpark，一种前馈式类别无关三维动画生成流水线，利用关键洞察：许多基本运动可有效在二维空间建模联合变换。该方法在推理速度和运动质量上取得显著提升，并更好地遵循文本提示，减少手工劳动。",
+      "llm_tldr": "三维动画生成是3D内容创作中的瓶颈，现有方法推理速度慢、运动质量低、文本对齐差。本文提出AnimaSpark，一种前馈式类别无关三维动画生成流水线，利用关键洞察：许多基本运动可有效在二维空间建模联合变换。该方法在推理速度和运动质量上取得显著提升，并更好地遵循文本提示，减少手工劳动。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.12316v1",
+      "source": "arxiv",
+      "title": "Slots, Transitions, Loops: Learning Composable World Models for ARC",
+      "abstract": "ARC tests in-context rule induction: given a few input-output demonstrations, a model must infer the hidden rule and apply it to a new query. While many approaches express ARC rules through language, code, or symbolic programs, ARC itself is visual-symbolic: rules appear as grid transitions over objects, colors, shapes, and spatial relations. We introduce Loop-OWM, an object-centric world-modeling architecture that learns these rules as composable transitions over structured states. It combines color-prototype slots, demonstration-conditioned task summaries, and a looped transition model with dense propagation and slot-conditioned correction. On both ARC-1 and ARC-2, Loop-OWM outperforms non-looped and looped baselines with comparable or fewer parameters. These results suggest that ARC rules can be learned not only as language descriptions or searched programs, but also as transitions over visual-symbolic world states.",
+      "authors": [
+        "Gege Gao",
+        "Bernhard Schölkopf",
+        "Andreas Geiger"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T16:51:53+00:00",
+      "link": "https://arxiv.org/pdf/2606.12316v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "composable world model learning for ARC grid transformation rules",
+      "llm_evidence_cn": "用于ARC网格变换规则的可组合世界模型学习",
+      "llm_evidence": "用于ARC网格变换规则的可组合世界模型学习",
+      "canonical_evidence": "用于ARC网格变换规则的可组合世界模型学习",
+      "llm_tldr_en": "Loop-OWM learns composable world models for ARC tasks using object-centric slots and looped transitions, outperforming baselines on ARC-1 and ARC-2.",
+      "llm_tldr_cn": "Loop-OWM针对ARC任务中的上下文规则归纳问题，提出一种基于对象中心的世界模型架构。它将网格物体编码为颜色原型槽，并利用循环过渡模型学习可组合的状态转换。在ARC-1和ARC-2数据集上，该方法以更少参数超越非循环和循环基线。这项工作展示了世界模型在符号视觉推理中的应用潜力。",
+      "llm_tldr": "Loop-OWM针对ARC任务中的上下文规则归纳问题，提出一种基于对象中心的世界模型架构。它将网格物体编码为颜色原型槽，并利用循环过渡模型学习可组合的状态转换。在ARC-1和ARC-2数据集上，该方法以更少参数超越非循环和循环基线。这项工作展示了世界模型在符号视觉推理中的应用潜力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10902v1",
+      "source": "arxiv",
+      "title": "Pose-ICL: 3D-Aware In-Context Learning for Pose-Controllable Subject Customization",
+      "abstract": "Subject Customization is a foundational task in modern image generation. By providing a few reference images and a text prompt, users can generate images of a specific object in any desired scene. However, existing methods still struggle to achieve effective pose control for customized subjects. In practice, they often exhibit inaccurate poses or inconsistent cross-pose appearances. These limitations suggest that understanding objects in a volumetric manner remains a significant challenge for 2D-native backbones. To address this challenge, we propose Pose-ICL, a tuning-free framework that leverages 3D-aware In-Context Learning (ICL) to directly adapt to new subjects through multiple paired image-pose references. Its core mechanism,Surface-Anchored Position Embedding (SAPE), equips the model with explicit 3D awareness by anchoring image tokens to the surface coordinates of a volumetric bounding box. Dedicated refinements ensure its seamless compatibility with existing DiT models. Extensive evaluations on both 3D assets and real-world subjects demonstrate that Pose-ICL significantly outperforms current methods in both pose accuracy and identity consistency.",
+      "authors": [
+        "Xuan Han",
+        "Yihao Zhao",
+        "Mingyu You"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-09T14:13:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.10902v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D-aware in-context learning for pose-controllable subject customization",
+      "llm_evidence_cn": "3D感知的上下文学习用于姿态可控对象定制",
+      "llm_evidence": "3D感知的上下文学习用于姿态可控对象定制",
+      "canonical_evidence": "3D感知的上下文学习用于姿态可控对象定制",
+      "llm_tldr_en": "Pose-ICL introduces 3D-aware in-context learning to achieve pose control in subject customization without fine-tuning, using multi-reference image-pose pairs.",
+      "llm_tldr_cn": "Pose-ICL解决对象定制中的姿态控制难题，提出基于3D感知的上下文学习框架。通过提供多个参考图像-姿态对，模型无需微调即可适应新对象并生成指定姿态的图像。核心机制是表面感知（Surface-A）融合多参考信息。实验表明在姿态准确性和跨姿态一致性上显著超越现有方法，为2D生成赋予了3D空间理解能力。",
+      "llm_tldr": "Pose-ICL解决对象定制中的姿态控制难题，提出基于3D感知的上下文学习框架。通过提供多个参考图像-姿态对，模型无需微调即可适应新对象并生成指定姿态的图像。核心机制是表面感知（Surface-A）融合多参考信息。实验表明在姿态准确性和跨姿态一致性上显著超越现有方法，为2D生成赋予了3D空间理解能力。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11782v1",
+      "source": "arxiv",
+      "title": "Seeing What Matters: Perceptual Wrapper with Common Randomness for 3D Gaussian Splatting",
+      "abstract": "While 3D Gaussian Splatting (3DGS) achieves impressive real-time rendering, it frequently struggles to synthesize high-frequency textures, a limitation heavily exacerbated in memory-constrained and rate-distortion-optimized (RDO) pipelines. To address this, we propose a versatile 2D perceptual wrapper that enhances the rendered outputs of existing 3DGS representations in a content- and view-dependent manner. Our method leverages a lightweight synthesis network conditioned on pseudo-random Gaussian noise to synthesize perceptually plausible textures. Supervised by Wasserstein Distortion, the network learns to match local feature statistics rather than strictly enforcing pixel-wise reconstruction fidelity, effectively mitigating the blurriness inherent in standard frameworks. We demonstrate the broad applicability of our plug-and-play approach across vanilla, memory-constrained, and RDO 3DGS methods. Comprehensive subjective and objective experiments confirm that our method significantly improves over existing baselines, yielding superior perceptual quality at sharply reduced file or model sizes.",
+      "authors": [
+        "He-Bi Yang",
+        "Jing-Zhong Chen",
+        "Yen-Kuan Ho",
+        "Sang NguyenQuang",
+        "Fan-Yi Hsu",
+        "Yun-Yu Lee",
+        "Jui-Chiu Chiang",
+        "Wen-Hsiao Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T08:14:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.11782v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "perceptual wrapper for 3DGS to enhance texture synthesis, common randomness",
+      "llm_evidence_cn": "为3D高斯泼溅添加感知包装器，增强纹理合成",
+      "llm_evidence": "为3D高斯泼溅添加感知包装器，增强纹理合成",
+      "canonical_evidence": "为3D高斯泼溅添加感知包装器，增强纹理合成",
+      "llm_tldr_en": "Proposes a 2D perceptual wrapper with common randomness to enhance high-frequency texture synthesis in 3D Gaussian Splatting, using Wasserstein distortion.",
+      "llm_tldr_cn": "3D高斯泼溅在内存受限和率失真优化管线中难以合成高频纹理。本文提出一种通用的2D感知包装器，利用伪随机高斯噪声和Wasserstein失真监督，在保持保真度的同时显著提升纹理细节。该方法即插即用，兼容现有3DGS表示。",
+      "llm_tldr": "3D高斯泼溅在内存受限和率失真优化管线中难以合成高频纹理。本文提出一种通用的2D感知包装器，利用伪随机高斯噪声和Wasserstein失真监督，在保持保真度的同时显著提升纹理细节。该方法即插即用，兼容现有3DGS表示。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11152v1",
+      "source": "arxiv",
+      "title": "P3D-Bench: Benchmarking MLLMs for Parametric 3D Generation and Structural Reasoning",
+      "abstract": "Multimodal large language models can write code to produce complex programs as well as use programs to do 3D modeling, which opens up a new avenue for 3D generation powered by their priors, world knowledge and reasoning. Yet existing benchmarks rarely evaluate 3D modeling through code. Such modeling demands more than runnable code: from a text or visual specification, a model must generate a parametric 3D program that is geometrically precise, semantically aligned and assembly-consistent. We introduce P3D-Bench, a benchmark for parametric 3D generation. Unlike a 3D mesh, a parametric 3D program exposes explicit dimensions, construction operations and part relations, revealing whether a model recovers a design's structure, not just its appearance. Under a unified protocol, P3D-Bench covers three task families (Text-to-3D, Image-to-3D and Assembly-3D) and scores each output for executability, geometric fidelity, topology, text-grounded constraints, multiview semantic alignment and part-level structure. We evaluate frontier MLLMs and text-only LLMs on 400 text cases, 400 image cases and 203 annotated assemblies, with domain-specific models as reference points. Our extensive evaluation yields three findings. First, assemblies are the hardest setting, where models still fail to compose multiple parts into a coherent structure. Second, models can often recover the global shape and semantic identity of the target object, yet fail to reproduce the precise parametric geometry specified by the input. Third, part-level modeling remains weak on assemblies, where models recover neither the geometry of each part nor the right number of parts. These results position P3D-Bench as a benchmark for evaluating precise parametric geometry and part-level structure in parametric 3D generation.",
+      "authors": [
+        "Yikang Yang",
+        "Zhanpeng Hu",
+        "Youtian Lin",
+        "Mengqi Zhou",
+        "Jingxi Xu",
+        "Feihu Zhang",
+        "Jiaheng Liu",
+        "Yao Yao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-09T17:36:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.11152v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "benchmark for parametric 3D generation from MLLMs",
+      "llm_evidence_cn": "面向多模态大语言模型的参数化3D生成基准",
+      "llm_evidence": "面向多模态大语言模型的参数化3D生成基准",
+      "canonical_evidence": "面向多模态大语言模型的参数化3D生成基准",
+      "llm_tldr_en": "Introduces P3D-Bench, a benchmark evaluating MLLMs on generating parametric 3D programs from text or images, assessing geometric and structural accuracy.",
+      "llm_tldr_cn": "现有基准鲜有评估多模态大语言模型通过代码进行3D建模的能力，而此任务要求几何精确、语义一致且结构合理。本文提出P3D-Bench，通过参数化3D程序的形式评估模型是否能恢复设计结构而非仅是外观。在多种MLLM上的评测揭示了当前模型在复杂结构推理上的不足。",
+      "llm_tldr": "现有基准鲜有评估多模态大语言模型通过代码进行3D建模的能力，而此任务要求几何精确、语义一致且结构合理。本文提出P3D-Bench，通过参数化3D程序的形式评估模型是否能恢复设计结构而非仅是外观。在多种MLLM上的评测揭示了当前模型在复杂结构推理上的不足。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.11152v2",
+      "source": "arxiv",
+      "title": "P3D-Bench: Benchmarking MLLMs for Parametric 3D Generation and Structural Reasoning",
+      "abstract": "Multimodal large language models can write code to produce complex programs as well as use programs to do 3D modeling, which opens up a new avenue for 3D generation powered by their priors, world knowledge and reasoning. Yet existing benchmarks rarely evaluate 3D modeling through code. Such modeling demands more than runnable code: from a text or visual specification, a model must generate a parametric 3D program that is geometrically precise, semantically aligned and assembly-consistent. We introduce P3D-Bench, a benchmark for parametric 3D generation. Unlike a 3D mesh, a parametric 3D program exposes explicit dimensions, construction operations and part relations, revealing whether a model recovers a design's structure, not just its appearance. Under a unified protocol, P3D-Bench covers three task families (Text-to-3D, Image-to-3D and Assembly-3D) and scores each output for executability, geometric fidelity, topology, text-grounded constraints, multiview semantic alignment and part-level structure. We evaluate frontier MLLMs and text-only LLMs on 400 text cases, 400 image cases and 203 annotated assemblies, with domain-specific models as reference points. Our extensive evaluation yields three findings. First, assemblies are the hardest setting, where models still fail to compose multiple parts into a coherent structure. Second, models can often recover the global shape and semantic identity of the target object, yet fail to reproduce the precise parametric geometry specified by the input. Third, part-level modeling remains weak on assemblies, where models recover neither the geometry of each part nor the right number of parts. These results position P3D-Bench as a benchmark for evaluating precise parametric geometry and part-level structure in parametric 3D generation.",
+      "authors": [
+        "Yikang Yang",
+        "Zhanpeng Hu",
+        "Youtian Lin",
+        "Mengqi Zhou",
+        "Jingxi Xu",
+        "Feihu Zhang",
+        "Jiaheng Liu",
+        "Yao Yao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-09T17:36:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.11152v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "benchmark for parametric 3D generation evaluating structural reasoning",
+      "llm_evidence_cn": "评估参数化3D生成与结构推理的基准",
+      "llm_evidence": "评估参数化3D生成与结构推理的基准",
+      "canonical_evidence": "评估参数化3D生成与结构推理的基准",
+      "llm_tldr_en": "P3D-Bench evaluates MLLMs on generating parametric 3D programs that are geometrically precise, semantically aligned, and assembly-consistent.",
+      "llm_tldr_cn": "多模态大语言模型可通过编程进行3D建模，但缺乏评估其结构化推理能力的基准。本文提出P3D-Bench，专门评估模型从文本或视觉输入生成参数化3D程序的能力。该基准不仅要求程序可运行，还强调维度精确性、语义对齐与装配一致性。通过全面测试，揭示了当前模型在结构理解上的不足，为3D生成与推理研究提供了重要参照。",
+      "llm_tldr": "多模态大语言模型可通过编程进行3D建模，但缺乏评估其结构化推理能力的基准。本文提出P3D-Bench，专门评估模型从文本或视觉输入生成参数化3D程序的能力。该基准不仅要求程序可运行，还强调维度精确性、语义对齐与装配一致性。通过全面测试，揭示了当前模型在结构理解上的不足，为3D生成与推理研究提供了重要参照。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.04291v1",
+      "source": "arxiv",
+      "title": "A Cookbook of 3D Vision: Data, Learning Paradigms, and Application",
+      "abstract": "3D vision has rapidly evolved, driven by increasingly diverse data representations, learning paradigms, and modeling strategies. Yet the field remains fragmented across representations and benchmarks, making it difficult to develop unified perspectives on efficiency, fidelity, and scalability. This work provides a data-centric taxonomy of 3D vision that connects geometric representations, datasets, learning frameworks, and applications within a single conceptual map. We begin by analysing the principal structural representations of 3D data--point clouds, meshes, voxels, and 3D Gaussians--along with their acquisition pipelines. We then examine how dataset design, benchmark construction, and supervision regimes shape recent advances, spanning 2D-supervised 3D learning, implicit neural representations, and 4D world modeling. Through this integrative lens, we clarify the relationships among representations, learning paradigms, and downstream tasks in reconstruction, generation, and video modeling, offering a consolidated view of emerging trends toward balancing efficiency and fidelity and toward multimodal geometric grounding.",
+      "authors": [
+        "Hongyang Du",
+        "Zongxia Li",
+        "Dawei Liu",
+        "Runhao Li",
+        "Haoyuan Song",
+        "Qingyu Zhang",
+        "Yubo Wang",
+        "Jingcheng Ni",
+        "Shihang Gui",
+        "Congchao Dong",
+        "Tao Hu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-02T23:41:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.04291v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "comprehensive survey of 3D vision, data, learning paradigms, and applications",
+      "llm_evidence_cn": "3D视觉综述，涵盖数据、学习范式和应用",
+      "llm_evidence": "3D视觉综述，涵盖数据、学习范式和应用",
+      "canonical_evidence": "3D视觉综述，涵盖数据、学习范式和应用",
+      "llm_tldr_en": "A cookbook of 3D vision providing a data-centric taxonomy covering geometric representations, datasets, learning frameworks, and applications.",
+      "llm_tldr_cn": "3D视觉领域快速发展但碎片化。本文以数据为中心构建3D视觉分类体系，连接几何表示（点云、网格、体素、3D高斯）、数据集、学习框架与应用。系统梳理了从2D监督3D到生成式建模的最新进展，为研究者提供统一的视角。",
+      "llm_tldr": "3D视觉领域快速发展但碎片化。本文以数据为中心构建3D视觉分类体系，连接几何表示（点云、网格、体素、3D高斯）、数据集、学习框架与应用。系统梳理了从2D监督3D到生成式建模的最新进展，为研究者提供统一的视角。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.06695v1",
+      "source": "arxiv",
+      "title": "S23DR 2026 Winning Solution",
+      "abstract": "This text presents the winning solution to the S23DR 2026 challenge for structured 3D wireframe reconstruction from sparse SfM, fitted depth, and semantic segmentations. The method treats vertices as a conditional set and denoises 64 vertex tokens with a flow-matching DiT conditioned on Perceiver-style scene tokens. A global pass predicts the coarse structure, a hull-cropped second pass refines it, and a small multi-sample consensus step keeps the stochastic sampler well behaved. The final system ranked first on the private leaderboard, achievingHSS = 0.654.",
+      "authors": [
+        "Jan Skvrna",
+        "Miroslav Purkrabek",
+        "Lukas Neumann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-04T20:19:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.06695v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "structured 3D wireframe reconstruction with generative flow-matching",
+      "llm_evidence_cn": "使用流匹配生成结构化3D线框",
+      "llm_evidence": "使用流匹配生成结构化3D线框",
+      "canonical_evidence": "使用流匹配生成结构化3D线框",
+      "llm_tldr_en": "This winning solution for S23DR 2026 generates structured 3D wireframes from sparse SfM using a flow-matching DiT conditioned on scene tokens, achieving first place with HSS=0.654.",
+      "llm_tldr_cn": "针对稀疏SfM和深度输入的结构化3D线框重建问题，该解决方案将顶点视为条件集合，使用流匹配DiT降噪64个顶点令牌，并通过全局-局部两遍预测加多采样共识步骤实现精细结构。在S23DR 2026挑战中排名第一，HSS达到0.654，展示了生成模型在3D重建中的有效性。",
+      "llm_tldr": "针对稀疏SfM和深度输入的结构化3D线框重建问题，该解决方案将顶点视为条件集合，使用流匹配DiT降噪64个顶点令牌，并通过全局-局部两遍预测加多采样共识步骤实现精细结构。在S23DR 2026挑战中排名第一，HSS达到0.654，展示了生成模型在3D重建中的有效性。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11805v1",
+      "source": "arxiv",
+      "title": "TextHOI-3D: Text-to-3D Hand-Object Interaction via Discrete Multi-View Generation and Joint Mesh Optimization",
+      "abstract": "Text-conditioned 3D generation has progressed rapidly for images and isolated objects, but producing a hand-object mesh remains challenging: the output must preserve language semantics, cross-view consistency, object geometry, articulated hand shape, and physically plausible contact. We present TextHOI-3D, a staged framework that uses generated multi-view observations as an explicit interface between text-conditioned visual generation and geometry-aware hand-object recovery. TextHOI-3D learns a compact VQ token space for fixed-camera hand-object observations, predicts multi-view visual tokens from text with a CLIP-conditioned visual autoregressive model, and recovers a unified hand-object mesh through prior initialization, multi-view joint optimization, and anti-penetration refinement. The design separates semantic generation from geometric recovery while keeping both stages connected by a discrete multi-view representation. On HO3D-derived evaluations, the multi-view setting reduces object CD from 17.26 mm to 4.92 mm and penetration volume from 5.3721 cm^3 to 0.2193 cm^3 compared with a single-view counterpart, while improving hand errors and surface F-scores. These results support multi-view visual tokens as an effective intermediate representation for text-driven 3D hand-object mesh creation.",
+      "authors": [
+        "Zixiong Hao",
+        "Zhencun Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-10T08:38:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.11805v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "text-to-3D hand-object interaction generation",
+      "llm_evidence_cn": "文本到3D手物交互生成",
+      "llm_evidence": "文本到3D手物交互生成",
+      "canonical_evidence": "文本到3D手物交互生成",
+      "llm_tldr_en": "Proposes TextHOI-3D, a staged framework for text-to-3D hand-object mesh generation using multi-view token prediction and joint optimization.",
+      "llm_tldr_cn": "手物交互3D生成因需同时满足语义、视图一致性和物理接触而极具挑战。本文提出TextHOI-3D，先学习紧凑VQ空间，再由文本生成多视图视觉token，最后联合优化恢复统一手物网格。实验表明该方法能生成几何精确、接触合理的手物交互模型，实现了文本到3D交互的新途径。",
+      "llm_tldr": "手物交互3D生成因需同时满足语义、视图一致性和物理接触而极具挑战。本文提出TextHOI-3D，先学习紧凑VQ空间，再由文本生成多视图视觉token，最后联合优化恢复统一手物网格。实验表明该方法能生成几何精确、接触合理的手物交互模型，实现了文本到3D交互的新途径。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.05491v1",
+      "source": "arxiv",
+      "title": "Unpaired RGB-Thermal Gaussian-Splatting Using Visual Geometric Transformers",
+      "abstract": "Multi-modal novel view synthesis (NVS) combining RGB and thermal imagery enables precise 3D scene reconstruction with visual and thermal information. However, existing methods typically rely on precisely calibrated RGB-thermal image pairs or stereo setups, limiting scalability and practical deployment. To address this, we introduce a framework for unpaired RGB-thermal NVS that leverages VGGT, a 3D feed-forward transformer architecture, to independently estimate camera poses for each modality. The pose sets are then aligned using the Procrustes algorithm with a cross-modal feature matcher, enabling joint registration without paired calibration. Building on this alignment, we further propose a multi-modal 3D Gaussian Splatting approach that learns directly from unpaired RGB and thermal images. Experiments on diverse scenes demonstrate that our method achieves competitive performance in thermal view synthesis while maintaining RGB fidelity. Moreover, we show that existing reconstruction approaches can produce modality-specific reconstructions that lack cross-modal consistency. We thus introduce a benchmarking framework to rigorously evaluate both per-modality image synthesis and the multi-modal coherence of reconstructed scenes.",
+      "authors": [
+        "Jean Cordonnier",
+        "Chenghao Xu",
+        "Olga Fink",
+        "Malcolm Mielle"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-03T22:30:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.05491v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "unpaired RGB-thermal 3D Gaussian splatting for novel view synthesis",
+      "llm_evidence_cn": "无配对RGB-热成像3D高斯泼溅新视图合成",
+      "llm_evidence": "无配对RGB-热成像3D高斯泼溅新视图合成",
+      "canonical_evidence": "无配对RGB-热成像3D高斯泼溅新视图合成",
+      "llm_tldr_en": "Proposes unpaired RGB-thermal novel view synthesis using VGGT for pose estimation and multi-modal 3D Gaussian Splatting, enabling 3D generation without paired calibration.",
+      "llm_tldr_cn": "该文针对RGB和热成像模态未配对情况下的3D新视图合成问题，提出利用3D前馈Transformer VGGT分别估计各模态相机位姿，再通过Procrustes对齐实现联合注册，进而学习多模态3D高斯泼溅表示。该方法摆脱了对精确配准数据的需求，扩展了3D生成在多模态场景下的适用性。实验证明能有效重建含RGB和热信息的3D场景。",
+      "llm_tldr": "该文针对RGB和热成像模态未配对情况下的3D新视图合成问题，提出利用3D前馈Transformer VGGT分别估计各模态相机位姿，再通过Procrustes对齐实现联合注册，进而学习多模态3D高斯泼溅表示。该方法摆脱了对精确配准数据的需求，扩展了3D生成在多模态场景下的适用性。实验证明能有效重建含RGB和热信息的3D场景。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.08367v1",
+      "source": "arxiv",
+      "title": "Emergence World: A Platform for Evaluating Long-Horizon Multi-Agent Autonomy",
+      "abstract": "Most evaluations of LLM agents look like exams: a discrete task, a clean environment, a score in minutes or hours. We argue that this approach is mismatched with the deployment conditions of autonomous systems, where the relevant timescale can be weeks to months, and where the dynamics that matter most, such as behavioral drift, governance in diverse environmental contexts, and cross-influence between agents from different model families, only emerge over time. We introduce Emergence World, a continuously running multi-agent simulation platform designed to make those dynamics measurable. The platform hosts populations of LLM-driven agents in a shared spatial world grounded in live external data (e.g. real-time weather, news APIs, internet access), equips each agent with 120+ specialized tools and three persistent memory systems, and lets them govern themselves through democratic mechanisms with consequential outcomes. The platform is model-agnostic at the reasoning layer and supports heterogeneous populations in which agents from different vendors share the same world. To illustrate the kinds of questions the platform makes tractable, we present a 15-day cross-vendor study with five parallel worlds powered by Claude Sonnet 4.6, Grok 4.1 Fast, Gemini 3 Flash, GPT-5-mini, and a mixed population. Identical roles and starting conditions produced radically different outcomes, ranging from stable deliberative governance to total population collapse. We release the prompts, log data and configurations to support further research on long-horizon multi-agent autonomy.",
+      "authors": [
+        "Deepak Akkil",
+        "Ravi Kokku",
+        "Karthik Vikram",
+        "Tamer Abuelsaad",
+        "Aditya Vempaty",
+        "Satya Nitta"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.AI"
+      ],
+      "published": "2026-06-06T22:59:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.08367v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent simulation platform with shared spatial world grounded in live data",
+      "llm_evidence_cn": "基于实时数据的共享空间世界多智能体模拟平台",
+      "llm_evidence": "基于实时数据的共享空间世界多智能体模拟平台",
+      "canonical_evidence": "基于实时数据的共享空间世界多智能体模拟平台",
+      "llm_tldr_en": "Emergence World is a continuously running multi-agent simulation platform that evaluates long-horizon LLM agent autonomy in a shared spatial world with live external data.",
+      "llm_tldr_cn": "针对现有LLM智能体评估时间尺度短、无法捕捉长期动态的问题，本文提出Emergence World持续运行的多智能体模拟平台。该平台在共享空间世界中接入实时天气、新闻等外部数据，使行为漂移、治理等长期涌现特性可测量，为世界模型在智能体评估中的应用提供了新工具。",
+      "llm_tldr": "针对现有LLM智能体评估时间尺度短、无法捕捉长期动态的问题，本文提出Emergence World持续运行的多智能体模拟平台。该平台在共享空间世界中接入实时天气、新闻等外部数据，使行为漂移、治理等长期涌现特性可测量，为世界模型在智能体评估中的应用提供了新工具。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.12099v1",
+      "source": "arxiv",
+      "title": "ISAP-3D: Identity-Slot Aligned Part-Aware 3D Generation",
+      "abstract": "Part-aware 3D generation aims to synthesize structured objects with semantically meaningful components, yet often suffers from structural ambiguity due to identity-layout entanglement. Existing methods either infer part identity and spatial layout implicitly, which can lead to unstable part allocation (e.g., slot swapping or part merging), or rely on strong layout conditions that are difficult to obtain in practice. We attribute this ambiguity to identity-slot permutation freedom: without explicit identity-slot alignment, the correspondence between semantic parts and generation slots is not identifiable during training, allowing multiple slot assignments to fit the same supervision and leading to inconsistent decomposition. Based on this insight, we argue that stable part-aware generation requires identity-aligned one-to-one slot modelling. We therefore propose an identity-slot aligned framework, ISAP-3D, which anchors each part with semantic identity tokens and performs identity-conditioned one-to-one layout prediction, followed by layout-conditioned geometry synthesis. Structured local-global conditioning maintains identity alignment across semantic, spatial, and geometric stages. We also construct a part-level dataset with a unified semantic protocol to enable learnable and consistent identity-slot alignment. Extensive experiments demonstrate improved structural stability, controllability, and robustness over state-of-the-art part-aware generation baselines.",
+      "authors": [
+        "Junlin Hao",
+        "Haoshuai Fu",
+        "Xibin Song",
+        "Wei Li",
+        "Ruigang Yang",
+        "Xinggong Zhang",
+        "Jinchuan Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T13:54:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.12099v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "part-aware 3D generation method",
+      "llm_evidence_cn": "部件感知3D生成方法",
+      "llm_evidence": "部件感知3D生成方法",
+      "canonical_evidence": "部件感知3D生成方法",
+      "llm_tldr_en": "Proposes ISAP-3D for stable part-aware 3D generation by aligning identity slots, solving structural ambiguity and slot permutation freedom.",
+      "llm_tldr_cn": "针对部件感知3D生成中的结构歧义问题，提出ISAP-3D方法，通过显式对齐身份槽与语义部件，消除训练中身份槽排列自由带来的不稳定性。在多个数据集上验证了该方法能生成语义一致且结构稳定的3D物体，提升了分解的可靠性和生成质量。",
+      "llm_tldr": "针对部件感知3D生成中的结构歧义问题，提出ISAP-3D方法，通过显式对齐身份槽与语义部件，消除训练中身份槽排列自由带来的不稳定性。在多个数据集上验证了该方法能生成语义一致且结构稳定的3D物体，提升了分解的可靠性和生成质量。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.08666v1",
+      "source": "arxiv",
+      "title": "Language as a Sensor: Calibrated Spatial Belief Estimation in 3D Scenes from Natural Language",
+      "abstract": "Robots deployed in human-centric environments routinely receive natural-language descriptions of spatial information (\"I left my backpack on the table\") that reference parts of the world beyond their perceptual field of view. Traditional metric-semantic mapping ignores this signal, while off-the-shelf multimodal models remain limited in 3D spatial reasoning and are not directly amenable to fusion with other sensor modalities. To convert language observations into a calibrated spatial distribution, we train a Language Sensor Model (LSM) that maps each utterance and its scene-graph context to a multimodal distribution, with mixture weights encoding referential ambiguity (e.g., \"which table\") and component covariances encoding spatial uncertainty (e.g., where \"on the table\" the target lies). We then introduce VL-Map (Vision-Language Metric-Semantic Mapping), a probabilistic framework that treats these language predictions as stochastic observations and fuses them with onboard perception within a unified belief map. On the VLA-3D benchmark as well as on a real-world mobile robot, LSM is the only language predictor whose covariance estimates remain within the calibrated regime; fused into VL-Map, it leads to more accurate predictions of the target object location (~70% more probability mass on the true target compared to the strongest foundation-model baseline).",
+      "authors": [
+        "Aryan Naveen",
+        "Jason Xinyu Liu",
+        "Luca Carlone",
+        "Andreea Bobu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-07T15:17:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.08666v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "language-based spatial world model for robots",
+      "llm_evidence_cn": "基于语言的空间世界模型",
+      "llm_evidence": "基于语言的空间世界模型",
+      "canonical_evidence": "基于语言的空间世界模型",
+      "llm_tldr_en": "Trains a Language Sensor Model that maps natural language utterances to calibrated spatial distributions for robot belief estimation in 3D scenes.",
+      "llm_tldr_cn": "机器人常收到自然语言描述的空间信息，但现有方法难以将其转化为可融合的度量分布。本文提出语言传感器模型，将语言表达与场景图上下文映射为多模态空间分布，编码指代模糊性和空间不确定性。实验证明，该方法可有效融合语言观测并为机器人提供校准的3D信念估计。",
+      "llm_tldr": "机器人常收到自然语言描述的空间信息，但现有方法难以将其转化为可融合的度量分布。本文提出语言传感器模型，将语言表达与场景图上下文映射为多模态空间分布，编码指代模糊性和空间不确定性。实验证明，该方法可有效融合语言观测并为机器人提供校准的3D信念估计。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-02-729586-v1",
+      "source": "biorxiv",
+      "title": "Flexible route planning and rapid structure learning by mice in complex environments",
+      "abstract": "Action selection using predictive models of the environment plays a fundamental role in human and animal behaviour, yet is poorly understood at circuit and algorithmic levels. Spatial navigation is an attractive domain for characterising how world models guide action selection. However spatial behaviours are shaped by multiple control systems including habits, vector-navigation using a Euclidean model of spatial relationships, and route planning using models of environment structure. Understanding how world models support navigation requires assays that dissociate control systems and decorrelate behavioural variables, while generating large datasets that allow precise quantification of brain-behaviour relationships. Here we developed and computationally optimised a behavioural assay to quantify flexible navigation using knowledge of environment structure. Mice navigated to visually cued goals in complex mazes, with randomised start and goal locations on each trial, generating thousands of non-repetitive goal-directed navigation trajectories. They navigated efficiently - strongly favouring options on the shortest path-to-goal, and learnt rapidly - demonstrating knowledge of maze structure from their first sessions in new environments. We anticipate the assay will be useful for characterising how world models support flexible behaviour.",
+      "authors": [
+        "Pereira, M.",
+        "Godinho, B. S.",
+        "Machens, C. K.",
+        "Costa, R. M.",
+        "Akam, T."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-05T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.02.729586v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "studies how world models guide action selection in mouse spatial navigation",
+      "llm_evidence_cn": "研究世界模型如何指导小鼠空间导航中的行动选择",
+      "llm_evidence": "研究世界模型如何指导小鼠空间导航中的行动选择",
+      "canonical_evidence": "研究世界模型如何指导小鼠空间导航中的行动选择",
+      "llm_tldr_en": "This study investigates world models in mice during spatial navigation, developing assays to dissociate control systems and reveal rapid structure learning.",
+      "llm_tldr_cn": "为理解世界模型如何指导行动选择，本文以小鼠空间导航为模型，开发了能够区分习惯、向量导航和路线规划等控制系统的实验范式。通过收集大规模行为数据，精确量化了大脑-行为关系，揭示了小鼠利用世界模型进行灵活路径规划和快速结构学习的能力。",
+      "llm_tldr": "为理解世界模型如何指导行动选择，本文以小鼠空间导航为模型，开发了能够区分习惯、向量导航和路线规划等控制系统的实验范式。通过收集大规模行为数据，精确量化了大脑-行为关系，揭示了小鼠利用世界模型进行灵活路径规划和快速结构学习的能力。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.12153v1",
+      "source": "arxiv",
+      "title": "TopoCap: Learning Topology-Agnostic Motion Priors for Monocular Video-to-Animation",
+      "abstract": "The explosion of generative 3D assets has created a massive demand for animation, yet current motion capture methods remain brittle, restricted to species-specific templates (e.g., SMPL) or requiring labor-intensive manual rigging. We introduce TopoCap, the first unified framework capable of extracting motion from monocular video and retargeting it onto characters with arbitrary, unseen skeletal topologies, i.e., from bipeds to hexapods and inanimate objects, without test-time optimization. Our key insight is that while skeletal structures are combinatorial and discrete, the underlying physics of motion occupy a continuous, low-dimensional manifold. We materialize this insight via a two-stage generative pipeline. First, we learn a Universal Motion Manifold using a Graph CVAE that compresses heterogeneous kinematic chains into a shared, fixed-length latent code. By explicitly conditioning the decoder on a structural embedding of the target rig, we disentangle motion dynamics from skeletal topology. Second, we treat video-to-animation as a conditional flow matching problem, predicting these topology-agnostic codes from visual features. To learn this generalized prior, we introduce Mobjaverse, a massive-scale dataset curated from Objaverse-XL. Comprising over 5,000 unique skeletal topologies and 2 million frames, it exceeds the structural diversity of existing datasets by two orders of magnitude. Extensive experiments demonstrate that \\MethodMotion outperforms specialist models on human and quadruped benchmarks while enabling zero-shot retargeting for the long tail of 3D creatures. Dataset is publicly available at https://huggingface.co/datasets/duckduckplz/Mobjaverse.",
+      "authors": [
+        "Cheng-Feng Pu",
+        "Jia-Peng Zhang",
+        "Meng-Hao Guo",
+        "Yan-Pei Cao",
+        "Shi-Min Hu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-10T14:41:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.12153v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "topology-agnostic motion prior for 3D character animation from monocular video",
+      "llm_evidence_cn": "从单目视频提取运动并重定向到任意拓扑结构的3D角色",
+      "llm_evidence": "从单目视频提取运动并重定向到任意拓扑结构的3D角色",
+      "canonical_evidence": "从单目视频提取运动并重定向到任意拓扑结构的3D角色",
+      "llm_tldr_en": "Introduces TopoCap, a unified framework for extracting motion from video and retargeting it to characters with arbitrary skeletons via a generative two-stage pipeline.",
+      "llm_tldr_cn": "现有动作捕捉方法受限于固定模板或人工绑骨，难以泛化到不同拓扑结构。本文提出TopoCap，通过学习连续运动流形，实现从单目视频提取运动并重定向到任意骨架（从双足到六足）。两阶段生成管线无需测试时优化，显著扩展了3D资产动画的适用范围。",
+      "llm_tldr": "现有动作捕捉方法受限于固定模板或人工绑骨，难以泛化到不同拓扑结构。本文提出TopoCap，通过学习连续运动流形，实现从单目视频提取运动并重定向到任意骨架（从双足到六足）。两阶段生成管线无需测试时优化，显著扩展了3D资产动画的适用范围。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.11446v1",
+      "source": "arxiv",
+      "title": "3D-CBM: A Framework for Concept-Based Interpretability in Generative 3D Modeling",
+      "abstract": "This research introduces a framework for incorporating Concept Bottleneck Models (CBMs) into 3D generative architectures to address the inherent 'semantic gap' in deep geometric learning. As deep models become central to 3D content creation, explainability shifts from a peripheral feature to a fundamental requirement for trust and accountability in safety-critical domains such as healthcare and manufacturing. CBMs provide an intrinsic interpretability solution by constraining latent representations to align with human-defined concepts, yet their application to unstructured 3D data remains largely unexplored.   We design, implement, and validate a formal 3D-CBM architecture that maps raw geometric inputs, including point clouds and meshes, into a multi-tiered taxonomy of interpretable primitives and functional attributes. The framework further identifies strategic datasets, such as PartNet and ShapeNet, specialized for concept-based supervision. Experimental results from a 3D part-manipulation proof-of-concept experiment demonstrate the framework's efficacy, achieving a concept prediction accuracy of 88.8\\% and a Chamfer Distance of 0.0115. Critically, the model enables precise test-time intervention, allowing for the interactive correction of structural errors. This work establishes a foundation for semantically-steerable 3D generation and invites further exploration into collaborative human-in-the-loop design systems.",
+      "authors": [
+        "Ahmad Al-Kabbany"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-09T20:57:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.11446v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "concept bottleneck model for interpretability in generative 3D modeling",
+      "llm_evidence_cn": "将概念瓶颈模型引入生成式3D建模以实现可解释性",
+      "llm_evidence": "将概念瓶颈模型引入生成式3D建模以实现可解释性",
+      "canonical_evidence": "将概念瓶颈模型引入生成式3D建模以实现可解释性",
+      "llm_tldr_en": "Introduces 3D-CBM, a framework incorporating Concept Bottleneck Models into 3D generative architectures for intrinsic interpretability.",
+      "llm_tldr_cn": "随着3D内容生成在安全关键领域的应用，可解释性成为刚需。本文首次将概念瓶颈模型(CBM)引入3D生成架构，约束潜在表示与人类定义概念对齐。在点云和网格上验证，实现了在保持生成质量的同时提供可理解的中间表示。",
+      "llm_tldr": "随着3D内容生成在安全关键领域的应用，可解释性成为刚需。本文首次将概念瓶颈模型(CBM)引入3D生成架构，约束潜在表示与人类定义概念对齐。在点云和网格上验证，实现了在保持生成质量的同时提供可理解的中间表示。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
