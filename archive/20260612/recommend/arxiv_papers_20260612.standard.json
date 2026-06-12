@@ -1,0 +1,368 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-12T21:47:13.733419+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 6,
+    "deep_cap": 7,
+    "deep_selected": 6,
+    "quick_candidates": 3,
+    "quick_skim_target": 12,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2606.11894v1",
+      "source": "arxiv",
+      "title": "Wild3R: Feed-Forward 3D Gaussian Splatting from Unconstrained Sparse Photo Collection",
+      "abstract": "Feed-forward 3D Gaussian Splatting (3DGS) removes the need for time-consuming per-scene optimization required by traditional 3DGS. However, existing feed-forward approaches struggle with real-world photo collections that include diverse lighting conditions and transient objects. In this paper, we present Wild3R, a feed-forward approach for unconstrained sparse photo collections. The main bottleneck is the lack of training data that provides multiple viewpoints, a variety of illuminations, and transient variations necessary for learning robust scene representations. To address this, we introduce the WildCity dataset, which comprises 200 scenes, 170 lighting conditions, and transient objects, resulting in 337,500 images in total. By leveraging the dataset, our model learns appearance consistency across viewpoints conditioned on reference views, while removing transient content. Extensive experiments demonstrate that our method outperforms existing feed-forward approaches and achieves results competitive with prior per-scene optimization-based methods.",
+      "authors": [
+        "Yuto Furutani",
+        "Takashi Otonari",
+        "Kaede Shiohara",
+        "Toshihiko Yamasaki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T10:23:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.11894v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "feed-forward 3D Gaussian splatting from unconstrained sparse photo collections",
+      "llm_evidence_cn": "从非约束稀疏照片集合进行前馈3D高斯泼溅",
+      "llm_evidence": "从非约束稀疏照片集合进行前馈3D高斯泼溅",
+      "canonical_evidence": "从非约束稀疏照片集合进行前馈3D高斯泼溅",
+      "llm_tldr_en": "Wild3R proposes feed-forward 3D Gaussian splatting for unconstrained sparse photo collections with a new WildCity dataset, handling diverse lighting and transient objects.",
+      "llm_tldr_cn": "Wild3R针对现有前馈3D高斯泼溅方法在真实世界稀疏照片集合中效果不佳的问题，提出端到端前馈框架。主要瓶颈在于缺乏包含多视角、多种光照和瞬态物体的训练数据，为此构建了包含200个场景、170种光照条件的WildCity数据集。基于该数据集训练，Wild3R在非约束条件下实现了高质量3D重建，显著优于以往方法，为鲁棒3D场景理解提供了重要数据和技术基础。",
+      "llm_tldr": "Wild3R针对现有前馈3D高斯泼溅方法在真实世界稀疏照片集合中效果不佳的问题，提出端到端前馈框架。主要瓶颈在于缺乏包含多视角、多种光照和瞬态物体的训练数据，为此构建了包含200个场景、170种光照条件的WildCity数据集。基于该数据集训练，Wild3R在非约束条件下实现了高质量3D重建，显著优于以往方法，为鲁棒3D场景理解提供了重要数据和技术基础。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.06601v1",
+      "source": "arxiv",
+      "title": "Direct 3D-Aware Object Insertion via Decomposed Visual Proxies",
+      "abstract": "Object insertion aims to seamlessly composite a reference object into a specified region of a background image. Recent diffusion-based methods achieve high visual quality but formulate insertion as a simple 2D inpainting task, providing no explicit control over the object's 3D pose and limiting their practical applicability. We propose DIRECT (Decomposed Injection for Reference Composition and Target-integration), a novel framework that integrates interactive pose manipulation with high-fidelity 2D image synthesis to enable pose-controllable object insertion. Our method decomposes the insertion conditions into three complementary components: appearance guidance capturing visual details from the reference object, geometry guidance derived from the user-adjusted 3D proxy, and context guidance from the target background. By injecting them through separate pathways, DIRECT avoids feature entanglement and simultaneously preserves reference appearance, follows the user-specified pose, and adapts the object to the target scene. We also introduce an automated data construction pipeline to improve the diversity and quality of training data. Experiments show that DIRECT outperforms previous methods in both geometric controllability and visual quality.",
+      "authors": [
+        "Jingbo Gong",
+        "Yikai Wang",
+        "Yushi Lan",
+        "Yuhao Wan",
+        "Ziheng Ouyang",
+        "Rui Zhao",
+        "Ming-Ming Cheng",
+        "Qibin Hou",
+        "Chen Change Loy"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-04T18:00:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.06601v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "pose-controllable 3D-aware object insertion",
+      "llm_evidence_cn": "姿态可控的3D感知对象插入",
+      "llm_evidence": "姿态可控的3D感知对象插入",
+      "canonical_evidence": "姿态可控的3D感知对象插入",
+      "llm_tldr_en": "DIRECT framework enables pose-controllable 3D-aware object insertion by decomposing conditions into appearance, geometry, and pose, integrating interactive manipulation with 2D synthesis.",
+      "llm_tldr_cn": "现有扩散方法将对象插入视为2D修复，缺乏3D姿态控制。本文提出DIRECT框架，将插入条件分解为外观指导、几何指导和姿态指导，实现交互式姿态操作与高保真2D图像合成的结合。该方法支持用户调整物体3D姿态，同时保持视觉真实感。实验表明在姿态可控性和图像质量上均优于现有方法，为3D感知图像编辑提供新方案。",
+      "llm_tldr": "现有扩散方法将对象插入视为2D修复，缺乏3D姿态控制。本文提出DIRECT框架，将插入条件分解为外观指导、几何指导和姿态指导，实现交互式姿态操作与高保真2D图像合成的结合。该方法支持用户调整物体3D姿态，同时保持视觉真实感。实验表明在姿态可控性和图像质量上均优于现有方法，为3D感知图像编辑提供新方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-02-729586-v1",
+      "source": "biorxiv",
+      "title": "Flexible route planning and rapid structure learning by mice in complex environments",
+      "abstract": "Action selection using predictive models of the environment plays a fundamental role in human and animal behaviour, yet is poorly understood at circuit and algorithmic levels. Spatial navigation is an attractive domain for characterising how world models guide action selection. However spatial behaviours are shaped by multiple control systems including habits, vector-navigation using a Euclidean model of spatial relationships, and route planning using models of environment structure. Understanding how world models support navigation requires assays that dissociate control systems and decorrelate behavioural variables, while generating large datasets that allow precise quantification of brain-behaviour relationships. Here we developed and computationally optimised a behavioural assay to quantify flexible navigation using knowledge of environment structure. Mice navigated to visually cued goals in complex mazes, with randomised start and goal locations on each trial, generating thousands of non-repetitive goal-directed navigation trajectories. They navigated efficiently - strongly favouring options on the shortest path-to-goal, and learnt rapidly - demonstrating knowledge of maze structure from their first sessions in new environments. We anticipate the assay will be useful for characterising how world models support flexible behaviour.",
+      "authors": [
+        "Pereira, M.",
+        "Godinho, B. S.",
+        "Machens, C. K.",
+        "Costa, R. M.",
+        "Akam, T."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-05T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.02.729586v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "study on world models guiding spatial navigation in mice",
+      "llm_evidence_cn": "关于世界模型指导小鼠空间导航的研究",
+      "llm_evidence": "关于世界模型指导小鼠空间导航的研究",
+      "canonical_evidence": "关于世界模型指导小鼠空间导航的研究",
+      "llm_tldr_en": "This paper develops behavioral assays to dissociate control systems and quantify how world models guide action selection in mice.",
+      "llm_tldr_cn": "行动选择依赖于环境预测模型，但具体机制尚不明确。本文以空间导航为模型，开发了能够区分习惯、矢量导航和世界模型规划的范式，通过分析小鼠行为大数据揭示世界模型在路线规划中的作用。结果有助于理解大脑中世界模型的计算原理。",
+      "llm_tldr": "行动选择依赖于环境预测模型，但具体机制尚不明确。本文以空间导航为模型，开发了能够区分习惯、矢量导航和世界模型规划的范式，通过分析小鼠行为大数据揭示世界模型在路线规划中的作用。结果有助于理解大脑中世界模型的计算原理。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.06887v1",
+      "source": "arxiv",
+      "title": "ARAPDiffusion: ARAP Regularization for Diffusion-Based Deformable Shape Space Learning",
+      "abstract": "This paper introduces ARAPDiffusion, a latent diffusion model to learn the underlying continuous shape space of a deformation shape collection. The key innovation is in injecting the as-rigid-as-possible (ARAP) deformation model as regularization losses into latent diffusion (LD), releasing the requirement of having abundant 3D training data for learning generative models. In contrast to the standard LD, we show how the ARAP model can be used to improve both the encoder/decoder and the LD model. The training procedure alternates between using the synthetic distribution defined by the LD model to develop a regularization loss that enhances the shape encoder/decoder and using the shape decoder to develop a regularization loss to improve the LD model. We also show the benefit of the LD paradigm in combining a representation-free LD process and an implicit shape decoder that is applicable to unorganized point clouds. The experimental results of unconditional and conditional shape generation demonstrate the advantages of ARAPDiffusion over baseline approaches.",
+      "authors": [
+        "Haibo Liu",
+        "Jinghan Ke",
+        "Haitao Yang",
+        "Xiangru Huang",
+        "Georgios Pavlakos",
+        "Qixing Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T04:09:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.06887v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "latent diffusion model for deformable shape space learning",
+      "llm_evidence_cn": "用于变形形状空间学习的潜在扩散模型",
+      "llm_evidence": "用于变形形状空间学习的潜在扩散模型",
+      "canonical_evidence": "用于变形形状空间学习的潜在扩散模型",
+      "llm_tldr_en": "Presents ARAPDiffusion, a latent diffusion model with ARAP regularization to learn continuous shape spaces from deformation collections, reducing data requirements.",
+      "llm_tldr_cn": "该论文提出ARAPDiffusion，一种结合ARAP（as-rigid-as-possible）正则化的潜在扩散模型，用于从变形形状集合中学习连续形状空间。关键创新是将ARAP变形模型作为正则化损失注入潜在扩散，减少了对大规模3D训练数据的依赖。训练过程交替利用合成分布改善编码器/解码器以及扩散模型。实验证明该方法能够高效生成多样化且几何合理的变形形状，为数据稀缺条件下的3D生成提供了新途径。",
+      "llm_tldr": "该论文提出ARAPDiffusion，一种结合ARAP（as-rigid-as-possible）正则化的潜在扩散模型，用于从变形形状集合中学习连续形状空间。关键创新是将ARAP变形模型作为正则化损失注入潜在扩散，减少了对大规模3D训练数据的依赖。训练过程交替利用合成分布改善编码器/解码器以及扩散模型。实验证明该方法能够高效生成多样化且几何合理的变形形状，为数据稀缺条件下的3D生成提供了新途径。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.09034v1",
+      "source": "arxiv",
+      "title": "Leveraging NeRF-Rendered Images for 3D Gaussian Splatting",
+      "abstract": "Neural radiance field (NeRF) and 3D Gaussian splatting (3DGS) are two mainstream approaches for novel view synthesis. They often show complementary performance, i.e., 3DGS demonstrating faster rendering speed and NeRF demonstrating higher rendering quality. Motivated by this, we propose leveraging NeRF-rendered images for 3DGS. Specifically, we target street scenes and utilize a pre-trained street-specific NeRF method to produce training images for a target 3DGS method. In our 3DGS training, NeRF-rendered images are used to remove transient objects in street-level input views and to generate bird's-eye views as additional views, inheriting the higher-quality rendering of NeRF into 3DGS. We further incorporate a diffusion-based image enhancement to improve the image quality of the additional views. Experimental results on one synthetic and two real datasets demonstrate that our proposed method improves street-scene rendering while preserving the speed of 3DGS and the quality of NeRF.",
+      "authors": [
+        "Mizuki Morikawa",
+        "Yuta Shimizu",
+        "Chunyu Li",
+        "Yusuke Monno",
+        "Masatoshi Okutomi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-08T05:03:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.09034v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "leveraging NeRF-rendered images for 3D Gaussian Splatting",
+      "llm_evidence_cn": "利用NeRF渲染图像改进3D高斯抛雪法",
+      "llm_evidence": "利用NeRF渲染图像改进3D高斯抛雪法",
+      "canonical_evidence": "利用NeRF渲染图像改进3D高斯抛雪法",
+      "llm_tldr_en": "Proposes to use NeRF-rendered images to improve 3D Gaussian Splatting by removing transient objects and adding bird's-eye views, achieving higher quality.",
+      "llm_tldr_cn": "该论文提出利用NeRF渲染图像来增强3D高斯抛雪法（3DGS）的性能。针对街景场景，使用预训练的街景NeRF生成训练图像，用于去除输入视图中的瞬态物体并补充鸟瞰视图，从而结合NeRF的高渲染质量和3DGS的快速渲染速度。进一步结合扩散模型进行图像增强。实验表明该方法有效提升了3DGS的渲染质量，为神经渲染和光栅化方法的互补提供了新思路。",
+      "llm_tldr": "该论文提出利用NeRF渲染图像来增强3D高斯抛雪法（3DGS）的性能。针对街景场景，使用预训练的街景NeRF生成训练图像，用于去除输入视图中的瞬态物体并补充鸟瞰视图，从而结合NeRF的高渲染质量和3DGS的快速渲染速度。进一步结合扩散模型进行图像增强。实验表明该方法有效提升了3DGS的渲染质量，为神经渲染和光栅化方法的互补提供了新思路。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11446v1",
+      "source": "arxiv",
+      "title": "3D-CBM: A Framework for Concept-Based Interpretability in Generative 3D Modeling",
+      "abstract": "This research introduces a framework for incorporating Concept Bottleneck Models (CBMs) into 3D generative architectures to address the inherent 'semantic gap' in deep geometric learning. As deep models become central to 3D content creation, explainability shifts from a peripheral feature to a fundamental requirement for trust and accountability in safety-critical domains such as healthcare and manufacturing. CBMs provide an intrinsic interpretability solution by constraining latent representations to align with human-defined concepts, yet their application to unstructured 3D data remains largely unexplored.   We design, implement, and validate a formal 3D-CBM architecture that maps raw geometric inputs, including point clouds and meshes, into a multi-tiered taxonomy of interpretable primitives and functional attributes. The framework further identifies strategic datasets, such as PartNet and ShapeNet, specialized for concept-based supervision. Experimental results from a 3D part-manipulation proof-of-concept experiment demonstrate the framework's efficacy, achieving a concept prediction accuracy of 88.8\\% and a Chamfer Distance of 0.0115. Critically, the model enables precise test-time intervention, allowing for the interactive correction of structural errors. This work establishes a foundation for semantically-steerable 3D generation and invites further exploration into collaborative human-in-the-loop design systems.",
+      "authors": [
+        "Ahmad Al-Kabbany"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-09T20:57:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.11446v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "concept bottleneck models for generative 3D modeling",
+      "llm_evidence_cn": "概念瓶颈模型在生成式3D建模中的应用",
+      "llm_evidence": "概念瓶颈模型在生成式3D建模中的应用",
+      "canonical_evidence": "概念瓶颈模型在生成式3D建模中的应用",
+      "llm_tldr_en": "Introduces 3D-CBM, a framework integrating Concept Bottleneck Models into 3D generative architectures for interpretable 3D content creation.",
+      "llm_tldr_cn": "该论文提出3D-CBM框架，将概念瓶颈模型（CBM）集成到3D生成架构中，以解决深度几何学习中的语义鸿沟问题。通过约束潜在表示与人类定义概念对齐，实现了对生成式3D模型的可解释性。实验验证了该架构在点云和网格等原始几何输入上的有效性，为安全关键领域（如医疗和制造）中3D内容创建提供了可信赖的解决方案。这项工作首次将CBM应用于非结构化3D数据，推动了可解释生成式3D建模的发展。",
+      "llm_tldr": "该论文提出3D-CBM框架，将概念瓶颈模型（CBM）集成到3D生成架构中，以解决深度几何学习中的语义鸿沟问题。通过约束潜在表示与人类定义概念对齐，实现了对生成式3D模型的可解释性。实验验证了该架构在点云和网格等原始几何输入上的有效性，为安全关键领域（如医疗和制造）中3D内容创建提供了可信赖的解决方案。这项工作首次将CBM应用于非结构化3D数据，推动了可解释生成式3D建模的发展。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.08670v1",
+      "source": "arxiv",
+      "title": "WaveDiT: Distribution-Aware Wavelet Flow Matching for Efficient 3D Brain MRI Synthesis",
+      "abstract": "Large and demographically balanced datasets are essential for reliable neuroimaging biomarkers. Full-resolution 3D brain MRI synthesis can support data augmentation in this setting, but existing approaches either incur prohibitive computational cost at volumetric scale or rely on lossy latent compression that may compromise anatomical detail. As a result, practical 3D generative augmentation often requires specialized compute infrastructure. We propose WaveDiT, a conditional flow matching framework operating in the coefficient space of a 3D Haar Discrete Wavelet Transform. The model combines factorized spatio-depth attention with band-wise heteroscedastic uncertainty modeling derived from higher-order wavelet statistics. Predicted log-variance is integrated directly into both the flow objective and conditioning pathway, enabling adaptive precision consistent with the heavy-tailed and input-dependent variance structure of anatomical detail. This formulation supports full-resolution 3D synthesis under practical memory and time constraints on a single modern GPU. Evaluation on a multi-site cohort demonstrates improved alignment between generated and real MRI distributions, together with enhanced downstream brain age prediction and region-level anatomical agreement relative to diffusion, latent, and wavelet-based baselines. Code is available at https://github.com/sisinflab/WaveDiT",
+      "authors": [
+        "Danilo Danese",
+        "Angela Lombardi",
+        "Giuseppe Fasano",
+        "Matteo Attimonelli",
+        "Tommaso Di Noia"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-07T15:21:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.08670v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "conditional flow matching for 3D brain MRI synthesis",
+      "llm_evidence_cn": "条件流匹配用于3D脑MRI合成",
+      "llm_evidence": "条件流匹配用于3D脑MRI合成",
+      "canonical_evidence": "条件流匹配用于3D脑MRI合成",
+      "llm_tldr_en": "Proposes WaveDiT, a conditional flow matching framework in wavelet domain for efficient full-resolution 3D brain MRI synthesis.",
+      "llm_tldr_cn": "该论文提出WaveDiT，一种在3D Haar离散小波变换系数空间中运行的条件流匹配框架，用于高效合成全分辨率3D脑MRI图像。模型结合了分解的时空注意力与基于小波统计的带状异方差不确定性建模，克服了现有方法计算成本高或丢失解剖细节的问题。实验表明WaveDiT能够生成高质量、解剖学准确的3D脑部MRI，为数据增强和生物标志物研究提供实用工具。",
+      "llm_tldr": "该论文提出WaveDiT，一种在3D Haar离散小波变换系数空间中运行的条件流匹配框架，用于高效合成全分辨率3D脑MRI图像。模型结合了分解的时空注意力与基于小波统计的带状异方差不确定性建模，克服了现有方法计算成本高或丢失解剖细节的问题。实验表明WaveDiT能够生成高质量、解剖学准确的3D脑部MRI，为数据增强和生物标志物研究提供实用工具。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.06695v1",
+      "source": "arxiv",
+      "title": "S23DR 2026 Winning Solution",
+      "abstract": "This text presents the winning solution to the S23DR 2026 challenge for structured 3D wireframe reconstruction from sparse SfM, fitted depth, and semantic segmentations. The method treats vertices as a conditional set and denoises 64 vertex tokens with a flow-matching DiT conditioned on Perceiver-style scene tokens. A global pass predicts the coarse structure, a hull-cropped second pass refines it, and a small multi-sample consensus step keeps the stochastic sampler well behaved. The final system ranked first on the private leaderboard, achievingHSS = 0.654.",
+      "authors": [
+        "Jan Skvrna",
+        "Miroslav Purkrabek",
+        "Lukas Neumann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-04T20:19:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.06695v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D wireframe reconstruction method for structured 3D modeling",
+      "llm_evidence_cn": "3D线框重建方法用于结构化3D建模",
+      "llm_evidence": "3D线框重建方法用于结构化3D建模",
+      "canonical_evidence": "3D线框重建方法用于结构化3D建模",
+      "llm_tldr_en": "Presents the winning solution for structured 3D wireframe reconstruction using flow-matching DiT conditioned on scene tokens, achieving top rank in S23DR challenge.",
+      "llm_tldr_cn": "本文提出了S23DR挑战赛的获胜方案，针对结构化3D线框重建问题。该方法将顶点视为条件集，利用流匹配扩散模型在感知器风格场景令牌条件下进行去噪，通过全局预测和精炼两步流程，并辅以多采样一致性步骤，最终在私有排行榜上取得第一，HSS=0.654。",
+      "llm_tldr": "本文提出了S23DR挑战赛的获胜方案，针对结构化3D线框重建问题。该方法将顶点视为条件集，利用流匹配扩散模型在感知器风格场景令牌条件下进行去噪，通过全局预测和精炼两步流程，并辅以多采样一致性步骤，最终在私有排行榜上取得第一，HSS=0.654。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11782v1",
+      "source": "arxiv",
+      "title": "Seeing What Matters: Perceptual Wrapper with Common Randomness for 3D Gaussian Splatting",
+      "abstract": "While 3D Gaussian Splatting (3DGS) achieves impressive real-time rendering, it frequently struggles to synthesize high-frequency textures, a limitation heavily exacerbated in memory-constrained and rate-distortion-optimized (RDO) pipelines. To address this, we propose a versatile 2D perceptual wrapper that enhances the rendered outputs of existing 3DGS representations in a content- and view-dependent manner. Our method leverages a lightweight synthesis network conditioned on pseudo-random Gaussian noise to synthesize perceptually plausible textures. Supervised by Wasserstein Distortion, the network learns to match local feature statistics rather than strictly enforcing pixel-wise reconstruction fidelity, effectively mitigating the blurriness inherent in standard frameworks. We demonstrate the broad applicability of our plug-and-play approach across vanilla, memory-constrained, and RDO 3DGS methods. Comprehensive subjective and objective experiments confirm that our method significantly improves over existing baselines, yielding superior perceptual quality at sharply reduced file or model sizes.",
+      "authors": [
+        "He-Bi Yang",
+        "Jing-Zhong Chen",
+        "Yen-Kuan Ho",
+        "Sang NguyenQuang",
+        "Fan-Yi Hsu",
+        "Yun-Yu Lee",
+        "Jui-Chiu Chiang",
+        "Wen-Hsiao Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T08:14:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.11782v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "perceptual wrapper for 3D Gaussian Splatting rendering enhancement",
+      "llm_evidence_cn": "3D高斯溅射的感知增强方法",
+      "llm_evidence": "3D高斯溅射的感知增强方法",
+      "canonical_evidence": "3D高斯溅射的感知增强方法",
+      "llm_tldr_en": "A 2D perceptual wrapper using pseudo-random noise and Wasserstein Distortion improves texture synthesis for 3DGS in content- and view-dependent manner.",
+      "llm_tldr_cn": "现有3D高斯溅射（3DGS）在内存受限和率失真优化管道中难以合成高频纹理。本文提出一个轻量级的2D感知包装器，通过伪随机高斯噪声和Wasserstein散度损失学习局部特征统计，以内容及视角相关的方式提升渲染输出质量。该方法无需修改3DGS表示本身，有效缓解了模糊伪影。",
+      "llm_tldr": "现有3D高斯溅射（3DGS）在内存受限和率失真优化管道中难以合成高频纹理。本文提出一个轻量级的2D感知包装器，通过伪随机高斯噪声和Wasserstein散度损失学习局部特征统计，以内容及视角相关的方式提升渲染输出质量。该方法无需修改3DGS表示本身，有效缓解了模糊伪影。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
