@@ -1,0 +1,2092 @@
+Title: Stream3D-VLM: Online 3D Spatial Understanding with Incremental Geometry Priors
+
+URL Source: https://arxiv.org/pdf/2606.06891v1
+
+Published Time: Mon, 08 Jun 2026 00:26:53 GMT
+
+Number of Pages: 32
+
+Markdown Content:
+## Stream3D-VLM: Online 3D Spatial Understanding with Incremental Geometry Priors 
+
+Hanxun Yu 1,2∗†, Xuan Qu 1,2†, Lei Ke 2, Boqiang Zhang 2, Yuxin Wang 2,3,Jianke Zhu 1,4, and Dong Yu 2
+
+> 1
+
+Zhejiang University, 2Tencent Hunyuan, 3HKUST, 4Shenzhen Loop Area Institute 
+
+§ Project Page: https://stream3d-vlm.github.io/ 
+
+Abstract. Despite advances in 3D scene understanding, existing 3D Large Multimodal Models operate in offline settings, requiring complete scene observations or predefined video clips. In this paper, we present an online 3D vision-language model that enables real-time spatial un-derstanding from streaming video. Our approach adopts an autoregres-sive streaming control modeling based on the LLM’s next-token predic-tion objective to learn when to respond, and employs a lightweight Vi-sual–Spatial Feature Integration (VSFI) module to incrementally inject temporally aligned geometry priors into the visual stream. To alleviate long-context decoding overhead, we propose a plug-and-play Geometry-Adaptive Voxel Compression (GAVC) module for efficient visual token compression. To address the scarcity of streaming 3D–language data, we further develop a scalable data generation pipeline that curates over 1M online spatio-temporal 3D QA pairs and establishes a comprehensive benchmark spanning 29 tasks. Extensive experiments show that our ap-proach significantly outperforms both proprietary and open-source mod-els across online and offline 3D spatial understanding, reasoning, and grounding tasks. 
+
+Keywords: 3D Vision-Language Models · Spatial Intelligence · Online Scene Understanding 
+
+1 Introduction 
+
+With the rapid progress of Multimodal Large Language Models (MLLMs) [2, 8, 23,36,51,53] in visual–language reasoning and interaction, growing attention has focused on extending them to more complex 3D vision tasks, such as autonomous robotics, AR/VR glasses, and embodied agents. The goal is to equip MLLMs with robust 3D spatial understanding, enabling them to function more effectively in real-world application scenarios. Early pioneering works [10, 17, 21, 32, 58] on 3D Large Multimodal Models rely on explicit 3D sensor inputs ( e.g. , point clouds,  
+
+> ∗
+
+Work done during an internship at Tencent Hunyuan.  
+
+> †
+
+Equal contribution. 
+
+> arXiv:2606.06891v1 [cs.CV] 5 Jun 2026
+
+2 H. Yu et al. 3D Point Clouds / Meshes Predefined Video Clips      
+
+> Offline
+> Online
+> Query1 <Silent> <Silent> Response1 Query2 Response2
+> Depth Maps
+
+or 
+
+> 3D LLM
+> 2D VLM
+> …
+
+(a) Previous 3D Large Multimodal Models 
+
+(b) Stream3D -VLM (ours)    
+
+> Offline
+> …
+> T=6.0s T=9.0s T=42.0s T=43.0s
+> …
+> …
+> Finetune
+> + text query
+> Finetune
+> + text query
+> Teaser_v3
+> Video LLM
+> Finetune
+> streaming
+> video
+> + geometry
+> priors
+> Streaming Dialogue
+> T=7.0s
+> …
+> T=8.0s
+
+Fig. 1: Comparison between previous 3D LMMs and our Stream3D-VLM. 
+
+(a) Previous methods typically operate in offline settings, requiring complete 3D ob-servations or predefined video clips. (b) In contrast, our method enables real-time 3D spatial understanding and interaction on streaming video by incrementally integrating geometry priors from StreamVGGT [59]. 
+
+meshes, or depth maps) aligned with LLMs through instruction data. While ef-fective at capturing geometric structure, their dependence on scarce 3D data pre-vents them from scaling to large-scale training, thereby limiting model capacity. Recent advances in feed-forward 3D reconstruction [22, 24, 30, 33–35, 54] enable methods [11,56] that require only RGB videos, injecting rich spatial information and scaling training on abundant 2D data. However, as shown in Figure 1, both paradigms remain strictly offline, requiring complete 3D scene observations or predefined video clips before interaction and task execution. In contrast, real-world embodied applications demand real-time interaction at arbitrary moments during video streaming. Given prior efforts [6,31] in online 2D video understanding, which mainly tar-get egocentric narration and forecasting, one might expect such models to extend to 3D tasks. However, 3D vision–language problems, including visual grounding and camera-related estimation, require deep reasoning over object-object and object-camera spatial relationships, i.e. , the geometric structures inherent to the 3D world. Our experiments show that even with large-scale 3D–language fine-tuning, existing online 2D VLMs perform poorly on 3D tasks, highlighting the urgent need for a general-purpose 3D LMM capable of real-time interaction and powerful 3D spatial reasoning. To address this challenge, we propose Stream3D-VLM , the first 3D vi-sion–language model enabling online spatial understanding and interaction across Stream3D-VLM 3(c) Forward – Object Finding                                  
+
+> Stream3D -VLM [T=6s]:
+> Okay, I will monitor the
+> view and help you look
+> for the towel .
+> <Silent> <Silent>
+> Stream3D -VLM
+> [T=11s]: I found
+> the towel. It is
+> 1.9 meters away
+> at your 12 o‘clock .
+> User [T= 6s]: I‘m moving
+> around the room but I can’t
+> see the towel yet. Please
+> help me find it. I need to
+> know its clock direction and
+> distance when it appears.
+> User [T=50s]:
+> Estimate the
+> size of the
+> coffee table .
+> Stream3D -VLM
+> [T=50s]: It is
+> 1.2 mlong, 0. 8m
+> wide, and 0. 5m
+> tall.
+> User [T= 5s]: Give me a detailed
+> summary of the camera's motion
+> over the last 5seconds .
+> Stream3D -VLM [T=5s]: The
+> camera moved 3.3m total. Relative
+> to its starting pose 5 seconds ago,
+> it displaced 1.5m towards 9 o‘clock
+> and turned 147 degrees clockwise.
+> <Silent> <Silent> <Silent> <Silent> <Silent> <Response>
+
+Time Flow        
+
+> T = 50.0s
+> (a) Backward –Ego Motion Comprehensive
+> (b) Realtime –Object Size
+> T = 9.0s T = 10.0s T = 11.0s T = 6.0s
+> <Response> <Query> <Response> <Query> <Response>
+> <Query>
+
+…    
+
+> T = 3.0s T = 4.0s T = 5.0s T = 0.0s T = 1.0s T = 2.0s
+
+Fig. 2: Qualitative examples of Stream3D-VLM on streaming videos from ScanNet++ [50]. (a) Backward: The model aggregates historical visual-spatial fea-tures to precisely calculate the camera trajectory over a recent temporal window. (b) 
+
+Realtime: The model performs metric reasoning to estimate the physical size of the coffee table in the current frame. (c) Forward: The model continuously monitors the video stream and responds proactively only when the target object becomes visible. 
+
+multiple 3D–language tasks solely on streaming video. In this setting, the model is required to autonomously determine not only what to answer , but also 
+
+when to respond , allowing natural and flexible interaction during continuous video input, as shown in Figure 2. Built upon the LLM’s native autoregressive training objective, we reformulate streaming control as a next-token prediction problem, enabling the model to learn response timing without degrading text generation quality. To support continuous 3D scene comprehension, we incremen-tally extract temporally aligned geometry priors by a streaming feed-forward 3D reconstruction model and inject them into the visual stream via a lightweight Visual–Spatial Feature Integration (VSFI) module. This design eliminates re-liance on sparse 3D sensor data and supports scalable training on in-the-wild 2D videos. To handle long-term visual context during online inference, we introduce a plug-and-play Geometry-Adaptive Voxel Compression (GAVC) module that dynamically compresses visual tokens guided by spatial coordinates, preserving structural integrity while reducing redundancy and latency, enabling real-time deployment. A key challenge in developing an online 3D spatial understanding model lies in the lack of large-scale streaming 3D–language data. Existing datasets for online 2D VLMs mainly target egocentric narration and activity recogni-tion, offering limited supervision for 3D geometry and spatial relationships. To address this gap, we develop a scalable data generation pipeline to construct a large-scale online 3D spatio-temporal QA dataset with explicit timestamps, com-prising over 1 million QA pairs across 5.2k videos. Furthermore, we introduce 
+
+Stream3D-Bench , a novel benchmark consisting of 29 tasks over 518 videos, 4 H. Yu et al. 
+
+to systematically evaluate online 3D spatial understanding by measuring both model performance and temporal response accuracy. Extensive experiments demonstrate that our approach achieves state-of-the-art online 3D spatial understanding and reasoning, while maintaining leading performance on offline tasks such as visual grounding and dense captioning. We believe this work lays a fundamental step toward deploying 3D LMMs in real-world embodied applications. To summarize, our main contributions are threefold: 
+
+– We propose Stream3D-VLM, the first online 3D spatial understanding model solely on streaming video. By incrementally integrating geometry priors, it achieves effective 3D perception. A plug-and-play token compression module further reduces visual redundancy and inference latency, enabling real-time deployment. 
+
+– We develop a scalable data generation pipeline to curate online 3D spatio-temporal QA data with explicit timestamps for instruction tuning, address-ing the scarcity of large-scale streaming 3D-language data. 
+
+– We establish Stream3D-Bench, a novel benchmark with 29 tasks across 518 videos to rigorously evaluate and advance online 3D spatial understanding. 
+
+2 Related Work 
+
+3D Large Multimodal Models. Build on advances in Large Language Mod-els, recent works [12–15, 28, 37, 39, 44, 55] extend their capabilities to 3D data. Early methods [16, 29, 52] extract features from point clouds, meshes, or depth maps and align them with LLMs via adapters. While effective at capturing ge-ometric structure, they rely on sparse and costly 3D data, limiting the model’s scalability and capacity. More recent methods [42, 57] rely solely on RGB videos and integrate spatial cues by geometry-aware encoders from 3D reconstruction models [34, 35], eliminating reliance on explicit 3D sensors and enabling scal-able training on 2D videos. However, both paradigms operate in offline settings, requiring complete 3D scenes or manually selected video clips, which diverges from real-world streaming scenarios. In this work, we propose an online 3D LMM framework that enables real-time interaction while maintaining strong 3D spatial understanding and reasoning, achieving leading performance across both online and offline 3D-language tasks. 
+
+Online Video Understanding. Driven by the growing real-time demands like AR glasses and autonomous robotics, recent research has advanced online video understanding, including action detection [45] and forecasting [38]. VideoLLM-online [6] pioneers general-purpose LLMs for streaming video dialogue, while VideoLLM-MoD [43] uses a mixture-of-depth strategy to scale resolution effi-ciently. StreamChat [26] and VideoChat-Online [18] retain key video tokens via dynamic memory banks, and TimeChat-Online [49] and StreamingAssistant [20] reduce temporal redundancy for faster decoding. Despite these advances, online 2D VLMs struggle with 3D tasks due to limited geometric and spatial under-standing, emphasizing the need for a general-purpose online 3D LMM. By in-Stream3D-VLM 5[2] Metadata Computing 
+
+Object Visibility 
+
+Camera Kinematic s
+
+Geometric Measurement 
+
+> T0
+> T1
+> T2
+> T3
+> Threshold
+> Time
+> Visibility
+
+[4] Final Dataset & Benchmark    
+
+> Depth Maps
+> RGB Video
+> Camera Params
+> 3D Annotations
+
+[1] Task Formulation               
+
+> Environment Measurement
+> • Object Size
+> • Inter -Object Distance
+> Object Attributes
+> • Object Property
+> • Object Position
+> • Object Recognition
+> Object –Camera Relationship
+> • Absolute Distance
+> • Relative Distance
+> Object –Camera Relationship
+> • Distance • Location
+> • Direction • Finding
+> Object Chronology
+> • Counting • Time • Order
+> Object –Camera Relationship
+> • Distance • Direction • Location
+> Environment Measurement
+> • Room Area
+> Ego -Motion Estimation
+> • Direction • Path • Rotation
+> • Displacement • Comprehensive
+> Environment Measurement
+> • Room Area
+
+Temporal Interaction Modes Cognitive Competencies        
+
+> Backward Tracing
+> Realtime Perception
+> Forward Response
+> T1T2T3
+> Object
+> Attributes
+> Object
+> Chronology
+> Ego -Motion Estimation Environment Measurement
+> Object –Camera
+> Relationship
+> color
+> category
+> location
+> Ego -Motion Estimation
+> • Direction. • Path
+> • Rotation • Comprehensive
+> • Displacement
+
+Stream3D -1M Dataset      
+
+> 1M+ QAs 5.2k Scenes
+> Explicit Timestamps
+> Structured Taxonomy
+
+QA Transfer with VLM Verification    
+
+> Offline
+> QA
+> Object
+> Visibility Temporal Grounding VLM Verification
+
++ Q? 
+
+A. 
+
+> Human Review
+
+Rule -based Generation 
+
+> Metadata
+> Templates
+
+Q[ Timestamp ]: How far is the {Object }?” 
+
+A[ Timestamp ]: It is at your { Direction }, 
+
+about { Distance } meters away. 
+
++ Streaming QA pairs   
+
+> (with explicit timestamps)
+
+Q? 
+
+A. 
+
+> Human Review
+
+Stream3D -Bench     
+
+> 10k Samples
+> Balanced Coverage
+> 29 Tasks
+> Task -Specific Metrics
+
+✅
+
+✅
+
+[3] QA Generation 
+
+Fig. 3: Illustration of our data generation pipeline. Guided by a comprehensive task taxonomy spanning five cognitive competencies and three temporal interaction modes, the pipeline leverages detailed metadata from RGB-D video streams and a hybrid generation strategy to construct a large-scale spatio-temporal 3D QA dataset and the Stream3D-Bench for evaluating online 3D spatial understanding. 
+
+crementally integrating geometry priors into the visual stream, Stream3D-VLM enables continuous and real-time 3D scene comprehension. 
+
+3 Streaming 3D-Language Data Generation 
+
+To endow our model to perceive, reason, and interact with 3D environments in an online setting, we introduce a scalable pipeline for generating large-scale spatio-temporal 3D-language data with explicit timestamps for instruction tuning. As shown in Figure 3, we construct a comprehensive dataset of over 1 million QA pairs across 29 tasks spanning 5.2k 3D scans. Additionally, we carefully curate a high-quality benchmark, Stream3D-Bench , to assess the online 3D spatial understanding and reasoning of MLLMs. 
+
+3.1 Task Taxonomy 
+
+We define streaming 3D vision-language tasks along two orthogonal dimensions: 
+
+Cognitive Competencies and Temporal Interaction Modes , forming a structured taxonomy that captures the core capabilities of an online 3D assistant. 
+
+Cognitive Competencies. We organize tasks along a hierarchical spectrum of spatial perception, ranging from ego-centric motion to global scene structure and fine-grained object-level analysis. Ego-Motion Estimation captures the agent’s own motion ( e.g. , path length and rotation angles). Environment Measurement 6 H. Yu et al. 
+
+quantifies scene-level properties ( e.g. , room area and inter-object distances). Ob-ject–Camera Relationship records spatial relations between the agent and ob-jects, including distance and direction. Object Chronology tracks objects over time, including counting, appearance order, and first/last observations. Object Attributes describe object-level features, such as category, color, and location. 
+
+Temporal Interaction Modes. We define three interaction modes based on the relative query-answer timing. Backward Tracing (Memory) retrieves infor-mation from past frames that is invisible in the current view, probing long-term memory capability. Realtime Perception (Observation) grounds responses in vi-sual evidence from the current frame, emphasizing immediate spatial perception. 
+
+Forward Response (Monitoring) entails asynchronous interaction, requiring the model to continuously monitor incoming frames and generate responses only when future conditions are satisfied. 
+
+3.2 Data Collection and Processing Data Sources. Our pipeline builds on the train splits of three widely used 3D datasets: ScanNet [9], ScanNet++ [50], and ARKitScenes [4]. Specifically, we utilize their RGB video streams, depth maps, camera parameters, and 3D instance segmentation annotations. Captured in real-world environments, these data preserve realistic characteristics such as motion blur, illumination changes, and sensor noise. 
+
+Metadata Computing. A key challenge in streaming 3D data generation lies in accurately grounding 2D frames in precise 3D properties. Hence, we develop a Core Annotation Engine that extracts structured metadata per frame. Object Visibility is computed by projecting 3D geometry onto the image plane with depth-aware occlusion and temporally thresholding valid timestamps. In parallel, 
+
+Camera Kinematics is derived by analyzing the camera trajectory over time, including cumulative path length, net displacement, and horizontal rotation. 
+
+Geometric Measurement further captures spatial relationships like camera-object distances, relative azimuth, and global scene attributes. Further details on data generation are provided in the Supplementary Material. 
+
+3.3 Question-Answer Generation 
+
+Building on the task taxonomy and computed metadata, we adopt a hybrid strategy combining geometric precision and semantic richness to curate 1M+ QA pairs across 29 tasks. 
+
+Rule-based Generation. For Ego-Motion Estimation , Object–Camera Rela-tionship , Environment Measurement , and Object Chronology , we employ a template-based generator leveraging the computed metadata in Sec. 3.2. It processes time-series signals and fills natural-language templates to generate QA pairs. For ex-ample, in Object Chronology tasks like Appearance Order, the generator extracts object entry timestamps and populates diverse linguistic templates. 
+
+QA Transfer with VLM Verification. For Object Attributes , we transfer ex-isting offline QAs [1] into the streaming setting via temporal grounding, linking Stream3D-VLM 7
+
+Table 1: Comparison of our proposed Stream3D-Bench with existing benchmarks focusing on spatial intelligence in 3D worlds.                  
+
+> Comparison VSI-Bench OST-Bench Stream3D-Bench
+> # Task Types 815 29 # QA Pairs 5k 10k 10k Input Format Video Clips Video Clips Streaming Video Evaluation Granularity Holistic Holistic Past / Present / Future Response Timing Required ✗✗✓
+
+each object-centric query to the frame t∗ where the object is sufficiently visible. We then apply VLM-based verification to ensure answerability under streaming conditions ( e.g. , motion blur or partial occlusion). Specifically, we use GPT-5 [27] to validate the visual evidence at t∗ and discard samples lacking adequate visual support. 
+
+3.4 Stream3D-Bench Overview. To evaluate MLLMs’ online 3D spatial understanding from stream-ing video, we construct Stream3D-Bench using our QA generation pipeline. It comprises 10,037 manually curated high-quality samples spanning 518 real videos sourced from the validation sets of ScanNet, ScanNet++, and ARKitScenes. Stratified sampling ensures balanced coverage of all five content categories and three temporal interaction modes (Sec. 3.1). As shown in Table 1, Stream3D-Bench significantly extends existing benchmarks such as VSI-Bench [46] and OST-Bench [25] in both task diversity and question complexity. More visualiza-tions are provided in the Supplementary Material. 
+
+Metrics. Stream3D-Bench employs task-specific evaluation metrics. For Nu-merical Answers, we follow VSI-Bench and report Mean Relative Accuracy . For Multiple-Choice Answers, we use Exact Match . For Open-Ended Answers, we adopt an LLM-as-a-judge protocol with GPT-4o [19] to assess correctness. To evaluate the temporal precision inherent in streaming tasks, we introduce a new metric Answer-Timing Accuracy ( AT A ), measuring how well the predicted re-sponse time aligns with the GT timestamp. Let tpred denote the predicted re-sponse time and tgt represent the earliest answerable GT timestamp. With a delay penalty factor β = 0 .5, the timing score is defined as 
+
+S(tpred ) = I(tpred ≥ tgt ) · exp  −β(tpred − tgt ) (1) 
+
+AT A is computed by averaging the timing score over all samples. We addi-tionally report Time-To-First-Token (TTFT), end-to-end latency, and memory usage to enable a comprehensive evaluation of inference efficiency. 
+
+4 Stream3D-VLM Architecture 
+
+Our goal is to equip MLLM with online 3D spatial understanding and reasoning from streaming video, enabling diverse real-time visual interaction tasks. Fig-8 H. Yu et al. <SEP> <END>                        
+
+> Streaming Loss
+> <SEP> Streaming Continuation <END> Response Trigger
+> Vision Encoder
+> Pre -trained Large Language Model
+> Spatial Encoder
+> <END>
+> Streaming Loss Streaming Loss LM Loss LM Loss
+> Geometry -Enhanced Visual Tokens Textual Tokens
+> Text Tokenization
+> Vision Tokens
+> …
+> …
+> Geometry Tokens
+> “I’m moving around the room
+> and can’t see the bag yet.
+> Please report its direction and
+> distance once it appears.”
+> Language
+> Instructions
+> N
+> ×Dvis (K+1)
+> ×Dgeo MLP
+> ⊕
+> QK,V
+> ⊕Addition
+> Visual -Spatial Feature Integration (VSFI)
+> N
+> ×Dvis
+> Compute weighted values via
+> a dual -attention mechanism .
+> Cluster Aggregation. ③
+> 3D Coordinates Fused Visual Tokens
+> Feature Similarity
+> Geometry -Adaptive Voxel Compression (GAVC)
+> +
+> Pipeline_v2
+> ①Adaptively cluster voxels
+> via spatial K-Means.
+> ……
+> …
+> ……
+> Camera Tokens
+> Visual Latent
+> Fused Vision Tokens
+> Tokens Tokens
+> Spatial Proximity
+> Cross -Modal Cross -Attention
+> streaming video
+> …
+> heads
+> prediction
+> ②
+> 纯色填充版
+> ⊕
+> Visual -Spatial Feature Integration
+> Geometry -Adaptive Voxel Compression
+
+Fig. 4: Overview of our proposed Stream3D-VLM. Our pipeline processes streaming video as a temporally ordered input sequence. We utilize the LLM’s native next-token prediction to jointly optimize a streaming control loss and the standard lan-guage modeling (LM) loss, enabling the model to learn when to respond or keep silent. We then suggest the VSFI module to inject temporally aligned geometric priors from a 3D reconstruction model into the visual stream. To mitigate long-context redundancy in online inference, we further propose a plug-and-play GAVC module that dynami-cally compresses visual tokens guided by 3D structure, enabling real-time deployment. 
+
+ure 4 illustrates our framework. In this section, we first introduce a streaming decision learning strategy that utilizes the LLM’s native next-token prediction objective to model response timing after a user query. Next, we present the Visual-Spatial Feature Integration ( VSFI ) module to inject geometry priors into the visual stream for continuous 3D scene comprehension. Finally, we propose a plug-and-play Geometry-Adaptive Voxel Compression ( GAVC ) module that dynamically compresses visual tokens guided by spatial coordinates, preserving structural integrity while significantly reducing redundancy and latency during long-context online inference. 
+
+4.1 Autoregressive Streaming Mechanism 
+
+Existing 3D LMMs are primarily designed for offline inference on pre-segmented video clips. When deployed in streaming scenarios, they necessitate repeat-edly reprocessing the entire historical context at each incoming frame to de-cide whether to respond, leading to excessive memory usage and high inference latency. This inefficiency severely limits their applicability in real-time settings. 
+
+Streaming Control Modeling. Inspired by recent advances in online 2D video LLMs [6, 43], we reformulate streaming control as a next-token prediction prob-lem. Specifically, we exploit the LLM’s native autoregressive objective to enable the model to learn when to answer —skipping redundant frames and triggering responses only when necessary, rather than generating outputs at every time step. To this end, we introduce two special decision tokens, <SEP> and <END> ,Stream3D-VLM 9
+
+which indicate whether the model should continue ingesting visual inputs or stop and initiate response generation, as illustrated below: 
+
+USER: <img> Query 
+
+| {z }
+
+> Context History
+
+<img> <SEP> <img> <SEP> 
+
+| {z }
+
+> Streaming Continuation
+
+<img> <END> 
+
+| {z }
+
+> Response Trigger
+
+ASSISTANT: <txt> ... <txt> 
+
+| {z }
+
+> Response Generation
+
+(2) 
+
+Joint Training Objective. To unify streaming control and language generation within a single autoregressive framework, we modify the training label mask to supervise these decision tokens explicitly. The overall training objective is a weighted sum of the streaming decision loss Lstream and the standard language modeling loss LLM :
+
+Lstream = 1
+
+|D| 
+
+X
+
+> t∈D
+
+CE t, LLM = 1
+
+|T | 
+
+X
+
+> t∈T
+
+CE t,
+
+CE t ≡ CE  pθ (yt | y<t ), y t
+
+, L = λ Lstream + LLM ,
+
+(3) where D is the set of streaming decision tokens yt ∈ { <SEP> , <END> }, T contains all remaining tokens, CE( ·) denotes the cross-entropy loss, pθ is the model’s next-token prediction distribution, and λ balances the two objectives. During inference, the model decides whether to respond at each frame via next token prediction ( <SEP> or <END> ). 
+
+4.2 Visual-Spatial Feature Integration 
+
+To endow MLLMs with spatial understanding without explicit 3D inputs, we use latent geometry from feed-forward 3D reconstruction models, enabling scalable training on large-scale 2D videos. Specifically, we adopt StreamVGGT [59] to incrementally extract geometry priors from streaming video in online settings. 
+
+Latent Geometric Encoding. Given an incoming RGB frame It ∈ R3×H×W ,we first extract 2D visual tokens H2D  
+
+> t
+
+∈ RN ×Dvis 
+
+via the MLLM’s native vision encoder. In parallel, StreamVGGT’s spatial encoder produces latent geometry tokens Gt ∈ RK×Dgeo 
+
+along with a camera token ct ∈ R1×Dgeo 
+
+encoding global camera and scene information. We concatenate these tokens and project them into the LLM embedding space via a lightweight two-layer MLP: 
+
+H3D  
+
+> t
+
+= MLP([ ct ; Gt]) ∈ R(K+1) ×Dvis 
+
+. (4) 
+
+Cross-Attention Fusion. To inject geometric priors into the semantic stream, we treat H2D  
+
+> t
+
+as queries and H3D  
+
+> t
+
+as keys and values. A stack of cross-attention blocks yields geometry-enhanced visual tokens Hf 
+
+> t
+
+∈ RN ×Dvis 
+
+:
+
+Hf 
+
+> t
+
+= softmax 
+
+ (WQH2D  
+
+> t
+
+)( WKH3D  
+
+> t
+
+)⊤
+
+√dk
+
+
+
+(WVH3D  
+
+> t
+
+), (5) where WQ, WK , and WV are learnable projections and dk denotes the key di-mension. A residual connection is applied to preserve the original semantics as 
+
+Hf 
+
+> t
+
+← Hf 
+
+> t
+
++ H2D  
+
+> t
+
+.10 H. Yu et al. 
+
+4.3 Geometry-Adaptive Voxel Compression 
+
+After visual-spatial feature integration, we introduce a plug-and-play module that dynamically compresses visual tokens guided by spatial coordinates, effec-tively reducing long-context visual redundancy during online inference. 
+
+3D Voxel Construction. For each incoming frame It ∈ R3×H×W , we first use StreamVGGT’s prediction heads to estimate the depth map Dt ∈ RH×W
+
+and camera intrinsics and extrinsics (Kt, Et). Given the 2D patch coordinates 
+
+(uj , v j ) in It, each patch is back-projected to 3D position: 
+
+pt,j = E−1
+
+> t
+
+ Dt(uj , v j )K−1 
+
+> t
+
+[uj , v j , 1] ⊤ . (6) The 2D tokens are then lifted into spatially-aware 3D voxels via sinusoidal po-sitional encoding: vt,j = Hf 
+
+> t,j
+
++ PE( pt,j ).
+
+Dynamic Clustering. To enable dynamic compression while preserving the inherent 3D structure, the newly constructed voxels at time t are collected as: 
+
+Vt = {(vt,j , pt,j )}Nj=1 . (7) We then apply spatial K-Means clustering to adaptively partition the combined voxel set into K clusters: 
+
+{C k}Kk=1 = KMeans( {p | (v, p) ∈ V t}, K ) , (8) where each cluster Ck groups spatially proximal voxels in 3D space, enabling structure-aware dynamic compression. The clustering process is executed in par-allel on the GPU, incurring negligible additional latency. 
+
+Dual-Attention Aggregation. Within each cluster Ck, voxel features are ag-gregated via a dual-attention mechanism that models both feature similarity and 
+
+spatial proximity . The cluster center’s feature and coordinate are computed as: 
+
+¯vk = 1
+
+|C k|
+
+X
+
+> j∈C k
+
+vj , ¯pk = 1
+
+|C k|
+
+X
+
+> j∈C k
+
+pj . (9) Each voxel vj ∈ C k is assigned feature and spatial weights: 
+
+sf 
+
+> j
+
+= cos( vj , ¯vk), s p 
+
+> j
+
+= exp  −∥ pj − ¯pk∥2/2σ2
+
+> k
+
+ , (10) where σk is the voxel distance standard deviation to the center. The two are combined as wj = α s f 
+
+> j
+
++ (1 − α) sp 
+
+> j
+
+.
+
+The aggregated feature for cluster k is v′ 
+
+> k
+
+= P 
+
+> j∈C k
+
+wj vj . These compressed voxels {v′
+
+> k
+
+}Kk=1 , encoding both rich semantics and spatial cues, are then fed to the LLM with prompt tokens for efficient autoregressive generation. 
+
+5 Experiments 
+
+5.1 Experimental Setup Datasets and Benchmarks. To evaluate our model across online and offline 3D-language tasks, we train it on the curated 1M+ streaming 3D spatio-temporal Stream3D-VLM 11 
+
+Table 2: Evaluation results on Stream3D-Bench. Stream3D-VLM consistently outperforms all competing models, delivering the most accurate response timing and the lowest inference latency. NA/MCA/OEA denote numerical, multiple-choice, and open-ended answers, respectively. FT indicates that the model is fine-tuned on our cu-rated online 3D spatio-temporal QA dataset for fair comparison. Bold and underlined values indicate the best and the second-best results, respectively. The results are re-ported under a 1fps streaming video setting.                                                                                                                                                                                                                
+
+> Methods Avg. ↑Backward Tracing Realtime Perception Forward Response Answer-Timing Acc. ↑TTFT Latency ↓End2End Latency ↓Memory Usage ↓Image Resolution NA MCA OEA NA MCA OEA NA MCA OEA
+> Proprietary Models (API)
+> GPT-4o 28.0 10.5 36.3 24.9 31.1 34.8 51.1 10.2 29.9 23.0 55.9% –––1296 ×968 GPT-5 35.0 18.7 44.1 33.6 38.0 46.2 52.8 12.9 30.6 37.7 61.7% –––1296 ×968
+> Open-source Models
+> LLaVA-Video-7B 20.4 12.7 34.6 11.4 21.6 28.6 38.0 10.2 20.3 6.5 55.5% 650ms 2.84s 25.8G 1152 ×768 InternVL3-8B 24.1 22.1 34.4 6.8 30.7 31.2 40.0 18.3 27.2 5.9 19.8% 1034ms 5.65s 40.5G 1024 ×765 InternVL3.5-8B 27.0 21.4 36.2 17.6 28.2 38.2 42.4 25.2 25.8 8.2 23.0% 1771ms 6.72s 43.1G 1024 ×765 Qwen2.5-VL-7B 22.5 11.6 36.3 13.6 23.1 33.2 39.4 11.3 28.4 5.5 19.2% 325ms 3.16s 40.0G 1008 ×784 Qwen2.5-VL-32B 29.3 14.1 40.3 35.7 28.7 37.6 43.2 22.4 30.2 11.5 35.2% 560ms 5.87s 91.6G 1008 ×784 Qwen3-VL-8B 19.0 2.5 33.2 20.2 16.0 33.4 28.4 4.6 24.7 8.3 61.7% 150ms 1.56s 28.8G 1024 ×768 Qwen3-VL-32B 23.1 4.9 34.2 35.9 19.4 32.0 31.8 7.3 29.2 13.5 66.4% 282ms 3.22s 65.5G 1024 ×768
+> Streaming Dialogue VLMs
+> VideoLLM-online-8B (FT) 34.6 28.8 40.9 27.8 31.3 37.9 44.6 38.2 32.7 29.2 70.2% 120ms 1.29s 28.4G 384 ×384 Qwen2.5-VL-7B (FT) 47.8 45.6 56.6 45.4 45.7 44.6 48.7 46.6 57.4 39.8 73.1% 106ms 0.53s 36.8G 504 ×392
+> Stream3D-VLM-4B 54.6 58.1 61.2 45.2 58.8 57.3 52.8 55.3 60.6 41.9 75.4% 43ms 0.24s 20.7G 504 ×392
+> Stream3D-VLM-8B 58.8 59.8 67.9 50.5 61.4 61.5 54.3 58.1 66.7 49.4 86.7% 62ms 0.39s 36.6G 504 ×392
+
+QA pairs, alongside the VSI-590K dataset [48] including real videos from the train splits of S3DIS, ScanNet, ScanNet++, ARKitScenes, and Aria Digital Twin. For evaluation, we employ Stream3D-Bench for online spatial understand-ing, VSI-Bench [46] for offline spatial reasoning, and downstream 3D scene un-derstanding tasks, including ScanRefer [5] for visual grounding, ScanQA [1] for question answering, and Scan2Cap [7] for dense captioning. 
+
+Implementation Details. Our model is based on Qwen2.5-VL-3B/7B [3] and integrates StreamVGGT-1B [59] as the spatial encoder to supply incremental 3D geometry priors temporally aligned with the streaming video input. We train our model in a unified end-to-end multi-task instruction tuning paradigm for a sin-gle epoch on the mixed dataset. We adopt the AdamW optimizer with a weight decay of 0.03, using randomly sampled data at each step. During training, the MLLM visual encoder and spatial encoder are frozen, while the proposed VSFI module and LLM backbone are fully trainable. 
+
+Inference Pipeline. During online inference, the video is input as a frame-by-frame stream with a default 1 FPS. Our model ingests each frame sequentially and generates tokens on-the-fly. In the whole process, KV caching is employed to accelerate decoding, implicitly reusing previously generated tokens without explicit concatenation across frames. 
+
+5.2 Main Results Evaluation on Stream3D-Bench. Since existing offline models cannot na-tively process streaming videos, we provide the full video and specify the query time, prompting joint prediction of response timing and answers. We also fine-tune an online 2D VLM [6] and Qwen2.5-VL-7B with streaming decision learn-12 H. Yu et al. 
+
+Table 3: Evaluation results on VSI-Bench. Despite being designed for streaming scenarios, Stream3D-VLM also performs well across all subtasks of the offline spatial perception and reasoning benchmark, significantly surpassing both commercial and open-source models. 
+
+Methods Online Avg. ↑ Numerical Answer Multiple-Choice Answer 
+
+Obj. Cnt. Abs. Dist. Obj. Size Room Size Rel. Dist. Rel. Dir. Route Plan Appr. Order 
+
+Proprietary Models (API) 
+
+GPT-4o ✗ 34.0 46.2 5.3 43.8 38.2 37.0 41.3 31.5 28.5 Gemini-1.5 Pro ✗ 45.4 56.2 30.9 64.1 43.6 51.3 46.3 36.0 34.6 Gemini-2.5 Pro ✗ 51.5 43.8 34.9 64.3 42.8 61.1 47.8 45.9 71.3 
+
+Open-source Models 
+
+LongVILA-8B ✗ 21.6 29.1 9.1 16.7 0.0 29.6 30.7 32.5 25.5 VILA-1.5-40B ✗ 31.2 22.4 24.8 48.7 22.7 40.5 25.7 31.5 32.9 Qwen2.5-VL-7B ✗ 33.0 40.9 14.8 43.4 10.7 38.6 38.5 33.0 29.8 Qwen2.5-VL-72B ✗ 37.0 25.1 29.3 54.5 38.8 38.2 37.0 34.0 28.9 LLaVA-OneVision-72B ✗ 40.2 43.5 23.9 57.6 37.5 42.5 39.9 32.5 44.6 LLaVA-NeXT-Video-72B ✗ 40.9 48.9 22.8 57.4 35.3 42.4 36.7 35.0 48.6 
+
+Spatial Reasoning Models 
+
+SpaceR-7B ✗ 45.5 57.8 28.2 59.9 47.1 40.1 45.4 33.5 52.1 Spatial-MLLM-4B ✗ 48.4 65.3 34.8 63.1 45.1 41.3 46.2 33.5 46.3 VG LLM-8B ✗ 50.7 67.9 37.7 58.6 62.0 46.6 40.7 32.4 59.2 VLM-3R-8B ✗ 60.9 70.2 49.4 69.2 67.1 65.4 80.5 45.4 40.1 
+
+Stream3D-VLM-4B ✓ 55.2 68.6 38.4 65.9 56.4 49.9 54.3 42.3 66.0 
+
+Stream3D-VLM-8B ✓ 65.9 72.4 50.1 71.5 68.7 70.8 73.3 46.2 73.8 
+
+Table 4: Evaluation results on ScanQA, ScanRefer, and Scan2Cap. Stream3D-VLM, while operating in the online setting, excels in traditional 3D scene understanding tasks, including Question Answering, Visual Grounding, and Dense Captioning. 
+
+Methods Online ScanQA ScanRefer Scan2Cap@0.50 
+
+BLEU-4 METEOR ROUGE CIDEr EM Acc@0.25 Acc@0.50 BLEU-4 METEOR ROUGE CIDEr 
+
+Task-Specific Models 
+
+ScanQA ✗ 10.1 13.1 33.3 64.9 21.0 – – – – – –ScanRefer ✗ – – – – – 37.3 24.3 – – – –Scan2Cap ✗ – – – – – – – 22.4 21.4 43.5 35.2 3D-Vista ✗ 13.1 15.2 38.6 76.6 27.0 50.6 45.8 34.0 27.1 54.3 66.9 
+
+3D/2.5D-Input Models 
+
+3D-LLM ✗ 12.0 14.5 35.7 69.4 20.5 30.3 – 8.1 13.1 33.2 –LEO ✗ 11.5 16.2 39.3 80.0 24.5 – – 38.2 27.9 58.1 72.4 Inst3D-LMM ✗ 14.9 18.4 42.6 88.6 24.6 57.8 51.6 38.3 27.5 57.2 79.7 LLaVA-3D ✗ 14.5 20.7 49.6 91.7 27.0 54.1 42.4 41.1 30.2 63.4 79.2 Video-3D LLM ✗ 16.2 19.8 49.0 102.1 30.1 58.1 51.7 40.2 28.5 61.7 80.0 
+
+Only Video-Input Models 
+
+SPAR-8B ✗ 15.3 – – 90.7 27.7 48.8 43.1 – – – –Spatial-MLLM-4B ✗ 14.8 18.4 45.0 91.8 26.3 49.3 44.2 37.8 27.3 57.8 76.5 VG LLM-8B ✗ 16.0 18.0 44.2 98.6 27.3 54.4 47.9 40.1 28.4 62.0 76.4 
+
+Stream3D-VLM-4B ✓ 16.6 19.5 47.9 102.6 29.2 56.5 51.9 41.6 28.8 63.5 78.8 
+
+Stream3D-VLM-8B ✓ 17.8 21.0 50.2 104.5 30.9 58.4 52.5 42.8 31.0 64.2 81.2 
+
+ing on the curated 3D QA pairs as baselines. As shown in Table 2, our method achieves strong spatial understanding and temporal reasoning across three cat-egories, significantly outperforming both proprietary and open-source models. 
+
+Evaluation on VSI-Bench. To examine whether streaming prediction affects offline performance, we evaluate our method on VSI-Bench. As shown in Table 3, our 8B model achieves the highest average accuracy of 65.9%, outperforming both open-source general models and specialized spatial reasoning models. No-tably, the 4B variant reaches 55.2% accuracy, surpassing much larger 72B mod-els and the proprietary model Gemini-2.5 Pro [8]. These results demonstrate our method’s strong 3D spatial understanding and reasoning, even in offline settings. 
+
+Evaluation on ScanQA, ScanRefer, and Scan2Cap. We also evaluate Stream3D-VLM on other 3D scene understanding tasks—question answering, visual grounding, and dense captioning in Table 4. Despite using online videos Stream3D-VLM 13 
+
+Table 5: Ablation of streaming loss design. We explore different loss functions and weighting factors to identify an optimal trade-off across multiple evaluation metrics under the online input setting.                                          
+
+> Configs Stream3D-Bench Answer-Timing Acc. ↑End2End Latency ↓
+> NA ↑MCA ↑OEA ↑
+> Loss Function (fixed λ= 2 .0)Focal Loss 58.1 63.2 49.8 77.4% 0.52s Standard CE 59.8 65.4 51.4 86.7% 0.39s
+> Weighting Factor (using Standard CE Loss)
+> λ= 1 .059.6 65.0 53.3 80.3% 0.42s
+> λ= 2 .059.8 65.4 51.4 86.7% 0.39s
+> λ= 3 .057.0 63.8 50.2 89.2% 0.40s
+
+Table 6: Ablation study on the impact of 3D geometry prior modeling in the VSFI module. We compare the full Stream3D-VLM model with a fine-tuned Qwen2.5-VL-7B baseline and with variants that remove individual components.                                            
+
+> Settings Stream3D-Bench VSI-Bench
+> NA ↑MCA ↑OEA ↑NA ↑MCA ↑
+> Baseline (Visual Only) 46.0 52.9 44.6 42.9 46.2
+> w/o Camera Tokens 55.4 60.4 46.3 60.5 61.4
+> w/o Geometry Tokens 52.9 58.6 50.2 56.1 55.7 Fusion: Addition 57.6 65.8 49.2 63.5 63.4 Fusion: Concat. + MLP 53.5 60.3 50.1 60.8 62.1
+> Full Model (Cross-Attn.) 59.8 65.4 51.4 65.7 66.0
+
+without explicit 3D data, our method outperforms others across all tasks and metrics. The 4B variant remains competitive, exceeding many larger methods. 
+
+5.3 Ablation Studies Ablation Analysis of Streaming Loss Configurations. We explore dif-ferent loss functions and weighting factors for streaming prediction to balance performance and efficiency. Table 5 shows that standard cross-entropy and focal loss perform similarly. However, over-weighting the streaming loss harms over-all performance, while underweighting reduces response time accuracy. Optimal results occur at a streaming-to-generation loss weight ratio of 2.0. 
+
+Effects of Visual-Spatial Feature Integration (VSFI). Table 6 evaluates strategies for combining latent geometric features. Using either camera informa-tion or geometry tokens alone improves over the baseline, while combining both performs best. Moreover, a fusion design with stacked cross-attention blocks and skip connections outperforms patch-level addition or MLP-based concatenation. 
+
+Impacts of Geometry-Adaptive Voxel Compression (GAVC). Table 7 compares GAVC with other token compression baselines such as random prun-ing, average pooling, and VisionZip [47]. Unlike methods based on semantic redundancy or attention scores that ignore 3D structure, GAVC dynamically 14 H. Yu et al. 
+
+Table 7: Comparison of token compression strategies at a 50% retention ratio. Unlike baseline methods that rely solely on semantic redundancy or attention scores, GAVC performs spatially guided dynamic updates, thereby preserving geometric consistency under streaming video inputs. 
+
+Methods Stream3D-Bench ScanQA 
+
+NA ↑ MCA ↑ OEA ↑ B-4 ↑ ROUGE ↑ CIDEr ↑ EM ↑
+
+Geometry-Unaware Baselines 
+
+Random 35.6 40.2 36.8 8.5 32.6 72.4 18.8 Avg. Pooling 47.8 52.9 45.2 11.4 41.6 94.5 24.0 VisionZip 49.2 53.8 41.6 13.0 43.8 87.2 24.4 
+
+Geometry-Adaptive Compression 
+
+GAVC (Ours) 59.8 65.4 51.4 17.8 50.2 104.5 30.9 (a) Response and Answer -Timing Accuracy (b) TTFT and End2End Latency  
+
+> Accuracy (%)
+> TTFT Latency ( ms )
+> End -to -End Latency (s)
+> Token Retention Ratio (%) Token Retention Ratio (%)
+
+Fig. 5: Ablation study of the token retention ratio in the GAVC module. 
+
+We analyze the trade-off between performance and efficiency by reporting response accuracy, answer-timing accuracy, TTFT, and end-to-end latency on Stream3D-Bench. 
+
+updates voxels guided by spatial properties, better handling irregular voxel dis-tributions. As shown in Figure 5, GAVC maintains competitive accuracy with substantially reduced latency, even at a 25% token retention ratio. 
+
+6 Conclusion 
+
+In this paper, we propose Stream3D-VLM, the first online 3D spatial under-standing model solely on streaming video. We reformulate streaming control as a next-token prediction problem, enabling the model to learn when to respond or keep silent. For continuous 3D scene comprehension, we introduce a VSFI module that incrementally injects temporally aligned geometric priors into the visual stream. We further propose a GAVC module to dynamically compress visual tokens guided by 3D structure, reducing long-context redundancy during online inference. Extensive experiments demonstrate that our model achieves leading performance across diverse online and offline 3D-language tasks. Stream3D-VLM 15 
+
+References 
+
+1. Azuma, D., Miyanishi, T., Kurita, S., Kawanabe, M.: Scanqa: 3d question answer-ing for spatial scene understanding. In: proceedings of the IEEE/CVF conference on computer vision and pattern recognition. pp. 19129–19139 (2022) 2. Bai, S., Cai, Y., Chen, R., Chen, K., Chen, X., Cheng, Z., Deng, L., Ding, W., Gao, C., Ge, C., et al.: Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 (2025) 3. Bai, S., Chen, K., Liu, X., Wang, J., Ge, W., Song, S., Dang, K., Wang, P., Wang, S., Tang, J., et al.: Qwen2.5-vl technical report. arXiv preprint arXiv:2502.13923 (2025) 4. Baruch, G., Chen, Z., Dehghan, A., Dimry, T., Feigin, Y., Fu, P., Gebauer, T., Joffe, B., Kurz, D., Schwartz, A., et al.: Arkitscenes: A diverse real-world dataset for 3d indoor scene understanding using mobile rgb-d data. arXiv preprint arXiv:2111.08897 (2021) 5. Chen, D.Z., Chang, A.X., Nießner, M.: Scanrefer: 3d object localization in rgb-d scans using natural language. In: European conference on computer vision. pp. 202–221. Springer (2020) 6. Chen, J., Lv, Z., Wu, S., Lin, K.Q., Song, C., Gao, D., Liu, J.W., Gao, Z., Mao, D., Shou, M.Z.: Videollm-online: Online video large language model for streaming video. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. pp. 18407–18418 (2024) 7. Chen, Z., Gholami, A., Nießner, M., Chang, A.X.: Scan2cap: Context-aware dense captioning in rgb-d scans. In: Proceedings of the IEEE/CVF conference on com-puter vision and pattern recognition. pp. 3193–3203 (2021) 8. Comanici, G., Bieber, E., Schaekermann, M., Pasupat, I., Sachdeva, N., Dhillon, I., Blistein, M., Ram, O., Zhang, D., Rosen, E., et al.: Gemini 2.5: Pushing the frontier with advanced reasoning, multimodality, long context, and next generation agentic capabilities. arXiv preprint arXiv:2507.06261 (2025) 9. Dai, A., Chang, A.X., Savva, M., Halber, M., Funkhouser, T., Nießner, M.: Scannet: Richly-annotated 3d reconstructions of indoor scenes. In: Proceedings of the IEEE conference on computer vision and pattern recognition. pp. 5828–5839 (2017) 10. Deng, J., He, T., Jiang, L., Wang, T., Dayoub, F., Reid, I.: 3d-llava: Towards gener-alist 3d lmms with omni superpoint transformer. In: Proceedings of the Computer Vision and Pattern Recognition Conference. pp. 3772–3782 (2025) 11. Fan, Z., Zhang, J., Li, R., Zhang, J., Chen, R., Hu, H., Wang, K., Qu, H., Wang, D., Yan, Z., et al.: Vlm-3r: Vision-language models augmented with instruction-aligned 3d reconstruction. arXiv preprint arXiv:2505.20279 (2025) 12. Fu, R., Liu, J., Chen, X., Nie, Y., Xiong, W.: Scene-llm: Extending language model for 3d visual reasoning. In: 2025 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV). pp. 2195–2206. IEEE (2025) 13. Hong, Y., Zhen, H., Chen, P., Zheng, S., Du, Y., Chen, Z., Gan, C.: 3d-llm: In-jecting the 3d world into large language models. Advances in Neural Information Processing Systems 36 , 20482–20494 (2023) 14. Hu, W., Lin, J., Long, Y., Ran, Y., Jiang, L., Wang, Y., Zhu, C., Xu, R., Wang, T., Pang, J.: G2vlm: Geometry grounded vision language model with unified 3d reconstruction and spatial reasoning. arXiv preprint arXiv:2511.21688 (2025) 15. Huang, J., Ma, X., Linghu, X., Fan, Y., He, J., Tan, W., Li, Q., Zhu, S.C., Chen, Y., Jia, B., et al.: Leo-vl: Towards 3d vision-language generalists via data scaling with efficient representation. arXiv preprint arXiv:2506.09935 (2025) 16 H. Yu et al. 16. Huang, J., Yong, S., Ma, X., Linghu, X., Li, P., Wang, Y., Li, Q., Zhu, S.C., Jia, B., Huang, S.: An embodied generalist agent in 3d world. In: Proceedings of the 41st International Conference on Machine Learning. pp. 20413–20451 (2024) 17. Huang, X., Wu, J., Xie, Q., Han, K.: 3drs: Mllms need 3d-aware representation supervision for scene understanding. In: The Thirty-ninth Annual Conference on Neural Information Processing Systems (2025) 18. Huang, Z., Li, X., Li, J., Wang, J., Zeng, X., Liang, C., Wu, T., Chen, X., Li, L., Wang, L.: Online video understanding: Ovbench and videochat-online. In: Proceed-ings of the Computer Vision and Pattern Recognition Conference. pp. 3328–3338 (2025) 19. Hurst, A., Lerer, A., Goucher, A.P., Perelman, A., Ramesh, A., Clark, A., Os-trow, A., Welihinda, A., Hayes, A., Radford, A., et al.: Gpt-4o system card. arXiv preprint arXiv:2410.21276 (2024) 20. Jin, X., Yu, H., Yu, B., Liu, K., Liu, J., Tao, K., Pei, Y., Wang, H., Dang, F., Liu, J., et al.: Streamingassistant: Efficient visual token pruning for accelerating online video understanding. arXiv preprint arXiv:2512.12560 (2025) 21. Kang, W., Huang, H., Shang, Y., Shah, M., Yan, Y.: Robin3d: Improving 3d large language model via robust instruction tuning. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 3905–3915 (2025) 22. Lan, Y., Luo, Y., Hong, F., Zhou, S., Chen, H., Lyu, Z., Yang, S., Dai, B., Loy, C.C., Pan, X.: Stream3r: Scalable sequential 3d reconstruction with causal transformer. arXiv preprint arXiv:2508.10893 (2025) 23. Li, B., Zhang, Y., Guo, D., Zhang, R., Li, F., Zhang, H., Zhang, K., Zhang, P., Li, Y., Liu, Z., et al.: Llava-onevision: Easy visual task transfer. arXiv preprint arXiv:2408.03326 (2024) 24. Lin, H., Chen, S., Liew, J., Chen, D.Y., Li, Z., Shi, G., Feng, J., Kang, B.: Depth anything 3: Recovering the visual space from any views. arXiv preprint arXiv:2511.10647 (2025) 25. Lin, J., Zhu, C., Xu, R., Mao, X., Liu, X., Wang, T., Pang, J.: Ost-bench: Evaluat-ing the capabilities of mllms in online spatio-temporal scene understanding. arXiv preprint arXiv:2507.07984 (2025) 26. Liu, J., Yu, Z., Lan, S., Wang, S., Fang, R., Kautz, J., Li, H., Alvare, J.M.: Stream-chat: Chatting with streaming video. arXiv preprint arXiv:2412.08646 (2024) 27. OpenAI.: Gpt-5 system card (2025), https://cdn.openai.com/gpt-5-system-card.pdf 
+
+28. Ouyang, K., Liu, Y., Wu, H., Liu, Y., Zhou, H., Zhou, J., Meng, F., Sun, X.: Spacer: Reinforcing mllms in video spatial reasoning. arXiv preprint arXiv:2504.01805 (2025) 29. Qi, Z., Zhang, Z., Fang, Y., Wang, J., Zhao, H.: Gpt4scene: Understand 3d scenes from videos with vision-language models. arXiv preprint arXiv:2501.01428 (2025) 30. Su, Z., Ye, W., Feng, H., Fan, K., Zhang, J., Yu, D., Liu, Z., Wong, N.: Xstreamvggt: Extremely memory-efficient streaming vision geometry grounded transformer with kv cache compression. arXiv preprint arXiv:2601.01204 (2026) 31. Tang, H., Zhang, C., Jin, M., Yu, Q., Wang, Z., Jin, X., Zhang, Y., Du, M.: Time series forecasting with llms: Understanding and enhancing model capabilities. ACM SIGKDD Explorations Newsletter 26 (2), 109–118 (2025) 32. Wang, H., Zhao, Y., Wang, T., Fan, H., Zhang, X., Zhang, Z.: Ross3d: Reconstruc-tive visual instruction tuning with 3d-awareness. arXiv preprint arXiv:2504.01901 (2025) Stream3D-VLM 17 33. Wang, H., Zhou, H., Liu, H., Yan, L.: 4d-vggt: A general foundation model with spatiotemporal awareness for dynamic scene geometry estimation. arXiv preprint arXiv:2511.18416 (2025) 34. Wang, J., Chen, M., Karaev, N., Vedaldi, A., Rupprecht, C., Novotny, D.: Vggt: Visual geometry grounded transformer. In: Proceedings of the Computer Vision and Pattern Recognition Conference. pp. 5294–5306 (2025) 35. Wang, Q., Zhang, Y., Holynski, A., Efros, A.A., Kanazawa, A.: Continuous 3d perception model with persistent state. In: Proceedings of the Computer Vision and Pattern Recognition Conference. pp. 10510–10522 (2025) 36. Wang, W., Gao, Z., Gu, L., Pu, H., Cui, L., Wei, X., Liu, Z., Jing, L., Ye, S., Shao, J., et al.: Internvl3. 5: Advancing open-source multimodal models in versatility, reasoning, and efficiency. arXiv preprint arXiv:2508.18265 (2025) 37. Wang, X., Li, Z., Xu, Y., Qi, J., Yang, Z., Ma, R., Liu, X., Zhang, C.: Spatial 3d-llm: Exploring spatial awareness in 3d vision-language models. In: 2025 IEEE International Conference on Multimedia and Expo (ICME). pp. 1–6. IEEE (2025) 38. Wang, X., Feng, M., Qiu, J., Gu, J., Zhao, J.: From news to forecast: Integrating event analysis in llm-based time series forecasting with reflection. Advances in Neural Information Processing Systems 37 , 58118–58153 (2024) 39. Wang, Y., Ke, L., Zhang, B., Qu, T., Yu, H., Huang, Z., Yu, M., Xu, D., Yu, D.: N3d-vlm: Native 3d grounding enables accurate spatial reasoning in vision-language models. arXiv preprint arXiv:2512.16561 (2025) 40. Wei, H., Tang, H., Jia, X., Wang, Z., Yu, H., Li, Z., Satoh, S., Van Gool, L., Wang, Z.: Physical adversarial attack meets computer vision: A decade survey. IEEE Transactions on Pattern Analysis and Machine Intelligence 46 (12), 9797– 9817 (2024) 41. Wei, H., Yu, H., Zhang, K., Wang, Z., Zhu, J., Wang, Z.: Moiré backdoor attack (mba): A novel trigger for pedestrian detectors in the physical world. In: Pro-ceedings of the 31st ACM International Conference on Multimedia. pp. 8828–8838 (2023) 42. Wu, D., Liu, F., Hung, Y.H., Duan, Y.: Spatial-mllm: Boosting mllm capabilities in visual-based spatial intelligence. arXiv preprint arXiv:2505.23747 (2025) 43. Wu, S., Chen, J., Lin, K.Q., Wang, Q., Gao, Y., Xu, Q., Xu, T., Hu, Y., Chen, E., Shou, M.Z.: Videollm-mod: Efficient video-language streaming with mixture-of-depths vision computation. Advances in Neural Information Processing Systems 
+
+37 , 109922–109947 (2024) 44. Xu, R., Wang, X., Wang, T., Chen, Y., Pang, J., Lin, D.: Pointllm: Empowering large language models to understand point clouds. In: European Conference on Computer Vision. pp. 131–147. Springer (2024) 45. Yan, T., Zeng, W., Xiao, Y., Tong, X., Tan, B., Fang, Z., Cao, Z., Zhou, J.T.: Crossglg: Llm guides one-shot skeleton-based 3d action recognition in a cross-level manner. In: European Conference on Computer Vision. pp. 113–131. Springer (2024) 46. Yang, J., Yang, S., Gupta, A., Han, R., Fei-Fei, L., Xie, S.: Thinking in Space: How Multimodal Large Language Models See, Remember and Recall Spaces. In: CVPR (2025) 47. Yang, S., Chen, Y., Tian, Z., Wang, C., Li, J., Yu, B., Jia, J.: Visionzip: Longer is better but not necessary in vision language models. In: Proceedings of the Com-puter Vision and Pattern Recognition Conference. pp. 19792–19802 (2025) 48. Yang, S., Yang, J., Huang, P., Brown, E., Yang, Z., Yu, Y., Tong, S., Zheng, Z., Xu, Y., Wang, M., Lu, D., Fergus, R., LeCun, Y., Fei-Fei, L., Xie, S.: Cambrian-s: Towards spatial supersensing in video. arXiv preprint arXiv:2511.04670 (2025) 18 H. Yu et al. 49. Yao, L., Li, Y., Wei, Y., Li, L., Ren, S., Liu, Y., Ouyang, K., Wang, L., Li, S., Li, S., et al.: Timechat-online: 80% visual tokens are naturally redundant in streaming videos. In: Proceedings of the 33rd ACM International Conference on Multimedia. pp. 10807–10816 (2025) 50. Yeshwanth, C., Liu, Y.C., Nießner, M., Dai, A.: Scannet++: A high-fidelity dataset of 3d indoor scenes. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 12–22 (2023) 51. Yu, H., Li, W., Qu, X., Wang, S., Chen, J., Zhu, J.: Visiontrim: Unified vision token compression for training-free mllm acceleration. arXiv preprint arXiv:2601.22674 (2026) 52. Yu, H., Li, W., Wang, S., Chen, J., Zhu, J.: Inst3d-lmm: Instance-aware 3d scene understanding with multi-modal instruction tuning. In: Proceedings of the Com-puter Vision and Pattern Recognition Conference. pp. 14147–14157 (2025) 53. Yu, H., Qu, X., Wang, Y., Zhu, J., Ke, L.: Unlocking dense metric depth estimation in vlms. arXiv preprint arXiv:2605.15876 (2026) 54. Yuan, S., Yang, Y., Yang, X., Zhang, X., Zhao, Z., Zhang, L., Zhang, Z.: In-finitevggt: Visual geometry grounded transformer for endless streams. arXiv preprint arXiv:2601.02281 (2026) 55. Zhang, J., Chen, Y., Zhou, Y., Xu, Y., Huang, Z., Mei, J., Chen, J., Yuan, Y.J., Cai, X., Huang, G., et al.: From flatland to space: Teaching vision-language models to perceive and reason in 3d. arXiv preprint arXiv:2503.22976 (2025) 56. Zhao, R., Zhang, Z., Xu, J., Chang, J., Chen, D., Li, L., Sun, W., Wei, Z.: Space-mind: Camera-guided modality fusion for spatial reasoning in vision-language mod-els. arXiv preprint arXiv:2511.23075 (2025) 57. Zheng, D., Huang, S., Li, Y., Wang, L.: Learning from videos for 3d world: En-hancing mllms with 3d vision geometry priors. arXiv preprint arXiv:2505.24625 (2025) 58. Zhu, C., Wang, T., Zhang, W., Pang, J., Liu, X.: Llava-3d: A simple yet effec-tive pathway to empowering lmms with 3d capabilities. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 4295–4305 (2025) 59. Zhuo, D., Zheng, W., Guo, J., Wu, Y., Zhou, J., Lu, J.: Streaming 4d visual geometry transformer. arXiv preprint arXiv:2507.11539 (2025) Stream3D-VLM 19 
+
+# Supplementary Material 
+
+In this part, we provide more details and additional experimental results on our approach. The supplementary material is organized as follows: 
+
+• § A: Metadata computing details; 
+
+• § B: Detailed data generation pipeline; 
+
+• § C: Stream3D-1M dataset statistics; 
+
+• § D: Stream3D-Bench details; 
+
+• § E: More visualization results; 
+
+• § F: Evaluation prompts for offline models. 
+
+A Metadata Computing Details 
+
+This section details the computational logic for the metadata introduced in Sec-tion 3.2 of the main paper. 
+
+A.1 Visibility and Occlusion Reasoning 
+
+To determine the visibility of an object instance Oi at frame t, we project its 3D mesh vertices Vi onto the 2D image plane via the camera intrinsic matrix 
+
+K and the extrinsic pose Et. Let pproj = ( u, v ) denote the projected pixel coordinates of a vertex x ∈ Vi, and dx be its corresponding depth in the camera coordinate system. We determine the vertex-level visibility Vt(x) by enforcing geometric consistency between the projected vertex depth and the sensor depth map Dt(u, v ):
+
+Vt(x) = I (|dx − Dt(u, v )| < τ occ ) · I (0 ≤ u < W, 0 ≤ v < H ) , (11) where I(·) represents the indicator function, and τocc denotes the occlusion tol-erance threshold (empirically set to 0.05m). We quantify the object visibility score for the current frame as the ratio of the number of currently visible vertices to the maximum number of visible vertices observed across the entire video sequence, inspired by recent work [39, 55]. Finally, to obtain a binary visibility label, we threshold this ratio using values adapted to specific tasks. 
+
+A.2 Camera Kinematics Computation 
+
+We analyze the geometric properties of the camera pose trajectory, denoted as 
+
+{Pt}Tt=0 . Let tt ∈ R3 represent the camera center (translation) and Rt ∈ SO (3) 
+
+represent the orientation at frame t. We compute the following kinematic metrics: 20 H. Yu et al. 
+
+• Path Length: Calculated as the cumulative Euclidean distance traversed by the camera center across consecutive frames: 
+
+L =
+
+> T
+
+X
+
+> i=1
+
+∥ti − ti−1∥2. (12) 
+
+• Displacement: Defined as the Euclidean distance between the initial and final camera positions: 
+
+∆ = ∥tT − t0∥2. (13) 
+
+• Direction: Defined as the azimuthal angle ( i.e. , clock position) of the fi-nal position relative to the initial pose. This is computed by projecting the displacement vector (tT − t0) onto the local coordinate system of the initial camera P0.
+
+• Rotation: Defined as the variation in horizontal orientation between the start and end frames. It is obtained by calculating the signed angle between the optical axes (forward vectors) of RT and R0 projected onto the horizon-tal plane. 
+
+A.3 Geometric Measurement 
+
+Leveraging the dense point clouds derived from 3D instance segmentation, we compute the following metrics to characterize the geometric properties of the scene and objects: 
+
+• Object-Camera Relationship: We analyze the egocentric spatial relation of an object with respect to the camera. Specifically, the Direction (dis-cretized as clock positions) is computed based on the object centroid in the camera’s local coordinate system. The Distance is defined as the minimum Euclidean distance between the camera center and the set of points belonging to the object instance. 
+
+• Inter-Object Distance: To quantify the spatial separation between two objects, we compute the minimum Euclidean distance between their respec-tive 3D point sets. This calculation is efficiently accelerated using a KD-Tree structure to query the nearest neighbor points. 
+
+• Object Size: We estimate the spatial extent of an object by constructing an Oriented Bounding Box (OBB) around its point cloud. The dimensions are parameterized by the length, width, and height of this bounding volume. 
+
+• Room Area: The approximate area of the room is derived from the global scene point cloud. We project the scene’s bounding box onto the horizontal plane and calculate the product of its length and width. 
+
+B Detailed Data Generation Pipeline 
+
+B.1 Rule-based Generation Templates 
+
+We constructed diverse linguistic templates for each rule-based task. Stream3D-VLM 21 
+
+• Ego-Motion Estimation: Questions focus on monitoring future motion (Forward) or recalling past motion (Backward). Example: “How much total distance has the camera traveled in the past {N } seconds?” 
+
+• Object–Camera Relationship: Covers Distance, Direction ( e.g. , “to your left"), and Location (Clock position + Distance). Example: “Where is the 
+
+{Object } relative to me right now?” (Realtime) vs. “I can’t see the {Object }
+
+anymore. Where is it relative to me?” (Backward). 
+
+• Environment Measurement: Includes Object Size, Room Area, and Inter-object Distance. Example: What is the shortest distance between the {Object _A}
+
+and the {Object _B} in meters? 
+
+• Object Chronology: Involves counting unique instances, determining ap-pearance order, and timestamps. Example: “How many {Object _Class }
+
+have you seen so far?” or “Did you see the {Object _A} before or after the 
+
+{Object _B}?” Table A1 presents the complete collection of question templates for all 29 tasks, hierarchically structured according to three temporal interaction modes and five cognitive categories. 
+
+B.2 QA Transfer with VLM Verification 
+
+For semantic tasks (Attribute, Position, Recognition), we adapt static ScanQA data. 1. Temporal Grounding: We align the static question to the video timeline by identifying the frame t∗ where the target object is most clearly visible (highest visibility ratio). 2. VLM Verification: We employ GPT-5 [27] with the prompt: “You are an expert in visual question answering verification. Please examine whether the provided image frame contains sufficient visual evidence to support the given Question and Answer pair. You must assess if the target object is clearly perceivable. Return ‘1‘ if the answer can be strictly inferred from the visual content, and ‘0‘ otherwise.” to ensure the question is answerable from the visual stream alone, filtering out questions relying on unobservable context. 
+
+B.3 Construction of Target Object Whitelist 
+
+When constructing streaming 3D QA pairs for object-centric tasks, we observed that many object labels are noisy, ambiguous, or otherwise unsuitable for mean-ingful question generation. To ensure high-quality QA, we employed GPT-5 [27] to rigorously curate a Target Object Whitelist from the full label sets of ScanNet and ScanNet++. We adopted a unified high-precision filtering strategy based on three core criteria: 1. Specific Identity: Retain concrete object classes ( e.g. , chair, monitor) while discarding broad hypernyms ( e.g. , furniture, electronics) to ensure semantic precision. 22 H. Yu et al. 
+
+Tab-A1: Taxonomy and question templates of Stream3D-Bench. The bench-mark comprises 29 tasks, hierarchically structured according to temporal interaction modes and cognitive categories. Highlighted variables are dynamically instantiated for each scene. 
+
+Mode Category Specific Task Question Template / Example Backward Tracing Ego-Motion 
+
+Cam. Direction Where is the current camera location relative to its position {n} seconds ago? 
+
+Cam. Path What is the total path length covered by the camera during the last {n} seconds? 
+
+Cam. Rotation What was the camera’s horizontal rotation angle over the past {n} seconds? 
+
+Cam. Displacement How far has the camera moved during the last {n} seconds? 
+
+Cam. Comprehensive Provide a detailed summary of the camera’s motion over the last {n} seconds. 
+
+Env. Measure. Room Area Based on the observed footage, estimate the room’s length, width, and area. 
+
+Obj-Cam Rel. 
+
+Obj-Cam Distance The {object} is currently out of view. How far away is it from me? 
+
+Obj-Cam Direction Where is the {object} relative to me now? Please use directional terms. 
+
+Obj-Cam Location Provide both the clock direction and the distance of the {object} relative to me. 
+
+Chronology 
+
+Object Counting How many {category}(s) have you seen so far? 
+
+Appearance Time At what timestamp (in seconds) did the {object} first appear? 
+
+Appearance Order What is the first-time appearance order of {choice a}, {choice b}, {choice c}? 
+
+> Realtime Perception
+
+Env. Measure. 
+
+Object Size Estimate the size of the {object}. 
+
+Obj-Obj Distance What is the distance between {object A} and {object B} cur-rently? 
+
+Obj-Cam Rel. Absolute Distance How far is this {object} from my current position? 
+
+Relative Distance Which of the following objects ({a, b, c, d}) is closest to me? 
+
+Attributes 
+
+Object Property What is the color/material/shape of the {object} currently in view? 
+
+Object Position Is the {object} currently located on the floor or on another ob-ject? 
+
+Object Recognition Identify the {object} currently at the center of the view. 
+
+> Forward Response
+
+Ego-Motion 
+
+Cam. Direction Where will the camera be located compared to here in {n} sec-onds? 
+
+Cam. Path In {n} seconds, how much ground will the camera cover in total? 
+
+Cam. Rotation How many degrees will the camera turn horizontally in {n} sec-onds? 
+
+Cam. Displacement. How far will the camera be from its current position in {n} seconds? 
+
+Cam. Comprehensive Give a comprehensive report on the camera’s motion over the next {n} seconds. 
+
+Env. Measure. Room Area Once the room is sufficiently covered, tell me its length, width, and area. 
+
+Obj-Cam Rel. 
+
+Obj-Cam Distance Wait {n} seconds, then tell me the distance to the {object}. 
+
+Obj-Cam Location In {n} seconds, report both the clock direction and distance of the {object} relative to me. 
+
+Obj-Cam Direction Wait {n} seconds, then indicate the direction of the {object}. 
+
+Object Finding I’m moving, help locate the {object} and report its clock direc-tion and distance. 
+
+2. Distinct Entity: Select standalone functional entities rather than depen-dent parts ( e.g. , retain door but discard door frame). 3. Spatial Localizability: Prioritize objects with finite, well-defined bound-aries, excluding continuous structural elements such as floor, ceiling, and wall. The prompts used to curate the Target Object Whitelist are shown in Figure A1. 
+
+Note: While structural elements like walls can theoretically support specific tasks ( e.g. , Object-to-Object Distance), they are unsuitable for the majority of Stream3D-VLM 23 
+
+object-centric tasks ( e.g. , Object Size or Object Counting). To maintain consis-tency across the benchmark, we applied this whitelist globally. This approach ensures a clear and consistent definition of “object" across tasks, prevents refer-ential ambiguity ( e.g. , distinguishing between multiple walls in a single view), and focuses evaluation on the model’s ability to perceive distinct 3D instances. <System Message> :
+
+> You are a data annotation assistant for a 3D dataset. Your task is to classify whether a
+> label represents a **specific, spatially localized 3D instance** suitable for diverse spatial
+> reasoning tasks (e.g., estimating size, calculating distance/direction, or object finding).
+
+<User Instruction >:  
+
+> Please evaluate the label based on the following strict criteria:
+> **Return "1" (Keep) ONLY if the label meets ALL of these conditions:**
+> 1. **Specific Identity:** It must refer to a concrete object class (e.g., 'chair', 'monitor'),
+> NOT a broad category or hypernym (e.g., 'furniture', 'electronics', 'appliance', 'equipment').
+> 2. **Distinct Entity:** It must be a whole, standalone functional entity (e.g., 'door',
+> 'window'), NOT a dependent component or frame (e.g., 'door frame', 'window sill', 'table leg',
+> 'handle').
+> 3. **Localizable:** It must have clear boundaries (e.g., 'rug', 'poster', 'sink'), NOT be a
+> structural boundary of the room (e.g., 'wall', 'floor', 'ceiling').
+> **Return "0" (Discard) if the label falls into ANY of these categories:**
+> 1. **Broad/Vague Categories:** 'furniture', 'prop', 'item', 'object', 'stuff', 'misc',
+> 'unknown'.
+> 2. **Structural Parts/Frames:** 'door frame', 'window frame', 'molding', 'baseboard', 'trim',
+> 'column', 'beam', 'pipe'.
+> 3. **Room Boundaries:** 'wall', 'floor', 'ceiling'.
+> 4. **Materials/Textures:** 'wood', 'metal', 'carpet' (if wall -to -wall), 'tile'.
+> 5. **Partial/Fragments:** 'fragment', 'part of...', 'corner' .
+
+Fig-A1: Prompts employed to curate the Target Object Whitelist for object-centric 3D online QA. 
+
+C Stream3D-1M Dataset Statistics 
+
+We present a comprehensive statistical analysis of the Stream3D-1M Dataset ,a large-scale dataset containing approximately 1 million (1,003,203) question-answer pairs derived from 5,154 unique scans. This dataset is designed to train Multimodal Large Language Models (MLLMs) with robust streaming 3D capa-bilities. The detailed composition is summarized in Figure A2 and Table A2. 
+
+Scene Diversity and Data Sources. To ensure the model generalizes across diverse environments, our dataset aggregates scenes from three distinct sources. As detailed in Table A2 (Top), ARKitScenes [4] contributes the majority of raw video data, accounting for 60.1% of the total videos. This vast diversity is crucial for preventing the model from overfitting to the specific interior styles of ScanNet-like environments. ScanNet [9], and ScanNet++ [50] contribute 23.3% and 16.6% of the videos, respectively, serving as the foundation for fine-grained semantic and geometric reasoning. 24 H. Yu et al. (a) Data Source (b) Cognitive Competency 
+
+Streaming 3D Dataset (S3D) -- 1 M QAs   
+
+> (c) Interaction Mode
+> ScanNet ++
+> 43.5%
+> Object
+> Chronology
+> 14.3%
+> Realtime
+> 19.8% ARKitScenes
+> 28.6 %
+> ScanNet
+> 27.9 %
+> Ego -Motion
+> Estimation
+> 50.1 %
+> Object Attributes
+> 2.4%
+> Environment
+> Measurement
+> 8.2 %
+> Object –Camera
+> Relationship
+> 25.0 %
+> Backward
+> 46.3 %
+> Forward
+> 33.9 %
+
+Fig-A2: Statistical distribution of Stream3D-1M dataset. The figure visualizes the composition of the training set (over 1M samples) across three key dimensions: 
+
+(a) Data Source , highlighting that ScanNet++ contributes the plurality of QA pairs (43.5%) due to its dense annotations; (b) Task Category , dominated by Ego-Motion Estimation tasks (50.1%) which serve as the foundation for spatial tracking; and (c) Interaction Mode , demonstrating a strong emphasis on long-term memory (Back-ward, 46.3%) and active monitoring (Forward, 33.9%). 
+
+QA Distribution and Density. While ARKitScenes offers scene breadth, 
+
+ScanNet++ provides annotation depth. Despite comprising fewer scenes, Scan-Net++ contributes the largest portion of QA pairs ( 43.5% ), reflecting its high-quality, dense annotations that support complex spatial reasoning. Conversely, ARKitScenes contributes 28.6% of the QAs, primarily focusing on camera motion and trajectories, balancing the dataset between semantic richness and kinematic diversity. 
+
+Task Category Distribution. The distribution of task types reflects the fun-damental requirements of a streaming 3D assistant: 
+
+• Ego-Motion Estimation (50.1%): This category dominates the dataset. Since ego-motion estimation is a prerequisite for spatial tracking and is ap-plicable to all data sources, it serves as a large-scale pre-training foundation. 
+
+• Object-Camera Relation (25.0%) & Object Chronology (14.3%): 
+
+These tasks constitute the core of spatial interaction, requiring the model to update object states relative to the viewer dynamically. 
+
+• Environment Measurement (8.2%) & Object Attributes (2.4%): 
+
+These tasks are inherently scarcer as they rely on specific geometric condi-tions or high-quality VLM-verified semantic attributes, ensuring high preci-sion over quantity. 
+
+Temporal Mode Distribution. The dataset emphasizes memory and predic-tion capabilities. Backward Tracing accounts for 46.3% of the data, training the model’s long-term history retention. Realtime Perception (19.8%) and 
+
+Forward Response (33.9%) ensure the model remains responsive to current and future events. Stream3D-VLM 25 (d) Test Type 
+
+Streaming 3D Bench (S3DB) – 10 K QAs        
+
+> (a) Data Source (b) Cognitive Competency (c) Interaction Mode
+> ScanNet ++
+> 40.7%
+> Object –Camera
+> Relationship
+> 31.9%
+> Numerical
+> 31.9%
+> Backward
+> 41.3%
+> ARKitScenes
+> 14.2 %
+> ScanNet
+> 45.1 %
+> Ego -Motion
+> Estimation
+> 35.5 %
+> Object Attributes
+> 10.6 %
+> Environment
+> Measurement
+> 11.3 %
+> Object Chronology
+> 10.6 %
+> Forward
+> 33.9 %
+> Realtime
+> 24.8 %Multiple -Choice
+> 31.9 %Open -Ended
+> 36.2 %
+
+Fig-A3: Statistical distribution of Stream3D-Bench. The four pie charts illus-trate the composition of the benchmark across diverse dimensions: (a) Data Source ,showing a robust integration of ScanNet, ScanNet++, and ARKitScenes; (b) Task Category , covering five core cognitive capabilities; (c) Interaction Mode , balancing tasks across Memory (Backward), Observation (Realtime), and Monitoring (Forward) phases; and (d) Answer Type , maintaining a uniform distribution among Open-ended, Numerical, and Multiple-choice formats. 
+
+D Stream3D-Bench Details 
+
+To systematically evaluate the capabilities of MLLMs in online 3D spatial under-standing, we construct Stream3D-Bench , a comprehensive benchmark com-prising 10,037 high-quality samples derived from 518 unique videos. As shown in Figure A3 and Table A3, the benchmark is rigorously balanced across data sources, task categories, interaction modes, and answer types, ensuring a fair and robust assessment. 
+
+Data Sources and Diversity. The benchmark integrates diverse indoor 3D data to prevent overfitting to specific sensor characteristics. Specifically, the data is sourced from ScanNet (312 scans), ScanNet++ (100 scans), and ARK-itScenes (106 scans). While ScanNet and ScanNet++ provide dense semantic annotations for object-centric tasks, ARKitScenes contributes significantly to camera motion tasks, enriching the diversity of trajectory dynamics. 
+
+Task Categories. Stream3D-Bench covers five core capability dimensions. To ensure balanced evaluation, we apply a stratified sampling strategy where most specific sub-tasks ( Camera Path (Backward) , Object Finding (Forward) ) are ex-plicitly balanced to approximately 356 samples each. Exceptions occur only in tasks with strict geometric constraints, such as Room Area , where valid samples are inherently scarcer. The overall distribution across categories is: 
+
+• Ego-Motion Estimation (35.5%): The largest category, assessing ego-motion perception across all three datasets. 
+
+• Object-Camera Relationship (31.9%): Evaluates spatial reasoning ca-pabilities like distance and direction estimation. 
+
+• Environment Measurement (11.3%): Focuses on quantifying scene at-tributes ( e.g. , object size, room area). 
+
+• Object Attributes (10.6%): Tests attribute recognition and property un-derstanding. 26 H. Yu et al. 
+
+Tab-A2: Detailed statistics of the Stream3D-1M dataset.                                   
+
+> Attribute Count Percent
+> Scan Count by Source
+> ARKitScenes 3,098 60.1% ScanNet 1,201 23.3% ScanNet++ 855 16.6%
+> Total Scans 5,154 100.0%
+> QA Count by Source
+> ScanNet++ 436,812 43.5% ScanNet 279,859 27.9% ARKitScenes 286,532 28.6%
+> Total QAs 1,003,203 100.0%
+> Task Category
+> Ego-Motion Estimation 503,072 50.1% Object-Camera Relationship 250,650 25.0% Object Chronology 143,475 14.3% Environment Measurement 82,126 8.2% Object Attributes 23,880 2.4%
+> Interaction Mode
+> Backward 464,241 46.3% Forward 340,153 33.9% Realtime 198,809 19.8%
+
+Tab-A3: Detailed statistics of Stream3D-Bench composition.                              
+
+> Attribute Count Percent
+> Data Source
+> ScanNet 4,525 45.1% ScanNet++ 4,082 40.7% ARKitScenes 1,430 14.2%
+> Task Category
+> Ego-Motion Estimation 3,560 35.5% Object-Camera Relationship 3,204 31.9% Environment Measurement 1,137 11.3% Object Attributes 1,068 10.6% Object Chronology 1,068 10.6%
+> Interaction Mode
+> Backward 4,145 41.3% Forward 3,400 33.9% Realtime 2,492 24.8%
+> Test Type
+> Open-Ended 3,629 36.2% Numerical 3,204 31.9% Multiple-Choice 3,204 31.9%
+
+• Object Chronology (10.6%): Assesses temporal awareness, such as ap-pearance order and counting. 
+
+Temporal Interaction Modes. The benchmark evaluates agents across three distinct temporal phases, ensuring the model can handle memory, observation, and prediction: 
+
+• Backward Tracing (41.3%): Assessing long-term memory and history retrieval. 
+
+• Realtime Perception (24.8%): Testing instant spatial perception and current-frame analysis. 
+
+• Forward Response (33.9%): Evaluating future monitoring and asyn-chronous response capabilities. 
+
+Answer Types. To validate different output modalities, the benchmark main-tains a near-perfect balance among answer formats: Open-ended (36.2%), Nu-merical (31.9%), and Multiple-choice (31.9%). This uniform distribution pre-vents bias towards any specific answering style. Stream3D-VLM 27 
+
+E More Visualization Results 
+
+In this section, we present comprehensive visualization examples covering all 29 tasks in Stream3D-Bench, hierarchically structured along three temporal inter-action patterns and five cognitive categories, as illustrated in Figures A4–A8. Scene0217_00 
+
+T = 11.0s 
+
+T = 14.0s T = 17.0s 
+
+T = 4.0s T = 7.0s T = 9.0s 
+
+<Silent> <Silent> <Silent> <Silent> 
+
+<Silent> <A2> <Q2> 
+
+Q2 [T=17s]: What is the first -time appearance order of trash can, 
+
+backpack, and chair ? Choices: 
+
+(A) backpack, then trash can, then chair 
+
+(B) trash can, then chair, then backpack 
+
+(C) chair, then trash can, then backpack 
+
+(D) trash can, then backpack, then chair 
+
+Please answer with the option letter only (e.g., A). 
+
+T = 2.0s T = 8.0s 
+
+T = 12.0s T = 18.0s T = 19.0s T = 23.0s 
+
+<A4> <Q4> <A3> <Q3> 
+
+<A1 -Instant> <Q1> <Silent> 
+
+<Silent> 
+
+A2 [T=17s]: C
+
+Q4 [T=23s]: Based on the observed footage, estimate the room’s length ,
+
+width , and area .
+
+A4 [T=23s]: I have analyzed the geometry. Length: 5.4m , Width: 4.0m .
+
+Total area: 21.9 square meters .
+
+Q3 [T=18s]: Provide a detailed summary of the camera’s motion over the 
+
+last 10 seconds . Specifically, please include the total path distance, net 
+
+displacement, final clock direction relative to the start, and horizontal 
+
+rotation details. 
+
+A3 [T=18s]: The camera traveled 2.7m . Its final position is 2.0m away at 
+
+3 o'clock relative to where it was 10 seconds ago, having rotated 155 
+
+degrees clockwise .
+
+Q1 [T=2s]: Give a comprehensive report on the camera’s motion over the 
+
+next 10 seconds . Specifically, please include the total path distance, net 
+
+displacement, final clock direction relative to the start, and horizontal 
+
+rotation details. 
+
+A1 -Final [T=12s]: The camera traveled 2.7m . Relative to its position 10 
+
+seconds ago, it ended up 0.4m away at the 3 o'clock position, and rotated 
+
+180 degrees counter -clockwise .
+
+A1 -Instant [T=2s]: Understood. I'll track distance, displacement, 
+
+direction, and rotation for the next 10 seconds. 
+
+Backward Ego -Motion Estimation 
+
+(Comprehensive) 
+
+Environment Measurement 
+
+• Object Size 
+
+• Inter -Object Distance 
+
+Object Attributes 
+
+• Object Property 
+
+• Object Position 
+
+• Object Recognition 
+
+Object –Camera Relationship 
+
+• Absolute Distance 
+
+• Relative Distance 
+
+Object –Camera Relationship 
+
+• Distance • Location 
+
+• Direction • Finding 
+
+Object Chronology 
+
+• Counting • Time • Order 
+
+Object –Camera Relationship 
+
+• Distance • Direction • Location 
+
+Environment Measurement 
+
+• Room Area 
+
+Ego -Motion Estimation 
+
+• Direction • Path • Rotation 
+
+• Displacement • Comprehensive 
+
+Environment Measurement 
+
+• Room Area 
+
+Temporal Interaction Modes 
+
+Backward Tracing 
+
+Realtime Perception 
+
+Forward Active Responding 
+
+Ego -Motion Estimation 
+
+• Direction. • Path 
+
+• Rotation •
+
+Comprehensive 
+
+• Displacement 
+
+Realtime – Object Size 
+
+Forward Ego -Motion Estimation 
+
+(Comprehensive) Backward Object Chronology 
+
+(Order) 
+
+Backward Environment Measurement 
+
+(Room Area) 
+
+<A1 -Final> 
+
+Fig-A4: Stream3D-Bench Examples (Part 1). 28 H. Yu et al. Scene0025_00 
+
+<A1 -Instant> <Q1> <A2 -Final> 
+
+Environment Measurement 
+
+• Object Size 
+
+• Inter -Object Distance 
+
+Object Attributes 
+
+• Object Property 
+
+• Object Position 
+
+• Object Recognition 
+
+Object –Camera Relationship 
+
+• Absolute Distance 
+
+• Relative Distance 
+
+Object –Camera Relationship 
+
+• Distance • Location 
+
+• Direction • Finding 
+
+Object Chronology 
+
+• Counting • Time • Order 
+
+Object –Camera Relationship 
+
+• Distance • Direction • Location 
+
+Environment Measurement 
+
+• Room Area 
+
+Ego -Motion Estimation 
+
+• Direction • Path • Rotation 
+
+• Displacement • Comprehensive 
+
+Environment Measurement 
+
+• Room Area 
+
+Temporal Interaction Modes 
+
+Backward Tracing 
+
+Realtime Perception 
+
+Forward Active Responding 
+
+Ego -Motion Estimation 
+
+• Direction. • Path 
+
+• Rotation • Comprehensive 
+
+• Displacement 
+
+Realtime Object –Camera Relationship 
+
+(Absolute Distance) 
+
+Q4 [T=1 2s]: I can see the pillow now. How far away is it from my 
+
+current position? Please answer with a single number representing 
+
+the distance in meters. Do not include units or sentences. 
+
+A4 [T=12s]: 2.0 
+
+"question_for_test ": "I will rota 
+
+camera angle covers enough of 
+
+and total area.", 
+
+"answer_for_test ": "The camer 
+
+approximately 6.1m long and 5 
+
+"question_for_test_frame 
+
+"question_for_test_time 
+
+"answer_for_test_frame 
+
+"answer_for_test_time 
+
+{
+
+"answer": "Understood. I am p 
+
+the camera, and I will calculate 
+
+"frame": 90, 
+
+"time": 3.0 
+
+}, 
+
+"question_for_test ": "Wait 10.0 
+
+pillow's clock position and dista 
+
+sentence.", 
+
+"answer_for_test ": "At your 5 o 
+
+"question_for_test_frame 
+
+"question_for_test_time 
+
+"answer_for_test_frame 
+
+"answer_for_test_time 
+
+{
+
+"answer": "Okay, counting dow 
+
+"frame": 570, 
+
+"time": 19.0, 
+
+"type": "immediate" 
+
+}, 
+
+"question_for_test ": "I can see 
+
+me? \nPlease answer with a sin 
+
+not include units or sentences. 
+
+"answer_for_test ": "2.0", 
+
+"question_for_test_frame 
+
+"question_for_test_time 
+
+"answer_for_test_frame 
+
+"question_for_test 
+
+"answer_for_test 
+
+"question_for_test_frame 
+
+"question_for_test_time 
+
+"answer_for_test_frame 
+
+"answer_for_test_time 
+
+"question_for_test 
+
+"answer_for_test 
+
+"question_for_test_frame 
+
+"question_for_test_time 
+
+"answer_for_test_frame 
+
+"answer_for_test_time 
+
+"is_boundary ": false 
+
+"answer_for_test 
+
+Compared to where i 
+
+at same spot, with a r 
+
+relative to its previou 
+
+"question_for_test_fr 
+
+"question_for_test_t 
+
+"answer_for_test_fra 
+
+"answer_for_test_tim 
+
+T = 20.0s T = 24.0s T = 19.0s T = 29.0s T = 34.0s T = 36.0s 
+
+T = 12.0s T = 5.0s T = 8.0s T = 11.0s T = 3.0s T = 10.0s 
+
+<Silent> <A5 -Final> 
+
+Forward Environment Measurement 
+
+(Room Area) 
+
+Q1 [T=3s]: I will rotate the camera to show you the room. Once the 
+
+room is sufficiently covered, tell me its length , width , and area .
+
+A1 -Final [T=36s]: The camera rotation is now sufficient. The room is 
+
+approximately 6.1m long and 5.9m wide , with an area of 35.7m ².
+
+A1 -Instant [T=3s]: Understood. I am processing the video stream. 
+
+Please continue rotating the camera, and I will calculate the dimensions 
+
+once the view is sufficient. 
+
+Realtime Object Attributes 
+
+(Object Recognition) 
+
+Q6 [T=20s]: Identify the object that is directly to the right of the 
+
+white shelf ?
+
+A6 [T=20s]: Door .
+
+Realtime Object Attributes 
+
+(Object Property) 
+
+Q3 [T=11s]: What color couch is the pillow on? 
+
+A3 [T=11s]: Black .
+
+Forward Object –Camera Relationship 
+
+(Location) 
+
+Q5 [T= 19 s]: Wait 10.0 secon ds , then describe the pillow’s location (clock 
+
+position and distance) . Please answer in a concise sentence. 
+
+A5 -Final [T=29s]: At your 5 o'clock , 1.5m away. 
+
+A5 -Instant [T=19s]: Okay, counting down 10.0 seconds. 
+
+<A1 -Final> 
+
+Q2 [T= 5s]: How many degrees will the camera turn horizontally in 5
+
+seconds ? Choices: 
+
+(A) 15 degrees clockwise (B) 53 degrees clockwise 
+
+(C) 53 degrees counter -clockwise (D) 80 degrees counter -clockwise 
+
+Answer with the option letter only. 
+
+A2 -Instant [T=5s]: Sure, I'll calculate the horizontal degrees the 
+
+camera turns over the next 5 seconds. 
+
+Forward Ego -Motion Estimation 
+
+(Rotation) 
+
+A2 -Final [T=10s]: C
+
+<A2 -Instant> <Q2> <Silent> <A3> <Q3> <A4> <Q4> 
+
+<A5 -Instant> <Q5> <Silent> <A6> <Q6> 
+
+How many couches have you seen so far? 
+
+Fig-A5: Stream3D-Bench Examples (Part 2). Stream3D-VLM 29 Scene0426_00 
+
+<Silent> <A5> <Q5> 
+
+<A1> <Q1> 
+
+<Silent> 
+
+Q1 [T= 1s]: Estimate the size of the desk? Specifically, please provide 
+
+the length , width , and height of the desk in meters. 
+
+A1 [T=1s]: The desk is 1.5 meters in length, 0.8 meters in width, and 0.7 
+
+meters in height. 
+
+Q3 [T= 5s]: Wait 12.0 seconds , then indicate the direction of the desk 
+
+relative to me. Use directional terms. Choices: 
+
+(A) to your back -right (B) behind you 
+
+(C) to your back -left (D) to your right 
+
+Please answer with the option letter only (e.g., A). 
+
+A3 -Final [T=17s]: C
+
+A3 -Instant [T=5s]: Sure, I will check its direction in 12.0 seconds. 
+
+x
+
+33 34 37 23 32 Rotation 42 
+
+T = 32.0s T =33.0s T = 23.0s T = 34.0s T = 37.0s T = 42.0s 
+
+T = 17.0s T = 4.0s T = 5.0s T = 13.0s T = 6.0s T = 1.0s 
+
+Environment Measurement 
+
+• Object Size 
+
+• Inter -Object Distance 
+
+Object Attributes 
+
+• Object Property 
+
+• Object Position 
+
+• Object Recognition 
+
+Object –Camera Relationship 
+
+• Absolute Distance 
+
+• Relative Distance 
+
+Object –Camera Relationship 
+
+• Distance • Location 
+
+• Direction • Finding 
+
+Object Chronology 
+
+• Counting • Time • Order 
+
+Object –Camera Relationship 
+
+• Distance • Direction • Location 
+
+Environment Measurement 
+
+• Room Area 
+
+Ego -Motion Estimation 
+
+• Direction • Path • Rotation 
+
+• Displacement • Comprehensive 
+
+Environment Measurement 
+
+• Room Area 
+
+Temporal Interaction Modes 
+
+Backward Tracing 
+
+Realtime Perception 
+
+Forward Active Responding 
+
+Ego -Motion Estimation 
+
+• Direction. • Path 
+
+• Rotation • Comprehensive 
+
+• Displacement 
+
+Q2 [T= 4s]: What is the distance between the desk and the backpack? 
+
+Please answer with the numerical value in meters only. 
+
+A2 [T=4s]: 0.4 Q5 [T=33s]: Provide both the clock direction and the distance of the 
+
+dresser relative to me. Please answer in a concise sentence. 
+
+A5 [T=33s]: It is at your 10 o'clock , about 1.2 meters away. 
+
+Q4 [T= 6s]: In 7 seconds , how much ground will the camera cover in total? 
+
+(Answer with a single number in meters) 
+
+A4 -Final [T=13s]: 1.4 
+
+A4 -Instant [T=6s]: Understood. I will track the total distance covered 
+
+by the camera over the next 7 seconds. 
+
+Q6 [T=34s]: Wait 3.0 seconds , then tell me the distance to the tissue 
+
+box. Please answer with a single number representing the distance in 
+
+meters. Do not include units or sentences. 
+
+A6 -Final [T=37s]: 1.4 
+
+A6 -Instant [T=34s]: Understood, waiting 3.0 seconds. 
+
+Forward Object –Camera Relationship 
+
+(Distance) 
+
+Forward Ego -Motion Estimation 
+
+(Path) 
+
+Forward Object –Camera Relationship 
+
+(Direction) 
+
+Realtime Environment Measurement 
+
+(Object -Object Distance) 
+
+Realtime Environment Measurement 
+
+(Object Size) 
+
+Backward. Object –Camera Relationship 
+
+(Location) 
+
+<A2> <Q2> <A3 -Instant> <Q3> <A3 -Final> <A4 -Instant> <Q4> <A4 -Final> 
+
+<Silent> <A6 -Instant> <Q6> <A6 -Final> 
+
+Fig-A6: Stream3D-Bench Examples (Part 3). 30 H. Yu et al. Scene0599_02 
+
+Realtime Object –Camera Relationship 
+
+(Relative Distance) 
+
+<Silent> 
+
+Realtime Object Attributes 
+
+(Object Position) 
+
+Forward Object –Camera Relationship 
+
+(Finding) 
+
+<Silent> 
+
+Q2 [T=15s]: At what timestamp (in seconds) did the paper towel first 
+
+appear? Please answer with the number only (in seconds). 
+
+A2 [T=15s]: 0.0 
+
+Q4 [T=26s]: I’m moving, help locate the backpack and report its clock 
+
+direction an d distance .
+
+A4 -Final [T=36s]: I see the backpack. It's 2.1m away from you at the 1
+
+o'clock position. 
+
+A4 -Instant [T=26s]: Sure, I'll keep an eye out for the backpack. 
+
+Environment Measurement 
+
+• Object Size 
+
+• Inter -Object Distance 
+
+Object Attributes 
+
+• Object Property 
+
+• Object Position 
+
+• Object Recognition 
+
+Object –Camera Relationship 
+
+• Absolute Distance 
+
+• Relative Distance 
+
+Object –Camera Relationship 
+
+• Distance • Location 
+
+• Direction • Finding 
+
+Object Chronology 
+
+• Counting • Time • Order 
+
+Object –Camera Relationship 
+
+• Distance • Direction • Location 
+
+Environment Measurement 
+
+• Room Area 
+
+Ego -Motion Estimation 
+
+• Direction • Path • Rotation 
+
+• Displacement • Comprehensive 
+
+Environment Measurement 
+
+• Room Area 
+
+Temporal Interaction Modes 
+
+Backward Tracing 
+
+Realtime Perception 
+
+Forward Active Responding 
+
+Ego -Motion Estimation 
+
+• Direction. • Path 
+
+• Rotation • Comprehensive 
+
+• Displacement 
+
+Backward. Object –Camera Relationship 
+
+(Direction) 
+
+Backward. Object –Camera Relationship 
+
+(Distance) 
+
+Backward Object Chronology 
+
+(Counting) 
+
+Backward Ego -Motion Estimation 
+
+(Path) 
+
+Backward Ego -Motion Estimation 
+
+(Displacement) 
+
+Instant> 
+
+Final> 
+
+<Ax> 
+
+Q6 [T=29s]: How far will the camera be from its current position in 5 
+
+seconds ? (Answer with a single number in meters) 
+
+A6 -Final [T=34s]: 1.2 
+
+A6 -Instant [T=29s]: Understood. I'll measure how far the camera ends 
+
+up from here in 5 seconds. 
+
+Q1 [T=7s]: The trash can is currently out of view. How far is it from 
+
+me?. Please answer with a single number representing the distance in 
+
+meters. Do not include units or sentences. 
+
+A1 [T=7s]: 1.6 
+
+A3[T=19s]: 2.0 
+
+Q3 [T=19s]: What is the total path length covered by the camera during 
+
+the last 9 seconds ? (Answer with a single number in meters) 
+
+Backward Ego -Motion Estimation 
+
+(Direction) 
+
+Q5 [T=28s]: Where is the current camera location relative to its 
+
+position 6 seconds ago ? Choices :
+
+(A) directly behind (B) to the back -left 
+
+(C) to the front -left (D) straight ahead 
+
+Answer with the option letter only. 
+
+A5 [T=28s]: A
+
+Backward Object Chronology 
+
+(Time) 
+
+Forward Ego -Motion Estimation 
+
+(Displacement) 
+
+T = 26.0s T =28.0s T = 22.0s T = 29.0s T = 34.0s T = 36.0s 
+
+T = 19.0s T = 4.0s T = 7.0s T = 15.0s T = 0.0s T = 10.0s 
+
+<A1> <Q1> <A2> <Q2> <A3> <Q3> 
+
+<A5> <Q5> <A4 -Instant ><Q4> <A4 -Final ><A6 -Instant> <Q6> <A6 -Final> <Silent> 
+
+<Silent> 
+
+Fig-A7: Stream3D-Bench Examples (Part 4). Stream3D-VLM 31 Scene0164_00 
+
+Realtime Object –Camera Relationship 
+
+(Relative Distance) 
+
+<Silent> 
+
+Object Attributes 
+
+• Object Property 
+
+• Object Position 
+
+• Object Recognition 
+
+Object –Camera Relationship 
+
+• Absolute Distance 
+
+• Relative Distance 
+
+Object –Camera Relationship 
+
+• Distance • Location 
+
+• Direction • Finding 
+
+Object Chronology 
+
+• Counting • Time • Order 
+
+Object –Camera Relationship 
+
+• Distance • Direction • Location 
+
+Environment Measurement 
+
+• Room Area 
+
+Environment Measurement 
+
+• Room Area 
+
+• Displacement 
+
+Backward. Object –Camera Relationship 
+
+(Direction) 
+
+Backward Ego -Motion Estimation 
+
+(Displacement) 
+
+Instant> 
+
+Final> 
+
+<Ax> 
+
+T = 18.0s T = 5.0s T = 7.0s T = 0.0s 
+
+Q4 [T=18s]: How far has the camera moved during the last 3 seconds ?
+
+(Answer with a single number in meters) 
+
+A4 [T=18s]: 0.9 
+
+Q1 [T=5s]: Which of these objects is the most distant from me: 
+
+(A) coffee maker (B) frying pan (C) bag of coffee beans 
+
+Please answer with the option letter only (e.g., A). 
+
+A1 [T=5s]: C
+
+Q2 [T=7s]: Where is the bag relative to me now? Please use directional 
+
+terms. Choices :
+
+(A) behind you (B) to your back -right 
+
+(C) to your front -left (D) directly in front of you 
+
+Please answer with the option letter only (e.g., A). 
+
+A2 [T=7s]: B
+
+<A1> <Q1> <A4> <Q4> <A2> <Q2> <Silent> <Silent> 
+
+Realtime Object Attributes 
+
+(Object Position) 
+
+Backward Object Chronology 
+
+(Counting) 
+
+T = 4.0s T =9.0s T = 11.0s T = 20.0s 
+
+Q2 [T= 12s ]: Where is the window of the door ?
+
+A2 [T= 12s ]: Left of the door .
+
+Q3 [T=20s]: How many chair(s) have you seen so far? Choices: 
+
+(A) 6 (B) 5 (C) 4 (D) 3 
+
+Please answer with the option letter only (e.g., A). 
+
+A3 [T=20s]: C
+
+<Silent> <Silent> <A2> <Q2> <A3> <Q3> 
+
+T = 12.0s 
+
+Backward Ego -Motion Estimation 
+
+(Rotation) 
+
+Q3 [T=1 7s]: What was the camera's horizontal rotation angle over the 
+
+past 8 seconds ? Choices: 
+
+(A) 64 degrees counter -clockwise (B) 64 degrees clockwise 
+
+(C) 49 degrees counter -clockwise (D) 84 degrees clockwise 
+
+Answer with the option letter only. 
+
+A3 [T=17s]: A
+
+Scene0427_00 
+
+<A1 -Instant> <Q1> <A1 -Final> 
+
+T = 17.0s 
+
+Forward Ego -Motion Estimation 
+
+(Direction) 
+
+Q1 [T=9s]: Where will the camera be located compared to here in 8
+
+seconds ? Choices: 
+
+(A)to the right (B) to the back -left 
+
+(C) to the front -left (D) to the back -right 
+
+Answer with the option letter only. 
+
+A1 -Final [T=17s]: A
+
+A1 -Instant [T=9s]: Copy that. Let's see which way the camera heads 
+
+over the next 8 seconds. 
+
+<A3> <Q3> 
+
+T = 17.0s T = 9.0s 
+
+Fig-A8: Stream3D-Bench Examples (Part 5). 32 H. Yu et al. 
+
+F Evaluation Prompts for Offline Models 
+
+Since existing offline models [10,14,15,21,28,37] cannot natively process stream-ing videos or generate online responses, we adapt them to Stream3D-Bench by providing the full video as input and explicitly specifying the query time. The models are prompted to jointly predict when to respond and what answer to produce. As illustrated in Figure A9, we explicitly inform the model of the total video duration and require it to simulate a streaming (online) scenario. Specifi-cally, the query timestamp and the user question are given simultaneously, and the model must determine at what time after the query it has accumulated suffi-cient visual evidence to respond. The answer is constrained to rely only on visual information available up to the predicted response time. Although this protocol enables a coarse evaluation of existing offline MLLMs on Stream3D-Bench, it inherently places them in a favorable and unrealistic set-ting, as the entire video is provided upfront, effectively granting access to more visual information than would be available in a true streaming scenario. De-spite this disadvantageous comparison setup, experimental results consistently show that our real-time streaming 3D spatial understanding model significantly outperforms offline baselines across multiple evaluation metrics, including both answer accuracy and response-time precision. These results further demonstrate the superiority and effectiveness of our approach for online 3D spatial under-standing. In future work, we plan to explore a broader range of streaming feed-forward 3D reconstruction models [22, 24, 30, 33, 54] to further investigate and enhance model generalization and stability [40, 41], thereby facilitating better adaptation to real-world embodied applications. <System Message> : 
+
+> You are an AI visual assistant capable of analyzing a streaming video that represents a 3D
+> scene and providing helpful, detailed, and polite responses to the user’s real -time questions.
+> The conversation is grounded in an indoor environment .
+
+<User Instruction >:                    
+
+> These are the complete frames of a video covering the entire duration, from 0 s to 54 s.
+> Context: A user asks a question at 4.0 sduring video playback .You must simulate a streaming
+> (online) scenario where you process the video sequentially
+> Question: I'm moving around the room, but I can't see the bag yet. Please help me find it. I
+> need to know its clock direction and distance when it appears.
+> **Task Requirements**:
+> 1. Determine when the model should answer (answer time) when you have sufficient visual
+> evidence to answer the question.
+> 2. Provide the answer content based ONLY on visual information available up to that answer
+> time. Do NOT use future frames.
+> **Output Constraints**:
+> -You MUST output ONLY a valid JSON object
+> -Do NOT include explanations, reasoning, or any extra text.
+> -Do NOT include markdown, comments, or natural language.
+> -Report time in seconds with 0.1s precision.
+> Output format (JSON only):
+> {" prediction_answer_ time ": "x. xs ", "prediction_ answer ": " xxx"}
+
+Fig-A9: Evaluation prompts for offline MLLMs on our Stream3D-Bench.

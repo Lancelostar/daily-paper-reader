@@ -1,0 +1,752 @@
+Title: EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming
+
+URL Source: https://arxiv.org/pdf/2606.07179v1
+
+Published Time: Mon, 08 Jun 2026 00:56:30 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming 
+
+## Yuang Shi 1,2,3, Simone Gasparini 2,3, Géraldine Morin 2,3, Wei Tsang Ooi 1,3
+
+1National University of Singapore, Singapore 
+
+2IRIT - University of Toulouse, France 
+
+3IPAL, IRL2955, Singapore 57.89% Ghost Splats 17.81% Ghost Splats       
+
+> 𝐿𝑂𝐷 !𝐿𝑂𝐷 "
+> 𝐿𝑂𝐷 #𝐿𝑂𝐷 $
+> SSIM: 0.64 SSIM: 0.71
+> SSIM: 0.80 SSIM: 0.86
+> 264 MB 464 MB
+> 643 MB 822 MB
+> 75.76% Ghost Splats 71.83% Ghost Splats
+
+Geometry Error Accumulation & 
+
+Splat Redundancy with Ghost Splats Abrupt Quality Transition During Refinement        
+
+> 11.59% Ghost Splats 14.72% Ghost Splats
+> SSIM: 0.89 SSIM: 0.91
+> SSIM: 0.91 SSIM: 0.91
+> 125 MB 209 MB
+> 285 MB 353 MB
+> 𝐿𝑂𝐷 !𝐿𝑂𝐷 "
+> 𝐿𝑂𝐷 #𝐿𝑂𝐷 $
+> 20.92% Ghost Splats 18.01% Ghost Splats
+
+Resolved Geometry Error & 
+
+Decreased Model Redundancy Smooth Quality Transition During Refinement 
+
+> Enhancement Layer #3
+> Enhancement Layer #2
+> Enhancement Layer #1
+> Base Layer
+
+Discrete Layering Paradigm 
+
+Continuous Layering Paradigm 
+
+𝐿𝑂𝐷 !
+
+𝐿𝑂𝐷 "
+
+𝐿𝑂𝐷 #
+
+𝐿𝑂𝐷 $
+
+> Evolution Tree
+> Discrete Layers
+
+Figure 1: Continuous vs. Discrete Layering for Scalable 3D Streaming. EvoGS replaces discrete layered 3DGS layers with a continuous evolution tree, where each splat refines into correlated children. This parent-child structure eliminates redundant ghost splats, enables smooth anytime rendering, and achieves better quality–storage efficiency for scalable 3D streaming. 
+
+## Abstract 
+
+Streaming 3D Gaussian Splatting requires highly scalable, progres-sive representations. Existing progressive methods rely on discrete layering , accumulating separate splat sets for each level of detail. This structural independence between layers inherently leads to er-ror accumulation, severe splat redundancy, and uncontrolled quality transitions. We propose EvoGS , the first continuous-layering repre-sentation. Organized as an Evolution Tree, EvoGS generates finer details via an explicit, wavelet-inspired parent-child refinement. This empowers child nodes to structurally correct ancestral errors, yield inherently sparse and highly compressible inter-layer signals. Extensive experiments show EvoGS eliminates splat redundancy from over 65% to under 25%. Compared to state-of-the-art baselines, it reduces transmission payload and GPU VRAM footprint by up to 2.4 × and 5.5 ×, respectively, and achieves smooth quality transitions optimal for real-time adaptive streaming. 
+
+## Keywords 
+
+Progressive Gaussian Splatting, Continuous Layering, Splat Refine-ment, Scalable Streaming 
+
+## 1 Introduction 
+
+The rapid surge of extended reality (XR) applications has created an urgent demand for efficient delivery of 3D content over dynamic net-works. 3D Gaussian Splatting (3DGS) [Kerbl et al . 2023] has emerged as a compelling representation for this setting, offering photorealis-tic quality and real-time rendering. However, immersive streaming scenarios involve heterogeneous client devices, unpredictable inter-active 6DoF navigation, and dynamic multi-dimensional budgets (e.g., bandwidth, memory, latency) [Viola and Cesar 2023]. These interleaved consumption and transmission patterns impose three strict requirements on the 3D representation [Gong et al . 2025; Han et al. 2020; Kim et al. 2025; Shi 2025]:  
+
+> arXiv:2606.07179v1 [cs.CV] 5 Jun 2026 Conference’17, July 2017, Washington, DC, USA Shi et al.
+
+• Quality Scalability . A single encoded representation must serve content with adaptive and refinable quality without re-encoding. 
+
+• Rendering Scalability . The client must produce a valid and render-able scene at any point during streaming. The rendering cost and quality should be proportional to the amount of data received. 
+
+• Real-Time Adaptation . The representation must support contin-uous responsiveness to varying and dynamic consumption pat-terns and system resource constraints. The existing works, which propose layered 3DGS representations for scalable streaming, share a common construction principle that each level of detail (LOD) is represented by an independent splats set, trained to overfit its target resolution. LapisGS [Shi et al . 2025] establishes this paradigm by organizing 3DGS into a base layer and enhancement layers added sequentially at increasing resolutions. We term this construction paradigm as discrete layering (Figure 2b). Discrete layering satisfies rendering scalability, that any received prefix constitutes a valid scene, but its construction reveals struc-tural limitations that undermine quality scalability and real-time adaptation. These limitations share a common root: the inter-layer relationship is compositional, not evolutionary . During training, higher layers are collaboratively rendered with frozen lower layers, mean-ing their correlation is strictly limited to 2D visual blending. Because there is no parameter-level relationship or structural linkage be-tween a splat in one layer and a splat in another, higher layers are forced to overfit to their target resolution by superimposing new splats, rather than correcting the foundational 3D geometry. Specifically, this construction gives rise to a cascade of problems: 
+
+• Error Accumulation. Because low-resolution training provides insufficient geometric supervision, the base layer encodes geom-etry errors. Higher layers cannot correct the frozen geometry of lower layers but only add new splats alongside it, so these errors accumulate through all quality levels (Figure 8). 
+
+• Splat Redundancy . Higher layers must over-densify to compen-sate for lower-layer errors. The model size is thus inflated by the masking cost of prior errors. Dynamic opacity optimization [Shi et al . 2025] was proposed to reduce the error from lower-layer splats by fading them out. Although it improves the model expres-sivity, over to 90% of lower-layer splats are transparent at finer levels (Tables 3 and 4), yet they persist in storage, transmission, and GPU memory, contributing little to the rendered output. 
+
+• Uncontrolled Quality Transition . Because each layer is trained as a discrete, independent set, the quality jump between adjacent levels is uncontrolled. The underlying quality increments remain irregular, producing a non-uniform rate-distortion curve that prevents fine-grained bandwidth adaptation (Figure 11). 
+
+• Unexploited Inter-Layer Correlation . Discrete layering’s set-based construction exposes no parameter-level relationship between layers, any codec must treat each layer as an independent entity. Only intra-layer compression is applicable, leaving inter-layer redundancy entirely unexploited. In this paper, we propose continuous layering , an alternative par-adigm in which splats across quality levels are connected through explicit parent-child lineage, as shown in Figure 2c. To construct continuous-layering 3DGS for scalable streaming, we introduce 
+
+EvoGS , a method that organizes splats into an Evolution Tree. 
+
+LOD 0 LOD 1 LOD 2 LOD 3 
+
+> (a) Space-based hierarchy, for local rendering.
+
+LOD 0 LOD 1 LOD 2 LOD 3 
+
+> (b) Discrete-layered hierarchy, for scalable streaming.
+
+LOD 0 LOD 1 LOD 2 LOD 3 
+
+> (c) Continuous-layered hierarchy, for scalable streaming.
+
+Figure 2: Three paradigms for LOD 3DGS. (a) Space-based hierarchy: complete model resides on client; different LODs are obtained by selecting subsets at render time. (b) Discrete layering: each LOD adds a splat set; layers share no structural relationship, producing abrupt quality jumps and layer re-dundancy. (c) Continuous layering: each LOD is a structured refinement of the previous one; quality improves smoothly. 
+
+Inspired by wavelet transformations [Sweldens 1996], we orga-nize splats into a binary tree where each internal splat node 𝑷 
+
+evolves to two splat children 𝑪 1, 𝑪 2 through a learned refinement: 
+
+𝑪 1 = 𝑷 + 𝝍 , 𝑪 2 = 𝑷 − 𝜶 ⊙ 𝝍 , where 𝝍 is a shared refinement direc-tion, and 𝜶 is an asymmetry factor. We further detail the design motivation and derivation of this construction in Section 3.1. The evolution tree directly resolves the limitations of discrete layering. Higher layers correct ancestral geometry via 𝝍 rather than masking errors, naturally eliminating redundant ghost splats. The small magnitude of 𝝍 (Figures 5 and 6) guarantees inherently smooth progressive refinement, while the collinear, parent-relative parametrization yields structured signals that are significantly more compressible than independent splat sets. At rendering time, trun-cating the tree at any depth produces a valid scene that scales proportionally with received data. Our contributions are as follows: 
+
+• A novel paradigm for scalable 3DGS. We propose a continuous-layering approach named EvoGS , which is a fundamental shift away from the discrete-layering representations used in exist-ing progressive scalable streaming. By structuring splats into an Evolution Tree with explicit parent-child lineage, our method fun-damentally resolves the error accumulation and splat redundancy problems inherent in existing discrete-layering approaches. 
+
+• Wavelet-inspired refinement. We design a collinear refinement mechanism to generate child splats. Grounded in wavelet de-composition theory, this formulation yields inherently sparse refinement signals while utilizing a learned per-attribute asym-metry factor to flexibly capture complex, non-symmetric scene details without wasting representational capacity. EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming Conference’17, July 2017, Washington, DC, USA 
+
+• State-of-the-Art performance for scalable progressive streaming. Extensive experiments demonstrate that EvoGS significantly out-performs baselines. It reduces the splat redundancy ratio from over 65% to under 25%, decreasing the transmission payload and rendering GPU footprint by factors of up to 2.5 × and 5.5 ×.Furthermore, EvoGS achieves smooth and monotonic quality transitions and produces highly compressible inter-layer signals, reducing storage by an additional factor of 8.7 × using standard compression techniques with minimal visual degradation. 
+
+## 2 Background and Related Work 2.1 3D Gaussian Splatting 
+
+3DGS [Kerbl et al . 2023] achieves real-time photorealistic radiance field rendering by representing a 3D scene as a collection of splats. Each splat is defined as 𝐺 (x) = exp (− 12 x𝑇 Σ−1x) and characterized by a position x, a covariance matrix Σ decomposed into a scaling matrix S and rotation matrix R, opacity 𝜎 , and view-dependent color encoded as Spherical Harmonic (SH) coefficients. At render time, splats are projected into 2D camera coordinates and rasterized in a tile-based front-to-back order with 𝛼 -blending. Initialized from a sparse Structure-from-Motion point cloud, the splats are then re-fined via gradient-descent optimization with adaptive densification. 
+
+## 2.2 Scalable 3DGS for Streaming 
+
+Applying Level-of-Detail (LOD) to 3DGS has been approached from two distinct perspectives: partitioning the 3D space into hierarchical units, and organizing quality levels into progressive layers. 
+
+Space-based hierarchy. Several methods build multiscale 3DGS representations by partitioning the scene spatially [Kerbl et al . 2024; Liu et al . 2024; Lu et al . 2024; Qin et al . 2025; Ren et al . 2024; Yan et al . 2024]. For instance, [Yan et al . 2024] aggregate fine splats into multi-layers to mitigate aliasing, and [Kerbl et al . 2024] proposed a tree-based hierarchy for real-time rendering of large-scale scenes by recursively merging neighboring splats into parent nodes, with interior nodes optimized per level. Scaffold-GS [Lu et al . 2024] par-titions space into voxels with anchor splats and MLPs predicting local splat attributes. [Ren et al . 2024] extends this with an octree whose levels correspond to anchor sets defining the LOD, and [Qin et al . 2025] designed a specialized splitting strategy for delicate textures in large-scale aerial scenes. These methods share a com-mon design: they partition 3D space into units (octree cells, voxels, chunks) and construct LOD by varying spatial granularity. Crucially, their hierarchies are designed primarily as rendering-time selection mechanisms. At render time, a traversal algorithm selects which subset of splats to rasterize based on viewport. While this spatial structure allows a client to request only the splats within its current frustum, there is no mechanism for progressive quality transmis-sion. Moreover, each spatial level is independently represented with no structural correlation between scales, so transmitting a coarser level provides no reusable data toward a finer one. The total model size is the sum of all levels rather than a progressive refinement of a single representation (Figure 2a). 
+
+Quality-based Hierarchy. An alternative approach organizes 3DGS into layers ordered by rendering quality rather than spatial extent [Krishna et al . 2025; Shi et al . 2025; Sun et al . 2025; Tsai et al . 2025; Wang et al . 2026]. LapisGS [Shi et al . 2025] introduced Layer 0 Layer 1 LOD 0 LOD 1     
+
+> Stack
+> LOD 0LOD 1Parent Children
+> Evolve
+> Evolution Tree  Discrete Layer
+
+Figure 3: Top (discrete layers): To fit the target geometry (black outline) at LOD 1, the splat from LOD 0 remains frozen and is always rendered for LOD 1. The quality transition is achieved by stacking splats from Layer 1 on top. Bottom (evolution tree): The parent splat at LOD 0 evolves into child splats that replace it at LOD 1. The children structurally adapt to fit the finer geometry, achieving a smooth quality transition. 
+
+this paradigm by training a base layer and enhancement layers at increasing resolutions, with each layer comprising a new set of splats. [Sun et al . 2025] builds a DASH-based streaming system on top of this representation, while [Tsai et al . 2025] applies a similar paradigm at object-segmented granularity. These methods satisfy the basic requirement of progressive streaming that any prefix of layers constitutes a valid and renderable scene. However, they share a common construction principle, i.e . discrete layering (Figure 2b), in which each quality level is a separate splat set with no parameter-level relationship to adjacent levels. As detailed in our experiments (Section 4.3), this structural independence inherently leads to error accumulation, splat redundancy, uncontrolled quality transitions, and unexploited inter-layer correlation. 
+
+## 3 Methodology 
+
+Discrete layering’s limitations stem from a compositional inter-layer relationship. To overcome this, we propose continuous layering 
+
+via an Evolution Tree of splats with explicit parent-child refine-ment. We detail our parent-child parametrization, tree structure, and progressive pipelines below. 
+
+## 3.1 Design Space for Parent-Child Refinement 
+
+The root cause of discrete layering’s flaws is the lack of parameter-level connections between a splat and its lower-layer counterparts. Unlike spatial hierarchies ( e.g ., octrees) that partition space, our tree encodes splat lineage : each leaf traces a unique ancestral chain back to a root, and its parameters are defined by accumulated refinements (Figure 3). This resolves discrete layering limitations by design: (i) inter-layer relationships are explicit and traversable; (ii) truncating the tree yields a valid scene with fewer redundant splats; and (iii) rendering cost and GPU memory scales strictly with received data. The central design question is how children relate to their parent. Conference’17, July 2017, Washington, DC, USA Shi et al. +𝑪 𝟏 = 𝜽 𝟏 𝜹 𝟏 +𝑪 𝟐 = 𝜽 𝟐 𝜹 𝟐 𝜶 ⊙ 
+
+> 𝑷
+> 𝑪 𝟏 𝑪 𝟐
+
+(a) Option A ( 2𝐷 param.). 𝑪 𝟏 = 𝑷 + 𝜹 𝟏 𝑪 𝟐 = 𝑷 + 𝜹 𝟐 𝜶 ⊙   
+
+> 𝑷
+> 𝑪 𝟏 𝑪 𝟐
+> 𝜹 𝟏 𝜹 𝟐
+
+(b) Option B ( 2𝐷 param.). 𝝍            
+
+> 𝑪 𝟏 =𝑷 +𝝍 𝑪 𝟐 =𝑷 −𝝍 𝜶 ⊙
+> 𝑷
+> 𝑪 𝟏 𝑪 𝟐
+
+(c) Option C ( 𝐷 param.). 𝝍 , 𝜶              
+
+> 𝑪 𝟏 =𝑷 +𝝍 𝑪 𝟐 =𝑷 −𝜶 ⊙𝝍
+> 𝑷
+> 𝑪 𝟏 𝑪 𝟐
+
+(d) Option D ( 𝐷 + 5 param.). 
+
+Figure 4: Design space for parent-child refinement. (a, b) Un-constrained constructions. (c) A symmetric collinear residual (Haar wavelet) is rigid for real-world details. (d) An asymmet-ric formulation relaxes the symmetry with a learned factor 
+
+𝜶 , achieving structural compressibility and high representa-tional expressivity. 
+
+Let 𝑷 ∈ R𝐷 denote the parameters of a parent splat, where 𝐷 
+
+encompasses position, rotation, scale, opacity, and SH coefficients. A binary split produces children 𝑪 1 and 𝑪 2. We evaluate four possible constructions (Figure 4). 
+
+Option A: Independent children. Each child is parameterized independently: 
+
+𝑪 1 = 𝜽 1, 𝑪 2 = 𝜽 2, (1) where 𝜽 1, 𝜽 2 ∈ R𝐷 are freely optimized. This is equivalent to the densification strategy of standard 3DGS [Kerbl et al . 2023]: a splat splits into two that are then optimized without constraint. The resulting tree is, in effect, a discrete-layering representation that records the splitting history, inheriting all its limitations. The parent 
+
+𝑷 bears no guaranteed relationship to 𝜽 1 or 𝜽 2, so coarse rendering is unreliable, violating rendering scalability . With 2𝐷 uncorrelated parameters per split, the representation also offers nothing for 
+
+real-time adaptation to exploit. 
+
+Option B: Independent residuals. Each child is defined as an independent offset from the parent: 
+
+𝑪 1 = 𝑷 + 𝜹 1, 𝑪 2 = 𝑷 + 𝜹 2, (2) where 𝜹 1, 𝜹 2 ∈ R𝐷 are freely optimized. Mathematically, this is Option A with a different initialization that biases children toward the parent at the early training, but the offsets can grow in arbitrary directions as training progresses. The two offsets remain uncorre-lated, the parameter cost remains 2𝐷 per split, and the limitations for rendering scalability and real-time adaptation persist. Options A and B reveal a clear pattern: without structural en-forcement of parent-child proximity, coarse-depth rendering quality is unpredictable and the refinement data is unstructured. Also, both approaches are highly inefficient for transmission, as they require 
+
+2𝐷 parameters per split. Meeting the streaming principles demands a stronger constraint on how children relate to parent. 
+
+Option C: Symmetric collinear residual. A constraint re-quires children to deviate from parent along a shared direction equally: 
+
+𝑪 1 = 𝑷 + 𝝍 , 𝑪 2 = 𝑷 − 𝝍 , 𝑪 1 + 𝑪 2
+
+2 = 𝑷 , (3) 0 20 40 60 80 100 
+
+> Top fraction of coefficients (%)
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Cumulative energy (%)
+> xyz
+> features_dc
+> features_rest
+> scaling
+> rotation
+> opacity
+
+(a) Symmetric (Option C). 0 20 40 60 80 100  
+
+> Top fraction of coefficients (%)
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> Cumulative energy (%)
+> xyz
+> features_dc
+> features_rest
+> scaling
+> rotation
+> opacity
+
+(b) Asymmetric (Option D). 
+
+Figure 5: Cumulative energy concentration of 𝝍 . Both con-structions retain wavelet sparsity: fewer than 20% of coeffi-cients carry over 90% of the energy. 
+
+where 𝝍 ∈ R𝐷 is a learned refinement vector. This halves the pa-rameter cost to 𝐷 per split. Rendering the parent in place of its two unsent children recovers their exact mean, i.e . the optimal 𝐿 2
+
+approximation at that scale, making coarse-depth rendering prov-ably optimal under the mean-square criterion, directly satisfying 
+
+rendering scalability .This construction is, in fact, Haar wavelet lifting scheme [Sweldens 1996]: 𝑷 is the approximation coefficient (low-frequency signal) and 
+
+𝝍 is the detail coefficient (high-frequency correction). Recursively reconstructing children from one parent at each level is exactly an inverse discrete wavelet transform. The wavelet-like process encourages the refinement coefficients 𝝍 to be sparse and near-zero for locally smooth signals (Figure 5a), making progressive coding efficient.The symmetric construction thus satisfies rendering scalability , produces compact refinement signals favorable for real-time adaptation , and inherits the sparsity guarantees of wavelet decompositions. However, this rigid symmetry wastes capacity on real scenes. For instance, at a foreground-background boundary, one child must move substantially to capture foreground texture while the other should remain static for the smooth background. Forced symmetry over-refines the background or under-refines the foreground, penalizing quality scalability (validated in Sections 4.2 and 4.3). 
+
+Option D: Asymmetric collinear residual. To recover ex-pressivity, we relax the symmetric constraint with a learned per-attribute asymmetry vector 𝜶 ∈ R𝐴 (𝐴 = 5 for position, rotation, scale, opacity, and SH): 
+
+𝑪 1 = 𝑷 + 𝝍 , 𝑪 2 = 𝑷 − 𝜶 ⊙ 𝝍 , 𝑪 1 + 𝑪 2
+
+2 = 𝑷 + 12 (1 − 𝜶 )𝝍 , (4) requiring 𝐷 + 5 parameters per split. The collinearity constraint is preserved, as the children still lie along a single axis through 𝑷 .Paralleling how JPEG2000 [Taubman and Marcellin 2002] adopted biorthogonal filters over orthogonal Haar wavelets, our 𝜶 trades exact mean preservation for representational power, while preserv-ing the essential properties of the wavelet framework. To verify this empirically, we construct trees for Option C and D on synthetic Blender [Mildenhall et al . 2020], and measure the cumulative en-ergy concentration of 𝝍 (Figure 5). In both cases, 𝝍 values remain tightly clustered near zero, with fewer than 20% of coefficients car-rying over 90% of the energy. This confirms that the asymmetric formulation retains the sparsity that makes wavelet decompositions effective for progressive coding. We further exploit this sparsity in EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming Conference’17, July 2017, Washington, DC, USA 0.05 0.00 0.05                       
+
+> 10 0
+> 10 1
+> Density (log)
+> _xyz
+> 0.50 0.25 0.00 0.25 0.50
+> 10 0
+> Density (log)
+> _features_dc
+> 0.050 0.025 0.000 0.025 0.050 0.075
+> 10 0
+> 10 1
+> Density (log)
+> _features_rest
+> 21012
+> 10 1
+> 10 0
+> Density (log)
+> _scaling
+> 0.2 0.0 0.2
+> 10 0
+> Density (log)
+> _rotation
+> 50510 15
+> 10 2
+> 10 1
+> Density (log)
+> _opacity
+
+Figure 6: The distribution of 𝝍 for each attribute of splat of 
+
+Playroom as an example. We can see except opacity, other attributes’ 𝝍 are centered around 0 with small values, sup-porting smooth quality refinement. Note that opacity has a different semantic range and is typically pushed toward extremes during training. 
+
+Section 4.3 to demonstrate the compressibility of the refinement signals. Therefore, we adopt Option D. 
+
+Tree structure. The Evolution Tree consists of root nodes (base-line geometry 𝑷 root ∈ R𝐷 ), internal nodes (storing learned refine-ments 𝝍 ∈ R𝐷 and 𝜶 ∈ R𝐴 ), and leaf nodes (renderable splats). A leaf’s final parameters 𝑺 are computed by accumulating refinements from root to leaf: 𝑺 = 𝑷 root + Íℓ𝑘 =1 𝒔 𝒌 ⊙ 𝝍 𝒌 , where ℓ is leaf depth and 𝒔 𝒌 ∈ {+ 1, −𝜶 𝑘 } indicates the branch taken. Crucially, a node’s role is dynamic and depends on the quality level at which the scene is rendered. At a coarser quality level, a node acts as a renderable leaf; at a finer quality, it becomes internal, passing its parameters to its children. This flexibility is what enables a single stored tree to serve multiple quality tiers. 
+
+## 3.2 Progressive Training 
+
+Multi-level optimization. We denote 𝑁 +1 as the total number of quality levels, which is also the total number of training stages in the progressive training scheme. We denote 𝐿 𝑖 as the 𝑖 -th quality level where 𝑖 ∈ { 0, 1, . . . , 𝑁 }. Given a full-resolution multi-view image set D𝑁 , we build an image pyramid {D𝑖 }𝑁 𝑖 =0: D𝑖 =   Vim, Xim
+
+ 𝑀 𝑚 =1 ,
+
+where Vim is the camera matrix, Xim is the corresponding image at the 𝑖 -th resolution, and 𝑀 is the number of views. We define the leaf set F𝑖 as the set of all leaf nodes in the tree after level-𝐿 𝑖 training. Rendering at 𝐿 𝑖 rasterizes exactly the splats defined by F𝑖 . The leaf sets are related by progressive refinement. At each training stage, a subset of leaves in F𝑖 are replaced by their children to produce F𝑖 +1 =  F𝑖 \ S 𝑖 
+
+ ∪ C(S 𝑖 ), where S𝑖 ⊆ F 𝑖 is the set of leaves that split during level-𝐿 𝑖 +1 training, and C(S 𝑖 ) denotes their children produced via Equation (4). Leaves not selected for splitting (because their local geometry is already well-represented) persist unchanged into F𝑖 +1.At level 𝐿 0, a standard 3DGS model is trained on D0, with each splat becoming a root node ( 𝝍 = 0, 𝜶 = 1) and forming F0. At each subsequent level 𝐿 𝑖 , the leaf set F𝑖 −1 serves as the trainable frontier. For each node 𝑛 ∈ F 𝑖 −1, its refinement direction 𝝍 𝑛 and asymmetry vector 𝜶 𝑛 are unfrozen, while ancestor parameters remain fixed. Because children are defined relative to their parent via Equation (4), gradient updates to 𝝍 and 𝜶 refine the scene by correcting the parent representation, rather than masking its deficiencies with independent splats. The optimization minimizes a rendering loss L𝑖 consisting of an 
+
+𝐿 1-norm term and a D-SSIM term: L𝑖 = (1−𝜆 ) Í𝑀 𝑚 =1 L1 ( ˆXim, Xim) + 
+
+𝜆 Í𝑀 𝑚 =1 LD-SSIM ( ˆXim, Xim), where 𝑋 𝑖 𝑚 is the ground truth for view 𝑚 
+
+at the 𝑖 -th quality level, ˆ𝑋 𝑖 𝑚 is the image rendered from the current leaf set, and 𝜆 = 0.2 following the default setting [Kerbl et al . 2023]. 
+
+Adaptive densification. During training, leaves whose accu-mulated 2D positional gradients exceed a threshold are split into two children, follows the standard 3DGS [Kerbl et al . 2023]. Be-cause splitting is gradient-driven rather than uniformly applied, the resulting Evolution Tree is unbalanced and spatially adaptive. A leaf may recursively split within a single training stage if its descendants continue to exhibit high gradient. After training at level 𝐿 𝑖 converges, all 𝝍 and 𝜶 values at the frontier are frozen, the current leaf set becomes F𝑖 , and the process advances to level 𝐿 𝑖 +1.This cycle repeats until the final level 𝐿 𝑁 , producing a complete tree whose leaf sets F0, . . . , F𝑁 define the 𝑁 +1 quality tiers of the representation. To stream the scene progressively, the server trans-mits F0 first, then sends refinement data only for the regions that actually split, with the 𝝍 and 𝜶 of S𝑖 for each subsequent level. Because the tree grows adaptively during training, F𝑖 naturally contains more splats in geometrically complex regions and fewer in smooth ones. This means rendering cost at any quality level is proportional to the scene’s actual detail distribution, not to a uniform spatial resolution. 
+
+## 3.3 Rendering 
+
+At render time, the client requests a quality level 𝐿 𝑖 . The parameters of the active leaf set F𝑖 are reconstructed via Section 3.1 and passed directly to the standard 3DGS tile-based rasterizer. 
+
+Inherently smooth quality transitions. Discrete layering suf-fers from visible “popping” when switching between quality levels. Methods are proposed to mitigate this with attribute interpolation between adjacent splats [Kerbl et al . 2024; Shi et al . 2025], which is a rendering-time workaround that blends splats. In EvoGS , tran-sitioning from F𝑖 to F𝑖 +1 simply replaces individual parents with correlated children offset by a highly sparse 𝝍 . As incremental refinement data arrives, visual updates are minute and localized, yielding an inherently continuous quality progression. Smoothness is a property of the representation itself, not a post-hoc rendering trick. In Section 4.3, we quantitatively evaluate the smooth quality transition of our method, compared to discrete-layering method. 
+
+Per-region adaptive rendering. Because our model is tra-versed as a tree, spatial regions can be rendered at mixed reso-lutions simultaneously. For example, in bandwidth-constrained VR scenarios, foveal regions can be traversed to 𝐿 𝑁 while peripheral regions stop at 𝐿 𝑗 (𝑗 < 𝑁 ). The rasterizer simply renders the mixed leaf set F foveal  
+
+> 𝑁
+
+∪ F periph.  
+
+> 𝑗
+
+in a single pass. This fine-grained spatial adaptation is structurally impossible in discrete-layering represen-tations. 
+
+## 4 Experiments 
+
+We evaluate EvoGS to validate the advantages of continuous lay-ering for scalable streaming. Section 4.1 details the experimental Conference’17, July 2017, Washington, DC, USA Shi et al. 
+
+Table 1: Quantitative comparison results on various datasets (Blender [Mildenhall et al . 2020], Mip-NeRF360 [Barron et al .2022], Tank&Temples [Knapitsch et al . 2017], Deep Blending [Hedman et al . 2018]) at different quality levels. Stor.: cumulative transmitted data (MB). Mem.: materialized leaf set in GPU memory (MB). Δ: difference between the best and the second-best methods. The best , the second best , and the third best results are denoted by pink, yellow, and green.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+> Method 𝐿 0𝐿 1𝐿 2𝐿 3
+> PSNR ↑SSIM ↑LPIPS ↓Stor. ↓Mem. ↓PSNR ↑SSIM ↑LPIPS ↓Stor. ↓Mem. ↓PSNR ↑SSIM ↑LPIPS ↓Stor. ↓Mem. ↓PSNR ↑SSIM ↑LPIPS ↓Stor. ↓Mem. ↓
+> Blender  Mono. 36.19 0.982 0.020 18.96 18.96 35.60 0.979 0.019 39.09 39.09 34.98 0.976 0.019 75.63 75.63 33.72 0.970 0.027 147.13 147.13 Single 19.32 0.751 0.131 147.13 147.13 22.81 0.866 0.071 147.13 147.13 27.93 0.947 0.033 147.13 147.13 33.72 0.970 0.027 147.13 147.13 L3GS 36.23 0.981 0.021 36.78 36.78 35.30 0.976 0.022 73.57 73.57 33.76 0.970 0.027 110.35 110.35 32.31 0.958 0.044 147.13 147.13 LapisGS 36.18 0.982 0.020 18.98 18.98 34.95 0.977 0.022 38.86 38.86 33.36 0.970 0.028 73.78 73.78 32.52 0.962 0.045 133.90 133.90
+> EvoGS 36.29 0.983 0.020 21.25 15.14 35.35 0.977 0.021 35.04 16.37 34.10 0.970 0.027 49.01 19.53 32.71 0.964 0.047 62.59 23.97
+> Δ+0.06 +0.001 +0.000 +10.7% -20.2% +0.05 +0.000 -0.001 -9.8% -57.9% +0.34 +0.000 +0.000 -33.6% -73.5% +0.19 +0.002 -0.003 -53.3% -82.1% Mip-360  Mono. 28.73 0.889 0.104 239.47 239.47 28.42 0.864 0.130 405.28 405.28 27.98 0.837 0.166 577.87 577.87 27.39 0.807 0.214 679.13 679.13 Single 19.86 0.622 0.217 679.13 679.13 22.69 0.737 0.191 679.13 679.13 26.16 0.821 0.176 679.13 679.13 27.39 0.807 0.214 679.13 679.13 L3GS 28.72 0.881 0.108 169.78 169.78 28.20 0.848 0.143 339.57 339.57 27.31 0.794 0.212 509.35 509.35 26.15 0.728 0.304 679.13 679.13 LapisGS 28.73 0.888 0.105 240.52 240.52 28.23 0.856 0.145 561.04 561.04 27.43 0.809 0.204 964.08 964.08 26.68 0.762 0.268 1382.05 1382.05
+> EvoGS 29.04 0.889 0.100 157.83 123.20 28.69 0.863 0.130 302.33 200.52 27.73 0.815 0.195 464.12 298.84 26.65 0.753 0.276 606.73 385.25
+> Δ+0.31 +0.001 -0.005 -7.0% -27.4% +0.46 +0.007 -0.013 -11.0% -40.9% +0.30 +0.006 -0.009 -8.9% -41.3% +0.03 +0.009 -0.008 -10.7% -43.3% T&T Mono. 24.45 0.892 0.093 87.57 87.57 24.55 0.882 0.104 149.97 149.97 24.31 0.868 0.127 256.02 256.02 23.71 0.848 0.177 434.18 434.18 Single 17.33 0.620 0.206 434.18 434.18 19.67 0.745 0.155 434.18 434.18 22.52 0.847 0.129 434.18 434.18 23.71 0.848 0.177 434.18 434.18 L3GS 25.09 0.898 0.087 108.55 108.55 24.72 0.872 0.109 217.09 217.09 23.85 0.830 0.159 325.63 325.63 22.56 0.754 0.288 434.18 434.18 LapisGS 24.62 0.893 0.094 86.85 86.85 24.58 0.875 0.115 208.42 208.42 24.13 0.850 0.152 394.19 394.19 23.42 0.818 0.228 691.44 691.44
+> EvoGS 25.57 0.902 0.086 88.45 77.89 25.41 0.886 0.099 186.82 94.26 24.67 0.858 0.137 270.18 119.52 23.42 0.808 0.237 354.84 149.70
+> Δ+0.48 +0.004 -0.001 +1.8% -10.3% +0.69 +0.011 -0.010 -10.4% -54.8% +0.54 +0.008 -0.015 -17.0% -63.3% +0.00 +0.010 -0.009 -18.3% -65.5% DB Mono. 27.01 0.841 0.142 261.79 261.79 28.54 0.876 0.133 419.81 419.81 29.43 0.901 0.147 564.46 564.46 29.56 0.904 0.244 665.59 665.59 Single 24.54 0.805 0.145 665.59 665.59 27.38 0.878 0.118 665.59 665.59 29.33 0.909 0.155 665.59 665.59 29.56 0.904 0.244 665.59 665.59 L3GS 27.24 0.844 0.139 166.40 166.40 28.27 0.864 0.149 332.79 332.79 28.79 0.877 0.185 499.19 499.19 28.69 0.874 0.293 665.59 665.59 LapisGS 27.02 0.841 0.143 262.79 262.79 28.29 0.871 0.145 493.64 493.64 29.00 0.890 0.172 744.68 744.68 28.97 0.891 0.276 999.82 999.82
+> EvoGS 27.78 0.857 0.124 133.10 101.35 28.81 0.878 0.131 230.72 139.19 29.30 0.892 0.164 323.18 179.74 29.10 0.887 0.277 405.30 215.43
+> Δ+0.54 +0.013 -0.015 -20.0% -39.1% +0.52 +0.007 -0.014 -30.7% -58.2% +0.30 +0.002 -0.008 -35.3% -64.0% +0.13 +0.004 -0.001 -39.1% -67.6%
+
+setup. Section 4.2 assesses the tradeoff between visual fidelity, trans-mission storage, and rendering footprint, demonstrating EvoGS ’s superior quality-to-size efficiency over discrete-layering baselines. Section 4.3 then analyzes inter-layer correlation, validating how the evolution tree eliminates splat redundancy, enables smooth quality transitions, and yields highly compressible refinement signals. 
+
+## 4.1 Experimental Setup 
+
+Dataset. We evaluate on all scenes from the standard 3DGS bench-mark [Kerbl et al . 2023] across Synthetic Blender [Mildenhall et al .2020], Mip-NeRF360 (Mip-360) [Barron et al . 2022], Tanks&Temples (T&T) [Knapitsch et al . 2017], and Deep Blending (DB) [Hedman et al . 2018]. To construct the four-level image pyramid {D0, D1, D2, D3 }
+
+required for progressive training, we downsample full-resolution images by factors of 8×, 4×, and 2×.
+
+Comparison methods. We compare EvoGS against: i) Mono-lithic. A separate, independent 3DGS model trained from scratch at each quality level. This serves as the quality upper bound, which is the best possible rendering without streaming constraint. ii) Sin-gle. One full-resolution 3DGS model trained on D3 and rendered at all resolution levels without per-level optimization. This repre-sents the baseline case where no adaptation to different quality levels is performed. iii) LapisGS [Shi et al . 2025]. The state-of-the-art discrete-layering method. It constructs a layered representation by training enhancement layers at increasing resolutions, with each layer comprising a separate set of splats. iv) L3GS [Tsai et al . 2025]. 
+
+A recent discrete-layering method defining layers by global signifi-cance score buckets. We adapt it to multi-resolution by training each layer on the corresponding pyramid resolution, while preserving its pruning-based splat count control, GSG-sorted partitioning, and fully-frozen ancestors. v) EvoGS (Symmetric). An ablation where the asymmetry factor is fixed to 𝜶 = 1, reducing the tree to a symmetric Haar wavelet construction. 
+
+Metrics. We evaluate rendering quality using PSNR, SSIM, and LPIPS. We also report two size metrics that capture distinct as-pects of the streaming and rendering pipeline: Storage size (Stor.) measures the cumulative transmission payload required to recon-struct a given quality level. Rendering footprint (Mem.) measures the GPU VRAM occupied by splats during rasterization. For base-lines, storage size always equals rendering footprint. For EvoGS , the rendering footprint is smaller as internal node parameters ( 𝝍 , 𝜶 )are consumed during structural reconstruction and do not occupy rendering memory. 
+
+Implementation details. Our implementation is built on the official 3DGS and LapisGS codebases [Kerbl et al . 2023; Shi et al .2025] and executed on an NVIDIA H100 GPU. The base layer 𝐿 0
+
+trains on D0 for 30k iterations. Each subsequent level 𝐿 𝑖 (𝑖 ≥ 1)trains for 30k iterations on D𝑖 , with densification every 3k iterations up to 15k. All other hyperparameters match default 3DGS settings. 
+
+## 4.2 Visual Quality v.s. Storage Size 
+
+Quantitative results. Table 1 presents results across the four datasets, and Figure 7 visualizes the quality–size tradeoff. 
+
+Monolithic and Single fail the streaming requirements. Monolithic achieves the highest reconstruction quality but requires transmit-ting an independent full model for every quality tier. The cumulative stored data reaches up to 1.9 GB on Mip-360, severely violating qual-ity scalability as no single representation serves multiple quality tiers. Single takes the opposite approach with one full-resolution model rendered at all levels, but its quality at coarser levels cata-strophically collapses ( e.g ., PSNR drops to 17 .33 dB on T&T’s 𝐿 0) due to overfitting to high-frequency details. Neither method is usable in a streaming scenario. 
+
+EvoGS achieves better visual quality than both discrete-layering baselines. The Δ rows in Table 1 show that EvoGS improves PSNR EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming Conference’17, July 2017, Washington, DC, USA 0.2 0.4 0.6 0.8 1.0 
+
+> Model Size (Normalized)
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> SSIM
+> Monolithic
+> Single
+> LapisGS
+> Ours
+> L3GS
+
+(a) 𝐿 0.0.2 0.4 0.6 0.8 1.0  
+
+> Model Size (Normalized)
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> SSIM
+> Monolithic
+> Single
+> LapisGS
+> Ours
+> L3GS
+
+(b) 𝐿 1.0.2 0.4 0.6 0.8 1.0  
+
+> Model Size (Normalized)
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> SSIM
+> Monolithic
+> Single
+> LapisGS
+> Ours
+> L3GS
+
+(c) 𝐿 2.0.2 0.4 0.6 0.8 1.0  
+
+> Model Size (Normalized)
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> SSIM
+> Monolithic
+> Single
+> LapisGS
+> Ours
+> L3GS
+
+(d) 𝐿 3.
+
+Figure 7: Quality-size tradeoff for each scene at each quality level. Each point represents the overall quality of a scene/object with the corresponding model size at a given quality level. 
+
+over the strongest discrete-layering baseline at each level by an aver-age of 0.31 dB across the four datasets, peaking at 0.69 dB (T&T 𝐿 1). SSIM and LPIPS follow similar trends. Notably, the second-best po-sition alternates between LapisGS and L3GS depending on dataset and level, which suggests neither discrete-layering scheme consis-tently outperforms the other, yet EvoGS surpasses both. This is paradigm-level evidence: continuous layering’s advantage is struc-tural to the construction principle, not specific to any particular discrete-layering design. The advantage stems from mitigating the error accumulation inherent to discrete layering: both LapisGS and L3GS permanently freeze lower-layer splats, locking in geometric errors that propagate upward, whereas EvoGS ’s explicit parent-child lineage allows higher layers to actively reposition and correct ancestral splats via the learned refinements 𝝍 and 𝜶 .
+
+EvoGS dramatically reduces both storage and rendering footprint. 
+
+Compared to LapisGS, EvoGS requires only 40 .5% of the storage payload (DB 𝐿 3) and 17 .9% of the rendering footprint (Blender 
+
+𝐿 3). Compared to L3GS, the reductions are 60 .9% and 16 .3% at the same operating points. The two baselines exhibit different growth patterns — LapisGS’s storage inflates unboundedly as densifica-tion adds splats per layer, while L3GS’s storage is capped by its pretrained-then-pruned initialization but grows linearly with layer count — yet EvoGS dominates both, because neither growth pattern reflects efficient representation. Figure 7 visualizes this: the EvoGS 
+
+cluster (red stars) remains highly compact in the top-left, while LapisGS (orange) and L3GS (purple) drift rightward across levels. The root cause is the splat redundancy inherent to discrete layer-ing. Unable to structurally adjust flawed lower layers, both LapisGS and L3GS must over-densify higher layers to mask prior errors, producing persistent “ghost splats”. EvoGS ’s tree construction elim-inates this redundancy by dynamically replacing parents with op-timized children that progressively refine the same region, with no need to maintain obsolete ancestors once finer descendants ex-ist. Furthermore, the gap between EvoGS ’s storage and rendering memory ( e.g ., 405 MB vs. 215 MB on DB 𝐿 3) provides a runtime ad-vantage absent in either discrete-layering baseline, where storage and rendering memory are necessarily equal. We further quantify splat redundancy in Section 4.3. 
+
+Ablation study. Table 2 compares the symmetric and asymmet-ric constructions. Asym consistently outperforms Sym in PSNR, with the gap growing from 0.82 dB at 𝐿 0 to 1.01 dB at 𝐿 3. This vali-dates the theoretical limitation raised in Section 3.1 that the rigid symmetric constraint ( 𝜶 = 1) forces children to deviate equally 
+
+Table 2: Ablation comparison across all datasets on average at four quality levels. Stor.: cumulative transmitted data (MB).                                    
+
+> Method 𝐿 0𝐿 1𝐿 2𝐿 3
+> PSNR Stor. PSNR Stor. PSNR Stor. PSNR Stor. Sym. 28.84 105.95 28.64 188.81 27.87 271.35 26.72 344.49 Asym. 29.66 105.15 29.55 188.72 28.86 276.62 27.73 347.36
+> Δ+0.82 -2.95% +0.91 -3.89% +0.99 +1.94% +1.01 +0.83%
+
+from parent, which is over-restrictive for non-symmetric real-world geometry. The per-attribute 𝜶 recovers this expressivity. Notably, despite requiring five extra scalars per node, Asym achieves com-parable or smaller storage at 𝐿 0–𝐿 1 because higher expressivity requires fewer splits to achieve the same quality. The minor storage overhead at 𝐿 2–𝐿 3 (+0.83% to +1.94% ) is heavily outweighed by the 
+
+>1 dB quality gain. In Section 4.3, we further analyze the reason for this observation, showing that the symmetric constraint produces more redundant splats because of the rigid constraint. 
+
+Qualitative results. Figures 8 and 9 illustrate rendered outputs on the Playroom and Drjohnson scene. At 𝐿 0, LapisGS and Mono-lithic produce severely degraded geometry (SSIM 0.64 , 0.29 ) with geometry collapsing into incoherent distributions, due to insuffi-cient supervision from the 8× downsampled images. In LapisGS, this foundational failure propagates upward as frozen artifacts. EvoGS ’s continuous layering enforces a collinear refinement constraint, al-lowing each level to correct residual errors. This produces coherent geometry early on (SSIM 0.89 , 0.93 at 𝐿 0) and scales smoothly to high-fidelity output at 𝐿 3.
+
+## 4.3 Analysis on Inter-Layer Correlation 
+
+The quality and size advantages demonstrated in Section 4.2 are surface manifestations of a deeper structural difference: EvoGS ’s evolution tree exposes inter-layer correlation that discrete layering cannot. In this section, we make this correlation concrete through three complementary analyses. We first quantify the splat redun-dancy that compositional layering produces; we then show how exploitable inter-layer structure enables smooth quality transitions during progressive streaming; and we finally demonstrate that the same structure makes the refinement signals highly compressible. 
+
+Splat redundancy. To empirically validate the "ghost splat" problem introduced in Section 1, we analyze the ratio of transpar-ent splats across different quality levels (Table 3). Discrete layering methods exhibit severe redundancy. At the highest quality level Conference’17, July 2017, Washington, DC, USA Shi et al. LapisGS Ours (Symmetric) Ours (Asymmetric) Single Monolithic 
+
+𝐿 !
+
+𝐿 "
+
+𝐿 #
+
+𝐿 $
+
+𝐿 !
+
+𝐿 "
+
+𝐿 #
+
+𝐿 $
+
+𝐿 !
+
+𝐿 "
+
+𝐿 #
+
+𝐿 $
+
+𝐿 !
+
+𝐿 "
+
+𝐿 #
+
+𝐿 $
+
+𝐿 !
+
+𝐿 "
+
+𝐿 #
+
+𝐿 $
+
+SSIM: 0.64 
+
+SSIM: 0.78 
+
+SSIM: 0.88 
+
+SSIM: 0.91 
+
+SSIM: 0. 79 
+
+SSIM: 0.86 
+
+SSIM: 0.89 
+
+SSIM: 0. 91 
+
+SSIM: 0.64 
+
+SSIM: 0.71 
+
+SSIM: 0.80 
+
+SSIM: 0.86 
+
+SSIM: 0.87 
+
+SSIM: 0.89 
+
+SSIM: 0.91 
+
+SSIM: 0.90 
+
+SSIM: 0.89 
+
+SSIM: 0.91 
+
+SSIM: 0.91 
+
+SSIM: 0.91 
+
+549 MB 
+
+549 MB 
+
+549 MB 
+
+549 MB 
+
+263 MB 
+
+381MB 
+
+461 MB 
+
+549 MB 
+
+264 MB 
+
+464 MB 
+
+643 MB 
+
+822 MB 
+
+130 MB 
+
+221 MB 
+
+301 MB 
+
+370 MB 
+
+125 MB 
+
+209 MB 
+
+285 MB 
+
+353 MB 
+
+Figure 8: Sample renderings of Playroom at four quality levels. LapisGS [Shi et al . 2025] accumulates the geometry error from low layers, while continuous layering (both Symmetric and Asymmetric) achieves the best visual quality and smallest model size. LapisGS Ours (Symmetric) Ours (Asymmetric) Single Monolithic 
+
+𝐿 !
+
+SSIM: 0. 64
+
+782 MB 
+
+𝐿 "
+
+SSIM: 0. 77 
+
+782 MB 
+
+𝐿 #
+
+SSIM: 0. 86 
+
+782 MB 
+
+𝐿 $
+
+SSIM: 0. 88 
+
+782 MB 
+
+𝐿 !
+
+SSIM: 0. 29 
+
+259 MB 
+
+𝐿 "
+
+SSIM: 0. 51
+
+458 MB 
+
+𝐿 #
+
+SSIM: 0. 76 
+
+667 MB 
+
+𝐿 $
+
+SSIM: 0. 88
+
+782 MB 
+
+𝐿 !
+
+SSIM: 0. 29 
+
+261 MB 
+
+𝐿 "
+
+SSIM: 0. 42 
+
+522 MB 
+
+𝐿 #
+
+SSIM: 0. 65
+
+846 MB 
+
+𝐿 $
+
+SSIM: 0. 81 
+
+1177 MB 
+
+𝐿 !
+
+SSIM: 0. 92 
+
+143 MB 
+
+𝐿 "
+
+SSIM: 0. 92 
+
+259 MB 
+
+𝐿 #
+
+SSIM: 0. 92 
+
+370 MB 
+
+𝐿 $
+
+SSIM: 0. 91 
+
+462 MB 
+
+𝐿 !
+
+SSIM: 0. 93 
+
+141 MB 
+
+𝐿 "
+
+SSIM: 0. 93 
+
+251 MB 
+
+𝐿 #
+
+SSIM: 0. 94 
+
+361 MB 
+
+𝐿 $
+
+SSIM: 0. 92 
+
+457 MB 
+
+Figure 9: Sample renderings of Drjohnson at four quality levels. LapisGS [Shi et al . 2025] accumulates the geometry error from low layers, while continuous layering (both Symmetric and Asymmetric) achieves the best visual quality and smallest model size. EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming Conference’17, July 2017, Washington, DC, USA 𝐿 ! 𝐿 "Smooth Renderings in Between 
+
+Figure 10: Example of quality transition of Lego . The continuous layering construction of EvoGS inherently supports smooth quality transition. Table 3: The ratios of transparent splats at four quality levels (average across all datasets). The opacity threshold is 0.005, same to [Kerbl et al. 2023].                  
+
+> % Transparent Splats Method LOD 0 LOD 1 LOD 2 LOD 3 LapisGS 15.92% 46.91% 55.59% 65.83%
+> EvoGS (Sym.) 14.40% 25.99% 33.67% 38.85%
+> EvoGS 12.08% 17.02% 21.04% 24.92%
+
+Table 4: Breakdown of the ratios of transparent splats of LapisGS, which show LapisGS fails to efficiently utilize low-layer splats.                         
+
+> Layer 0 Layer 1 Layer 2 Layer 3 Total LapisGS  LOD 0 15.92% ---15.92% LOD 1 80.33% 16.17% --46.91% LOD 2 90.66% 78.27% 15.34% -55.59% LOD 3 93.82% 88.66% 72.55% 14.20% 65.83%
+
+(LOD 3), 65.83% of LapisGS splats are rendered completely trans-parent. A per-layer breakdown (Table 4) isolates the root cause. As higher layers are added, the vast majority of lower-layer splats are effectively discarded. Specifically, 93.82% of Layer 0 and 88.66% of Layer 1 splats fade out at LOD 3. Because these discrete layers are frozen during progressive training and cannot structurally adapt to finer details, the optimizer is forced to mask inherited geomet-ric errors by dropping their opacity. This reliance on transparent splats directly inflates the model size and compromises rendering efficiency. In contrast, our continuous layering approach inherently miti-gates this bloat. By refining parent splats rather than overlaying independent sets, EvoGS drops the transparent splat ratio to just 24.92% at LOD 3. Furthermore, this analysis empirically validates our asymmetric design choice. The symmetric variant of EvoGS 
+
+produces a noticeably higher redundancy rate (38.85% at LOD 3) than the asymmetric model. This occurs because the rigid equal-magnitude constraint forces some child splats into sub-optimal geometric positions when capturing non-symmetric local details in real-world scenes. The optimizer must then suppress these ill-fitting splats via transparency, reproducing a milder version of the LapisGS failure mode. By relaxing this constraint, the asymmetric evolution tree minimizes wasted representational capacity.   
+
+> (a) TandT. (b) Mip-NeRF360.
+> (c) Synthetic Blender. (d) Deep Blending.
+
+Figure 11: Progressive streaming performance of continuous and discrete layering. On all the datasets, continuous layering achieves smoother quality transition and provides smaller model size at same quality. Quality transition. As discussed in Sections 1 and 3.3, discrete layers overfit to target resolutions, producing step-wise quality jumps. To demonstrate EvoGS ’s advantage here, we simulate a progressive transmission scenario (LOD 0 to LOD 3) for EvoGS 
+
+(denoted “Continuous Layering”) and LapisGS (denoted “Discrete Layering”). We evaluate 20 intermediate rendering snapshots as data arrives. EvoGS prioritizes transmitting splats with higher re-finement energy ( ∥𝝍 ∥), while LapisGS transmits in descending order of opacity. The resulting quality-vs-bytes curve (Figure 11) shows that continuous layering scales visual fidelity smoothly and proportionally with received data. Conversely, discrete layering exhibits stagnant improvement punctuated by abrupt jumps at LOD boundaries, proving that its intermediate transmission states are highly inefficient. A visual example of this smooth transition is provided in Figure 10. 
+
+Compressibility. As theorized in Section 3.1 and validated in Figures 5 and 6, the wavelet-inspired refinement residuals 𝝍 exhibit strong sparsity. This structural property naturally yields highly compressible signals. To demonstrate this, we pass EvoGS through Conference’17, July 2017, Washington, DC, USA Shi et al. 
+
+Table 5: Comparison of compressibility (averaged across all datasets). Stor.: cumulative transmitted data (MB). 
+
+Method 𝐿 0 𝐿 1 𝐿 2 𝐿 3
+
+PSNR Stor. PSNR Stor. PSNR Stor. PSNR Stor. LapisGS 29.13 152.28 29.00 325.49 28.47 544.18 27.64 801.80 
+
+EvoGS 29.66 105.15 29.55 188.72 28.86 276.62 27.73 347.36 w/ Comp. 29.53 42.89 29.32 59.28 28.59 76.48 27.63 91.75 
+
+a basic proof-of-concept compression pipeline: 8-bit uniform scalar quantization followed by zstd entropy coding [Collet and Kucher-awy 2018]. The results (Table 5) reveal a dramatic delivery advan-tage. Uncompressed EvoGS already halves the storage footprint of LapisGS at 𝐿 3 (347.36 MB vs. 801.80 MB) simply by eliminating ghost splats. Applying standard compression to 𝝍 aggressively shrinks this to 91.75 MB, which is 11.5% of the LapisGS, with a negligible PSNR penalty of 0.10 dB. This confirms that continuous layering not only mitigates structural bloat, but actively structures the scene into sparse, compressible residuals ideal for scalable transmission. 
+
+## 5 Conclusion 
+
+We introduced EvoGS , a continuous layering paradigm that fun-damentally resolves the structural inefficiencies for scalable 3DGS streaming. We demonstrated that the limitations of existing meth-ods stem from the parametric isolation of their discrete layers. By organizing splats into an Evolution Tree, EvoGS establishes an explicit parent-child lineage across quality tiers. The wavelet-inspired refinement mechanism enables finer layers to structurally correct lower-layer geometry. This design naturally eliminates re-dundant splats, yielding dramatic reductions in both transmission payload and rendering GPU memory footprints compared to cur-rent baselines. Furthermore, the inherent sparsity of the formula-tion produces highly compressible inter-layer signals and ensures smooth rate-distortion performance. EvoGS provides a robust, effi-cient, and adaptive foundation for immersive 6DoF streaming in resource-constrained environments. Besides, the local dependency and coherence inherent to EvoGS could offer opportunities for scene editing or animation. 
+
+## References 
+
+Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P. Srinivasan, and Peter Hedman. 2022. Mip-NeRF 360: Unbounded Anti-Aliased Neural Radiance Fields. In IEEE/CVF Conference on Computer Vision and Pattern Recognition, CVPR 2022, New Orleans, LA, USA, June 18-24, 2022 . IEEE, 5460–5469. Yann Collet and Murray Kucherawy. 2018. Zstandard compression and the applica-tion/zstd media type . Technical Report. Han Gong, Qiyue Li, Zhi Liu, Hao Zhou, Peng Yuan Zhou, Zhu Li, and Jie Li. 2025. Adaptive 3D Gaussian Splatting Video Streaming. IEEE Network (2025). Bo Han, Yu Liu, and Feng Qian. 2020. ViVo: visibility-aware mobile volumetric video streaming. In MobiCom ’20: The 26th Annual International Conference on Mobile Computing and Networking, London, United Kingdom, September 21-25, 2020 . 11:1– 11:13. Peter Hedman, Julien Philip, True Price, Jan-Michael Frahm, George Drettakis, and Gabriel J. Brostow. 2018. Deep blending for free-viewpoint image-based rendering. 
+
+ACM Transactions on Graphics 37, 6 (2018), 257. Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 2023. 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Transactions on Graphics 42, 4 (2023), 139:1–139:14. doi:10.1145/3592433 Bernhard Kerbl, Andreas Meuleman, Georgios Kopanas, Michael Wimmer, Alexandre Lanvin, and George Drettakis. 2024. A Hierarchical 3D Gaussian Representation for Real-Time Rendering of Very Large Datasets. ACM Transactions on Graphics 43, 4 (2024), 62:1–62:15. doi:10.1145/3658160 Gunjoong Kim, Seonghoon Park, Jeho Lee, Chanyoung Jung, Hyungchol Jun, and Hojung Cha. 2025. Vega: Fully Immersive Mobile Volumetric Video Streaming with 3D Gaussian Splatting. In Proceedings of the 31st Annual International Conference on Mobile Computing and Networking, ACM MOBICOM 2025, Hong Kong, November 4-8, 2025 . 1106–1120. Arno Knapitsch, Jaesik Park, Qian-Yi Zhou, and Vladlen Koltun. 2017. Tanks and temples: benchmarking large-scale scene reconstruction. ACM Transactions on Graphics 36, 4 (2017), 78:1–78:13. Nehal Baganal Krishna, Yuang Shi, Wei Tsang Ooi, and Amr Rizk. 2025. NETSPLAT: Data Plane Network Assistance for Streaming 3D Gaussian Splatting Scenes. In 
+
+Proceedings of the 3rd Workshop on Emerging Multimedia Systems, EMS 2025, Coimbra, Portugal, September 8-11, 2025 . 58–60. doi:10.1145/3746441.3748225 Yang Liu, Chuanchen Luo, Lue Fan, Naiyan Wang, Junran Peng, and Zhaoxiang Zhang. 2024. CityGaussian: Real-Time High-Quality Large-Scale Scene Rendering with Gaussians. In Computer Vision - ECCV 2024 - 18th European Conference, Milan, Italy, September 29-October 4, 2024, Proceedings, Part XVI (Lecture Notes in Computer Science, Vol. 15074) , Ales Leonardis, Elisa Ricci, Stefan Roth, Olga Russakovsky, Torsten Sattler, and Gül Varol (Eds.). Springer, 265–282. doi:10.1007/978-3-031-72640-8_15 Tao Lu, Mulin Yu, Linning Xu, Yuanbo Xiangli, Limin Wang, Dahua Lin, and Bo Dai. 2024. Scaffold-GS: Structured 3D Gaussians for View-Adaptive Rendering. In 
+
+IEEE/CVF Conference on Computer Vision and Pattern Recognition, CVPR 2024, Seattle, WA, USA, June 16-22, 2024 . IEEE, 20654–20664. doi:10.1109/CVPR52733.2024.01952 Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ra-mamoorthi, and Ren Ng. 2020. NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis. In Computer Vision - ECCV 2020 - 16th European Conference, Glasgow, UK, August 23-28, 2020, Proceedings, Part I (Lecture Notes in Computer Science, Vol. 12346) , Andrea Vedaldi, Horst Bischof, Thomas Brox, and Jan-Michael Frahm (Eds.). Springer, 405–421. Jiongming Qin, Kaixuan Zhou, Yu Jiang, Huizhi Zhu, Fei Luo, and Chunxia Xiao. 2025. JumpingGS: Level-jump 3D Gaussian Representation for Delicate Textures in Aerial Large-scale Scene Rendering. ACM Trans. Graph. 44, 6 (2025), 273:1–273:15. Kerui Ren, Lihan Jiang, Tao Lu, Mulin Yu, Linning Xu, Zhangkai Ni, and Bo Dai. 2024. Octree-GS: Towards Consistent Real-time Rendering with LOD-Structured 3D Gaussians. CoRR abs/2403.17898 (2024). arXiv:2403.17898 doi:10.48550/ARXIV. 2403.17898 Yuang Shi. 2025. 3D Gaussian-based Immersive Media Streaming in Networked Extended Reality. In Proceedings of the 16th ACM Multimedia Systems Conference, MMSys 2025, Stellenbosch, South Africa, 31 March 2025 - 4 April 2025 . 356–360. Yuang Shi, Géraldine Morin, Simone Gasparini, and Wei Tsang Ooi. 2025. LapisGS: Layered Progressive 3D Gaussian Splatting for Adaptive Streaming. In International Conference on 3D Vision, 3DV 2025, Singapore, March 25-28, 2025 . 991–1000. Yuan-Chun Sun, Yuang Shi, Cheng-Tse Lee, Mufeng Zhu, Wei Tsang Ooi, Yao Liu, Chun-Ying Huang, and Cheng-Hsin Hsu. 2025. LTS: A DASH Streaming System for Dynamic Multi-Layer 3D Gaussian Splatting Scenes. In Proceedings of the 16th ACM Multimedia Systems Conference, MMSys 2025, Stellenbosch, South Africa, 31 March 2025 - 4 April 2025 . 136–147. Wim Sweldens. 1996. The Lifting Scheme: A Custom-Design Construction of Biorthog-onal Wavelets. Applied and Computational Harmonic Analysis 3, 2 (1996), 186–200. David S. Taubman and Michael W. Marcellin. 2002. JPEG2000: standard for interactive imaging. Proc. IEEE 90, 8 (2002), 1336–1357. Yi-Zhen Tsai, Xuechen Zhang, Zheng Li, and Jiasi Chen. 2025. L3GS: Layered 3D Gaussian Splats for Efficient 3D Scene Delivery. In Proceedings of the 31st Annual International Conference on Mobile Computing and Networking, ACM MOBICOM 2025, Hong Kong, November 4-8, 2025 . 453–467. Irene Viola and Pablo Cesar. 2023. Chapter 15 - Volumetric video streaming: Cur-rent approaches and implementations. In Immersive Video Technologies , Giuseppe Valenzise, Martin Alain, Emin Zerman, and Cagri Ozcinar (Eds.). Academic Press, 425–443. Yifan Wang, Mufan Liu, Qi Yang, He Huang, Le Yang, and Yiling Xu. 2026. On the Efficient Adaptive Streaming of 3D Gaussian Splatting Over Dynamic Networks. 
+
+IEEE Trans. Circuits Syst. Video Technol. 36, 4 (2026), 4594–4608. Zhiwen Yan, Weng Fei Low, Yu Chen, and Gim Hee Lee. 2024. Multi-Scale 3D Gaussian Splatting for Anti-Aliased Rendering. In IEEE/CVF Conference on Computer Vision and Pattern Recognition, CVPR 2024, Seattle, WA, USA, June 16-22, 2024 . IEEE, 20923– 20931. doi:10.1109/CVPR52733.2024.01977

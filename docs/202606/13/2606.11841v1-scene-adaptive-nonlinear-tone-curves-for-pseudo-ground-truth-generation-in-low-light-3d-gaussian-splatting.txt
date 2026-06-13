@@ -1,0 +1,476 @@
+Title: Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting
+
+URL Source: https://arxiv.org/pdf/2606.11841v1
+
+Published Time: Thu, 11 Jun 2026 00:56:36 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+# Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting 
+
+## Mingzhe Lyu 1,2 , Jinqiang Cui 2, Hong Zhang 1* 
+
+> 1
+
+Shenzhen Key Laboratory of Robotics and Computer Vision, Southern University of Science and Technology, Shenzhen, 518055, China. 
+
+> 2
+
+Pengcheng Laboratory, Shenzhen, 518108, China. *Corresponding author(s). E-mail(s): hzhang@sustech.edu.cn; 
+
+Abstract 
+
+Low-light novel view synthesis is challenging because dark multi-view images contain noise, weak structural detail, and compressed dynamic range. Recent 3D Gaussian Splatting (3DGS) meth-ods address these challenges by generating pseudo ground-truth (pseudo-GT) images as supervision targets when paired normal-light references are unavailable. Existing pseudo-GT methods apply a uniform linear gain to all pixels, which clips bright regions while providing insufficient enhance-ment in dark regions, limiting reconstruction quality. We observe that nonlinear tone mappings, long established in 2D low-light enhancement, have not been explored for pseudo-GT generation in 3D reconstruction. Accordingly, we propose a scene-adaptive nonlinear tone-curve framework that replaces linear pseudo-GT with nonlinear alternatives. The framework introduces percentile-based normalisation for scene-agnostic curve application, a scene-adaptive offset for automatic black-level adjustment, and two complementary curves: Adaptive SoftExp (ASE), a bounded exponential curve, and Adaptive Poly3 (AP3), a data-driven cubic polynomial. The module changes only the pseudo-GT computation and leaves the 3DGS backbone unchanged. Experiments on three benchmarks covering 21 scenes show that both curves consistently outperform the linear baseline with PSNR improvements up to +4.34 dB on LOM and +3.25 dB on RealX3D. Both curves achieve similar performance despite their different mathematical forms, suggesting the improvement is curve-agnostic. Code is available at https://github.com/lvmingzhe/adaptiveToneCurve. 
+
+Keywords: 3D Gaussian Splatting, Low-light enhancement, Novel view synthesis, Tone mapping, Pseudo ground-truth 
+
+# 1 Introduction 
+
+Novel view synthesis (NVS) renders photo-realistic images from novel viewpoints given multi-view captures, with broad applications in augmented/virtual reality, autonomous driving, and digital content creation. Neural Radiance Fields (NeRF) [28] and 3D Gaussian Splatting (3DGS) [18] have enabled substantial progress under well-lit conditions, yet real-world cap-tures are frequently acquired in low-light envi-ronments such as nighttime surveillance, under-ground exploration, and poorly lit interiors, where images exhibit low signal-to-noise ratio, weak structural detail, and compressed dynamic range. These degradations jointly impair both geometry estimation and appearance optimisation, making 1
+
+> arXiv:2606.11841v1 [cs.CV] 10 Jun 2026
+
+standard NVS pipelines produce poor reconstruc-tions. Several approaches have been proposed for low-light NVS, focusing primarily on network architecture and scene representation. Early attempts apply 2D enhancement methods such as Zero-DCE [12] and SCI [26] as pre- or post-processing around standard NVS pipelines, but per-view enhancement does not enforce multi-view consistency. End-to-end NeRF-based meth-ods, including Aleth-NeRF [7] and I 2-NeRF [22], achieve improved quality by integrating illumi-nation modelling into the radiance field at the cost of long training times. LITA-GS [57] achieves state-of-the-art quality at real-time rendering speed with illumination-invariant structure priors. These methods have advanced the field through representation design, loss formulation, and dedi-cated modules. However, none has systematically examined the pseudo-GT generation that serves as the primary supervision signal when paired normal-light references are unavailable. In LITA-GS, pseudo-GT images are gener-ated by multiplying each low-light frame by a uniform gain factor and clamping the result to the valid intensity range. This linear strategy has two inherent limitations. First, the uniform gain amplifies all pixels equally: a factor large enough to lift dark regions into a visible range inevitably pushes brighter pixels beyond the representable range, where they are clipped and lose gradient signal. Second, the linear mapping provides no intensity-adaptive control, treating shadow and highlight regions identically. Notably, in 2D low-light enhancement, nonlinear tone mappings have long been the standard for bridging the gap between dark and bright images [12, 26], but this principle has not been applied to pseudo-GT generation in 3D reconstruction. To address these limitations, we propose a scene-adaptive nonlinear tone-curve framework for pseudo-GT generation in low-light 3DGS (Fig. 1). A nonlinear tone curve inherently applies stronger lifting in dark regions and gentler com-pression in bright regions, addressing both limi-tations of linear scaling without requiring archi-tectural changes. The framework consists of three components: percentile-based normalisation that makes the curve shape scene-agnostic regard-less of absolute exposure, a scene-adaptive offset that adjusts the black-level lift per image based on robust image statistics, and two complemen-tary tone curves, Adaptive SoftExp (ASE) and Adaptive Poly3 (AP3), that instantiate the non-linear mapping from different design principles. The entire module is a drop-in replacement for the linear pseudo-GT, leaving the LITA-GS back-bone unchanged and adding less than 0.5 ms of overhead per training iteration. Experiments on three benchmarks covering 21 scenes validate the proposed framework. On LOM [7] (5 scenes, 5K iterations), both ASE and AP3 improve mean PSNR by over 4 dB com-pared to the linear baseline. On RealX3D [21] (9 scenes, 15K iterations), AP3 improves NVS PSNR by +3.25 dB and ASE by +2.57 dB. On MipNeRF360-varying [2] (7 scenes, 15K itera-tions), both curves improve over the baseline on all three mean metrics (PSNR, SSIM, LPIPS). Notably, ASE and AP3 achieve similar perfor-mance across all benchmarks despite their dif-ferent mathematical forms, confirming that the improvement stems from the nonlinear mapping itself rather than any specific curve parametrisa-tion. The framework uses a unified offset configu-ration across all three benchmarks, requiring only a dataset-level brightness gain for adaptation. Our contributions are summarised as follows: 1. We identify the pseudo-GT tone curve as an overlooked design dimension in low-light 3DGS and show that nonlinear curves consistently outperform linear scaling on PSNR, SSIM, and LPIPS across three benchmarks covering 21 scenes. Two structurally different curves achieve similar gains, providing evidence that the nonlinear mapping itself, rather than any specific parametrisation, is the primary driver of quality gains. 2. We instantiate the framework with two com-plementary curves: Adaptive SoftExp (ASE), a physically grounded exponential curve with natural boundedness, and Adaptive Poly3 (AP3), a data-driven cubic polynomial selected from a systematic search over 22 candidate families. Both are drop-in replacements that modify only the pseudo-GT computation and leave the 3DGS backbone unchanged. 3. We introduce a scene-adaptive offset based on percentile statistics that automatically adjusts the black-level lift per image. Combined with a dataset-level brightness gain, this mechanism enables a unified configuration to generalise 2across all three benchmarks without per-scene hyperparameter tuning. 
+
+# 2 Related Work 
+
+## 2.1 Low-Light Novel View Synthesis 
+
+NeRF [28] and 3DGS [18] achieve photorealistic novel view synthesis but degrade severely when the inputs are low-light images. Earlier radiance-field work addresses high dynamic range (HDR) or noisy raw capture by incorporating exposure and tone modelling into volumetric rendering [15, 29]. Recent HDR-oriented 3DGS work further extends this direction to video reconstruction [5]. These methods focus on HDR or raw reconstruction rather than supervisory tone-curve design. Recent low-light NVS methods can be grouped by where in the pipeline they primarily address the bright-ness deficiency; individual methods may combine techniques from multiple stages. 
+
+(i) Input-side: These methods modify the training images before 3D reconstruction. LLGS [36] preprocesses with gamma correction; Cao et al. [4] apply semantic guidance; L 2DGS [19] extends input-side supervision to dynamic scenes via a learned well-lit-to-low-light transformation. LITA-GS [57] also generates pseudo-GT by lin-early scaling low-light frames, though its primary contributions lie in rendering-side modules. 
+
+(ii) Representation-side: These methods encode illumination explicitly within the 3D scene model. Aleth-NeRF [7] learns a transmittance-attenuating concealing field; I 2-NeRF [22] models low-light scenes as a Beer–Lambert absorption medium with a Bright-Channel transmittance prior; LLNeRF [35] and Bright-NeRF [37] decom-pose illumination, noise, and colour from sRGB and raw inputs in an unsupervised manner, respectively; GloNeRF [24] boosts multi-view consistency under low light. 
+
+(iii) Rendering-side: These methods embed enhancement in the rendering pipeline. LITA-GS [57] introduces illumination-invariant struc-ture priors and a progressive denoiser; Luminance-GS [8] and Gaussian-in-the-Dark [45] embed view-adaptive curves and sensor-response correction inside Gaussian rendering; DarkGS [53] learns a neural illumination model for relighting dark scenes; and LuSh-NeRF [31] jointly models low-light noise and camera-shake blur for NeRF. A concurrent work, MERID-GS [47], decouples illumination and reflectance via explicit Retinex decomposition for few-shot 360 ◦ synthesis. Despite this growing diversity, input-side methods uniformly rely on simple brightness transforms such as linear scaling or gamma correc-tion, and no prior work systematically examines whether replacing these with a nonlinear tone curve can improve reconstruction quality. Our work fills this gap. 
+
+## 2.2 Low-Light Image Enhancement 
+
+2D low-light enhancement provides the concep-tual foundation for our pseudo-GT design and is typically organised by enhancement paradigm. 
+
+Retinex-based decomposition traces a progres-sion from RetinexNet’s paired supervision [41], through KinD/KinD++ [55, 56] and the unfolded URetinex-Net [42], to the one-stage transformer Retinexformer [3] and Retinex-memory mecha-nisms [54]. Curve-based approaches learn higher-order tone curves [12, 20], self-calibrated illu-mination maps [26], or semantic-guided bright-ness curves [38]. End-to-end pipelines range from decomposition–restoration designs [30, 48] and the MIRNet multi-scale backbone [50], to lightweight or UHD transformers [6, 39], unpaired adversarial supervision [17], SNR-aware enhance-ment [43], and recent methods exploring illu-mination magnitude control, natural-illumination estimation, invertible networks, and multi-scale fusion [9, 33, 34, 51]. Diffusion-based methods recently push enhancement quality further by coupling Retinex priors with generative refine-ment [16, 23, 46]. A common finding across these paradigms is that nonlinear mappings are essen-tial for bridging the distributional gap between dark and bright images. Our work transfers this principle from 2D enhancement to pseudo-GT generation in the 3DGS training loop, showing that the choice of nonlinear curve shape broadly improves the quality of 3D reconstruction. 
+
+## 2.3 Tone Mapping 
+
+Tone mapping has a long history in display and rendering, where the goal is to compress HDR con-tent into a representable range. Our work draws on three lines from this literature. 3Fig. 1 System overview. Our scene-adaptive nonlinear tone-curve module (dashed box) replaces the original linear pseudo-GT generation in LITA-GS. The module computes percentile-based normalisation, an adaptive offset δ0 = α(1 − r)β , and applies either the ASE or AP3 tone curve to produce the pseudo-GT ˆIin . The LITA-GS backbone (3D Gaussians, rasteriser, PDM) remains entirely unchanged. The exposure control loss Lexp = L1(R0, ˆIin ) supervises the rendered RGB output. 
+
+Global tone mapping operators [10, 32] apply a single nonlinear curve (logarithmic, sig-moid, or filmic) across the entire image, with Hable’s filmic curve [13] from real-time game ren-dering following the same paradigm. These oper-ators assume the input already captures the full scene dynamic range; their nonlinear shape gov-erns how highlights are compressed but does not address shadow lifting on heavily underexposed low-light inputs. 
+
+Local and spatially-adaptive tone map-ping [11, 27] processes different image regions with different curves based on local luminance statistics, capturing the intuition that a single global curve cannot fit all spatial regions. This motivates our scene-adaptive offset that adjusts the black-level lift per image based on robust image-level percentile statistics. 
+
+Inverse tone mapping [1] addresses the reverse direction, reconstructing HDR content from low dynamic range inputs, and is most closely related conceptually to our pseudo-GT generation, where we map dark inputs toward bright targets. However, prior inverse tone map-ping methods focus on display-side reconstruction and do not consider the supervisory role of these curves in 3D scene reconstruction. In summary, classical tone mapping pro-vides the nonlinear curve vocabulary we adopt (polynomial and exponential families), but these operators were designed for display-side com-pression, not for generating supervision targets in 3D reconstruction. Our work repurposes this vocabulary for pseudo-GT generation and demon-strates that the nonlinear mapping itself is akey factor in reconstruction quality. The frame-work is orthogonal to representation-level 3DGS advances such as Mip-Splatting [49], Scaffold-GS [25], Deformable 3D Gaussians [44], and 2D Gaussian Splatting [14]. 
+
+# 3 Method 
+
+We propose a scene-adaptive nonlinear tone-curve framework that replaces the linear pseudo-GT in LITA-GS [57]. As illustrated in Fig. 1, the framework consists of three components: (1) percentile-based normalisation for scene-agnostic curve application, (2) a scene-adaptive offset that adjusts the black-level lift, i.e. the minimum output brightness assigned to dark pix-els, per image, and (3) two complementary tone curves (ASE and AP3) that instantiate the non-linear mapping. Our module serves as a drop-in replacement for the original linear pseudo-GT and leaves the LITA-GS [57] backbone unchanged throughout the entire training process. 
+
+## 3.1 Preliminaries: LITA-GS Pipeline 
+
+LITA-GS [57] augments each 3D Gaussian primi-tive with four additional attribute channels: (1) an illumination-invariant structure prior extracted via colour-invariant convolutions (CIConv2d) based on Kubelka–Munk reflectance theory, (2) a 
+
+depth attribute supervised by monocular depth estimates, (3) an illumination feature that decomposes the scene into light-dependent and light-independent components, and (4) a noise 
+
+attribute modelling sensor noise in dark images. 4During rasterisation, these attributes produce five parallel maps: the enhanced RGB image R0,structure prior Pr , depth Dr , illumination Lr , and noise NGS . A Progressive Denoising Module (PDM) with K = 3 cascaded stages iteratively refines the rendered image: Rk+1 = R0 − Nk+1 .A learnable tonemapper reconstructs the low-light observation as ˆIlow = RK ⊙ Lr . The total loss combines exposure control ( Lexp ), structure consistency ( Lstr ), denoising ( Lde ), and low-light reconstruction ( Lrec ). Among these losses, the exposure control loss 
+
+Lexp = L1(R0, ˆIin ) provides the dominant gra-dient signal to the Gaussian colour coefficients, where the pseudo ground-truth ˆIin is the supervi-sion target. In the original LITA-GS [57] frame-work, this pseudo-GT is generated by linearly scaling each low-light frame: 
+
+ˆIin = clamp 
+
+( θ
+
+mean( Ilow ) · Ilow , 0, 1
+
+)
+
+, (1) where θ is a fixed exposure hyperparameter that controls the target brightness level. The qual-ity of ˆIin therefore directly influences the upper bound on reconstruction quality. As discussed in Section 1, this linear strategy clips highlights and provides no intensity-adaptive control; we intro-duce nonlinear replacements as detailed in the following subsections. 
+
+## 3.2 Percentile Normalisation 
+
+The mean-based normalisation in Eq. 1 is sen-sitive to outlier pixels and produces unstable scaling across views with different exposure levels. We replace it with percentile-based normalisation for robustness. Given a low-light input Ilow ∈
+
+[0 , 1] 3×H×W , we first compute its luminance chan-nel using the ITU-R BT.601 standard: 
+
+Y = 0 .299 R + 0 .587 G + 0 .114 B (2) and extract two robust order statistics: 
+
+p90 = quantile( Y, 0.90) , p10 = quantile( Y, 0.10) .
+
+(3) The normalised input t = Ilow /p 90 maps the bulk of pixels into [0 , 1] regardless of absolute expo-sure level, making the subsequent curve shape 
+
+scene-agnostic . Unlike mean-based normalisation (Eq. 1), percentiles are robust to outliers and pro-vide stable normalisation across different views. 
+
+## 3.3 Scene-Adaptive Offset 
+
+The key scene descriptor is the shadow com-pactness ratio :
+
+r = p10 
+
+p90 
+
+∈ [0 , 1] . (4) A large r indicates less severe shadow compres-sion; a small r indicates severely compressed shadows with limited recoverable detail, which require stronger black-level lifting. For example, on the LOM [7] dataset, the bike scene has r = 0 .37 
+
+(bright backgrounds preserve shadow detail) while 
+
+shrub has r = 0 .12 (dense foliage produces dark shadows with limited detail). The adaptive offset δ0 is defined as: 
+
+δ0 = α · (1 − r)β , (5) where α sets the maximum offset magnitude (upper bound when r → 0) and β = 2 .5 governs the decay rate. We fix α = 0 .12 and β = 2 .5 across all three benchmarks; these values were obtained via grid search on the BlueHawaii scene and val-idated by the multi-scene ablation (Section 4.4), with no per-scene tuning required. The per-scene offset values for the five LOM scenes range from δ0 = 0 .038 on bike (r = 0 .37 ,
+
+−63% vs. the fixed cubic intercept of 0.103, pre-venting over-brightening) to δ0 = 0 .087 on shrub 
+
+(r = 0 .12 , retained for shadow recovery). This adaptive mechanism avoids the failure mode of fixed offsets, which over-brighten well-lit scenes and under-brighten dark scenes (see the bike case study in Section 5.2). The complete per-scene offset table is provided in Appendix C.1. 
+
+## 3.4 Adaptive SoftExp (ASE) 
+
+The soft-exponential function 1−e−x is a bounded concave operator widely used as a tone-mapping primitive: it monotonically maps [0 , ∞) to [0 , 1) ,lifts shadows linearly near zero, and saturates highlights smoothly. We compose it with the adaptive offset: 
+
+fASE (x) = δ0 + (1 − δ0) · (1 − e−g·t) (6) 5where t = x/p 90 , δ0 is defined in Eq. 5, and g
+
+is the gain parameter controlling curve steepness. Rather than fixing g, we make it brightness-adaptive :
+
+g = g0 + c · ¯Y , (7) where ¯Y is the mean luminance of the input low-light image, g0 = 1 .0 is the base gain, and c is a global scaling constant. Brighter low-light images (higher ¯Y ) indicate less extreme underexposure, but the p90 normalisation provides less stretch for these images and can leave the pseudo-GT too dim. The c · ¯Y term compensates by increasing the curve gain in proportion to absolute bright-ness. The constant c is selected per dataset (not per scene); we use c = 3 on LOM and c = 4 on RealX3D [21] for ASE, and c = 0 on MipNeRF360-varying [2], where the training views already span a wide brightness range, making additional gain adaptation unnecessary. 
+
+Properties. (i) Bounded concave shape :
+
+fASE (0) = δ0 (adaptive black level), 
+
+lim x→∞ fASE (x) = 1 (natural saturation), and strictly concave on t > 0, jointly compressing highlights while lifting shadows. (ii) Smoothness :the exponential core is C∞, providing well-defined gradients everywhere without clamp discontinu-ities. (iii) Physical interpretation : 1 − e−gt can be interpreted as a simple absorption-like response of a sensor with gain g, connecting the curve to well-understood imaging physics. 
+
+## 3.5 Adaptive Poly3 (AP3) 
+
+ASE has a simple bounded form. A data-driven curve provides a complementary option that can better match the brightness statistics favoured by the L1+SSIM reconstruction objective. Through systematic evaluation of 22 parametric curve fam-ilies on the BlueHawaii scene (full leaderboard in Appendix A), a cubic polynomial achieved the best validation PSNR: 
+
+p(t) = 0 .072 t3 − 0.438 t2 + 0 .995 t, (8) where t = x/p 90 and δ0 = α(1 − r)β as before. The polynomial coefficients were fitted via 2D regression on paired low/GT images from the BlueHawaii scene and then frozen : they are never updated during 3DGS training and are not tuned per scene. Like ASE, AP3 incorporates a brightness-adaptive gain: 
+
+fAP3 (x) = clamp( δ0 + p(t) b, 0, 1) , (9) where b = 1 + c · ¯Y scales the polynomial out-put based on the mean luminance ¯Y , using the same constant c as in Eq. 7. Note that c enters at different positions in the two curves: inside the exponential for ASE ( g = g0 + c ¯Y ) and outside the polynomial for AP3 ( b = 1 + c ¯Y ), reflect-ing each curve’s natural parameterisation. For brighter low-light images, b > 1 steepens the curve to compensate for the reduced stretch from the 
+
+p90 percentile normalisation step. 
+
+Properties. (i) Near-linear initial slope : the coefficient of t is 0.995 ≈ 1, providing strong, nearly proportional lifting in the shadow-to-midtone range. (ii) Cubic rolloff : the negative quadratic term ( −0.438 t2) compresses highlights for t > 1, preventing over-saturation. (iii) Black-level lift : δ0 raises the entire curve, recovering detail where shadow compression is most severe. 
+
+Trade-off. ASE is naturally bounded. The AP3 polynomial is unbounded and may produce values outside [0 , 1] for extreme t; a final clamp is therefore applied, though it affects fewer than 1% of pixels across all scenes. 
+
+## 3.6 Integration into LITA-GS 
+
+Both ASE and AP3 are drop-in replacements 
+
+for the linear pseudo-GT (Eq. 1). The substitution modifies only the pseudo-GT computation in the training loop: 
+
+ˆIin = fASE (Ilow ) or ˆIin = fAP3 (Ilow ). (10) No changes are made to the network architecture, the PDM, the differentiable rasteriser, or the loss formulation. Figure 2 visualises the two curves alongside linear scaling. The percentile computa-tion and curve evaluation add less than 0.5 ms per iteration, which is negligible compared to the dominant ∼50 ms rasterisation step. 
+
+# 4 Experiments 
+
+## 4.1 Experimental Setup 
+
+Datasets. We evaluate on three benchmarks: 
+
+LOM [7] (5 indoor/outdoor low-light scenes with 6Fig. 2 Tone curve comparison (legend in panel). ASE and AP3 both provide nonlinear enhancement, while linear scaling clips at 1.0. The adaptive offset δ0 lifts the black level, with AP3’s near-linear slope providing stronger mid-tone lifting than ASE’s concave shape. 
+
+paired normal-light GT), RealX3D [21] (9 real-world low-light scenes; BlueHawaii used for AP3 coefficient fitting, 8 remaining scenes held out), and MipNeRF360-varying [2] (7 scenes with synthetically varied exposure). Per-scene lists are provided in Appendix E. 
+
+Metrics. We report PSNR ↑ for pixel-level fidelity, SSIM ↑ [40] for structural similarity, and LPIPS ↓ [52] for perceptual quality. 
+
+Implementation. We build on the LITA-GS [57] codebase with identical hyperparame-ters except for the pseudo-GT mode. The offset parameters α = 0.12 and β = 2.5 are fixed across all three benchmarks; AP3 polynomial coefficients are fitted on BlueHawaii and frozen. The brightness-adaptive gain c is selected per dataset: c = 3 /1 (ASE/AP3) on LOM, c = 4 /2
+
+on RealX3D, c = 0 on MipNeRF360-varying. No per-scene tuning is performed. LOM uses 5K iter-ations; RealX3D and MipNeRF360-varying use 15K iterations. 
+
+## 4.2 Main Results on LOM 
+
+Table 1 presents the full comparison on LOM. Our methods are evaluated at 5K iterations; prior baselines use their originally reported settings from Zhou et al [57]. 
+
+Key findings. (1) Both nonlinear curves sub-stantially outperform the linear baseline at only 5K iterations: AP3 achieves the highest mean PSNR (24.43 dB, +4.34 dB over LITA-GS †) and ASE achieves the highest mean SSIM (.850). (2) ASE and AP3 achieve similar mean-level performance despite their different mathemati-cal forms (within 0.17 dB PSNR and .002 SSIM), supporting the curve-agnostic hypothesis that the nonlinear mapping itself drives the improvement. (3) The brightness-adaptive gain is important for moderately dark scenes: on sofa , it raises both curves above 24 dB compared to under-brightened fixed-gain variants. (4) Per-scene, the two curves show complementary strengths (ASE leads on 
+
+buu , bike , shrub ; AP3 leads on chair ), while I2-NeRF ‡ retains sofa PSNR and LITA-GS (15K) leads bike SSIM. Qualitative examples are shown in Fig. 3. 
+
+## 4.3 Cross-Dataset Generalisation 
+
+To validate generalisation beyond LOM [7], we evaluate on two additional datasets with distinct scene content and different exposure conditions. 
+
+4.3.1 RealX3D (9 Low-light Scenes) 
+
+Table 2 compares our methods against prior work on the RealX3D low-light benchmark (9 scenes, 15K iterations, matching the training budget of LITA-GS [57]). We report average training-view and NVS metrics. Our reproduced baseline closely matches the published LITA-GS numbers (NVS PSNR 15.25 vs. 15.57 dB). AP3 ( c=2 ) achieves the best results across all six metrics, improving NVS PSNR by +3 .25 dB and LPIPS by −0.038 over our baseline. ASE ( c=4 ) also improves over the baseline ( +2 .57 dB NVS PSNR). Both methods outperform all prior baselines across the reported metrics. BlueHawaii was used for AP3 coefficient fitting; on the 8 held-out scenes, AP3 still achieves NVS PSNR 18 .02 dB, showing that the fitted coefficients generalise beyond the training scene. 
+
+4.3.2 MipNeRF360-varying (7 Scenes) 
+
+Table 3 reports results on seven scenes with synthetically varied exposure at 15K iterations, matching the RealX3D budget and the standard MipNeRF360-varying training convention. With the same offset parameters (α = 0 .12 , β = 2 .5) 
+
+as the other two datasets and c = 0 to reflect the varying-exposure regime, both AP3 and ASE 
+
+improve over the linear baseline on PSNR, SSIM, and LPIPS .
+
+Per-metric summary. Both curves improve over the linear baseline on all three metrics. ASE leads PSNR ( +1 .79 dB to 17 .95 ), SSIM ( +0 .026 
+
+to .595 ), and LPIPS (−0.035 to .363 ) at the grand-mean level; AP3 also improves over the baseline on all three ( +0 .92 dB PSNR, +0 .010 
+
+7Table 1 Comparison on the LOM dataset (PSNR ↑ / SSIM ↑ / LPIPS ↓). Prior methods (above the double line) use results from Zhou et al [57]; I2-NeRF ‡ denotes our reproduction (25K iterations); LITA-GS † denotes our reproduction at 5K iterations. Bold = best, underlined = second best.                                                                                                                                                                                                                                                                                          
+
+> buu chair sofa bike shrub Mean
+> Method PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓
+> Baseline Methods
+> NeRF [28] 7.51 .291 .448 6.04 .147 .594 6.28 .210 .568 6.35 .072 .623 8.03 .031 .680 6.84 .150 .582 3DGS [18] 7.74 .292 .459 6.26 .146 .761 6.21 .201 .918 6.38 .071 .822 8.74 .039 .604 7.07 .150 .713
+> 3DGS/NeRF + Enhancement
+> NeRF + Zero-DCE [12] 17.81 .833 .357 12.44 .684 .547 14.43 .787 .539 10.16 .468 .557 12.58 .282 .540 13.48 .610 .508 3DGS + Zero-DCE 18.86 .890 .191 13.24 .731 .349 14.23 .767 .586 10.56 .498 .500 13.26 .430 .272 14.03 .663 .380 3DGS + SCI [26] 18.33 .869 .184 11.51 .631 .406 12.98 .709 .603 8.93 .364 .554 12.63 .382 .277 12.88 .591 .405
+> Enhancement + 3DGS/NeRF
+> Zero-DCE + NeRF 17.90 .858 .376 12.58 .721 .460 14.45 .831 .419 10.39 .518 .464 12.32 .308 .481 13.53 .647 .440 Zero-DCE + 3DGS 17.92 .896 .179 12.94 .756 .303 14.42 .831 .356 10.54 .539 .401 13.10 .467 .229 13.78 .698 .294 SCI + 3DGS 7.95 .695 .501 21.77 .866 .350 9.99 .750 .452 13.67 .677 .324 18.67 .657 .153 14.41 .729 .356
+> End-to-End Methods
+> Aleth-NeRF [7] 20.22 .859 .315 20.93 .818 .468 19.52 .857 .354 20.46 .727 .499 18.24 .511 .448 19.87 .754 .417 LITA-GS [57] (15K) 20.59 .897 .175 22.60 .873 .223 20.43 .895 .268 22.75 .819 .282 19.35 .659 .217 21.14 .829 .233
+> I2-NeRF ‡[22] (25K) 22.09 .829 .221 23.53 .872 .287 26.29 .883 .231 21.93 .797 .286 19.20 .680 .184 22.61 .812 .241 LITA-GS †(5K) 20.32 .877 .204 20.48 .838 .287 18.70 .850 .232 22.51 .799 .321 18.44 .684 .245 20.09 .810 .258
+> Ours (LITA-GS + Scene-Adaptive Pseudo-GT)
+> ASE (c= 3 , 5K) 28.10 .942 .143 22.94 .875 .326 24.26 .920 .230 24.56 .802 .344 21.44 .710 .241 24.26 .850 .257
+> AP3 (c= 1 , 5K) 27.15 .941 .142 26.33 .892 .263 24.15 .918 .221 23.21 .798 .353 21.33 .689 .234 24.43 .848 .243
+
+Fig. 3 Qualitative comparison on LOM ( bike , buu , and chair scenes). Columns: low-light input, I 2-NeRF [22], LITA-GS [57], ASE (Ours), AP3 (Ours), and GT. The low-light input (left) is severely underexposed. The LITA-GS baseline (linear pseudo-GT) produces desaturated colours, while I 2-NeRF recovers structure with residual blur and dim colours. Our ASE (with brightness-adaptive gain, c = 3 ) and AP3 recover natural contrast and sharpness closest to the GT reference (right). Renders include a visualisation-only post-processing step (released in our code) for a minor LITA-GS denoiser edge artifact; this does not affect Table 1 metrics. 
+
+SSIM, −0.012 LPIPS). On this dataset, ASE has higher aggregate metrics than AP3, although the two remain close (within 0.87 dB on PSNR, .016 
+
+on SSIM, and .023 on LPIPS). This is consistent with the curve-agnostic hypothesis: once a reason-able nonlinear curve replaces the linear baseline, the specific curve shape has a secondary effect. At the LOM-style 5K budget, the structural and perceptual metrics on this dataset regress rela-tive to the linear baseline. The 15K budget is required to let the Gaussian density and texture detail converge enough for SSIM and LPIPS to recover, which is consistent with the standard MipNeRF360-varying ≥ 15 K iteration convention for this benchmark. Figure 4 shows qualitative examples on four RealX3D scenes. Across all three benchmarks, nonlinear pseudo-GT consistently outperforms the linear baseline on all three metrics. The unified offset configuration (α = 0 .12 , β = 2 .5) gener-alises without modification; only the dataset-level brightness gain c requires adaptation to the spe-cific exposure regime of each dataset. Figure 5 visualises per-scene PSNR on both RealX3D and MipNeRF360-varying, confirming that the improvement holds consistently across individual scenes rather than being concentrated in a small number of outliers. 8Table 2 Quantitative comparison on RealX3D low-light scenes (9 scenes, 15K iterations, single seed, s = 10 ). Results for prior methods are from Liu et al [21]. Best in bold , second best underlined. 
+
+Train NVS Method PSNR ↑ SSIM ↑ LPIPS ↓ PSNR ↑ SSIM ↑ LPIPS ↓
+
+3DGS [18] 6.58 .060 .656 6.66 .058 .659 Aleth-NeRF [7] 12.98 .450 .706 12.99 .445 .704 Luminance-GS [8] 10.89 .531 .640 10.05 .433 .708 LITA-GS [57] 15.63 .542 .483 15.57 .542 .488 I2-NeRF [22] 15.55 .584 .514 15.51 .568 .532 Ours (baseline) 15.53 .541 .435 15.25 .512 .455 Ours + ASE ( c=4 ) 18.13 .682 .410 17.82 .652 .419 Ours + AP3 ( c=2 ) 18.92 .688 .407 18.50 .658 .417        
+
+> Table 3 Results on MipNeRF360-varying (7 scenes, 15K iterations, single seed). All variants share the unified offset
+> (α= 0 .12 , β = 2 .5) ; baseline uses the linear pseudo-GT (Eq. 1), both AP3 and ASE use c= 0 (varying-exposure training views already span the brightness range). Best per metric within each scene is in bold . Both tone-curve methods improve over the baseline on PSNR, SSIM, and LPIPS at the grand-mean level.
+
+Baseline AP3 ASE Scene PSNR ↑ SSIM ↑ LPIPS ↓ PSNR ↑ SSIM ↑ LPIPS ↓ PSNR ↑ SSIM ↑ LPIPS ↓
+
+bicycle 15 .11 .512 .495 15 .11 .434 .565 15 .80 .475 .514 
+
+bonsai 14 .40 .446 .513 17 .22 .649 .307 17 .98 .648 .313 
+
+counter 15 .90 .617 .287 18 .35 .637 .298 19 .17 .659 .277 
+
+garden 19 .54 .629 .405 17 .94 .580 .425 19 .45 .608 .384 
+
+kitchen 20 .00 .667 .340 19 .37 .649 .366 19 .28 .642 .358 
+
+room 14 .65 .654 .296 17 .14 .672 .240 19 .30 .686 .243 
+
+stump 13 .51 .457 .451 14 .44 .431 .499 14 .69 .446 .452 
+
+Mean 16 .16 .569 .398 17 .08 .579 .386 17 .95 .595 .363 
+
+## 4.4 Ablation Studies 
+
+We summarise two ablations here and defer the full tables, figures, and per-scene numbers to Appendix C for completeness. 
+
+Offset sensitivity. A wide δ0 sweep on buu 
+
+(5K iterations, AP3, c = 1 ) shows that PSNR spans over 9 dB across the tested range, with the peak near δ0 ≈ 0.04 . The fixed offset 0.103 used by prior work is 4.42 dB below the peak and well inside the degradation region, while our adap-tive formula sets δ0 = 0 .064 on buu , only 1.00 dB from the optimum and recovering 3.42 dB over the fixed baseline. The full sweep curve and per-LOM-scene adaptive offsets (Table 6) are given in Appendix C.1. 
+
+Multi-scene hyperparameter ablation. 
+
+On four RealX3D development scenes (Choco-late, Cupcake, GearWorks, Laboratory) at 5K iterations, AP3 with α = 0 .12 achieves the best cross-scene mean ( 17 .29 dB, +2 .82 dB over base-line), motivating our choice of α = 0 .12 across all three benchmarks. A fixed-gain sweep for ASE shows g = 2 .0 outperforms both the conservative (g = 1 .0) and aggressive ( g ≥ 3.0) settings, moti-vating the brightness-adaptive g0 +c ¯Y formulation used in the main results. Full table (Table 7) is in Appendix C.2. 
+
+# 5 Analysis and Discussion 
+
+## 5.1 ASE vs. AP3: Curve Shape Analysis 
+
+With fixed gain (g = 1.0), ASE under-brightens midtones on moderately dark scenes. The brightness-adaptive gain (Eq. 7, g = g0 +c· ¯Y )resolves this by automatically increasing g for brighter inputs, lifting both methods on sofa to above 24 dB. On LOM, AP3 with c = 1 and ASE with c = 3 are closely matched: AP3 marginally leads mean PSNR (24.43 vs. 24.26 dB) and ASE marginally leads mean SSIM (.850 vs. .848). The two curves also show complementary per-scene strengths, as follows: 
+
+AP3’s near-linear slope. The linear coef-ficient of AP3 is 0.995 ≈ 1, meaning the curve is nearly proportional in the shadow-to-midtone range. This preserves relative brightness ordering. The property is useful for scenes where normal-isation already provides sufficient stretch, such 9Fig. 4 Qualitative comparison on RealX3D (4 scenes). Columns: low-light input (real low-light capture at the nearest training pose; RealX3D’s test split provides only normal-light captures), I 2-NeRF [22], LITA-GS [57], ASE (Ours), AP3 (Ours), and GT. Laboratory and GearWorks are extremely dark, yet ASE and AP3 recover recognisable structure and colour where I 2-NeRF and LITA-GS show colour casts. Chocolate and Cupcake demonstrate faithful colour restoration under moderate low-light conditions. 
+
+Fig. 5 Per-scene PSNR comparison across RealX3D and MipNeRF360-varying (legend in panel). (a) RealX3D (15K iter-ations, seed=10): AP3 leads PSNR on 7 of 9 scenes; ASE leads on Laboratory and BlueHawaii . (b) MipNeRF360-varying (15K iterations, seed=10): with the unified offset (α = 0 .12 , β = 2 .5) and c = 0 , both AP3 and ASE improve over the baseline on grand-mean PSNR (AP3 17 .08 , ASE 17 .95 vs. baseline 16 .16 dB). ASE leads all three grand-mean metrics; AP3 is lower by .016 SSIM and .023 LPIPS. Dashed lines indicate dataset-level mean PSNR. 
+
+as bike , and for scenes with severely compressed shadows, such as shrub .
+
+ASE’s adaptive concavity. With brightness-adaptive g, the exponential steepness self-calibrates: dark scenes ( ¯Y ≈ 0.03 ) receive 
+
+g ≈ 1.09 (gentle curve preserving dynamics), while moderate scenes ( ¯Y ≈ 0.07 ) receive g ≈ 1.20 
+
+(steeper curve compensating for insufficient p90 
+
+normalisation). This eliminates the prior under-brightening on sofa without requiring manual per-scene parameter tuning. We emphasise that these are within-LOM 
+
+per-scene observations. The cross-dataset picture (Section 4.3) shows AP3 leading mean PSNR on LOM and RealX3D [21] while ASE leads on MipNeRF360-varying [2]; Section 5.4 presents a unified interpretation showing that both curves improve over the linear baseline under a single universal offset (α = 0 .12 , β = 2 .5) with only dataset-level c adaptation. Table 4 summarises the property comparison of the two curves. 10 Table 4 Property comparison of ASE and AP3. Mip360v = MipNeRF360-varying. 
+
+Property ASE AP3 Curve family Exponential Cubic polynomial Smoothness C∞ C∞ (pre-clamp) Boundedness Natural [0 , 1) Requires clamp Physical basis Film response Data-driven Free params g, α, β α, β (coeffs. fixed) PSNR (LOM) 24.26 dB 24.43 dB 
+
+LPIPS (LOM) .257 .243 
+
+PSNR (RealX3D) 17.82 dB 18.50 dB 
+
+LPIPS (RealX3D) .419 .417 
+
+PSNR (Mip360v) 17.95 dB 17.08 dB SSIM (Mip360v) .595 .579 LPIPS (Mip360v) .363 .386     
+
+> Fig. 6 Bike scene: actual low →GT luminance mapping vs. pseudo-GT curves (legend in panel). The ground truth is nearly linear with zero intercept in the shadow region. The fixed Poly3 offset ( +0 .103 ) systematically over-brightens shadows, while the adaptive offset δ0= 0 .038 remains close to the GT mapping.
+
+## 5.2 Case Study: Scene-Adaptive Offset on bike 
+
+The bike scene illustrates why the adaptive offset is necessary for robust generalisation of nonlin-ear pseudo-GT across diverse scenes. Its ground truth preserves dark blacks: the actual low-to-GT mapping is nearly linear with zero intercept in the shadow region (Fig. 6). A fixed offset of +0 .103 
+
+(from the original fixed cubic curve) lifts the entire curve above the GT, causing the optimiser to learn artificially bright shadows. This manifests as a clear PSNR regression when using fixed-offset AP3 on this scene. The adaptive offset resolves this. With r =0.37 (the highest among all LOM [7] scenes), δ0 is reduced to 0.038 ( −63% ), keeping the curve close to the true mapping. This mechanism flips the result from a PSNR regression to an improvement, demonstrating that scene-adaptive calibration is needed to ensure the nonlinear framework gener-alises reliably across diverse scenes.                
+
+> Fig. 7 Pixel intensity distributions (KDE) on two rep-resentative scenes. Top :BlueHawaii (GT skew ≈0).
+> Bottom :Chocolate (GT skew ≈0.75 ). Linear scaling reduces skewness only through hard clamping. Both ASE and AP3 achieve smooth redistribution, with AP3 slightly closer to the GT shape.
+
+## 5.3 Distribution Reshaping Effect 
+
+A complementary view of why both curves work, and where they differ, is to examine how each pseudo-GT mode reshapes the pixel intensity dis-tribution (Fig. 7). Low-light inputs have a sharp peak near zero with extreme right skewness (skew 
+
+> +1 .6), whereas the GT distribution varies per scene (e.g. near-zero on BlueHawaii , moderately right-skewed on Chocolate ). Linear scaling reduces skewness only via hard clamping, losing gradient signal for clipped pixels; ASE and AP3 instead achieve smooth reshaping through their nonlinear shapes, producing pseudo-GT distributions that match the per-scene GT skewness within ±0.3.Appendix D reports the per-scene skewness val-ues and provides the full L1-gradient-uniformity analysis. 
+
+## 5.4 Unified Interpretation: Nonlinear Mapping as the Primary Factor 
+
+Across all three benchmarks, replacing the linear pseudo-GT with either nonlinear curve consis-tently improves all three metrics, while the two curves achieve similar performance despite their different mathematical forms. This supports aclear interpretation: the nonlinear mapping itself is the primary factor driving improve-ment , while the specific curve shape plays asecondary role. • On real low-light captures (LOM, RealX3D), where all training views are consistently underexposed, both curves sub-stantially outperform the linear baseline: 
+
++4 .17 dB (ASE) / +4 .34 dB (AP3) on LOM and +2 .57 dB (ASE) / +3 .25 dB (AP3) on RealX3D. On both datasets the two curves 11 remain within 0.68 dB of each other on grand-mean PSNR. • On varying-exposure data (MipNeRF360-varying), where training views already span a wide brightness range, the improvement is smaller but still consistent across all three met-rics: PSNR ( +0 .92 to +1 .79 dB), SSIM ( +0 .010 
+
+to +0 .026 ), and LPIPS ( −0.012 to −0.035 ). The two curves again remain close (within 
+
+0.87 dB on PSNR). The practical configuration is straightforward: the offset (α = 0 .12 , β = 2 .5) is fixed across all benchmarks, and c is the only dataset-level adaptation ( c > 0 for consistently underexposed captures, c = 0 for varying-exposure data). Once c
+
+is selected, either nonlinear curve outperforms the linear baseline on all three metrics. 
+
+## 5.5 Limitations 
+
+Coefficient transferability. The AP3 polyno-mial coefficients were fitted on a single scene (BlueHawaii) using paired GT data. They gen-eralise well across 12 scenes on LOM and MipNeRF360-varying plus 8 held-out RealX3D scenes (20 additional scenes in total). Their opti-mality on significantly different scene types is not guaranteed, and a more robust approach would fit coefficients on a larger and more diverse dataset. 
+
+Training budget on varying-exposure data. The improvement on all three metrics for MipNeRF360-varying requires the 15K iteration budget shared with RealX3D; at the LOM-style 5K budget, the SSIM and LPIPS metrics regress relative to the linear baseline. A likely cause is Gaussian density convergence: the structural (SSIM) and perceptual (LPIPS) terms are sen-sitive to texture detail that requires more steps to fill in on this dataset. Single-seed evaluation is reported on the seven MipNeRF360-varying scenes; multi-seed validation is left to future work. 
+
+Dataset-adaptive gain c. The brightness-adaptive gain coefficient c must be set per dataset: 
+
+c > 0 for consistently underexposed captures and 
+
+c = 0 for varying-exposure captures. A fully auto-matic selector based on global input statistics (e.g. the fraction of pixels above p90 ) would eliminate this manual step but is left to future work. 
+
+# 6 Conclusion 
+
+This paper addresses the overlooked role of pseudo ground-truth design in low-light 3D Gaussian Splatting. We show that replacing the com-monly used linear pseudo-GT with nonlinear tone curves consistently improves reconstruction qual-ity across three benchmarks covering 21 scenes, without modifying the underlying network archi-tecture. The key insight is that the nonlinear map-ping itself is the primary factor: two structurally different curves (ASE and AP3) achieve similar gains over the linear baseline (up to +4.34 dB PSNR on LOM and +3.25 dB on RealX3D), con-firming that the improvement is curve-agnostic rather than tied to a specific parametrisation. These results underscore a broader lesson for low-light novel view synthesis: carefully designed supervision signals can be as impactful as archi-tectural innovations, yet such signals remain underexplored. A current limitation is that the brightness-adaptive gain c must be selected per dataset; a fully automatic selector would further simplify deployment. As low-light 3DGS methods mature, automatic and scene-aware pseudo-GT generation may become an important component of robust and practical reconstruction pipelines. 
+
+Acknowledgements. The authors thank Wen-han Yang for helpful discussions and the organ-isers of the NTIRE Workshop at CVPR 2026 for providing the dataset and baseline. 
+
+# Statements and Declarations 
+
+Funding This work was supported in part by Shenzhen Science and Technology Program under Grant SGDX20240115111759002; in part by the Meituan Academy of Robotics Shenzhen; and in part by Shenzhen Association for Science and Technology under Grant XHXS2025-003. 
+
+Author contributions Mingzhe Lyu: concep-tualisation, methodology, software, validation, formal analysis, investigation, visualisation, and writing (original draft). Jinqiang Cui: method-ology, supervision, project administration, and writing (review and editing). Hong Zhang: super-vision, funding acquisition, project administra-tion, and writing (review and editing). 
+
+Competing interests The authors declare that they have no conflict of interest. 12 Data availability The datasets used in this study are publicly available: LOM [7], RealX3D [21], and MipNeRF360-varying [2]. Source code reproducing all reported experiments is available at https://github.com/lvmingzhe/ adaptiveToneCurve. 
+
+# References 
+
+[1] Banterle F, Artusi A, Debattista K, et al (2017) Advanced High Dynamic Range Imag-ing, 2nd edn. CRC Press, https://doi.org/10. 1201/9781315119526 [2] Barron JT, Mildenhall B, Verbin D, et al (2022) Mip-NeRF 360: Unbounded anti-aliased neural radiance fields. In: Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 5470–5479, https://doi.org/10. 1109/CVPR52688.2022.00539 [3] Cai Y, Bian H, Lin J, et al (2023) Retinex-former: One-stage retinex-based transformer for low-light image enhancement. In: Pro-ceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), pp 12504–12513, https://doi.org/10.1109/ ICCV51070.2023.01149 [4] Cao Z, Wang Z, Zhang Y, et al (2025) Enhancing 3d gaussian splatting for low-quality images: Semantically guided training and unsupervised quality assessment. The Visual Computer 41:5815–5833. https://doi. org/10.1007/s00371-024-03754-z [5] Chen Z, Lu Z, Ma D, et al (2025) EvHDR-GS: Event-guided HDR video reconstruction with 3D gaussian splatting. In: Proceedings of the AAAI Conference on Artificial Intel-ligence, pp 2367–2375, https://doi.org/10. 1609/aaai.v39i3.32237 [6] Cui Z, Li K, Gu L, et al (2022) You only need 90k parameters to adapt light: A light weight transformer for image enhancement and exposure correction. In: Proceedings of the British Machine Vision Conference (BMVC), p 238 [7] Cui Z, Gu L, Sun X, et al (2024) Aleth-NeRF: Illumination adaptive NeRF with conceal-ing field assumption. In: Proceedings of the AAAI Conference on Artificial Intelligence, pp 1435–1444, https://doi.org/10.1609/aaai. v38i2.27908 [8] Cui Z, Chu X, Harada T (2025) Luminance-GS: Adapting 3d gaussian splatting to challenging lighting conditions with view-adaptive curve adjustment. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 26472–26482, https://doi.org/10.1109/ CVPR52734.2025.02465 [9] Dong H, Cheng S, Fang T, et al (2025) DED-Net: Multi-scale fusion and illumination-guided enhance-ment for low-light image restoration. The Visual Computer 41:9243–9255. https://doi.org/10.1007/s00371-025-03924-7 [10] Drago F, Myszkowski K, Annen T, et al (2003) Adaptive logarithmic mapping for dis-playing high contrast scenes. In: Computer Graphics Forum, pp 419–426, https://doi. org/10.1111/1467-8659.00689 [11] Durand F, Dorsey J (2002) Fast bilateral fil-tering for the display of high-dynamic-range images. In: ACM SIGGRAPH 2002 Papers, pp 257–266, https://doi.org/10.1145/566570. 566574 [12] Guo C, Li C, Guo J, et al (2020) Zero-reference deep curve estimation for low-light image enhancement. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 1780– 1789, https://doi.org/10.1109/CVPR42600. 2020.00185 [13] Hable J (2010) Uncharted 2: HDR lighting. Game Developers Conference (GDC) [14] Huang B, Yu Z, Chen A, et al (2024) 2D gaussian splatting for geometrically accurate radiance fields. In: ACM SIGGRAPH 2024 Conference Papers, pp 1–11, https://doi.org/ 10.1145/3641519.3657428 [15] Huang X, Zhang Q, Feng Y, et al (2022) HDR-NeRF: High dynamic range neural radiance fields. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 18377–18387, https://doi.org/10.1109/ CVPR52688.2022.01785 [16] Jiang H, Luo A, Liu X, et al (2024) Ligh-tenDiffusion: Unsupervised low-light image enhancement with latent-retinex diffusion 13 models. In: Computer Vision – ECCV 2024. Springer, pp 161–179, https://doi.org/10. 1007/978-3-031-73195-2_10 [17] Jiang Y, Gong X, Liu D, et al (2021) Enlight-enGAN: Deep light enhancement without paired supervision. IEEE Transactions on Image Processing 30:2340–2349. https://doi. org/10.1109/TIP.2021.3051462 [18] Kerbl B, Kopanas G, Leimkühler T, et al (2023) 3d gaussian splatting for real-time radiance field rendering. ACM Transac-tions on Graphics (TOG) 42(4):139:1–139:14. https://doi.org/10.1145/3592433 [19] Kumar A, Ambasamduram RN (2026) l2dgs :Low-light dynamic gaussian splatting. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 19096–19106 [20] Li C, Guo C, Loy CC (2022) Learning to enhance low-light image via zero-reference deep curve estimation. IEEE Transactions on Pattern Analysis and Machine Intelli-gence 44(8):4225–4238. https://doi.org/10. 1109/TPAMI.2021.3063604 [21] Liu S, Bao C, Cui Z, et al (2025) RealX3D: A physically-degraded 3d benchmark for multi-view visual restoration and reconstruction. arXiv preprint arXiv:251223437 https://doi. org/10.48550/arXiv.2512.23437 [22] Liu S, Gu L, Cui Z, et al (2025) I2-NeRF: Learning neural radiance fields under physically-grounded media interactions. In: Advances in Neural Information Processing Systems (NeurIPS) [23] Liu S, Xu X, Liu Y, et al (2026) Components-balanced guided diffusion for retinex-based low-light image enhancement. The Visual Computer 42(3). https://doi.org/10.1007/ s00371-026-04366-5 [24] Liu Z, Meng Q, Lu D, et al (2025) GloNeRF: Boosting NeRF capabilities and multi-view consistency in low-light environments. Com-puters & Graphics 128:104209. https://doi. org/10.1016/j.cag.2025.104209 [25] Lu T, Yu M, Xu L, et al (2024) Scaffold-GS: Structured 3D gaussians for view-adaptive rendering. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 20654–20664, https: //doi.org/10.1109/CVPR52733.2024.01952 [26] Ma L, Ma T, Liu R, et al (2022) Toward fast, flexible, and robust low-light image enhance-ment. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 5637–5646, https: //doi.org/10.1109/CVPR52688.2022.00555 [27] Mantiuk R, Daly S, Kerofsky L (2008) Dis-play adaptive tone mapping. In: ACM SIG-GRAPH 2008 Papers, pp 1–10, https://doi. org/10.1145/1399504.1360667 [28] Mildenhall B, Srinivasan PP, Tancik M, et al (2020) NeRF: Representing scenes as neu-ral radiance fields for view synthesis. In: European Conference on Computer Vision (ECCV). Springer, pp 405–421, https://doi. org/10.1007/978-3-030-58452-8_24 [29] Mildenhall B, Hedman P, Martin-Brualla R, et al (2022) Nerf in the dark: High dynamic range view synthesis from noisy raw images. In: Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recog-nition (CVPR), pp 16169–16178, https://doi. org/10.1109/CVPR52688.2022.01571 [30] Pan H, Gao B, Wang X, et al (2024) DICNet: Achieve low-light image enhancement with image decomposition, illumination enhance-ment, and color restoration. The Visual Computer 40:6779–6795. https://doi.org/10. 1007/s00371-024-03262-0 [31] Qu Z, Xu K, Hancke GP, et al (2024) LuSh-NeRF: Lighting up and sharpening NeRFs for low-light scenes. In: Advances in Neural Information Processing Systems (NeurIPS), https://doi.org/10.52202/079017-3486 [32] Reinhard E, Stark M, Shirley P, et al (2002) Photographic tone reproduction for digital images. ACM Transactions on Graph-ics (TOG) 21(3):267–276. https://doi.org/ 10.1145/566654.566575 [33] Shi Y, Liu D, Zhang L, et al (2024) MaCo: Efficient unsupervised low-light image enhancement via illumination-based magnitude control. The Visual Computer 40:8481–8499. https://doi.org/10.1007/ s00371-023-03249-3 [34] Singh K, Parihar AS (2024) Illumina-tion estimation for nature preserving low-light image enhancement. The Visual Com-puter 40:121–136. https://doi.org/10.1007/ s00371-023-02770-9 14 [35] Wang H, Xu X, Xu K, et al (2023) Light-ing up NeRF via unsupervised decompo-sition and enhancement. In: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), pp 12632– 12641, https://doi.org/10.1109/ICCV51070. 2023.01161 [36] Wang H, Huang J, Yang L, et al (2025) LLGS: Unsupervised gaussian splatting for image enhancement and reconstruction in pure dark environment. In: 2025 IEEE International Conference on Robotics and Automation (ICRA), https://doi.org/10. 1109/ICRA55743.2025.11127924 [37] Wang M, Huang X, Zhou G, et al (2025) Bright-NeRF: Brightening neural radiance field with color restoration from low-light RAW images. In: Proceedings of the AAAI Conference on Artificial Intelligence, pp 7817–7825, https://doi.org/10.1609/aaai. v39i8.32842 [38] Wang S, Wu G, Wang J, et al (2025) SBC-Net: Semantic-guided brightness curve esti-mation network for low-light image enhance-ment. The Visual Computer 41:3867–3882. https://doi.org/10.1007/s00371-024-03636-4 [39] Wang T, Zhang K, Shen T, et al (2023) Ultra-high-definition low-light image enhance-ment: A benchmark and transformer-based method. In: Proceedings of the AAAI Confer-ence on Artificial Intelligence, pp 2654–2662, https://doi.org/10.1609/aaai.v37i3.25364 [40] Wang Z, Bovik AC, Sheikh HR, et al (2004) Image quality assessment: From error visi-bility to structural similarity. IEEE Trans-actions on Image Processing 13(4):600–612. https://doi.org/10.1109/TIP.2003.819861 [41] Wei C, Wang W, Yang W, et al (2018) Deep retinex decomposition for low-light enhance-ment. In: British Machine Vision Conference (BMVC) [42] Wu W, Weng J, Zhang P, et al (2022) URetinex-Net: Retinex-based deep unfolding network for low-light image enhancement. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 5891–5900, https://doi.org/10. 1109/CVPR52688.2022.00581 [43] Xu X, Wang R, Fu CW, et al (2022) SNR-aware low-light image enhancement. In: Pro-ceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 17693–17703, https://doi.org/ 10.1109/CVPR52688.2022.01719 [44] Yang Z, Gao X, Zhou W, et al (2024) Deformable 3D gaussians for high-fidelity monocular dynamic scene reconstruction. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 20331–20341, https://doi.org/ 10.1109/CVPR52733.2024.01922 [45] Ye S, Dong ZH, Hu Y, et al (2024) Gaussian in the dark: Real-time view synthesis from inconsistent dark images using gaussian splatting. Computer Graph-ics Forum 43(7):e15213. https://doi.org/10. 1111/cgf.15213 [46] Yi X, Xu H, Zhang H, et al (2025) Diff-Retinex++: Retinex-driven reinforced diffu-sion model for low-light image enhancement. IEEE Transactions on Pattern Analysis and Machine Intelligence 47(8):6823–6841. https: //doi.org/10.1109/TPAMI.2025.3563612 [47] Yin Y, Wang Z, Zhang Y, et al (2026) Light ’em up: Enabling few-shot low-light 3D gaussian splatting with multi-scale explicit retinex illumination decoupling. arXiv preprint arXiv:260424053 [48] Yu X, Li H, Yang H (2023) Two-stage image decomposition and color regulator for low-light image enhancement. The Visual Computer 39:4165–4175. https://doi.org/10. 1007/s00371-022-02582-3 [49] Yu Z, Chen A, Huang B, et al (2024) Mip-Splatting: Alias-free 3d gaussian splatting. In: Proceedings of the IEEE/CVF Confer-ence on Computer Vision and Pattern Recog-nition (CVPR), pp 19447–19456, https://doi. org/10.1109/CVPR52733.2024.01839 [50] Zamir SW, Arora A, Khan SH, et al (2020) Learning enriched features for real image restoration and enhancement. In: European Conference on Computer Vision (ECCV), pp 492–511, https://doi.org/10. 1007/978-3-030-58595-2_30 [51] Zhang J, Wang H, Wu X, et al (2024) Invertible network for unpaired low-light 15 image enhancement. The Visual Com-puter 40:109–120. https://doi.org/10.1007/ s00371-023-02769-2 [52] Zhang R, Isola P, Efros AA, et al (2018) The unreasonable effectiveness of deep features as a perceptual metric. In: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), pp 586–595, https://doi.org/10.1109/CVPR.2018.00068 [53] Zhang T, Huang K, Zhi W, et al (2024) DarkGS: Learning neural illumination and 3D gaussians relighting for robotic explo-ration in the dark. In: 2024 IEEE/RSJ Inter-national Conference on Intelligent Robots and Systems (IROS). IEEE, pp 12864– 12871, https://doi.org/10.1109/IROS58592. 2024.10802684 [54] Zhang X, Zhang L (2026) Enhancing low-light image quality: A multi-granularity memory approach with RetinexMemory. The Visual Computer 42(3). https://doi.org/10. 1007/s00371-026-04375-4 [55] Zhang Y, Zhang J, Guo X (2019) Kin-dling the darkness: A practical low-light image enhancer. In: Proceedings of the 27th ACM International Conference on Multime-dia, pp 1632–1640, https://doi.org/10.1145/ 3343031.3350926 [56] Zhang Y, Guo X, Ma J, et al (2021) Beyond brightening low-light images. International Journal of Computer Vision 129(4):1013–1037. https://doi.org/10.1007/ s11263-020-01407-x [57] Zhou H, Dong W, Chen J (2025) LITA-GS: Illumination-agnostic novel view syn-thesis via reference-free 3d gaussian splat-ting and physical priors. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pp 21580–21589, https://doi.org/10.1109/ CVPR52734.2025.02010 
+
+# A Full Curve Family Search 
+
+This appendix reports the complete leaderboard from the 22-curve search referenced in Section 4.4. The AP3 cubic adopted in our framework was selected from this systematic search. 
+
+Setup. Each candidate curve was trained on the BlueHawaii scene at half-resolution for 5K iterations with identical optimiser, denoiser, and tonemapper settings. A fixed offset of +0 .103 was applied uniformly across all candidates (the scene-adaptive δ0 in AP3 was introduced afterwards; see observation (3) below). Curves were ranked by half-resolution PSNR / SSIM / LPIPS on the held-out test views. The softexp baseline is included as the reference point for ∆PSNR. 
+
+Results. Table 5 presents all 22 candidate curves plus the softexp baseline (23 rows in total). 
+
+fitted_cubic (rank 1) is the curve adopted by our AP3 method. 
+
+Three observations. (1) The space of effec-tive nonlinear pseudo-GT curves is broad. 16 of 22 candidates beat the softexp reference on PSNR, indicating that the benefit of nonlin-ear pseudo-GT is not tied to a specific curve family. This supports the curve-agnostic finding reported in the main paper: the nonlinear map-ping itself, rather than any particular parametri-sation, is the primary factor driving improvement. (2) Classical tone-mapping operators form a tight cluster. Ranks 2–6 cluster within 22 .28 –22 .39 dB (+1 .2 dB over the baseline) and contain well-known operators (ACES filmic , Reinhard , log ,
+
+power , exp_plateau ). This confirms that classi-cal HDR tone-mapping insights transfer to the pseudo-GT regime, but classical curves do not reach the top. (3) The fitted cubic dominates by a clear margin. fitted_cubic separates from the cluster by +0 .46 dB on PSNR and, more impor-tantly, by +0 .068 on SSIM (vs. rank 2) and 
+
+−0.024 on LPIPS (vs. rank 4). Its cubic shape, regressed directly from paired low/normal-light data, captures scene statistics that no paramet-ric family in our search reaches. Our AP3 method (Section 3.5) adopts this curve shape and fur-ther replaces the fixed offset ( +0 .103 ) with the scene-adaptive offset δ0 = α(1 − r)β .
+
+Failure cases. Curves at ranks 19–23 ( arc-tan , bezier3 , piecewise3 , hable , richards ) lose more than 5 dB on PSNR. Hable and piecewise3 produce 16 Table 5 Complete curve family search on BlueHawaii (half-resolution, 5K iterations, all 22 candidate curves + softexp baseline). ∆PSNR is computed relative to the softexp baseline. The top-ranked fitted_cubic is the curve adopted by AP3 in the main paper. Ranks 18–23 correspond to curves that fail to beat the baseline on PSNR; ranks 19–23 in particular illustrate that poor curve choices can lose more than 5 dB. 
+
+Rank Curve PSNR ↑ SSIM ↑ LPIPS ↓ ∆PSNR ∆SSIM 1 fitted_cubic (AP3) 22.85 0.733 0.312 +1.76 +0.087 
+
+2 exp_plateau 22.39 0.665 0.340 +1.30 +0.018 3 power_softexp 22.34 0.662 0.342 +1.25 +0.015 4 log_curve 22.32 0.660 0.336 +1.23 +0.013 5 aces_filmic 22.31 0.663 0.336 +1.21 +0.017 6 reinhard 22.28 0.660 0.343 +1.19 +0.014 7 softexp_gamma 22.11 0.658 0.342 +1.02 +0.011 8 rational 22.11 0.660 0.337 +1.02 +0.013 9 poly5_origin 22.06 0.656 0.349 +0.97 +0.010 10 double_exp 22.02 0.653 0.349 +0.93 +0.006 11 gamma 22.00 0.657 0.351 +0.91 +0.010 12 sinh_ratio 21.99 0.655 0.351 +0.90 +0.009 13 hybrid 21.79 0.656 0.352 +0.70 +0.009 14 poly3_origin 21.77 0.652 0.344 +0.68 +0.006 15 softexp_mod 21.53 0.651 0.352 +0.44 +0.005 16 sqrt_blend 21.51 0.651 0.357 +0.42 +0.004 17 softexp (baseline) 21.09 0.646 0.343 – –18 tanh_curve 20.92 0.639 0.360 −0.17 −0.008 
+
+19 arctan_curve 16.03 0.628 0.334 −5.06 −0.019 
+
+20 bezier3 15.31 0.427 0.417 −5.78 −0.219 
+
+21 piecewise3 13.37 0.475 0.461 −7.72 −0.172 
+
+22 hable 7.79 0.165 0.726 −13 .30 −0.482 
+
+23 richards 3.59 0.357 1.024 −17 .50 −0.289 
+
+mid-range steepening that crosses the GT distri-bution, and richards introduces a near-flat plateau region that collapses dynamic range. These cases illustrate that curve choice is not neutral: apoorly-shaped pseudo-GT curve can substantially degrade reconstruction below the linear baseline. 
+
+Classical operators: success vs. failure. 
+
+Two of the classical tone-mapping operators reviewed in Section 2, Reinhard [32] and Hable’s filmic curve [13], appear in this leaderboard with sharply different outcomes. Reinhard reaches rank 6 (+1 .19 dB over the baseline) and falls within the top tone-mapping cluster, while hable 
+
+collapses to rank 22 ( −13 .30 dB). The mecha-nism is direction-dependent: Reinhard’s “com-press highlights, lift midtones” behaviour trans-fers cleanly to the inverse-tone-mapping setting (mapping low-light inputs to bright targets), whereas Hable’s strong toe lift and S-curve mid-section, designed for HDR-to-LDR display com-pression, drive already-dim inputs further down when applied in the reverse direction. This con-trast reinforces the broader message: “classical” status alone does not guarantee suitability, and curve-shape characteristics rather than prove-nance determine whether an operator transfers across domains. 
+
+# B Qualitative Results on MipNeRF360-varying 
+
+Figure 8 shows qualitative reconstructions on five MipNeRF360-varying scenes ( bicycle , bonsai ,
+
+counter , room , stump ) under the same configura-tion as Table 3: 15K iterations, single seed (s=10), unified offset (α = 0 .12 , β = 2 .5) , brightness-adaptive gain c = 0. The columns show the low-light training input, the linear-pseudo-GT baseline, AP3, ASE, and a normal-light refer-ence. AP3 and ASE recover sharper structure and more natural colour than the linear base-line in shadow-dominated regions; both methods occasionally retain residual colour casts in highly underexposed inputs, consistent with the mixed 17 PSNR/SSIM but consistently improved LPIPS reported in Table 3. 
+
+# C Ablation Studies 
+
+This section collects the ablations referenced from Section 4.4: the offset sensitivity sweep that validates the adaptive formula (§C.1) and the multi-scene RealX3D hyperparameter abla-tion that selects α = 0 .12 for AP3 and motivates the brightness-adaptive gain for ASE (§C.2). 
+
+## C.1 Offset Sensitivity and Adaptive Calibration 
+
+To quantify the impact of the black-level off-set δ0 on reconstruction quality and verify that our adaptive formula lands near the optimum, we sweep δ0 over a wide range on the buu scene while keeping all other settings identical (5K iter-ations, AP3 curve, brightness-adaptive gain c = 1 ). Figure 9 plots PSNR as a function of the offset. Three observations follow: (1) Offset is a high-leverage parameter. The PSNR spread across the swept range is 9.10 dB (from 19.04 to 28.14), con-firming that δ0 is a first-order determinant of reconstruction quality. (2) A single fixed offset is fundamentally limited. The prior fixed value of 0.103 lies well inside the degradation region on 
+
+buu , trailing the peak by 4.42 dB. (3) The adap-tive formula tracks the peak. Driven purely by the scene statistic r, our adaptive offset automati-cally selects δ0 = 0 .064 on buu , only 1.00 dB below the sweep optimum, and recovers 3.42 dB over the fixed baseline. Table 6 reports the adaptive offset values selected for each LOM scene, showing the auto-matic per-scene differentiation produced by the same global hyperparameters (α, β ). The same 
+
+(α = 0 .12 , β = 2 .5) values are used unchanged on MipNeRF360-varying (Section 4.3); the data-regime knob there is the brightness-adaptive gain 
+
+c, set to 0 because varying-exposure training views already span a wide brightness range. 
+
+## C.2 Multi-Scene Hyperparameter Ablation 
+
+We ablate the key hyperparameters across 4RealX3D development scenes (Chocolate, Cup-cake, GearWorks, Laboratory) at 5K iterations        
+
+> Table 6 Adaptive offset δ0per LOM scene ( α= 0 .12 ,β= 2 .5). The offset automatically reduces for scenes with well-preserved shadows (large r) and remains higher for crushed shadows (small
+> r), producing scene-specific calibration from a single global formula.
+
+Scene p90 r δ0 (adaptive) bike 0.043 0.37 0.038 
+
+buu 0.155 0.22 0.064 
+
+chair 0.082 0.17 0.075 
+
+shrub 0.073 0.12 0.087 
+
+sofa 0.125 0.26 0.055           
+
+> Table 7 Cross-scene ablation on 4 RealX3D development scenes (mean PSNR ↑/ SSIM ↑, 5K iter.). AP3 varies offset magnitude α; ASE varies fixed gain g(i.e. c= 0 in the brightness-adaptive gain formula) to identify the operating range before adopting brightness-adaptive gain. AP3 α= 0 .12
+> achieves the best unified performance.
+
+Config Mean PSNR Mean SSIM ∆ PSNR Baseline 14.48 .500 –
+
+AP3 α = 0 .12 17.29 .651 +2.82 
+
+AP3 α = 0 .20 17.03 .647 +2.56 AP3 α = 0 .30 15.93 .625 +1.45 ASE g = 1 .0 16.60 .641 +2.12 ASE g = 2 .0 17.25 .607 +2.78 ASE g = 3 .0 16.05 .594 +1.57 ASE g = 4 .0 15.43 .639 +0.95 
+
+each. Table 7 shows the cross-scene average results for AP3 (varying α) and ASE (varying g). 
+
+Key findings. (1) For AP3, α = 0 .12 is the best offset on RealX3D development scenes (17.29 dB, +2.82 dB over baseline). We adopt 
+
+α = 0 .12 across both curves and all three bench-marks; c serves as the only dataset-level adapta-tion parameter. (2) For ASE, the fixed-gain sweep shows that g = 2 .0 outperforms both the conser-vative ( g = 1 .0) and aggressive ( g ≥ 3.0) settings, motivating the brightness-adaptive g0 +c ¯Y formu-lation. (3) Aggressive parameters (large α or g)help dark scenes like GearWorks but hurt brighter scenes like Chocolate and Laboratory, reinforcing the data-adaptive view. 18 Fig. 8 Qualitative comparison on MipNeRF360-varying (5 scenes, 15K iterations, seed=10, α = 0 .12 , c = 0 ). Columns: low-light input, linear-pseudo-GT baseline, AP3 (ours), ASE (ours), normal-light reference.         
+
+> Fig. 9 Offset sensitivity sweep on buu . PSNR varies by over 9 dB across the tested range, with a clear peak near
+> δ0≈0.04 . Our adaptive offset (star marker, δ0= 0 .064 )lands close to the peak, while the fixed offset used by prior work (cross marker, δ0= 0 .103 ) sits 4.42 dB below the peak and within the degradation region.
+
+# D Distribution Reshaping Effect 
+
+This section provides per-scene skewness num-bers and the L1-gradient-uniformity argument complementing the KDE visualisation in Fig. 7. The GT distribution varies across scenes: 
+
+BlueHawaii has near-zero skewness (−0.01 ), while Chocolate retains moderate right skewness (+0 .75 ) due to its darker scene content. Both curves adapt to both cases: on BlueHawaii, ASE and AP3 reduce skewness from +22 .22 to +0 .33 
+
+and +0 .28 respectively; on Chocolate, from +1 .64 
+
+to +1 .09 and +1 .08 .This reshaping impacts the L1 loss land-scape: when the pseudo-GT distribution is less skewed, the per-pixel L1 gradients are distributed more uniformly across the intensity range, which may explain the higher final quality observed in Table 1. 19 E Dataset and Implementation Details 
+
+Per-scene lists. LOM: bike , buu , chair , shrub ,
+
+sofa . RealX3D: BlueHawaii , Chocolate , Cupcake ,
+
+GearWorks , Laboratory , MilkCookie , Popcorn ,
+
+Sculpture , Ujikintoki . MipNeRF360-varying: bicy-cle , bonsai , counter , garden , kitchen , room , stump .
+
+Metrics. We use PSNR, SSIM [40], and LPIPS [52] with an AlexNet backbone. 
+
+Iteration budget rationale. LOM uses 5K iterations to isolate the pseudo-GT contribu-tion, matching the LITA-GS † 5K reproduction baseline in Table 1. RealX3D and MipNeRF360-varying use 15K iterations, matching the original LITA-GS RealX3D protocol and the standard MipNeRF360-varying training convention. This budget lets the structural (SSIM) and percep-tual (LPIPS) metrics converge on texture-rich, varying-exposure scenes. 
+
+Brightness-adaptive gain c. On LOM, c = 3 
+
+for ASE and c = 1 for AP3; on RealX3D, c = 4 
+
+for ASE and c = 2 for AP3; on MipNeRF360-varying, c = 0 for both because varying-exposure training views already span a wide brightness range and additional gain adaptation provided no measurable benefit on this data. 20

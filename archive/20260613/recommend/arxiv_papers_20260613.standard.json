@@ -1,0 +1,461 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-13T20:50:48.087806+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 5,
+    "deep_cap": 7,
+    "deep_selected": 5,
+    "quick_candidates": 6,
+    "quick_skim_target": 12,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2606.07288v1",
+      "source": "arxiv",
+      "title": "ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation",
+      "abstract": "Reconstructing surface meshes from multi-view images has remained a core challenge in recent years. Most existing methods, whether implicit or explicit, depend on intermediate representations and post-processing steps like Marching Cubes or TSDF fusion, often resulting in artifacts and fragmented geometry. Directly optimizing explicit meshes is a promising approach. However, it presents two critical challenges. The first is how to adaptively refine mesh topology to capture detail without introducing degenerate faces. The second is how to maintain consistent UV coordinates for high-fidelity texturing as the mesh structure evolves. To overcome these, we propose ExMesh, a novel framework that directly optimizes explicit meshes by integrating differentiable optimization with discrete topology updates. Specifically, we introduce an adaptive vertex splitting and merging strategy, along with real-time UV maintenance, to enable coarse-to-fine optimization while preserving geometric integrity. To our knowledge, ExMesh is the first framework to seamlessly integrate discrete topology operations into a continuous differentiable optimization pipeline. Extensive experiments demonstrate that ExMesh achieves a balance among accuracy, computational efficiency, and mesh conciseness.",
+      "authors": [
+        "Chuanjin Fan",
+        "Lifan Wu",
+        "Wenjie Chang",
+        "Hanzhi Chang",
+        "Wenfei Yang",
+        "Tianzhu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-05T13:59:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.07288v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly reconstructs explicit meshes from multi-view images, a core 3D generation task",
+      "llm_evidence_cn": "直接从多视图图像重建显式网格，属于核心3D生成任务",
+      "llm_evidence": "直接从多视图图像重建显式网格，属于核心3D生成任务",
+      "canonical_evidence": "直接从多视图图像重建显式网格，属于核心3D生成任务",
+      "llm_tldr_en": "ExMesh directly optimizes explicit meshes with topology adaptation and consistent UV coordinates, avoiding post-processing artifacts in 3D reconstruction.",
+      "llm_tldr_cn": "现有3D网格重建方法依赖中间表示和后处理步骤（如Marching Cubes），常引入伪影和碎片化几何。本文提出ExMesh，直接优化显式网格，通过可微优化自适应细化拓扑结构，并保持UV坐标一致性以实现高保真纹理。实验表明该方法能生成高质量网格，避免了传统流程的缺陷，推动了显式网格重建的发展。",
+      "llm_tldr": "现有3D网格重建方法依赖中间表示和后处理步骤（如Marching Cubes），常引入伪影和碎片化几何。本文提出ExMesh，直接优化显式网格，通过可微优化自适应细化拓扑结构，并保持UV坐标一致性以实现高保真纹理。实验表明该方法能生成高质量网格，避免了传统流程的缺陷，推动了显式网格重建的发展。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.08737v1",
+      "source": "arxiv",
+      "title": "Dream-Tac: A Unified Tactile World Action Model for Contact-Rich Robot Manipulation",
+      "abstract": "World action models inherit the predictive capability of world models, enabling action generation to be guided by anticipated future observations. However, they rely primarily on vision and often fail in contact-rich manipulation, where critical cues arise from physical interaction. In this paper, we propose Dream-Tac, a unified Tactile-World Action Model that jointly models actions, future visual observations, and tactile dynamics. Specifically, Dream-Tac introduces (i) contact-gated visuotactile fusion to selectively integrate tactile signals and (ii) a contact-aware attention bias to better regulate cross-modal interactions during manipulation. To support real-time deployment, we further design a dual-level acceleration strategy, reformulating the contact-aware bias to preserve the fused attention path during training and introducing cache-based diffusion acceleration at inference, achieving up to 2.9$\\times$ faster training and 1.8$\\times$ faster inference. Across six contact-rich manipulation tasks, Dream-Tac improves action accuracy by 31.7\\% on average, demonstrating the effectiveness of unified visuotactile world modeling.Code is available at https://github.com/LYFCLOUDFAN/Dream-Tac.",
+      "authors": [
+        "Yunfan Lou",
+        "Yifan Ye",
+        "Yankai Fu",
+        "Jun Cen",
+        "Xiaowei Chi",
+        "Yaoxu Lyu",
+        "Peidong Jia",
+        "Sirui Han",
+        "Zhihe Lu",
+        "Shanghang Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-07T17:18:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.08737v1",
+      "tags": [
+        "keyword:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world action model that inherits predictive capability of world models",
+      "llm_evidence_cn": "世界动作模型继承了世界模型的预测能力",
+      "llm_evidence": "世界动作模型继承了世界模型的预测能力",
+      "canonical_evidence": "世界动作模型继承了世界模型的预测能力",
+      "llm_tldr_en": "Dream-Tac introduces a unified Tactile-World Action Model that jointly models actions, visual observations, and tactile dynamics for contact-rich robot manipulation, extending world models to incorporate tactile sensing.",
+      "llm_tldr_cn": "现有的世界模型在操作任务中主要依赖视觉，忽视了触觉在接触丰富操作中的关键作用。Dream-Tac提出了统一的世界动作模型，联合建模动作、未来视觉和触觉动态，通过接触门控融合和注意力偏置实现跨模态交互，并设计了双级加速策略以支持实时部署。",
+      "llm_tldr": "现有的世界模型在操作任务中主要依赖视觉，忽视了触觉在接触丰富操作中的关键作用。Dream-Tac提出了统一的世界动作模型，联合建模动作、未来视觉和触觉动态，通过接触门控融合和注意力偏置实现跨模态交互，并设计了双级加速策略以支持实时部署。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-02-729586-v1",
+      "source": "biorxiv",
+      "title": "Flexible route planning and rapid structure learning by mice in complex environments",
+      "abstract": "Action selection using predictive models of the environment plays a fundamental role in human and animal behaviour, yet is poorly understood at circuit and algorithmic levels. Spatial navigation is an attractive domain for characterising how world models guide action selection. However spatial behaviours are shaped by multiple control systems including habits, vector-navigation using a Euclidean model of spatial relationships, and route planning using models of environment structure. Understanding how world models support navigation requires assays that dissociate control systems and decorrelate behavioural variables, while generating large datasets that allow precise quantification of brain-behaviour relationships. Here we developed and computationally optimised a behavioural assay to quantify flexible navigation using knowledge of environment structure. Mice navigated to visually cued goals in complex mazes, with randomised start and goal locations on each trial, generating thousands of non-repetitive goal-directed navigation trajectories. They navigated efficiently - strongly favouring options on the shortest path-to-goal, and learnt rapidly - demonstrating knowledge of maze structure from their first sessions in new environments. We anticipate the assay will be useful for characterising how world models support flexible behaviour.",
+      "authors": [
+        "Pereira, M.",
+        "Godinho, B. S.",
+        "Machens, C. K.",
+        "Costa, R. M.",
+        "Akam, T."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-05T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.02.729586v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "directly investigates world models in spatial navigation and structure learning",
+      "llm_evidence_cn": "直接研究空间导航中的世界模型和结构学习",
+      "llm_evidence": "直接研究空间导航中的世界模型和结构学习",
+      "canonical_evidence": "直接研究空间导航中的世界模型和结构学习",
+      "llm_tldr_en": "Develops an assay to dissociate control systems in mouse navigation, revealing how world models guide flexible route planning.",
+      "llm_tldr_cn": "空间导航中世界模型如何指导动作选择尚不明确。本文开发了能够解耦习惯、向量导航和基于模型规划的试验范式，通过小鼠复杂环境行为实验，量化了世界模型在灵活路径规划中的角色。结果表明动物能快速学习环境结构并利用世界模型进行前瞻性规划。",
+      "llm_tldr": "空间导航中世界模型如何指导动作选择尚不明确。本文开发了能够解耦习惯、向量导航和基于模型规划的试验范式，通过小鼠复杂环境行为实验，量化了世界模型在灵活路径规划中的角色。结果表明动物能快速学习环境结构并利用世界模型进行前瞻性规划。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.07179v1",
+      "source": "arxiv",
+      "title": "EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming",
+      "abstract": "Streaming 3D Gaussian Splatting requires highly scalable, progressive representations. Existing progressive methods rely on \\textit{discrete layering}, accumulating separate splat sets for each level of detail. This structural independence between layers inherently leads to error accumulation, severe splat redundancy, and uncontrolled quality transitions. We propose EvoGS, the first \\textit{continuous-layering} representation. Organized as an Evolution Tree, EvoGS generates finer details via an explicit, wavelet-inspired parent-child refinement. This empowers child nodes to structurally correct ancestral errors, yield inherently sparse and highly compressible inter-layer signals. Extensive experiments show EvoGS eliminates splat redundancy from over 65\\% to under 25\\%. Compared to state-of-the-art baselines, it reduces transmission payload and GPU VRAM footprint by up to 2.4$\\times$ and 5.5$\\times$, respectively, and achieves smooth quality transitions optimal for real-time adaptive streaming. Project page: https://yuang-ian.github.io/evogs/",
+      "authors": [
+        "Yuang Shi",
+        "Simone Gasparini",
+        "Géraldine Morin",
+        "Wei Tsang Ooi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.MM",
+        "eess.IV"
+      ],
+      "published": "2026-06-05T11:44:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.07179v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "continuous-layered Gaussian splatting for scalable 3D streaming",
+      "llm_evidence_cn": "连续分层高斯溅射表示，用于可扩展3D流式传输",
+      "llm_evidence": "连续分层高斯溅射表示，用于可扩展3D流式传输",
+      "canonical_evidence": "连续分层高斯溅射表示，用于可扩展3D流式传输",
+      "llm_tldr_en": "EvoGS introduces a continuous-layering representation via an evolution tree for efficient progressive 3D streaming.",
+      "llm_tldr_cn": "现有3DGS流式传输依赖离散分层，导致冗余和错误累积。EvoGS提出连续分层表示，通过进化树结构生成精细细节，子节点可纠正父节点误差，实现稀疏且可压缩的层间信号。实验表明EvoGS消除了冗余，提高了质量过渡的平滑性，为3D内容流式传输提供了高效解决方案。",
+      "llm_tldr": "现有3DGS流式传输依赖离散分层，导致冗余和错误累积。EvoGS提出连续分层表示，通过进化树结构生成精细细节，子节点可纠正父节点误差，实现稀疏且可压缩的层间信号。实验表明EvoGS消除了冗余，提高了质量过渡的平滑性，为3D内容流式传输提供了高效解决方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11841v1",
+      "source": "arxiv",
+      "title": "Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting",
+      "abstract": "Low-light novel view synthesis is challenging because dark multi-view images contain noise, weak structural detail, and compressed dynamic range. Recent 3D Gaussian Splatting (3DGS) methods address these challenges by generating pseudo ground-truth (pseudo-GT) images as supervision targets when paired normal-light references are unavailable. Existing pseudo-GT methods apply a uniform linear gain to all pixels, which clips bright regions while providing insufficient enhancement in dark regions, limiting reconstruction quality. We observe that nonlinear tone mappings, long established in 2D low-light enhancement, have not been explored for pseudo-GT generation in 3D reconstruction. Accordingly, we propose a scene-adaptive nonlinear tone-curve framework that replaces linear pseudo-GT with nonlinear alternatives. The framework introduces percentile-based normalisation for scene-agnostic curve application, a scene-adaptive offset for automatic black-level adjustment, and two complementary curves: Adaptive SoftExp (ASE), a bounded exponential curve, and Adaptive Poly3 (AP3), a data-driven cubic polynomial. The module changes only the pseudo-GT computation and leaves the 3DGS backbone unchanged. Experiments on three benchmarks covering 21 scenes show that both curves consistently outperform the linear baseline with PSNR improvements up to +4.34 dB on LOM and +3.25 dB on RealX3D. Both curves achieve similar performance despite their different mathematical forms, suggesting the improvement is curve-agnostic. Code is available at https://github.com/lvmingzhe/adaptiveToneCurve",
+      "authors": [
+        "Mingzhe Lyu",
+        "Jinqiang Cui",
+        "Hong Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T09:20:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.11841v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "low-light 3D Gaussian splatting for novel view synthesis",
+      "llm_evidence_cn": "低光照3D高斯泼溅新视图合成",
+      "llm_evidence": "低光照3D高斯泼溅新视图合成",
+      "canonical_evidence": "低光照3D高斯泼溅新视图合成",
+      "llm_tldr_en": "This paper addresses low-light novel view synthesis by proposing scene-adaptive nonlinear tone curves to generate pseudo ground-truth images for 3D Gaussian Splatting, significantly improving reconstruction quality over uniform gain methods.",
+      "llm_tldr_cn": "针对低光照条件下新视图合成中噪声和动态范围压缩的问题，本文提出场景自适应非线性色调曲线用于生成伪地面真值图像，替代现有的统一线性增益方法。该方法能动态调整每个像素的亮度映射，避免高光截断并增强暗部细节。在多个低光照数据集上的实验表明，本方法显著提升了3D高斯泼溅重建的质量，尤其在高光和低光区域。这项工作首次将非线性色调映射引入3D伪GT生成，为低光照3D重建提供了有效策略。",
+      "llm_tldr": "针对低光照条件下新视图合成中噪声和动态范围压缩的问题，本文提出场景自适应非线性色调曲线用于生成伪地面真值图像，替代现有的统一线性增益方法。该方法能动态调整每个像素的亮度映射，避免高光截断并增强暗部细节。在多个低光照数据集上的实验表明，本方法显著提升了3D高斯泼溅重建的质量，尤其在高光和低光区域。这项工作首次将非线性色调映射引入3D伪GT生成，为低光照3D重建提供了有效策略。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.11529v1",
+      "source": "arxiv",
+      "title": "XPR: An Extensible Cross-Platform Point-Based Differentiable Renderer",
+      "abstract": "Point-based differentiable rendering underpins modern 3D reconstruction, novel-view synthesis, and learning-based graphics pipelines, but developing new rendering methods often requires extensive low-level implementation, hardware-specific kernels, and manually written backward passes. This limits rapid prototyping, reproducibility, exploration, and deployment, especially across diverse hardware platforms. This paper presents XPR, an extensible cross-platform framework for point-based differentiable rendering. XPR introduces a high-level programming interface that separates method-specific logic from the shared rendering pipeline, allowing users to implement new methods in a few lines of code. Its pipeline decomposes rendering into modular, statically shaped parallel operations that can be lowered by a cross-platform compiler to GPUs, TPUs, CPUs, and other ML accelerators. We demonstrate implementations of 3DGS, 3DGUT, and LinPrim, with only a few 100s lines of Python code, each of which can be compiled to a range of hardware platforms with the XLA compiler. These results show that XPR enables fast experimentation and portable execution for emerging point-based differentiable rendering systems.",
+      "authors": [
+        "Steve Rhyner",
+        "Sankeerth Durvasula",
+        "Aleksandr Kovalev",
+        "Hansel Jia",
+        "Adrian Zhao",
+        "Mrutunjayya Mrutunjayya",
+        "Nilesh Ahuja",
+        "Selvakumar Panneer",
+        "Christina Giannoula",
+        "Nandita Vijaykumar"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV",
+        "cs.PF"
+      ],
+      "published": "2026-06-10T00:19:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.11529v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "extensible differentiable renderer for 3D graphics pipelines",
+      "llm_evidence_cn": "可扩展的可微渲染器，支持3D图形管线",
+      "llm_evidence": "可扩展的可微渲染器，支持3D图形管线",
+      "canonical_evidence": "可扩展的可微渲染器，支持3D图形管线",
+      "llm_tldr_en": "XPR provides a high-level programming interface for point-based differentiable rendering, enabling rapid implementation and cross-platform deployment.",
+      "llm_tldr_cn": "可微渲染是3D重建和新视角合成的关键技术，但开发新方法需要大量底层工作。XPR提出可扩展跨平台框架，通过模块化管道和高层接口，使用户能用少量代码实现新渲染方法，并自动生成高效后向传播。实验证明XPR支持多种方法快速开发，显著降低研究门槛，推动3D生成技术迭代。",
+      "llm_tldr": "可微渲染是3D重建和新视角合成的关键技术，但开发新方法需要大量底层工作。XPR提出可扩展跨平台框架，通过模块化管道和高层接口，使用户能用少量代码实现新渲染方法，并自动生成高效后向传播。实验证明XPR支持多种方法快速开发，显著降低研究门槛，推动3D生成技术迭代。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.06891v1",
+      "source": "arxiv",
+      "title": "Stream3D-VLM: Online 3D Spatial Understanding with Incremental Geometry Priors",
+      "abstract": "Despite advances in 3D scene understanding, existing 3D Large Multimodal Models operate in offline settings, requiring complete scene observations or predefined video clips. In this paper, we present an online 3D vision-language model that enables real-time spatial understanding from streaming video. Our approach adopts an autoregressive streaming control modeling based on the LLM's next-token prediction objective to learn when to respond, and employs a lightweight Visual-Spatial Feature Integration (VSFI) module to incrementally inject temporally aligned geometry priors into the visual stream. To alleviate long-context decoding overhead, we propose a plug-and-play Geometry-Adaptive Voxel Compression (GAVC) module for efficient visual token compression. To address the scarcity of streaming 3D-language data, we further develop a scalable data generation pipeline that curates over 1M online spatio-temporal 3D QA pairs and establishes a comprehensive benchmark spanning 29 tasks. Extensive experiments show that our approach significantly outperforms both proprietary and open-source models across online and offline 3D spatial understanding, reasoning, and grounding tasks. The project page is available at https://stream3d-vlm.github.io/",
+      "authors": [
+        "Hanxun Yu",
+        "Xuan Qu",
+        "Lei Ke",
+        "Boqiang Zhang",
+        "Yuxin Wang",
+        "Jianke Zhu",
+        "Dong Yu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T04:16:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.06891v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "online 3D spatial understanding with incremental geometry priors for real-time world perception",
+      "llm_evidence_cn": "在线3D空间理解，增量几何先验用于实时世界感知",
+      "llm_evidence": "在线3D空间理解，增量几何先验用于实时世界感知",
+      "canonical_evidence": "在线3D空间理解，增量几何先验用于实时世界感知",
+      "llm_tldr_en": "Stream3D-VLM enables real-time 3D spatial understanding from streaming video using incremental geometry priors and efficient token compression.",
+      "llm_tldr_cn": "现有3D多模态模型需要完整场景观察，无法实时。Stream3D-VLM提出在线模型，采用自回归流控制学习何时响应，通过视觉-空间特征整合模块增量注入几何先验，并利用几何自适应体素压缩减少计算量。实验表明该方法在流式视频中实现实时3D空间理解，为机器人等应用提供了实时世界建模能力。",
+      "llm_tldr": "现有3D多模态模型需要完整场景观察，无法实时。Stream3D-VLM提出在线模型，采用自回归流控制学习何时响应，通过视觉-空间特征整合模块增量注入几何先验，并利用几何自适应体素压缩减少计算量。实验表明该方法在流式视频中实现实时3D空间理解，为机器人等应用提供了实时世界建模能力。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11568v1",
+      "source": "arxiv",
+      "title": "4DP-QA: Scalable QA for 4D Perception in Vision Language Models",
+      "abstract": "Despite recent advances, Vision Language Models (VLMs) still struggle to grasp the dynamics of the world. We note that the ability to reason about a 4D scene, challenging in itself, is further complicated by two factors. First, VLMs observe motion indirectly via its projection onto 2D images. Second, existing datasets fail to disentangle object and camera motion. To address these challenges, we present a QA generation pipeline that focuses on motion-related scene understanding. We take particular care of the entanglement of camera and object motion by casting tracking in both the traditional way and in a novel, fixed reference system, dubbed True-Motion Tracking, which provides an intuitive description of motion. From this pipeline, we generate a large-scale training dataset of 400K samples, 4DP-QA (4D Perception QA), and a 2.2K-sample benchmark, 4DP-QA-Bench. Training existing models on our dataset yields performance improvements on an external benchmark, validating the effectiveness of our method.",
+      "authors": [
+        "Seokju Cho",
+        "Abhishek Badki",
+        "Hang Su",
+        "Jindong Jiang",
+        "Ziyao Zeng",
+        "Seungryong Kim",
+        "Sifei Liu",
+        "Orazio Gallo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T01:49:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.11568v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "4D perception and world dynamics understanding for vision-language models",
+      "llm_evidence_cn": "视觉语言模型的4D感知与世界动态理解",
+      "llm_evidence": "视觉语言模型的4D感知与世界动态理解",
+      "canonical_evidence": "视觉语言模型的4D感知与世界动态理解",
+      "llm_tldr_en": "4DP-QA generates a large-scale QA dataset with true-motion tracking to improve VLMs' reasoning about dynamic world scenes.",
+      "llm_tldr_cn": "视觉语言模型难以理解世界动态，现有数据集未分离物体和相机运动。本文提出真运动跟踪方法，在固定参考系中描述运动，并构建大规模4D问答数据集。实验表明，使用该数据集训练后，VLM在动态场景推理任务上性能显著提升，推动了世界模型在具身智能中的应用。",
+      "llm_tldr": "视觉语言模型难以理解世界动态，现有数据集未分离物体和相机运动。本文提出真运动跟踪方法，在固定参考系中描述运动，并构建大规模4D问答数据集。实验表明，使用该数据集训练后，VLM在动态场景推理任务上性能显著提升，推动了世界模型在具身智能中的应用。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.12213v1",
+      "source": "arxiv",
+      "title": "SHERPA: Seam-aware Harmonized ERP Adaptation for Open-Domain 360$^\\circ$ Panorama Generation",
+      "abstract": "Panoramic imagery is increasingly used in world-generation, games, and simulation, where users may need not only photorealistic scenes but also stylized and non-photorealistic environments. Large-scale text-to-image diffusion and flow models provide broad style and semantic priors for this goal, but planar image training misaligns them with the wrap-around topology and polar regions of $360^\\circ$ panoramas represented in equirectangular projection (ERP). We present SHERPA, a lightweight adaptation framework that combines frequency-selective Circular RoPE, Circular Latent Encoding/Decoding, image-side FFN adapters, and a Dual-Path Training Scheme. Circular RoPE replaces only the seam-sensitive high-frequency horizontal RoPE band with integer-periodic harmonics while preserving the pretrained lower-frequency spectrum. The Paired Panorama Path supervises geometry, while the Unpaired Style Path uses self-supervised yaw consistency for target-free stylized prompts. As a result, SHERPA generates $360^\\circ$ panoramas across both photorealistic panorama domains and open-domain stylized prompts.",
+      "authors": [
+        "Jungwoon Kang",
+        "Jaehun Kim",
+        "Yiwon Yu",
+        "Hyungyum Jang",
+        "Sanghoon Lee",
+        "Jongyoo Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T15:29:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.12213v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "panorama generation for world-building and simulation applications",
+      "llm_evidence_cn": "用于世界构建和模拟的全景图生成",
+      "llm_evidence": "用于世界构建和模拟的全景图生成",
+      "canonical_evidence": "用于世界构建和模拟的全景图生成",
+      "llm_tldr_en": "SHERPA adapts text-to-image models for seamless 360-degree panorama generation using circular RoPE and dual-path training.",
+      "llm_tldr_cn": "全景图像在虚拟世界生成和模拟中需求增长，但平面图像训练与环绕拓扑不匹配。SHERPA提出轻量适应框架，通过频率选择性Circular RoPE、圆形潜编码/解码和双路径训练，实现开放域360度全景图的无缝生成。实验表明该方法能产生高质量、风格多样的全景图，为世界构建提供了实用工具。",
+      "llm_tldr": "全景图像在虚拟世界生成和模拟中需求增长，但平面图像训练与环绕拓扑不匹配。SHERPA提出轻量适应框架，通过频率选择性Circular RoPE、圆形潜编码/解码和双路径训练，实现开放域360度全景图的无缝生成。实验表明该方法能产生高质量、风格多样的全景图，为世界构建提供了实用工具。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11782v1",
+      "source": "arxiv",
+      "title": "Seeing What Matters: Perceptual Wrapper with Common Randomness for 3D Gaussian Splatting",
+      "abstract": "While 3D Gaussian Splatting (3DGS) achieves impressive real-time rendering, it frequently struggles to synthesize high-frequency textures, a limitation heavily exacerbated in memory-constrained and rate-distortion-optimized (RDO) pipelines. To address this, we propose a versatile 2D perceptual wrapper that enhances the rendered outputs of existing 3DGS representations in a content- and view-dependent manner. Our method leverages a lightweight synthesis network conditioned on pseudo-random Gaussian noise to synthesize perceptually plausible textures. Supervised by Wasserstein Distortion, the network learns to match local feature statistics rather than strictly enforcing pixel-wise reconstruction fidelity, effectively mitigating the blurriness inherent in standard frameworks. We demonstrate the broad applicability of our plug-and-play approach across vanilla, memory-constrained, and RDO 3DGS methods. Comprehensive subjective and objective experiments confirm that our method significantly improves over existing baselines, yielding superior perceptual quality at sharply reduced file or model sizes.",
+      "authors": [
+        "He-Bi Yang",
+        "Jing-Zhong Chen",
+        "Yen-Kuan Ho",
+        "Sang NguyenQuang",
+        "Fan-Yi Hsu",
+        "Yun-Yu Lee",
+        "Jui-Chiu Chiang",
+        "Wen-Hsiao Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T08:14:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.11782v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "improves 3D Gaussian Splatting rendering quality, relevant to recent advances in 3D generation",
+      "llm_evidence_cn": "改进3D高斯泼溅渲染质量，属于3D生成领域近期进展",
+      "llm_evidence": "改进3D高斯泼溅渲染质量，属于3D生成领域近期进展",
+      "canonical_evidence": "改进3D高斯泼溅渲染质量，属于3D生成领域近期进展",
+      "llm_tldr_en": "Perceptual wrapper enhances 3DGS outputs by synthesizing high-frequency textures using lightweight network conditioned on noise, mitigating blur.",
+      "llm_tldr_cn": "3D高斯泼溅在纹理合成上存在模糊问题。本文提出一种2D感知包装器，利用条件于伪随机噪声的轻量网络合成感知上逼真的纹理，通过Wasserstein距离监督局部特征统计而非逐像素重建。该方法以最小计算代价提升了现有3DGS表示的视觉质量，是3D渲染生成领域的实用进展。",
+      "llm_tldr": "3D高斯泼溅在纹理合成上存在模糊问题。本文提出一种2D感知包装器，利用条件于伪随机噪声的轻量网络合成感知上逼真的纹理，通过Wasserstein距离监督局部特征统计而非逐像素重建。该方法以最小计算代价提升了现有3DGS表示的视觉质量，是3D渲染生成领域的实用进展。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-05-730482-v1",
+      "source": "biorxiv",
+      "title": "Generating whole-brain neural activity and behavior through unified latent dynamics",
+      "abstract": "Understanding how high-dimensional neural activity and behavior emerge from shared underlying dynamics remains a fundamental challenge in neuroscience. Addressing this problem is key to enabling digital twins that can faithfully reproduce and predict the multiscale brain-behavior dynamics of living systems. Here we present NEBULA (NEural and Behavioral modeling through Unified LAtent dynamics), a generative framework that jointly models whole-brain neural activity and behavior. Using brain-wide recordings from C. elegans, the model learns a unified latent dynamical structure that supports long-horizon generation of neural and behavioral trajectories, realistic simulations of behavior, and targeted virtual interventions. Perturbations of the learned dynamics reveal behaviorally relevant transition points, whereas steering interventions enable controlled manipulation of neural and behavioral states without retraining. These results establish a framework for linking brain dynamics to behavior in a living organism and provide a foundation for scalable virtual experimentation in neuroscience.",
+      "authors": [
+        "Nuzzi, D.",
+        "Mattia, M.",
+        "Pezzulo, G."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-10T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.05.730482v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "builds a generative model of whole-brain dynamics, functioning as a world model for neural and behavioral data",
+      "llm_evidence_cn": "构建全脑动力学生成模型，作为神经与行为数据的世界模型",
+      "llm_evidence": "构建全脑动力学生成模型，作为神经与行为数据的世界模型",
+      "canonical_evidence": "构建全脑动力学生成模型，作为神经与行为数据的世界模型",
+      "llm_tldr_en": "NEBULA jointly models neural activity and behavior via unified latent dynamics, enabling long-horizon generation and virtual interventions.",
+      "llm_tldr_cn": "理解神经活动与行为背后的共享动力学是构建数字孪生的关键。本文提出NEBULA，一种生成框架，学习隐式动力学结构，联合建模全脑神经活动和行为。基于线虫全脑记录，模型能生成长时程神经和行为轨迹，并支持虚拟扰动。该方法为生物世界模型提供了新范式。",
+      "llm_tldr": "理解神经活动与行为背后的共享动力学是构建数字孪生的关键。本文提出NEBULA，一种生成框架，学习隐式动力学结构，联合建模全脑神经活动和行为。基于线虫全脑记录，模型能生成长时程神经和行为轨迹，并支持虚拟扰动。该方法为生物世界模型提供了新范式。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
