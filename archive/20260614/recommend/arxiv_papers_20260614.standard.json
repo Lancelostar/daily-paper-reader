@@ -1,0 +1,627 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-14T20:35:40.964164+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 9,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 8,
+    "quick_skim_target": 12,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2606.12783v1",
+      "source": "arxiv",
+      "title": "A Tutorial on World Models and Physical AI",
+      "abstract": "World modeling is emerging as a central principle for building intelligent systems capable of prediction, reasoning, and decision making. A central distinction can be drawn between explicit world models, which learn structured dynamics for rollout-based reasoning and planning, and implicit world models, which encode predictive structure within scalable learned representations. These complementary paradigms provide a foundation for physical AI in domains such as robotics and autonomous driving, enabling intelligence beyond reactive control under real-world constraints. Recent foundation models further suggest a pathway toward unified systems integrating perception, prediction, and action. Despite rapid progress, major challenges remain in hierarchical reasoning, long-horizon planning, and autonomous goal formation, which are critical for advancing toward artificial general intelligence. This tutorial presents a coherent framework in which diverse world modeling approaches are unified through shared predictive structure and differentiated by how such structure is represented and exploited.",
+      "authors": [
+        "Il-Seok Oh"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-11T00:52:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.12783v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "tutorial on world models and physical AI",
+      "llm_evidence_cn": "世界模型与物理AI教程",
+      "llm_evidence": "世界模型与物理AI教程",
+      "canonical_evidence": "世界模型与物理AI教程",
+      "llm_tldr_en": "A comprehensive tutorial covering explicit and implicit world models, their role in physical AI, challenges, and future directions.",
+      "llm_tldr_cn": "世界模型正成为智能系统预测、推理和决策的核心原则。本教程明晰区分显式世界模型（结构化动力学）与隐式世界模型（可扩展表征），探讨其在机器人和自动驾驶等物理AI领域的应用，并指出层次推理和长时规划等挑战。",
+      "llm_tldr": "世界模型正成为智能系统预测、推理和决策的核心原则。本教程明晰区分显式世界模型（结构化动力学）与隐式世界模型（可扩展表征），探讨其在机器人和自动驾驶等物理AI领域的应用，并指出层次推理和长时规划等挑战。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11894v2",
+      "source": "arxiv",
+      "title": "Wild3R: Feed-Forward 3D Gaussian Splatting from Unconstrained Sparse Photo Collection",
+      "abstract": "Feed-forward 3D Gaussian Splatting (3DGS) removes the need for time-consuming per-scene optimization required by traditional 3DGS. However, existing feed-forward approaches struggle with real-world photo collections that include diverse lighting conditions and transient objects. In this paper, we present Wild3R, a feed-forward approach for unconstrained sparse photo collections. The main bottleneck is the lack of training data that provides multiple viewpoints, a variety of illuminations, and transient variations necessary for learning robust scene representations. To address this, we introduce the WildCity dataset, which comprises 200 scenes, 170 lighting conditions, and transient objects, resulting in 337,500 images in total. By leveraging the dataset, our model learns appearance consistency across viewpoints conditioned on reference views, while removing transient content. Extensive experiments demonstrate that our method outperforms existing feed-forward approaches and achieves results competitive with prior per-scene optimization-based methods.",
+      "authors": [
+        "Yuto Furutani",
+        "Takashi Otonari",
+        "Kaede Shiohara",
+        "Toshihiko Yamasaki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T10:23:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.11894v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "feed-forward 3DGS from sparse photos for 3D generation",
+      "llm_evidence_cn": "前馈3DGS用于稀疏照片3D生成",
+      "llm_evidence": "前馈3DGS用于稀疏照片3D生成",
+      "canonical_evidence": "前馈3DGS用于稀疏照片3D生成",
+      "llm_tldr_en": "Wild3R is a feed-forward 3D Gaussian Splatting method for unconstrained sparse photo collections, introducing the WildCity dataset to handle diverse lighting and transient objects.",
+      "llm_tldr_cn": "现有前馈3DGS方法难以应对真实世界照片中的多样光照和瞬变物体。Wild3R提出了一种前馈方法，并构建了包含200个场景、170种光照条件的WildCity数据集进行训练。通过将光照和瞬变物体建模为条件输入，该方法无需逐场景优化即可从稀疏照片生成高质量3D表示，显著提升了鲁棒性和泛化性。",
+      "llm_tldr": "现有前馈3DGS方法难以应对真实世界照片中的多样光照和瞬变物体。Wild3R提出了一种前馈方法，并构建了包含200个场景、170种光照条件的WildCity数据集进行训练。通过将光照和瞬变物体建模为条件输入，该方法无需逐场景优化即可从稀疏照片生成高质量3D表示，显著提升了鲁棒性和泛化性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13460v1",
+      "source": "arxiv",
+      "title": "VISA: VLM-Guided Instance Semantic Auditing for 3D Occupancy World Models",
+      "abstract": "Semantic 3D occupancy provides a voxelized world state for autonomous driving and robot decision making, but object and rare-class errors can affect free-space interpretation, collision checking, and temporal state propagation. We show that a common VLM strategy, aligning 3D voxel or object features with crop-caption embeddings, improves text-space similarity without reliably improving closed-set occupancy mIoU. Motivated by this mismatch, we propose VISA, a training-time semantic auditing approach for existing occupancy world models. VISA queries an offline VLM on a representative crop of each physical object instance, obtains a structured audit with class hypotheses, plausible confusions, reliability, attributes, and evidence, and propagates it along the object track. The audit is grounded to matched 3D object voxels and distilled into semantic logits through reliability-weighted taxonomy, attribute-factor, and scene-level audit graph losses, while inference remains unchanged and requires no VLM. On nuScenes, averaged across three runs, VISA improves OccWorld from 19.06 to 20.05 mIoU and GaussianWorld from 21.36 to 21.91 mIoU; on GaussianWorld, object mIoU improves from 18.18 to 19.16 and rare-class mIoU from 15.60 to 16.79. These results suggest that VLMs are better suited to closed-set occupancy as reliability-aware semantic auditors than as generic caption-embedding targets.",
+      "authors": [
+        "Ruiqi Xian",
+        "Yuehan Xian",
+        "Jing Liang",
+        "Xuewei Qi",
+        "Dinesh Manocha"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T15:15:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.13460v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "VLM-guided semantic auditing for 3D occupancy world models",
+      "llm_evidence_cn": "VLM引导的3D占据世界模型语义审计",
+      "llm_evidence": "VLM引导的3D占据世界模型语义审计",
+      "canonical_evidence": "VLM引导的3D占据世界模型语义审计",
+      "llm_tldr_en": "VISA proposes a training-time semantic auditing approach for 3D occupancy world models using VLM queries to improve closed-set occupancy mIoU.",
+      "llm_tldr_cn": "VISA针对3D占据世界模型中的对象和稀有类错误，提出训练时语义审计方法。它用VLM对每个实例进行结构化审计，将审计结果传播以提升模型语义质量。实验表明，VISA在降低误报率和提高mIoU方面优于现有对齐策略。",
+      "llm_tldr": "VISA针对3D占据世界模型中的对象和稀有类错误，提出训练时语义审计方法。它用VLM对每个实例进行结构化审计，将审计结果传播以提升模型语义质量。实验表明，VISA在降低误报率和提高mIoU方面优于现有对齐策略。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13652v1",
+      "source": "arxiv",
+      "title": "World Tracing: Generative Pixel-Aligned Geometry Beyond the Visible",
+      "abstract": "Image-to-3D methods often trade off faithfulness and completeness: depth estimators are anchored to input pixels but stop at the visible surface, while image-to-3D models generate complete shapes that are often misaligned with the input. We introduce World Tracing, a generative pixel-aligned geometry representation that predicts 3D points aligned with observed pixels while completing geometry beyond the visible surface. For each input pixel, World Tracing predicts an ordered stack of camera-space 3D points, where the first layer represents the visible surface and subsequent layers represent front-to-back intersections with occluded surfaces. We instantiate this representation with a world-tracing diffusion transformer, WT-DiT, which treats multiple geometry layers as separate denoising tokens coupled through factorized and global attention. WT-DiT is trained with pixel-space flow matching and a mixed noise schedule that balances visible-surface reconstruction with occluded-geometry generation. World Tracing achieves strong performance on visible-surface reconstruction and complete geometry generation across object, scene, and dynamic benchmarks, outperforming both depth predictors and image-to-3D generators. It also preserves 2D-to-3D correspondence, enabling text-driven 3D scene editing, geometry-conditioned novel-view video synthesis, and training-free integration with textured-mesh generators.",
+      "authors": [
+        "Hao Zhang",
+        "Mohamed El Banani",
+        "Jen-Hao Cheng",
+        "Paul Zhang",
+        "Yi Hua",
+        "Ben Mildenhall",
+        "Christoph Lassner",
+        "Narendra Ahuja",
+        "Gengshan Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-11T17:52:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.13652v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generative pixel-aligned geometry for image-to-3D completion",
+      "llm_evidence_cn": "生成式像素对齐几何，用于图像到3D完成",
+      "llm_evidence": "生成式像素对齐几何，用于图像到3D完成",
+      "canonical_evidence": "生成式像素对齐几何，用于图像到3D完成",
+      "llm_tldr_en": "World Tracing predicts an ordered stack of 3D points per pixel, completing occluded geometry beyond the visible surface, with a diffusion transformer WT-DiT.",
+      "llm_tldr_cn": "图像到3D方法在保真度和完整性之间存在权衡。World Tracing提出一种生成式像素对齐几何表示，为每个输入像素预测有序的3D点堆栈，第一层为可见表面，后续层为被遮挡的几何。通过世界追踪扩散变压器WT-DiT实例化，该方法实现了与输入像素对齐的完整几何预测，在遮挡区域生成合理的3D结构，为图像到3D生成提供了更忠实且完整的解决方案。",
+      "llm_tldr": "图像到3D方法在保真度和完整性之间存在权衡。World Tracing提出一种生成式像素对齐几何表示，为每个输入像素预测有序的3D点堆栈，第一层为可见表面，后续层为被遮挡的几何。通过世界追踪扩散变压器WT-DiT实例化，该方法实现了与输入像素对齐的完整几何预测，在遮挡区域生成合理的3D结构，为图像到3D生成提供了更忠实且完整的解决方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13345v1",
+      "source": "arxiv",
+      "title": "JointEdit3D: Feed-Forward 3D Scene Editing in a Unified Latent Space",
+      "abstract": "Existing 3D scene editing methods typically rely on per-scene optimization over explicit 3D representations or cascaded edit-and-reconstruct pipelines, resulting in high test-time cost, limited 3D awareness, and structural inconsistencies. To couple appearance synthesis and geometry prediction during editing, we build on a unified RGB-geometry reconstruction-generation latent space and adapt it to feed-forward 3D scene editing. The resulting framework, \\textbf{JointEdit3D}, performs asymmetric latent inpainting by observing only a single edited RGB reference latent and generating the remaining RGB views and edited geometry latent under source-scene anchoring. JointEdit3D introduces a dedicated SceneAnchor Branch to inject source-scene structure without forcing direct copying, and adopts edit/background-aware losses to balance edited-region fidelity with unedited-content preservation. To address the lack of paired resources for standardized 3D scene editing evaluation, we introduce SceneEdit3D-15K, a dataset with 15K paired editing samples and renderer-provided 3D annotations, together with SceneEdit3D-Bench, a curated 100-sample benchmark. Experiments show that JointEdit3D improves edited-region quality and 3D structural completeness over prior baselines while maintaining competitive background preservation.",
+      "authors": [
+        "Xinnan Zhu",
+        "Ruijie Xu",
+        "Jiayu Ying",
+        "Daoguo Dong",
+        "Jiachen Xu",
+        "Yuan Xie",
+        "Xin Tan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T13:35:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.13345v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "feed-forward 3D scene editing with generation",
+      "llm_evidence_cn": "前馈3D场景编辑，涉及生成",
+      "llm_evidence": "前馈3D场景编辑，涉及生成",
+      "canonical_evidence": "前馈3D场景编辑，涉及生成",
+      "llm_tldr_en": "JointEdit3D performs feed-forward 3D scene editing in a unified RGB-geometry latent space, using asymmetric latent inpainting from a single edited RGB reference.",
+      "llm_tldr_cn": "现有3D场景编辑方法依赖于逐场景优化或多阶段管线，导致计算成本高且结构不一致。JointEdit3D构建在统一的RGB-几何重建生成隐空间上，通过场景锚定分支注入源场景结构，仅观察单张编辑后的RGB参考隐码即可生成其余RGB视图和编辑后的几何隐码。该方法实现了前馈式的3D场景编辑，在保持结构一致性的同时显著降低了测试时间成本。",
+      "llm_tldr": "现有3D场景编辑方法依赖于逐场景优化或多阶段管线，导致计算成本高且结构不一致。JointEdit3D构建在统一的RGB-几何重建生成隐空间上，通过场景锚定分支注入源场景结构，仅观察单张编辑后的RGB参考隐码即可生成其余RGB视图和编辑后的几何隐码。该方法实现了前馈式的3D场景编辑，在保持结构一致性的同时显著降低了测试时间成本。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13376v1",
+      "source": "arxiv",
+      "title": "MoVerse: Real-Time Video World Modeling with Panoramic Gaussian Scaffold",
+      "abstract": "We present MoVerse, a real-time video world model that creates an interactively navigable scene from a single narrow-field-of-view image. This setting is challenging because the input observes only a small fraction of the environment, while interactive roaming requires a complete surrounding world, persistent geometry, controllable camera motion, and temporally coherent high-fidelity observations. MoVerse addresses this problem by separating world construction from observation rendering. It first expands the input into a gravity-aligned 360$^\\circ$ panorama with topology-aware diffusion, closing the missing field of view before 3D reasoning. It then lifts the panorama into a persistent 3D Gaussian scaffold using panoramic geometry-aware residual prediction, yielding a dense and directly renderable spatial memory. Finally, a Gaussian-conditioned video renderer translates scaffold renderings along user-specified camera trajectories into photorealistic video. To make this renderer practical for interaction, we train a bidirectional diffusion teacher for high-quality conditional rendering and distill it into a causal autoregressive student for bounded-latency streaming. This design combines the controllability and long-range consistency of explicit 3D representations with the perceptual quality of generative video models. MoVerse supports real-time scene roaming at 8~FPS on a single NVIDIA RTX~4090 GPU, demonstrating a practical path toward single-image world creation with interactive video output.",
+      "authors": [
+        "Yang Zhou",
+        "Ziheng Wang",
+        "Yuqin Lu",
+        "Haofeng Liu",
+        "Jun Liang",
+        "Shengfeng He",
+        "Jing Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T14:01:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.13376v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "real-time video world modeling from single image",
+      "llm_evidence_cn": "从单张图像进行实时视频世界建模",
+      "llm_evidence": "从单张图像进行实时视频世界建模",
+      "canonical_evidence": "从单张图像进行实时视频世界建模",
+      "llm_tldr_en": "MoVerse introduces a real-time video world model that constructs an interactively navigable 360-degree scene from a single narrow-FOV image using panorama diffusion and 3D Gaussian scaffold.",
+      "llm_tldr_cn": "MoVerse提出了一种实时视频世界模型，能够从单张窄视野图像创建可交互漫游的360度场景。该方法首先通过拓扑感知扩散将输入扩展为全景图，弥补缺失视野，然后利用全景几何感知残差预测将全景图提升为持久3D高斯支架，从而实现高效的世界构建与渲染分离。该系统支持可控相机运动和时间一致的高保真观测。",
+      "llm_tldr": "MoVerse提出了一种实时视频世界模型，能够从单张窄视野图像创建可交互漫游的360度场景。该方法首先通过拓扑感知扩散将输入扩展为全景图，弥补缺失视野，然后利用全景几何感知残差预测将全景图提升为持久3D高斯支架，从而实现高效的世界构建与渲染分离。该系统支持可控相机运动和时间一致的高保真观测。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13364v1",
+      "source": "arxiv",
+      "title": "VideoMDM: Towards 3D Human Motion Generation From 2D Supervision",
+      "abstract": "We introduce VideoMDM, a diffusion-based framework that trains 3D human motion priors directly from accurate 2D poses extracted from monocular videos, without any 3D ground truth. A pretrained 2D-to-3D lifter provides approximate 3D pose sequences that serve as a noisy teacher: these are diffused, denoised by the model in 3D, and supervised in 2D by reprojecting the prediction and comparing against accurate keypoints. We show that, under mild assumptions, a depth-weighted 2D reprojection loss is equivalent in expectation to direct 3D supervision, and we adapt standard 3D motion regularizers - velocity consistency and over-parameterized representation alignment - to this 2D setting. Unlike methods that lift 2D to 3D only at inference, VideoMDM learns a coherent 3D motion manifold during training. On HumanML3D it nearly closes the gap to fully 3D-supervised MDM (FID 0.88 vs 0.54); On real video datasets Fit3D and NBA the method learns to generate motions consistently preferred by humans, with strong quantitative results.",
+      "authors": [
+        "Amir Mann",
+        "Gal Michael Harari",
+        "Merav Keidar",
+        "Or Litany"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-06-11T13:49:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.13364v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D human motion generation from 2D poses",
+      "llm_evidence_cn": "从2D姿态生成3D人体运动",
+      "llm_evidence": "从2D姿态生成3D人体运动",
+      "canonical_evidence": "从2D姿态生成3D人体运动",
+      "llm_tldr_en": "VideoMDM is a diffusion framework that trains 3D human motion priors from 2D video poses without 3D ground truth.",
+      "llm_tldr_cn": "本文针对3D人体运动生成中缺乏3D标注的问题，提出了VideoMDM框架。该框架利用预训练的2D到3D提升器提供噪声教师信号，通过扩散和2D重投影损失学习3D运动先验。实验表明，在无需3D真值的情况下，生成的3D运动具有较好的连贯性和准确性。",
+      "llm_tldr": "本文针对3D人体运动生成中缺乏3D标注的问题，提出了VideoMDM框架。该框架利用预训练的2D到3D提升器提供噪声教师信号，通过扩散和2D重投影损失学习3D运动先验。实验表明，在无需3D真值的情况下，生成的3D运动具有较好的连贯性和准确性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.13644v1",
+      "source": "arxiv",
+      "title": "Surflo: Consistent 3D Surface Flow Model with Global State",
+      "abstract": "Geometry is invariant to viewpoint, which makes any collection of images a redundant encoding of a single 3D state. Existing feed-forward reconstruction models fail to exploit this: per-view methods emit overlapping, unaligned pointmaps that grow linearly with input count, while global-latent methods commit to a fixed, low-resolution output. We introduce Surflo, which compresses a variable number of unposed RGB views into K latent tokens-one global state-and decodes oriented 3D surface points by independently transporting them from noise onto the surface via flow matching. This frees the output from any fixed grid or token budget: the same latent yields from a few thousand to a million points in a single forward pass. To suppress the local inconsistencies inherent to independent per-point decoding, an inference-time guidance term correlates nearby points by injecting a photometric gradient during ODE integration. Surflo matches or surpasses feed-forward baselines on surface metrics, runs an order of magnitude faster than optimization-based methods that require hundreds of views, and is the only feed-forward approach to combine a global latent with arbitrary-resolution decoding.",
+      "authors": [
+        "Antoine Guédon",
+        "Shu Nakamura",
+        "Nicolas Dufour",
+        "Jiahui Lei",
+        "Ko Nishino",
+        "Angjoo Kanazawa"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T17:48:38+00:00",
+      "link": "https://arxiv.org/pdf/2606.13644v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D surface flow model for generative point cloud output",
+      "llm_evidence_cn": "用于生成点云的3D表面流模型",
+      "llm_evidence": "用于生成点云的3D表面流模型",
+      "canonical_evidence": "用于生成点云的3D表面流模型",
+      "llm_tldr_en": "Surflo compresses multi-view images into a global latent state and decodes 3D surface points via flow matching, enabling variable-resolution point cloud generation from a single model.",
+      "llm_tldr_cn": "现有3D重建方法在视角冗余利用和输出分辨率上受限。Surflo将任意数量未定位视图压缩为K个全局潜变量，通过流匹配从噪声中解码出朝向3D表面点。该方法摆脱固定网格限制，单次前向可生成数千至百万个点，并抑制局部不一致。",
+      "llm_tldr": "现有3D重建方法在视角冗余利用和输出分辨率上受限。Surflo将任意数量未定位视图压缩为K个全局潜变量，通过流匹配从噪声中解码出朝向3D表面点。该方法摆脱固定网格限制，单次前向可生成数千至百万个点，并抑制局部不一致。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.08043v1",
+      "source": "arxiv",
+      "title": "OmniFaceRig: Fully Automatic Inner-Mouth-Aware Face Rigging Across Diverse 3D Character Topologies",
+      "abstract": "Facial rigging - creating FACS-based blendshapes together with inner-mouth geometry (teeth, gums, and tongue) - remains a major bottleneck in 3D character production. Existing pipelines still require substantial designer effort, especially for manual landmark annotation, per-character template adjustment, and inner-mouth placement. We present OmniFaceRig, a fully automatic end-to-end pipeline that converts a static surface-only 3D character mesh, with no pre-modeled oral cavity, into an inner-mouth-aware FACS rig with up to 155 blendshapes, procedurally fitted teeth, gums, and tongue, and re-packed UV/texture. OmniFaceRig supports diverse topologies - humans, humanoids, long-muzzled animals (e.g., dogs, wolves, foxes), and short-muzzled animals (e.g., cats, bears, rabbits, tigers) - with no manual landmarks, no user-provided templates, and no per-asset setup. The pipeline combines hybrid VLM+CV riggability checking, multi-model face parsing, dense keypoint-driven template registration, procedural inner-mouth construction, and collision-aware blendshape transfer. For non-human characters, OmniFaceRig selects topology-specific face and inner-mouth templates and uses collision-aware inner-mouth fitting to reduce teeth-face intersections without exposing users to category-specific tuning. We also publicly release Omni-Bench, a freely available benchmark dataset of 1,000 biped 3D characters with FACS facial blendshapes and inner-mouth geometry, spanning humans, humanoids, cats, dogs, and other animals. Experiments show high final rigging success on screened Omni-Bench inputs, nearly complete face detection recall from the segmentation ensemble and reliable inner-mouth placement with low penetration. Together, OmniFaceRig provides an automatic path from static generated characters to animation-ready facial rigs across both human and non-human topologies.",
+      "authors": [
+        "Chao Wang",
+        "Guangyao Ma",
+        "John Doublestein",
+        "Junming Chen",
+        "Yiming Lin",
+        "Zhaoen Su",
+        "Xiaomin Luo",
+        "Shiyang Cheng",
+        "Jie Shen",
+        "Doug Roble",
+        "Dilin Wang",
+        "Yilei Li",
+        "Rakesh Ranjan"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV"
+      ],
+      "published": "2026-06-06T08:06:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.08043v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "automatic 3D face rig generation for characters",
+      "llm_evidence_cn": "自动生成3D角色面部绑骨",
+      "llm_evidence": "自动生成3D角色面部绑骨",
+      "canonical_evidence": "自动生成3D角色面部绑骨",
+      "llm_tldr_en": "OmniFaceRig automatically converts a static 3D character mesh into an inner-mouth-aware FACS rig with up to 155 blendshapes, supporting diverse topologies.",
+      "llm_tldr_cn": "面部绑骨是3D角色制作的瓶颈。OmniFaceRig提出全自动端到端管线，将静态表面网格转换为含内部口腔的FACS绑骨，最多155个混合形状，并可程序化生成牙齿、牙龈和舌头。该方法支持人类、人形、长嘴动物等多种拓扑，无需手动标注，极大加速了角色制作流程。",
+      "llm_tldr": "面部绑骨是3D角色制作的瓶颈。OmniFaceRig提出全自动端到端管线，将静态表面网格转换为含内部口腔的FACS绑骨，最多155个混合形状，并可程序化生成牙齿、牙龈和舌头。该方法支持人类、人形、长嘴动物等多种拓扑，无需手动标注，极大加速了角色制作流程。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.09278v1",
+      "source": "arxiv",
+      "title": "Internalizing Geometric Law: Learning from Solver Residuals for Precision-Critical Generation",
+      "abstract": "Large Language Models frequently hallucinate in precision-critical domains such as technical diagramming and mechanical design, where outputs must satisfy strict geometric constraints. We study open-ended geometric synthesis from natural language: translating free-form descriptions into precise constructions whose entities must simultaneously satisfy dozens of interacting constraints. To make this tractable, we release PyGeoX, a programmable geometric DSL that compiles declarative constraints into a differentiable loss, and PyGeoX-Bench, a stratified suite of 300 problems with per-constraint verifiable rewards. Using PyGeoX as a verifier, we identify a failure mode we call Outlier Gradient Masking: under global-norm rewards (any scheme that aggregates residuals through a single norm, for example, $\\exp(-\\mathrm{MSE})$), a single outlier constraint can nullify the learning signal across all others. To address this, we propose Saturating Additive Rewards (SAR), which decompose the reward into bounded per-constraint terms, preserving partial progress and ensuring consistent gradients even under severe violations. Against MSE-based rewards, the natural baseline for geometry solvers, SAR improves the hard-tier solving rate by $2.3\\times$, and the resulting 8B model is competitive with much larger frontier systems on this benchmark. We release the engine, benchmark, and data at https://github.com/Huawei-AI4Math/PyGeoX.",
+      "authors": [
+        "Rafael Cabral",
+        "Pang Zixi",
+        "Ziyi Shou",
+        "Shen Xin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-08T09:44:31+00:00",
+      "link": "https://arxiv.org/pdf/2606.09278v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generation of precise geometric constructions from text, relevant to 3D generative models",
+      "llm_evidence_cn": "从文本生成精确几何结构，与3D生成模型相关",
+      "llm_evidence": "从文本生成精确几何结构，与3D生成模型相关",
+      "canonical_evidence": "从文本生成精确几何结构，与3D生成模型相关",
+      "llm_tldr_en": "Introduces PyGeoX for text-to-geometric synthesis, learning from solver residuals to ensure precision-critical generation.",
+      "llm_tldr_cn": "该文针对自然语言到精确几何合成的挑战，提出PyGeoX可编程几何DSL及其基准。通过将声明式约束编译为可微损失并利用求解器残差学习，有效解决了大模型的“离群梯度掩盖”问题，实现了满足多约束的几何结构生成。该方法对精确3D生成任务具有重要借鉴意义。",
+      "llm_tldr": "该文针对自然语言到精确几何合成的挑战，提出PyGeoX可编程几何DSL及其基准。通过将声明式约束编译为可微损失并利用求解器残差学习，有效解决了大模型的“离群梯度掩盖”问题，实现了满足多约束的几何结构生成。该方法对精确3D生成任务具有重要借鉴意义。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.13676v1",
+      "source": "arxiv",
+      "title": "Modality Forcing for Scalable Spatial Generation",
+      "abstract": "Text-to-image (T2I) models contain rich spatial priors. Synthesizing photorealistic, cluttered scenes requires an understanding of geometry, including perspective and relative scale. Prior works adapt T2I models to leverage this prior for depth prediction, but they require dense depth data and involve complex recipes. We propose Modality Forcing, a simple, scalable post-training recipe for joint image-depth generation using a single DiT trained on sparse depth data. Modality Forcing enables conditional and joint generation of image and depth in any permutation by assigning separate noise levels per modality. Per-modality decoders let us train on sparse, real-world depth and achieve strong, generalizable depth prediction. We further show that Modality Forcing inherits the scalability of T2I pre-training: by training a set of T2I models from scratch (370M to 3.3B parameters), we find that larger models trained on more image data produce more accurate depth. Our strongest model is competitive with state-of-the-art monocular depth estimators and reduces AbsRel by 57% relative to existing joint image-depth generative models. These results provide strong evidence that image generation is a scalable pre-training objective for spatial perception. https://modality-forcing.github.io/",
+      "authors": [
+        "Bardienus Pieter Duisterhof",
+        "Deva Ramanan",
+        "Jeffrey Ichnowski",
+        "Justin Johnson",
+        "Keunhong Park"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T17:59:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.13676v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "joint image-depth generation for 3D-aware synthesis",
+      "llm_evidence_cn": "联合图像深度生成，用于3D感知合成",
+      "llm_evidence": "联合图像深度生成，用于3D感知合成",
+      "canonical_evidence": "联合图像深度生成，用于3D感知合成",
+      "llm_tldr_en": "Modality Forcing enables joint image-depth generation using a single DiT trained on sparse depth data, achieving strong depth prediction and inheriting scalability from T2I models.",
+      "llm_tldr_cn": "文本到图像模型蕴含丰富的空间先验，但现有方法需要稠密深度数据和复杂流程。Modality Forcing提出一种简单可扩展的后训练方案，通过为每种模态分配不同噪声水平，实现任意排列的图像-深度条件与联合生成。使用稀疏真实世界深度数据训练后，模型展现出强大的泛化深度预测能力，并继承了T2I模型的可扩展性，为空间生成提供了新范式。",
+      "llm_tldr": "文本到图像模型蕴含丰富的空间先验，但现有方法需要稠密深度数据和复杂流程。Modality Forcing提出一种简单可扩展的后训练方案，通过为每种模态分配不同噪声水平，实现任意排列的图像-深度条件与联合生成。使用稀疏真实世界深度数据训练后，模型展现出强大的泛化深度预测能力，并继承了T2I模型的可扩展性，为空间生成提供了新范式。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.08655v1",
+      "source": "arxiv",
+      "title": "PhysGraph: A Physics-aware 3D Scene Graph for Perception and Reasoning",
+      "abstract": "To perform a wide range of daily tasks, robots need to construct a 3D representation that is semantically rich, physically grounded, and structured enough to support task planning and affordance prediction. However, existing approaches primarily focus on semantic retrieval, often overlooking physical and kinematic factors. Methods that attempt to model physical properties typically rely on narrow training sets or single-object modeling, limiting scalability and generalization across diverse object types. To address these challenges, we present PhysGraph, a framework that unifies symbolic reasoning with structured 3D geometry to model kinematic and physical properties in cluttered scenes. Given RGB-D observations, PhysGraph reconstructs object-centric 3D geometry and associates object instances across views. It then decomposes objects into functional parts and infers materials and articulations through visual reasoning. Evaluated on both synthetic and real-world datasets, PhysGraph achieves state-of-the-art results in semantic segmentation, multi-object mass estimation, and articulation prediction. With its simple yet effective design, PhysGraph produces physically consistent and semantically structured scene graphs, serving as a structured 3D representation for downstream tasks such as constraint-aware 3D affordance prediction and real-to-sim transfer, both of which are demonstrated in our experiments.",
+      "authors": [
+        "Haoyu Li",
+        "Aaron Thomas",
+        "Shuyan Zhou",
+        "Xianyi Cheng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-06-07T14:50:44+00:00",
+      "link": "https://arxiv.org/pdf/2606.08655v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics-aware 3D scene graph for world model reasoning",
+      "llm_evidence_cn": "物理感知3D场景图，可用于世界模型推理",
+      "llm_evidence": "物理感知3D场景图，可用于世界模型推理",
+      "canonical_evidence": "物理感知3D场景图，可用于世界模型推理",
+      "llm_tldr_en": "PhysGraph unifies symbolic reasoning with structured 3D geometry to model kinematic and physical properties in cluttered scenes, supporting task planning and affordance prediction.",
+      "llm_tldr_cn": "针对现有3D表示方法忽略物理因素的问题，提出了PhysGraph框架，该框架将符号推理与结构化3D几何统一起来，以建模杂乱场景中的运动学和物理属性。通过RGB-D观测重建以物体为中心的3D表示，支持任务规划和功能预测。实验表明该方法在物理感知推理任务上表现优越，为机器人的世界模型构建提供了新思路。",
+      "llm_tldr": "针对现有3D表示方法忽略物理因素的问题，提出了PhysGraph框架，该框架将符号推理与结构化3D几何统一起来，以建模杂乱场景中的运动学和物理属性。通过RGB-D观测重建以物体为中心的3D表示，支持任务规划和功能预测。实验表明该方法在物理感知推理任务上表现优越，为机器人的世界模型构建提供了新思路。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.11816v1",
+      "source": "arxiv",
+      "title": "WorldReasoner: Evaluating Whether Language Model Agents Forecast Events with Valid Reasoning",
+      "abstract": "Forecasting real-world events requires language-model agents to reason under uncertainty from incomplete, time-bounded information. Yet evaluating whether agents genuinely forecast requires more than final-answer accuracy: a model may be correct by recalling memorized training facts, citing fabricated evidence, or producing an unsupported causal story. We present WorldReasoner, an evaluation framework for temporally valid event forecasting. Each task gives an agent a resolved forecasting question, a simulated forecast date, and access only to evidence available before that date; after resolution, the framework scores the submitted probability, cited evidence, and optional causal event graph. WorldReasoner reports three complementary axes: outcome quality against resolved answers, evidence quality over cited sources, and reasoning quality against post-resolution hindsight graphs. The benchmark is built by an agentic construction pipeline that generates forecasting questions, collects time-stamped evidence, and builds hindsight reference graphs at scale, yielding 345 resolved tasks derived from 14,141 articles with graphs covering 8,087 extracted events. Across six controlled agent settings, temporally valid retrieval is the strongest driver of outcome accuracy; causal graph construction improves key-event recovery; and correct graph-enabled forecasts are more strongly grounded in key events and relevant sources, yet agents still struggle to convert grounded evidence into calibrated probabilities.",
+      "authors": [
+        "Yizhou Chi",
+        "Eric Chamoun",
+        "Zifeng Ding",
+        "Andreas Vlachos"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-10T08:50:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.11816v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "world model evaluation for forecasting",
+      "llm_evidence_cn": "世界模型在事件预测中的应用评估",
+      "llm_evidence": "世界模型在事件预测中的应用评估",
+      "canonical_evidence": "世界模型在事件预测中的应用评估",
+      "llm_tldr_en": "WorldReasoner evaluates language model agents' forecasting validity using temporally constrained evidence, providing a framework for assessing world model reasoning.",
+      "llm_tldr_cn": "现有语言模型在事件预测中可能依赖记忆或捏造证据，缺乏有效评估。本文提出WorldReasoner框架，通过时间约束下的证据和因果图，评估智能体预测推理的有效性。实验表明该框架能有效区分真实推理与表面正确，为世界模型推理能力提供可靠评测手段。",
+      "llm_tldr": "现有语言模型在事件预测中可能依赖记忆或捏造证据，缺乏有效评估。本文提出WorldReasoner框架，通过时间约束下的证据和因果图，评估智能体预测推理的有效性。实验表明该框架能有效区分真实推理与表面正确，为世界模型推理能力提供可靠评测手段。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.12688v1",
+      "source": "arxiv",
+      "title": "M*: A Modular, Extensible, Serving System for Multimodal Models",
+      "abstract": "We are entering a new era of composite model architectures that integrate diverse components such as vision encoders, language backbones, diffusion and flow heads, audio codecs, action generators, and world-model predictors. Such architectures underpin a broad class of multimodal models, including unified multimodal models, omni models, speech-language models, vision-language-action policies, and world models. However, existing model serving frameworks were built on narrow assumptions about model structure, making them ill-suited to accommodate this new architectural diversity. Here we present M*, a universal serving system for efficient serving of composite AI models. M* represents models as dataflow graphs, processing requests spanning diverse modalities and tasks as traversals over these graphs. The core insight is a modular abstraction that supports arbitrary composition of model components, flexible placement onto a physical cluster, and model-agnostic optimizations within a distributed runtime. We call this abstraction the Walk Graph and show how it can concisely capture composite models from a broad range of families. We instantiate M* on representative models and find that it achieves, on average, 20% lower end-to-end latency than vLLM-Omni for text-to-image workloads on BAGEL, while delivering up to 2.9x lower real-time factor and 2.7x higher throughput for text-to-speech workloads on Qwen3-Omni. M* also outperforms the V-JEPA 2-AC rollout baseline for robotic planning by up to 12.5x. Thus, our work paves the road towards more efficient serving of complex models with minimal developer effort.",
+      "authors": [
+        "Atindra Jha",
+        "Naomi Sagan",
+        "Keisuke Kamahori",
+        "Irmak Sivgin",
+        "Rohan Sanda",
+        "Steven Gao",
+        "Mark Horowitz",
+        "Luke Zettlemoyer",
+        "Olivia Hsu",
+        "Jure Leskovec",
+        "Baris Kasikci",
+        "Stephanie Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.DC"
+      ],
+      "published": "2026-06-10T21:22:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.12688v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "serving system supporting world model predictors",
+      "llm_evidence_cn": "支持世界模型预测器的多模态模型服务系统",
+      "llm_evidence": "支持世界模型预测器的多模态模型服务系统",
+      "canonical_evidence": "支持世界模型预测器的多模态模型服务系统",
+      "llm_tldr_en": "M* is a universal serving system for composite AI models including world models, enabling efficient deployment via dataflow graph representation.",
+      "llm_tldr_cn": "复合多模态模型如世界模型需要灵活的服务系统，现有框架适应性差。本文提出M*，将模型表示为数据流图，高效处理多种模态请求。该系统支持世界模型等架构，显著提升推理吞吐量和资源利用率，为世界模型实际部署提供基础设施。",
+      "llm_tldr": "复合多模态模型如世界模型需要灵活的服务系统，现有框架适应性差。本文提出M*，将模型表示为数据流图，高效处理多种模态请求。该系统支持世界模型等架构，显著提升推理吞吐量和资源利用率，为世界模型实际部署提供基础设施。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.12994v1",
+      "source": "arxiv",
+      "title": "DeepJEB++: Foundation Model-Driven Large-Scale 3D Engineering Dataset via 2D Latent Space Augmentation",
+      "abstract": "Data-driven engineering design is constrained by the lack of large-scale 3D datasets that pair geometry with physics-based performance labels. In particular, existing 3D data augmentation techniques have limitations in preserving subtle and diverse geometric variations, and it remains difficult to automate the subsequent simulation-labeling process, where boundary conditions vary depending on the generated geometry. We present DeepJEB++, a foundation-model-driven data-augmentation framework that expands a small seed set of jet engine brackets into a large, simulation-labeled 3D dataset under constrained resources. Our key idea is to augment in the data-rich 2D latent space, then transfer to 3D. In Stage 1, we fine-tune a pretrained 2D latent diffusion model on multi-view renders and synthesize novel views by latent interpolation, retaining manufacturable designs through a vision-language-model (VLM) quality filter. In Stage 2, the validated images are lifted to 3D meshes by a domain-adapted generative foundation model. In Stage 3, an automated pipeline recognizes the load and bolt interfaces on each mesh and assigns finite-element labels -- mass, stress, and displacement -- without manual intervention. We assess augmentation quality along three intrinsic axes: manufacturability, label fidelity against the SimJEB ground truth, and distributional consistency. Starting from fewer than 400 seed designs, DeepJEB++ yields 15,360 simulation-labeled 3D brackets -- a 40x expansion -- using a single GPU per stage. The dataset will be made publicly available to support reproducible engineering-AI research.",
+      "authors": [
+        "Soyoung Yoo",
+        "Leekyo Jeong",
+        "Jinsu Ra",
+        "Dongeon Lee",
+        "Sunwoong Yang",
+        "Hyogu Jeong",
+        "Namwoo Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CE"
+      ],
+      "published": "2026-06-11T07:30:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.12994v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "foundation model-driven 3D dataset generation via augmentation",
+      "llm_evidence_cn": "基础模型驱动的3D数据集增强生成",
+      "llm_evidence": "基础模型驱动的3D数据集增强生成",
+      "canonical_evidence": "基础模型驱动的3D数据集增强生成",
+      "llm_tldr_en": "DeepJEB++ uses foundation models to augment 2D latent space and transfer to 3D, generating large-scale simulation-labeled 3D engineering datasets.",
+      "llm_tldr_cn": "工程设计的3D数据集稀缺且标注昂贵。本文提出DeepJEB++，在数据丰富的2D潜空间进行增强，再映射到3D，结合基础模型自动生成多样化的3D支架并附带仿真标签。该方法大幅扩大了数据集规模，且保持几何多样性。",
+      "llm_tldr": "工程设计的3D数据集稀缺且标注昂贵。本文提出DeepJEB++，在数据丰富的2D潜空间进行增强，再映射到3D，结合基础模型自动生成多样化的3D支架并附带仿真标签。该方法大幅扩大了数据集规模，且保持几何多样性。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

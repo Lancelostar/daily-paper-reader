@@ -6,53 +6,67 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-13
-- 运行时间：2026-06-13 20:56:55 UTC
+- 最新运行日期：2026-06-14
+- 运行时间：2026-06-14 20:44:06 UTC
 - 运行状态：成功
-- 本次总论文数：11
-- 精读区：5
-- 速读区：6
+- 本次总论文数：15
+- 精读区：7
+- 速读区：8
 
 ### 今日简报（AI）
-今日共推荐11篇论文，精读2篇高分（9.0）：《ExMesh》专注自适应拓扑的显式网格重建，《Dream-Tac》提出用于接触丰富机器人操作的统一触觉世界模型。建议优先研读这两篇，分别聚焦几何拓扑自适应与触觉驱动的机器人操作前沿方向。
-- 详情：[/202606/13/README](/202606/13/README)
+今日精选7篇精读论文，涵盖世界模型、物理AI与三维重建前沿。
+最值得关注的是满分教程《World Models and Physical AI》以及9分新方法《Wild3R》实现无约束稀疏照片的3D高斯泼溅重建。
+普通读者可优先阅读10分教程打基础，再深入《Wild3R》了解3D重建前沿。
+- 详情：[/202606/14/README](/202606/14/README)
 
 ### 精读区论文标签
-1. [ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation](/202606/13/2606.07288v1-exmesh-explicit-mesh-reconstruction-with-topology-adaptation)  
+1. [A Tutorial on World Models and Physical AI](/202606/14/2606.12783v1-a-tutorial-on-world-models-and-physical-ai)  
+   标签：评分：10.0/10、query:world-model
+   evidence：世界模型与物理AI教程
+2. [Wild3R: Feed-Forward 3D Gaussian Splatting from Unconstrained Sparse Photo Collection](/202606/14/2606.11894v2-wild3r-feed-forward-3d-gaussian-splatting-from-unconstrained-sparse-photo-collection)  
    标签：评分：9.0/10、query:d-gen
-   evidence：直接从多视图图像重建显式网格，属于核心3D生成任务
-2. [Dream-Tac: A Unified Tactile World Action Model for Contact-Rich Robot Manipulation](/202606/13/2606.08737v1-dream-tac-a-unified-tactile-world-action-model-for-contact-rich-robot-manipulation)  
+   evidence：前馈3DGS用于稀疏照片3D生成
+3. [VISA: VLM-Guided Instance Semantic Auditing for 3D Occupancy World Models](/202606/14/2606.13460v1-visa-vlm-guided-instance-semantic-auditing-for-3d-occupancy-world-models)  
    标签：评分：9.0/10、query:world-model
-   evidence：世界动作模型继承了世界模型的预测能力
-3. [Flexible route planning and rapid structure learning by mice in complex environments](/202606/13/biorxiv-10-64898-2026-06-02-729586-v1-flexible-route-planning-and-rapid-structure-learning-by-mice-in-complex-environments)  
-   标签：评分：9.0/10、query:world-model
-   evidence：直接研究空间导航中的世界模型和结构学习
-4. [EvoGS: Constructing Continuous-Layered Gaussian Splatting with Evolution Tree for Scalable 3D Streaming](/202606/13/2606.07179v1-evogs-constructing-continuous-layered-gaussian-splatting-with-evolution-tree-for-scalable-3d-streaming)  
+   evidence：VLM引导的3D占据世界模型语义审计
+4. [World Tracing: Generative Pixel-Aligned Geometry Beyond the Visible](/202606/14/2606.13652v1-world-tracing-generative-pixel-aligned-geometry-beyond-the-visible)  
+   标签：评分：9.0/10、query:d-gen
+   evidence：生成式像素对齐几何，用于图像到3D完成
+5. [JointEdit3D: Feed-Forward 3D Scene Editing in a Unified Latent Space](/202606/14/2606.13345v1-jointedit3d-feed-forward-3d-scene-editing-in-a-unified-latent-space)  
    标签：评分：8.0/10、query:d-gen
-   evidence：连续分层高斯溅射表示，用于可扩展3D流式传输
-5. [Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting](/202606/13/2606.11841v1-scene-adaptive-nonlinear-tone-curves-for-pseudo-ground-truth-generation-in-low-light-3d-gaussian-splatting)  
+   evidence：前馈3D场景编辑，涉及生成
+6. [VideoMDM: Towards 3D Human Motion Generation From 2D Supervision](/202606/14/2606.13364v1-videomdm-towards-3d-human-motion-generation-from-2d-supervision)  
    标签：评分：8.0/10、query:d-gen
-   evidence：低光照3D高斯泼溅新视图合成
+   evidence：从2D姿态生成3D人体运动
+7. [MoVerse: Real-Time Video World Modeling with Panoramic Gaussian Scaffold](/202606/14/2606.13376v1-moverse-real-time-video-world-modeling-with-panoramic-gaussian-scaffold)  
+   标签：评分：8.0/10、query:world-model
+   evidence：从单张图像进行实时视频世界建模
 
 ### 速读区论文标签
-1. [XPR: An Extensible Cross-Platform Point-Based Differentiable Renderer](/202606/13/2606.11529v1-xpr-an-extensible-cross-platform-point-based-differentiable-renderer)  
+1. [Surflo: Consistent 3D Surface Flow Model with Global State](/202606/14/2606.13644v1-surflo-consistent-3d-surface-flow-model-with-global-state)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：用于生成点云的3D表面流模型
+2. [Modality Forcing for Scalable Spatial Generation](/202606/14/2606.13676v1-modality-forcing-for-scalable-spatial-generation)  
+   标签：评分：8.0/10、query:d-gen
+   evidence：联合图像深度生成，用于3D感知合成
+3. [OmniFaceRig: Fully Automatic Inner-Mouth-Aware Face Rigging Across Diverse 3D Character Topologies](/202606/14/2606.08043v1-omnifacerig-fully-automatic-inner-mouth-aware-face-rigging-across-diverse-3d-character-topologies)  
    标签：评分：7.0/10、query:d-gen
-   evidence：可扩展的可微渲染器，支持3D图形管线
-2. [4DP-QA: Scalable QA for 4D Perception in Vision Language Models](/202606/13/2606.11568v1-4dp-qa-scalable-qa-for-4d-perception-in-vision-language-models)  
+   evidence：自动生成3D角色面部绑骨
+4. [PhysGraph: A Physics-aware 3D Scene Graph for Perception and Reasoning](/202606/14/2606.08655v1-physgraph-a-physics-aware-3d-scene-graph-for-perception-and-reasoning)  
    标签：评分：7.0/10、query:world-model
-   evidence：视觉语言模型的4D感知与世界动态理解
-3. [Seeing What Matters: Perceptual Wrapper with Common Randomness for 3D Gaussian Splatting](/202606/13/2606.11782v1-seeing-what-matters-perceptual-wrapper-with-common-randomness-for-3d-gaussian-splatting)  
+   evidence：物理感知3D场景图，可用于世界模型推理
+5. [WorldReasoner: Evaluating Whether Language Model Agents Forecast Events with Valid Reasoning](/202606/14/2606.11816v1-worldreasoner-evaluating-whether-language-model-agents-forecast-events-with-valid-reasoning)  
+   标签：评分：7.0/10、query:world-model
+   evidence：世界模型在事件预测中的应用评估
+6. [M*: A Modular, Extensible, Serving System for Multimodal Models](/202606/14/2606.12688v1-m-a-modular-extensible-serving-system-for-multimodal-models)  
+   标签：评分：7.0/10、query:world-model
+   evidence：支持世界模型预测器的多模态模型服务系统
+7. [DeepJEB++: Foundation Model-Driven Large-Scale 3D Engineering Dataset via 2D Latent Space Augmentation](/202606/14/2606.12994v1-deepjeb-foundation-model-driven-large-scale-3d-engineering-dataset-via-2d-latent-space-augmentation)  
    标签：评分：7.0/10、query:d-gen
-   evidence：改进3D高斯泼溅渲染质量，属于3D生成领域近期进展
-4. [Generating whole-brain neural activity and behavior through unified latent dynamics](/202606/13/biorxiv-10-64898-2026-06-05-730482-v1-generating-whole-brain-neural-activity-and-behavior-through-unified-latent-dynamics)  
-   标签：评分：7.0/10、query:world-model
-   evidence：构建全脑动力学生成模型，作为神经与行为数据的世界模型
-5. [Stream3D-VLM: Online 3D Spatial Understanding with Incremental Geometry Priors](/202606/13/2606.06891v1-stream3d-vlm-online-3d-spatial-understanding-with-incremental-geometry-priors)  
-   标签：评分：6.0/10、query:world-model
-   evidence：在线3D空间理解，增量几何先验用于实时世界感知
-6. [SHERPA: Seam-aware Harmonized ERP Adaptation for Open-Domain 360$^\circ$ Panorama Generation](/202606/13/2606.12213v1-sherpa-seam-aware-harmonized-erp-adaptation-for-open-domain-360circ-panorama-generation)  
-   标签：评分：6.0/10、query:world-model
-   evidence：用于世界构建和模拟的全景图生成
+   evidence：基础模型驱动的3D数据集增强生成
+8. [Internalizing Geometric Law: Learning from Solver Residuals for Precision-Critical Generation](/202606/14/2606.09278v1-internalizing-geometric-law-learning-from-solver-residuals-for-precision-critical-generation)  
+   标签：评分：6.0/10、query:d-gen
+   evidence：从文本生成精确几何结构，与3D生成模型相关
 
 
 <div class="dpr-home-promo-card">
