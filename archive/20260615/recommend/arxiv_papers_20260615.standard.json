@@ -1,0 +1,478 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-15T22:36:10.869139+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 4,
+    "deep_cap": 7,
+    "deep_selected": 4,
+    "quick_candidates": 7,
+    "quick_skim_target": 12,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2606.14048v1",
+      "source": "arxiv",
+      "title": "WAM4D: Fast 4D World Action Model via Spatial Register Tokens",
+      "abstract": "World action models (WAMs) have recently shown promise in jointly modeling future observations and executable robot actions. However, most existing WAMs still operate in 2D video or latent spaces, where visually plausible rollouts miss the 3D spatial constraints and occluded contact geometry required for precise manipulation. While geometric foundation models offer strong priors for recovering dense 3D structure and motion from visual observations, forcing WAMs to predict the dense 4D representation introduces costly geometric decoding and slows down causal action generation. To address the trade-off, we present WAM4D, a fast 4D world action model that uses lightweight spatial register tokens as training-time future-depth readouts to transfer pretrained geometric priors into a causal video-action transformer, then removes the register branch for lightweight action inference. To prevent non-causal shortcuts, we further design causal mixture attention for the Mixture-of-Transformers (MoT) WAM backbone, defining modality-specific visibility among video, action, and geometry tokens. Comprehensive experiments on RoboTwin 2.0 and challenging real-world manipulation tasks show that WAM4D improves spatial consistency and achieves competitive action prediction while maintaining efficient inference.",
+      "authors": [
+        "Ying Li",
+        "Xiaobao Wei",
+        "Jiajun Cao",
+        "Hao Wang",
+        "Xiaowei Chi",
+        "Chengyu Bai",
+        "Qianpu Sun",
+        "Jiajun Li",
+        "Xiaojie Zhang",
+        "Jian Tang",
+        "Sirui Han",
+        "Shanghang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-12T02:49:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.14048v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Fast 4D world action model using spatial register tokens",
+      "llm_evidence_cn": "基于空间注册令牌的快速4D世界动作模型",
+      "llm_evidence": "基于空间注册令牌的快速4D世界动作模型",
+      "canonical_evidence": "基于空间注册令牌的快速4D世界动作模型",
+      "llm_tldr_en": "WAM4D uses lightweight spatial register tokens as future-depth readouts to enable fast 4D world action modeling that preserves 3D geometry for precise manipulation.",
+      "llm_tldr_cn": "WAM4D面向机器人操作，提出轻量级空间注册令牌作为训练时未来深度读出的信号，将预训练几何模型的知识迁移到世界动作模型中。该方法在保持3D几何约束的同时，显著加速了4D预测。实验表明，WAM4D在真实机器人任务中实现了精确的操纵，平衡了效率与几何精度。",
+      "llm_tldr": "WAM4D面向机器人操作，提出轻量级空间注册令牌作为训练时未来深度读出的信号，将预训练几何模型的知识迁移到世界动作模型中。该方法在保持3D几何约束的同时，显著加速了4D预测。实验表明，WAM4D在真实机器人任务中实现了精确的操纵，平衡了效率与几何精度。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14574v1",
+      "source": "arxiv",
+      "title": "SIMMER: Benchmarking Latent Failures in LLM Executable Planning with a World Model",
+      "abstract": "Large language models (LLMs) are increasingly deployed as planners for autonomous agents in household environments. While existing benchmarks evaluate whether LLM-generated plans execute successfully, they overlook a critical type of failure: latent failures. Unlike immediate failures that trigger instant feedback at execution time and enable timely correction, latent failures do not immediately halt plan execution but silently compromise goal achievement. In severe cases, they cause irreversible harm. To address this gap, we introduce SIMMER, a benchmark for evaluating latent failures in LLM planning through a human-curated symbolic world model grounded in the kitchen domain. SIMMER defines a world model comprising 77 actions, 262 unique objects, and approximately 46,800 possible interactions that are semantically realistic, derived from real-world cooking scripts. It then leverages a state machine executor that validates plans against the world model and detects immediate precondition violations, latent hazards, and irreversible failures. Experiments across six LLMs show that even frontier models achieve at most 17% error-free plans. Moreover, up to 56% of plans contain latent failures, the majority of which lead to irreversible consequences. We further demonstrate that explicit state reasoning via counterfactual foresight simulation can reduce latent failures by up to 72% and irreversible cases by up to 75%, suggesting a promising direction for more robust LLM planners.",
+      "authors": [
+        "Xiaoxin Lu",
+        "Ranran Haoran Zhang",
+        "Rui Zhang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T15:53:16+00:00",
+      "link": "https://arxiv.org/pdf/2606.14574v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for LLM planning using a world model",
+      "llm_evidence_cn": "利用世界模型评估LLM规划的基准",
+      "llm_evidence": "利用世界模型评估LLM规划的基准",
+      "canonical_evidence": "利用世界模型评估LLM规划的基准",
+      "llm_tldr_en": "SIMMER is a benchmark for latent failures in LLM planning, using a human-curated symbolic world model in the kitchen domain to detect silent failures that compromise goal achievement.",
+      "llm_tldr_cn": "现有评估LLM规划成功的基准忽略了潜伏失败这一关键问题：这些失败不会立即中止执行，却会悄然破坏目标达成。为此，本文引入SIMMER基准，通过精心构建的厨房领域符号世界模型来评估潜伏失败。该世界模型包含77个动作和262个唯一对象，能够捕捉LLM规划中隐藏的错误。实验表明，当前LLM在检测潜伏失败方面存在显著不足。本工作为更可靠的自主规划系统提供了评估工具。",
+      "llm_tldr": "现有评估LLM规划成功的基准忽略了潜伏失败这一关键问题：这些失败不会立即中止执行，却会悄然破坏目标达成。为此，本文引入SIMMER基准，通过精心构建的厨房领域符号世界模型来评估潜伏失败。该世界模型包含77个动作和262个唯一对象，能够捕捉LLM规划中隐藏的错误。实验表明，当前LLM在检测潜伏失败方面存在显著不足。本工作为更可靠的自主规划系统提供了评估工具。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14168v1",
+      "source": "arxiv",
+      "title": "MUSE: Agentic 3D Scene Authoring via Memory-Grounded Incremental Requirement Satisfaction",
+      "abstract": "Text-driven 3D scene generation is a promising technique for digital content creation, embodied AI simulation, and interactive design, yet practical workflows often require refining, extending, or correcting existing scenes while preserving non-target content. Existing methods can produce realistic and structurally plausible scenes, but they generally lack editability with requirement-level state tracking, so part-level failures often lead to full-scene regeneration or manual intervention. To tackle this challenge, we formulate controllable 3D scene authoring as incremental requirement satisfaction, unifying construction and editing. In this paper, we present MUSE, a memory-grounded multi-agent framework in which an Architect compiles instructions into structured requirements, a Sculptor executes local scene operations, and an Inspector verifies each step while updating Working, Scene, and Skill Memory. To evaluate requirement-level controllability and preservation-aware editing, we introduce AuthorBench, offering 145 constrained construction cases and a 1,584-case preservation-aware editing pool paired with external structured checks. On full construction cases, MUSE improves All-Goal success from 37.9 to 80.7 and surface-constraint fulfillment from 35.0 to 92.6 over the strongest baseline. On a stratified 240-case editing test split, MUSE achieves 49.6 All-Goal success, 99.9 preservation rate, and only 0.6 unintended change rate. Beyond automated metrics, human evaluations on compared local-editing baselines support stronger alignment with user intent, and downstream navigation-proxy tests indicate stronger spatial stability. Combined with ablations validating our memory designs, these results establish MUSE as an effective framework for controllable 3D scene authoring.",
+      "authors": [
+        "Ruijie Xu",
+        "Xinnan Zhu",
+        "Jiayu Ying",
+        "Daoguo Dong",
+        "Yuzhou Ji",
+        "Xin Tan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-12T06:51:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.14168v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "agentic 3D scene authoring with incremental requirement satisfaction",
+      "llm_evidence_cn": "基于增量需求满足的智能体3D场景创作",
+      "llm_evidence": "基于增量需求满足的智能体3D场景创作",
+      "canonical_evidence": "基于增量需求满足的智能体3D场景创作",
+      "llm_tldr_en": "MUSE formulates controllable 3D scene authoring as incremental requirement satisfaction using a memory-grounded multi-agent framework, enabling refinement without full regeneration.",
+      "llm_tldr_cn": "文本驱动的3D场景生成支持数字内容创作，但现有方法缺乏编辑性和需求状态追踪，导致部分失败需完全重生成。本文将可控3D场景创作形式化为增量需求满足过程，提出MUSE框架，基于记忆的多智能体架构，由建筑师编译需求并逐步执行。实验表明MUSE能高效完成场景构建和编辑任务，避免了不必要的全面重生成。",
+      "llm_tldr": "文本驱动的3D场景生成支持数字内容创作，但现有方法缺乏编辑性和需求状态追踪，导致部分失败需完全重生成。本文将可控3D场景创作形式化为增量需求满足过程，提出MUSE框架，基于记忆的多智能体架构，由建筑师编译需求并逐步执行。实验表明MUSE能高效完成场景构建和编辑任务，避免了不必要的全面重生成。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.12688v1",
+      "source": "arxiv",
+      "title": "M*: A Modular, Extensible, Serving System for Multimodal Models",
+      "abstract": "We are entering a new era of composite model architectures that integrate diverse components such as vision encoders, language backbones, diffusion and flow heads, audio codecs, action generators, and world-model predictors. Such architectures underpin a broad class of multimodal models, including unified multimodal models, omni models, speech-language models, vision-language-action policies, and world models. However, existing model serving frameworks were built on narrow assumptions about model structure, making them ill-suited to accommodate this new architectural diversity. Here we present M*, a universal serving system for efficient serving of composite AI models. M* represents models as dataflow graphs, processing requests spanning diverse modalities and tasks as traversals over these graphs. The core insight is a modular abstraction that supports arbitrary composition of model components, flexible placement onto a physical cluster, and model-agnostic optimizations within a distributed runtime. We call this abstraction the Walk Graph and show how it can concisely capture composite models from a broad range of families. We instantiate M* on representative models and find that it achieves, on average, 20% lower end-to-end latency than vLLM-Omni for text-to-image workloads on BAGEL, while delivering up to 2.9x lower real-time factor and 2.7x higher throughput for text-to-speech workloads on Qwen3-Omni. M* also outperforms the V-JEPA 2-AC rollout baseline for robotic planning by up to 12.5x. Thus, our work paves the road towards more efficient serving of complex models with minimal developer effort.",
+      "authors": [
+        "Atindra Jha",
+        "Naomi Sagan",
+        "Keisuke Kamahori",
+        "Irmak Sivgin",
+        "Rohan Sanda",
+        "Steven Gao",
+        "Mark Horowitz",
+        "Luke Zettlemoyer",
+        "Olivia Hsu",
+        "Jure Leskovec",
+        "Baris Kasikci",
+        "Stephanie Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.DC"
+      ],
+      "published": "2026-06-10T21:22:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.12688v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "explicitly mentions world-model predictors and world models as key components of composite AI models",
+      "llm_evidence_cn": "明确提及世界模型预测器和世界模型作为复合AI模型的关键组件",
+      "llm_evidence": "明确提及世界模型预测器和世界模型作为复合AI模型的关键组件",
+      "canonical_evidence": "明确提及世界模型预测器和世界模型作为复合AI模型的关键组件",
+      "llm_tldr_en": "M* is a serving system for composite AI models including world models, enabling efficient deployment and inference of world model predictors across diverse modalities.",
+      "llm_tldr_cn": "当前复合模型架构集成了世界模型预测器等多种组件，但现有服务系统难以支持这种多样性。本文提出M*，一种通用服务系统，将模型表示为数据流图，实现多模态包括世界模型的高效服务。实验表明M*能有效处理包含世界模型的复合模型，支持大规模部署。该系统为世界模型的实际应用提供了基础设施支持。",
+      "llm_tldr": "当前复合模型架构集成了世界模型预测器等多种组件，但现有服务系统难以支持这种多样性。本文提出M*，一种通用服务系统，将模型表示为数据流图，实现多模态包括世界模型的高效服务。实验表明M*能有效处理包含世界模型的复合模型，支持大规模部署。该系统为世界模型的实际应用提供了基础设施支持。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.12994v1",
+      "source": "arxiv",
+      "title": "DeepJEB++: Foundation Model-Driven Large-Scale 3D Engineering Dataset via 2D Latent Space Augmentation",
+      "abstract": "Data-driven engineering design is constrained by the lack of large-scale 3D datasets that pair geometry with physics-based performance labels. In particular, existing 3D data augmentation techniques have limitations in preserving subtle and diverse geometric variations, and it remains difficult to automate the subsequent simulation-labeling process, where boundary conditions vary depending on the generated geometry. We present DeepJEB++, a foundation-model-driven data-augmentation framework that expands a small seed set of jet engine brackets into a large, simulation-labeled 3D dataset under constrained resources. Our key idea is to augment in the data-rich 2D latent space, then transfer to 3D. In Stage 1, we fine-tune a pretrained 2D latent diffusion model on multi-view renders and synthesize novel views by latent interpolation, retaining manufacturable designs through a vision-language-model (VLM) quality filter. In Stage 2, the validated images are lifted to 3D meshes by a domain-adapted generative foundation model. In Stage 3, an automated pipeline recognizes the load and bolt interfaces on each mesh and assigns finite-element labels -- mass, stress, and displacement -- without manual intervention. We assess augmentation quality along three intrinsic axes: manufacturability, label fidelity against the SimJEB ground truth, and distributional consistency. Starting from fewer than 400 seed designs, DeepJEB++ yields 15,360 simulation-labeled 3D brackets -- a 40x expansion -- using a single GPU per stage. The dataset will be made publicly available to support reproducible engineering-AI research.",
+      "authors": [
+        "Soyoung Yoo",
+        "Leekyo Jeong",
+        "Jinsu Ra",
+        "Dongeon Lee",
+        "Sunwoong Yang",
+        "Hyogu Jeong",
+        "Namwoo Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CE"
+      ],
+      "published": "2026-06-11T07:30:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.12994v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "proposes a framework for generating large-scale 3D engineering datasets via 2D latent space augmentation, directly related to generative 3D models",
+      "llm_evidence_cn": "提出通过2D潜在空间增强生成大规模3D工程数据集的框架，直接与生成3D模型相关",
+      "llm_evidence": "提出通过2D潜在空间增强生成大规模3D工程数据集的框架，直接与生成3D模型相关",
+      "canonical_evidence": "提出通过2D潜在空间增强生成大规模3D工程数据集的框架，直接与生成3D模型相关",
+      "llm_tldr_en": "DeepJEB++ uses foundation models in 2D latent space to augment and generate 3D engineering datasets with simulation labels, addressing data scarcity.",
+      "llm_tldr_cn": "数据驱动的工程设计缺乏大规模带物理标注的3D数据集，现有数据增强方法难以保持几何多样性。本文提出DeepJEB++框架，在数据丰富的2D潜在空间进行增强，再映射到3D，并利用基础模型自动生成仿真标签。实验将少量种子样本扩展为大规模带标签3D数据集，有效提升了数据多样性和可用性。该方法为3D生成模型训练提供了低成本高质量数据来源。",
+      "llm_tldr": "数据驱动的工程设计缺乏大规模带物理标注的3D数据集，现有数据增强方法难以保持几何多样性。本文提出DeepJEB++框架，在数据丰富的2D潜在空间进行增强，再映射到3D，并利用基础模型自动生成仿真标签。实验将少量种子样本扩展为大规模带标签3D数据集，有效提升了数据多样性和可用性。该方法为3D生成模型训练提供了低成本高质量数据来源。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.09278v1",
+      "source": "arxiv",
+      "title": "Internalizing Geometric Law: Learning from Solver Residuals for Precision-Critical Generation",
+      "abstract": "Large Language Models frequently hallucinate in precision-critical domains such as technical diagramming and mechanical design, where outputs must satisfy strict geometric constraints. We study open-ended geometric synthesis from natural language: translating free-form descriptions into precise constructions whose entities must simultaneously satisfy dozens of interacting constraints. To make this tractable, we release PyGeoX, a programmable geometric DSL that compiles declarative constraints into a differentiable loss, and PyGeoX-Bench, a stratified suite of 300 problems with per-constraint verifiable rewards. Using PyGeoX as a verifier, we identify a failure mode we call Outlier Gradient Masking: under global-norm rewards (any scheme that aggregates residuals through a single norm, for example, $\\exp(-\\mathrm{MSE})$), a single outlier constraint can nullify the learning signal across all others. To address this, we propose Saturating Additive Rewards (SAR), which decompose the reward into bounded per-constraint terms, preserving partial progress and ensuring consistent gradients even under severe violations. Against MSE-based rewards, the natural baseline for geometry solvers, SAR improves the hard-tier solving rate by $2.3\\times$, and the resulting 8B model is competitive with much larger frontier systems on this benchmark. We release the engine, benchmark, and data at https://github.com/Huawei-AI4Math/PyGeoX.",
+      "authors": [
+        "Rafael Cabral",
+        "Pang Zixi",
+        "Ziyi Shou",
+        "Shen Xin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-08T09:44:31+00:00",
+      "link": "https://arxiv.org/pdf/2606.09278v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "geometric synthesis from natural language for precision-critical generation, relates to generative 3D models",
+      "llm_evidence_cn": "从自然语言进行几何合成用于精确生成，与生成式3D模型相关",
+      "llm_evidence": "从自然语言进行几何合成用于精确生成，与生成式3D模型相关",
+      "canonical_evidence": "从自然语言进行几何合成用于精确生成，与生成式3D模型相关",
+      "llm_tldr_en": "Proposes PyGeoX, a geometric DSL for precise 3D generation from natural language, addressing hallucination via differentiable constraint loss.",
+      "llm_tldr_cn": "大语言模型在精确几何领域常产生幻觉，本文提出PyGeoX可编程几何领域特定语言，将声明式约束编译为可微损失以指导生成。在300个问题上验证了有效性，并发现全局范数奖励下的异常梯度掩盖问题，为3D精确生成提供了新方法。",
+      "llm_tldr": "大语言模型在精确几何领域常产生幻觉，本文提出PyGeoX可编程几何领域特定语言，将声明式约束编译为可微损失以指导生成。在300个问题上验证了有效性，并发现全局范数奖励下的异常梯度掩盖问题，为3D精确生成提供了新方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.12994v2",
+      "source": "arxiv",
+      "title": "DeepJEB++: Foundation Model-Driven Large-Scale 3D Engineering Dataset via 2D Latent Space Augmentation",
+      "abstract": "Data-driven engineering design is constrained by the lack of large-scale 3D datasets that pair geometry with physics-based performance labels. In particular, existing 3D data augmentation techniques have limitations in preserving subtle and diverse geometric variations, and it remains difficult to automate the subsequent simulation-labeling process, where boundary conditions vary depending on the generated geometry. We present DeepJEB++, a foundation-model-driven data-augmentation framework that expands a small seed set of jet engine brackets into a large, simulation-labeled 3D dataset under constrained resources. Our key idea is to augment in the data-rich 2D latent space, then transfer to 3D. In Stage 1, we fine-tune a pretrained 2D latent diffusion model on multi-view renders and synthesize novel views by latent interpolation, retaining manufacturable designs through a vision-language-model (VLM) quality filter. In Stage 2, the validated images are lifted to 3D meshes by a domain-adapted generative foundation model. In Stage 3, an automated pipeline recognizes the load and bolt interfaces on each mesh and assigns finite-element labels -- mass, stress, and displacement -- without manual intervention. We assess augmentation quality along three intrinsic axes: manufacturability, label fidelity against the SimJEB ground truth, and distributional consistency. Starting from fewer than 400 seed designs, DeepJEB++ yields 15,360 simulation-labeled 3D brackets -- a 40x expansion -- using a single GPU per stage. The dataset will be made publicly available to support reproducible engineering-AI research.",
+      "authors": [
+        "Soyoung Yoo",
+        "Leekyo Jeong",
+        "Jinsu Ra",
+        "Dongeon Lee",
+        "Sunwoong Yang",
+        "Hyogu Jeong",
+        "Namwoo Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CE"
+      ],
+      "published": "2026-06-11T07:30:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.12994v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Foundation model-driven 3D dataset augmentation in 2D latent space for engineering",
+      "llm_evidence_cn": "基础模型驱动的2D潜空间3D工程数据集增强",
+      "llm_evidence": "基础模型驱动的2D潜空间3D工程数据集增强",
+      "canonical_evidence": "基础模型驱动的2D潜空间3D工程数据集增强",
+      "llm_tldr_en": "DeepJEB++ uses a foundation model to augment 3D engineering datasets in 2D latent space, enabling large-scale simulation-labeled 3D data generation under constrained resources.",
+      "llm_tldr_cn": "针对3D工程数据稀缺问题，DeepJEB++提出基于基础模型的数据增强框架，在数据丰富的2D潜空间进行增强再迁移至3D，从而在有限资源下将小种子集扩展为大规模带仿真标签的3D数据集，显著降低了3D数据生成的门槛，为工程领域提供了可扩展的数据生成方案。",
+      "llm_tldr": "针对3D工程数据稀缺问题，DeepJEB++提出基于基础模型的数据增强框架，在数据丰富的2D潜空间进行增强再迁移至3D，从而在有限资源下将小种子集扩展为大规模带仿真标签的3D数据集，显著降低了3D数据生成的门槛，为工程领域提供了可扩展的数据生成方案。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.11314v1",
+      "source": "arxiv",
+      "title": "TRON: Tracing Rays to Orchestrate a Neural Renderer for 3D Gaussian Reconstructions",
+      "abstract": "We introduce TRON, a rendering framework that combines 3D Gaussian ray tracing with neural rendering to enable realistic and controllable rendering of real-world 3D scenes under novel lighting, dynamic object motion, object insertion, and material editing. Prior approaches that rely solely on physically based rendering (PBR) of Gaussian representations struggle to achieve realistic relighting due to imperfections in reconstructed geometry, material estimates, and light transport estimation. At the same time, neural rendering methods often lack an explicit scene representation, limiting their ability to support interactive editing with fine-grained manipulation. TRON bridges these two paradigms. We use intrinsic decomposition priors from a learned inverse rendering model to regularize the material properties of a Gaussian field, and repurpose a ray tracer to provide radiometric guidance rather than final pixels. By treating this output as a structured 3D scaffold, we empower a lightweight neural renderer to bridge the domain gap between shading-model constrained estimates and photorealistic output. Our key insight is that the combination of explicit 3D knowledge with robust material priors provides speed and controllability, while neural rendering enables the synthesis of photorealistic images. To support real-world scenarios, we train our neural renderer with a multi-stage strategy consisting of large-scale pretraining and targeted fine-tuning on a newly constructed dataset of 2.1M rendered synthetic and real-world frames from 3D reconstructions. TRON outperforms Gaussian-based relighting methods in realism, and prior neural renderers in editability and speed. To the best of our knowledge, TRON is the first method to enable practical interactive applications in captured 3D environments, offering realistic appearance under dynamic geometric, lighting and material conditions.",
+      "authors": [
+        "Or Perel",
+        "Hassan Abu Alhaija",
+        "Zian Wang",
+        "Jacob Munkberg",
+        "Matan Atzmon",
+        "Sanja Fidler",
+        "Masha Shugrina"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-09T18:01:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.11314v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "combines 3D Gaussian ray tracing with neural rendering for realistic controllable rendering of 3D scenes, relevant to generative 3D models",
+      "llm_evidence_cn": "结合3D高斯射线追踪和神经渲染实现真实感可控3D场景渲染，与生成3D模型相关",
+      "llm_evidence": "结合3D高斯射线追踪和神经渲染实现真实感可控3D场景渲染，与生成3D模型相关",
+      "canonical_evidence": "结合3D高斯射线追踪和神经渲染实现真实感可控3D场景渲染，与生成3D模型相关",
+      "llm_tldr_en": "TRON enables realistic controllable rendering of 3D Gaussian reconstructions with novel lighting, motion, and object insertion, advancing 3D generation.",
+      "llm_tldr_cn": "现有基于物理的渲染因几何和材质估计不完美而重光照效果差，纯神经渲染缺乏显式场景表示。本文提出TRON，结合3D高斯射线追踪与神经渲染，利用内在分解先验实现真实感重光照、动态物体运动、物体插入和材质编辑。实验在多个场景上展示了逼真且可控的渲染结果。该方法为3D生成模型的可控渲染和编辑提供了新范式。",
+      "llm_tldr": "现有基于物理的渲染因几何和材质估计不完美而重光照效果差，纯神经渲染缺乏显式场景表示。本文提出TRON，结合3D高斯射线追踪与神经渲染，利用内在分解先验实现真实感重光照、动态物体运动、物体插入和材质编辑。实验在多个场景上展示了逼真且可控的渲染结果。该方法为3D生成模型的可控渲染和编辑提供了新范式。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.14389v1",
+      "source": "arxiv",
+      "title": "MooMIns -- Monocular 3D Reconstruction and Object Pose Estimation from Multiple Instances",
+      "abstract": "Simultaneous 3D reconstruction and 6D object pose estimation from a single monocular image is an inherently ill-posed problem. In industrial settings, however, multiple instances of an object are often randomly arranged in bins, implicitly providing several views of the same object within a single image. We show that this implicit multi-view geometry can be exploited to simultaneously reconstruct the object in 3D and estimate the 6D pose of each visible object instance. We present MooMIns, a new Gaussian-splatting-based approach that inverts the original Gaussian splatting formulation: instead of rendering a single scene from multiple cameras, we render multiple object instances from a single camera. Our method is initialized with SAM3 instance segmentation masks and a modified Structure from Motion (SfM) pipeline. In contrast to learned monocular depth estimation, we perform true geometry-based reconstruction from image evidence, avoiding hallucinations caused by training data priors. We evaluate MooMIns on synthetic and real bin-picking scenarios, and demonstrate accurate reconstruction of previously unseen objects as well as reliable pose estimation of individual instance",
+      "authors": [
+        "Robert Langendörfer",
+        "Markus Hillemann",
+        "Markus Ulrich"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-12T12:24:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.14389v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Monocular 3D reconstruction using multiple instances",
+      "llm_evidence_cn": "利用多实例进行单目3D重建",
+      "llm_evidence": "利用多实例进行单目3D重建",
+      "canonical_evidence": "利用多实例进行单目3D重建",
+      "llm_tldr_en": "Proposes MooMIns, a Gaussian-splatting-based method that exploits implicit multi-view geometry from multiple object instances in a single image for 3D reconstruction and pose estimation.",
+      "llm_tldr_cn": "MooMIns面向工业场景，利用单张图像中多个物体实例提供的隐式多视角几何，提出基于高斯溅射的反向渲染方法，同时实现3D重建与6D姿态估计。实验表明，该方法有效缓解了单目重建的病态性，在多个数据集上达到先进水平。",
+      "llm_tldr": "MooMIns面向工业场景，利用单张图像中多个物体实例提供的隐式多视角几何，提出基于高斯溅射的反向渲染方法，同时实现3D重建与6D姿态估计。实验表明，该方法有效缓解了单目重建的病态性，在多个数据集上达到先进水平。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.14307v1",
+      "source": "arxiv",
+      "title": "Pano3D: Unified 3D Reconstruction and Panoptic Segmentation",
+      "abstract": "Recent advances in 3D feedforward reconstruction neural networks have achieved remarkable success in dense reconstruction from images without any camera parameters. Yet, equipping these models with robust semantic understanding remains an open problem. Here we introduce an approach that performs 3D reconstruction and 3D panoptic segmentation in a unified framework. We build on existing 3D reconstruction models and augment them with a set-based mask decoder. The approach is jointly trained with a geometric and semantic loss, which are shown to be mutually beneficial. More precisely, the features are initialized from the geometric information and then finetuned to capture jointly geometry and semantics. We demonstrate the generality of our approach by successfully applying our framework both to online and all-to-all attention reconstruction backbones. Our method achieves state-of-the-art performance in 3D panoptic segmentation across ScanNet, ScanNet200, and ScanNet++ datasets. Ablation studies show that such joint training of a unified model equips 3D feedforward reconstruction neural networks with panoptic segmentation and yields mutually beneficial improvements.",
+      "authors": [
+        "Victor Barberteguy",
+        "Ahmet Iscen",
+        "Mathilde Caron",
+        "Alireza Fathi",
+        "Gül Varol",
+        "Cordelia Schmid"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-12T09:43:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.14307v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unified 3D reconstruction and panoptic segmentation",
+      "llm_evidence_cn": "统一的3D重建与全景分割",
+      "llm_evidence": "统一的3D重建与全景分割",
+      "canonical_evidence": "统一的3D重建与全景分割",
+      "llm_tldr_en": "Presents a unified feedforward framework for 3D reconstruction and panoptic segmentation, showing that geometric and semantic learning are mutually beneficial.",
+      "llm_tldr_cn": "Pano3D将3D前馈重建与全景分割统一在一个框架中，通过联合训练几何与语义损失，使二者相互增强。该方法在现有重建模型上附加基于集合的掩码解码器，初始化于几何特征，再微调以联合捕获几何与语义。实验证明，统一建模提升了两个任务的性能。",
+      "llm_tldr": "Pano3D将3D前馈重建与全景分割统一在一个框架中，通过联合训练几何与语义损失，使二者相互增强。该方法在现有重建模型上附加基于集合的掩码解码器，初始化于几何特征，再微调以联合捕获几何与语义。实验证明，统一建模提升了两个任务的性能。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.14699v1",
+      "source": "arxiv",
+      "title": "Instruct-Particulate: Scaling Feed-Forward 3D Object Articulation with Kinematic Control",
+      "abstract": "Reconstructing articulated 3D objects is important for animation, gaming, and robotic simulations. Recent neural networks can estimate the articulated structure of 3D objects, but their generalization remains limited by the scarcity of annotated data for this task. To address this gap, we introduce Instruct-Particulate, a model that takes a 3D mesh together with a target kinematic specification, including part descriptions, connectivity, joint types, and optional point prompts, and predicts the corresponding kinematic part segmentation and joint motion parameters. The kinematic specification disambiguates the task and allows the model to target annotations of different granularity, thereby making it possible to use more abundant heterogeneous training data. At test time, the kinematic specification can be obtained automatically from large-scale vision-language models, so the model can be applied to any input mesh. To train our model at scale, we construct a heterogeneous dataset of more than 150,000 articulated 3D objects, extending existing publicly available collections with data obtained by partially labelling other 3D models (monolithic or already decomposed into parts) with kinematic labels by means of vision-language models. Experiments show that our model generalizes better across categories and to AI-generated meshes, enabling articulated asset reconstruction from real-world images via image-to-3D models.",
+      "authors": [
+        "Ruining Li",
+        "Yuxin Yao",
+        "Matt Zhou",
+        "Chuanxia Zheng",
+        "Christian Rupprecht",
+        "Joan Lasenby",
+        "Shangzhe Wu",
+        "Andrea Vedaldi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR",
+        "cs.RO"
+      ],
+      "published": "2026-06-12T17:59:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.14699v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "feed-forward 3D object articulation with kinematic control, relates to generative 3D models",
+      "llm_evidence_cn": "前馈3D物体关节化与运动学控制，涉及生成式3D模型",
+      "llm_evidence": "前馈3D物体关节化与运动学控制，涉及生成式3D模型",
+      "canonical_evidence": "前馈3D物体关节化与运动学控制，涉及生成式3D模型",
+      "llm_tldr_en": "Instruct-Particulate predicts kinematic part segmentation and joint parameters for 3D objects from a mesh and kinematic specification, enabling articulated 3D object reconstruction.",
+      "llm_tldr_cn": "可动3D物体重建对动画、游戏和机器人仿真至关重要，但现有方法因标注数据稀缺而泛化有限。本文提出Instruct-Particulate，从3D网格及运动学规范输入，前馈预测部件分割和关节参数，利用运动学规范消歧任务，并可利用多样化标注数据，显著提升了泛化能力。",
+      "llm_tldr": "可动3D物体重建对动画、游戏和机器人仿真至关重要，但现有方法因标注数据稀缺而泛化有限。本文提出Instruct-Particulate，从3D网格及运动学规范输入，前馈预测部件分割和关节参数，利用运动学规范消歧任务，并可利用多样化标注数据，显著提升了泛化能力。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
