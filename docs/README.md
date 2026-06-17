@@ -6,66 +6,43 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-16
-- 运行时间：2026-06-16 21:50:09 UTC
+- 最新运行日期：2026-06-17
+- 运行时间：2026-06-17 20:54:38 UTC
 - 运行状态：成功
-- 本次总论文数：14
-- 精读区：7
-- 速读区：7
+- 本次总论文数：7
+- 精读区：5
+- 速读区：2
 
 ### 今日简报（AI）
-今日日报精选14篇论文，精读7篇，重点覆盖世界模型评估与多模态推理。
-
-最值得看的是《How Should World Models Be Evaluated?》提出的决策中心评估框架，以及《DLWM》的高效多模态推理潜在世界模型（均为9.0分）。
-
-建议普通读者优先研读这两篇精读，把握世界模型评估新范式与多样性推理潜力。
-- 详情：[/202606/16/README](/202606/16/README)
+1) 今日精读5篇、速读2篇，聚焦世界模型与3D重建前沿方向。
+2) 最值得关注《Looped World Models》（10分）与《Future Dynamic 3D Reconstruction》（9分），前者突破闭环世界模型，后者实现动态3D重建与自运动解耦。
+3) 建议优先精读这两篇高分论文，重点关注闭环推理在3D重建中的潜力。
+- 详情：[/202606/17/README](/202606/17/README)
 
 ### 精读区论文标签
-1. [How Should World Models Be Evaluated? A Decision-Making-Centric Position](/202606/16/2606.15032v1-how-should-world-models-be-evaluated-a-decision-making-centric-position)  
+1. [Looped World Models](/202606/17/2606.18208v1-looped-world-models)  
+   标签：评分：10.0/10、query:world-model
+   evidence：首个循环架构的世界模型
+2. [Future Dynamic 3D Reconstruction: A 3D World Model with Disentangled Ego-Motion](/202606/17/2606.18250v1-future-dynamic-3d-reconstruction-a-3d-world-model-with-disentangled-ego-motion)  
    标签：评分：9.0/10、query:world-model
-   evidence：世界模型评估范式讨论
-2. [DLWM: Diverse Latent World Models for Efficient Multimodal Reasoning](/202606/16/2606.15160v1-dlwm-diverse-latent-world-models-for-efficient-multimodal-reasoning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：用于多模态推理的多样化潜在世界模型
-3. [GeoStream: Toward Precise Camera Controlled Streaming Video Generation](/202606/16/2606.15162v1-geostream-toward-precise-camera-controlled-streaming-video-generation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：视频世界模型的相机控制
-4. [HairLRM: Strand-based Hair Modeling via Large Reconstruction Models](/202606/16/2606.15238v1-hairlrm-strand-based-hair-modeling-via-large-reconstruction-models)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：大规模重建模型用于3D头发生成
-5. [Pixels to Proofs: Probabilistically-Safe Latent World Model Control via Parallel Conformal Robust MPC](/202606/16/2606.15594v1-pixels-to-proofs-probabilistically-safe-latent-world-model-control-via-parallel-conformal-robust-mpc)  
-   标签：评分：9.0/10、query:world-model
-   evidence：基于潜在世界模型的安全控制
-6. [LaWAM: Latent World Action Models for Efficient Dynamics-Aware Robot Policies](/202606/16/2606.15768v1-lawam-latent-world-action-models-for-efficient-dynamics-aware-robot-policies)  
+   evidence：直接针对三维重建的世界模型
+3. [WorldReasoner: Evaluating Whether Language Model Agents Forecast Events with Valid Reasoning](/202606/17/2606.11816v1-worldreasoner-evaluating-whether-language-model-agents-forecast-events-with-valid-reasoning)  
    标签：评分：8.0/10、query:world-model
-   evidence：用于机器人策略的隐式世界动作模型
-7. [Evolution & Foundation: AI Shares Creative Control](/202606/16/2606.16849v1-evolution--foundation-ai-shares-creative-control)  
+   evidence：基于有效推理的时间事件预测评估框架
+4. [Quantum Cinema: An Interactive Cinematic Exploration of Quantum Computing Hardware via Generative World Models](/202606/17/2606.17102v1-quantum-cinema-an-interactive-cinematic-exploration-of-quantum-computing-hardware-via-generative-world-models)  
+   标签：评分：8.0/10、query:world-model
+   evidence：使用生成式世界模型交互式可视化量子硬件
+5. [Edit3DGS: Unified Framework for Dynamic Head Editing via 2D Instruction-Guided Diffusion and 3D Gaussian Splatting](/202606/17/2606.17432v1-edit3dgs-unified-framework-for-dynamic-head-editing-via-2d-instruction-guided-diffusion-and-3d-gaussian-splatting)  
    标签：评分：8.0/10、query:d-gen
-   evidence：AI引导的进化系统生成3D有机形态
+   evidence：动态3D头部编辑结合扩散模型和高斯溅射
 
 ### 速读区论文标签
-1. [WorldReasoner: Evaluating Whether Language Model Agents Forecast Events with Valid Reasoning](/202606/16/2606.11816v1-worldreasoner-evaluating-whether-language-model-agents-forecast-events-with-valid-reasoning)  
-   标签：评分：7.0/10、query:world-model
-   evidence：评估世界事件预测中的推理有效性，与世界模型概念相关
-2. [VideoWeave: Unlocking Geometric Consistency in Video Generation via Joint Geometry-Video Modeling](/202606/16/2606.14162v1-videoweave-unlocking-geometric-consistency-in-video-generation-via-joint-geometry-video-modeling)  
+1. [MoonSplat: Monocular Online Gaussian Splatting with Sim(3) Global Optimization](/202606/17/2606.17935v1-moonsplat-monocular-online-gaussian-splatting-with-sim3-global-optimization)  
    标签：评分：7.0/10、query:d-gen
-   evidence：通过隐式几何特征实现几何一致的视频生成
-3. [NEXUS: Neural Energy Fields for Physically Consistent Contact-Rich 3D Object Dynamics](/202606/16/2606.15015v1-nexus-neural-energy-fields-for-physically-consistent-contact-rich-3d-object-dynamics)  
+   evidence：基于全局优化的在线3D高斯泼溅重建
+2. [ReAge3D: Re-Aging 3D Faces with View Consistency](/202606/17/2606.18156v1-reage3d-re-aging-3d-faces-with-view-consistency)  
    标签：评分：7.0/10、query:d-gen
-   evidence：用于视频生成的物理一致3D物体动力学
-4. [Cross-cue reconstruction of perceived 3D object structure from human visual cortex](/202606/16/biorxiv-10-64898-2026-06-08-730830-v1-cross-cue-reconstruction-of-perceived-3d-object-structure-from-human-visual-cortex)  
-   标签：评分：7.0/10、query:d-gen
-   evidence：通过自编码器从脑活动解码3D点云
-5. [DeepJEB++: Foundation Model-Driven Large-Scale 3D Engineering Dataset via 2D Latent Space Augmentation](/202606/16/2606.12994v2-deepjeb-foundation-model-driven-large-scale-3d-engineering-dataset-via-2d-latent-space-augmentation)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：用于工程设计的3D数据增强
-6. [TurboGS: Accelerating 3D Gaussian Splatting via Error-Guided Sparse Pixel Sampling and Optimization](/202606/16/2606.15924v1-turbogs-accelerating-3d-gaussian-splatting-via-error-guided-sparse-pixel-sampling-and-optimization)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：加速三维高斯泼溅优化以实现高保真渲染
-7. [Local-GS: Accelerating 3D Gaussian Splatting via Tile-Local Warp Coherence](/202606/16/2606.16566v1-local-gs-accelerating-3d-gaussian-splatting-via-tile-local-warp-coherence)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：加速3D高斯泼溅渲染
+   evidence：视角一致的3D面部年龄回溯
 
 
 <div class="dpr-home-promo-card">

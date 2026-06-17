@@ -1,0 +1,585 @@
+Title: Quantum Cinema: An Interactive Cinematic Exploration of Quantum Computing Hardware via Generative World Models
+
+URL Source: https://arxiv.org/pdf/2606.17102v1
+
+Published Time: Wed, 17 Jun 2026 00:03:58 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# Quantum Cinema: An Interactive Cinematic Exploration of Quantum Computing Hardware via Generative World Models. 
+
+Aoyu Zhang †
+
+Amazon Web Services 
+
+Beijing, China 
+
+Dongping Liu †
+
+Tenorshare 
+
+Hong Kong, China 
+
+Luyao Zhang †*
+
+Duke Kunshan University 
+
+Suzhou, China 
+
+Abstract —Quantum computing promises transformative ad-vances across science and industry, yet the physical hardware that enables these computations remains invisible to the public: quantum processors operate inside sealed dilution refrigerators at temperatures near absolute zero, making direct observation impossible. This “imagination gap” between quantum comput-ing’s growing societal impact and the public’s ability to vi-sualize it represents a significant barrier to quantum literacy and workforce development. We present Quantum Cinema , an open-source, browser-based interactive application that closes this gap by transforming invisible quantum hardware into ex-plorable, cinematic experiences using generative world models. Quantum Cinema guides users through a four-act narrative— from the foundational Nobel Prize-winning science of quantum entanglement, through curated video introductions to three major quantum computing architectures (trapped-ion, neutral-atom, and superconducting systems), into immersive three-dimensional generative worlds that make invisible quantum phenomena observable, and finally to interactive radar-chart comparisons grounded in real quantum device specifications. All three-dimensional environments are generated using World Labs’ generative world model platform and are scientifically grounded in curated metrics from Amazon Web Services (AWS) Braket quantum hardware. Quantum Cinema requires no installation, no specialized hardware, and no quantum computing background. It is designed to serve two distinct communities: scholars and developers seeking to replicate or extend the platform, and educa-tors, researchers, and science communicators seeking an intuitive tool for explaining quantum hardware to diverse audiences. This paper describes the system architecture, the generative world model pipeline, use cases for both communities, and directions for future work. 
+
+Index Terms —quantum computing, generative world models, scientific visualization, human-computer interaction, quantum education, AI for science, immersive visualization 
+
+I. Introduction 
+
+Quantum computing stands poised to transform science, industry, and society. From drug discovery and materials science to cryptography and financial modeling, the potential applications of quantum computational advantage span nearly every sector of the global economy [1]. Yet there exists a  
+
+> †
+
+Authors are listed in alphabetical order by first name. *Corresponding author: Luyao Zhang (lz183@duke.edu), Digital Innovation Research Center and Social Science Division, Duke Kunshan University. Address: Duke Avenue No.8, Kunshan, Suzhou, Jiangsu, China, 215316. 
+
+profound imagination gap : while the software layer of quan-tum computing—quantum circuits, algorithms, and gates— has become increasingly accessible through educational tools and cloud platforms, the hardware itself remains fundamen-tally invisible to the vast majority of researchers, students, and the public. Quantum processors operate inside massive dilution refrigerators at temperatures measured in millikelvin 
+
+(thousandths of a degree above absolute zero), sealed within shielded environments that no human eye can penetrate. The physical reality of quantum computing hardware—the golden coaxial cables, the superconducting quantum bits (qubits) etched onto silicon chips, the layered cryogenic stages de-scending toward absolute zero—has remained locked behind laboratory walls and abstracted away into circuit diagrams and mathematical notation. The scientific significance of quantum phenomena has re-ceived the highest levels of international recognition. The 2022 Nobel Prize in Physics was awarded to Alain Aspect, John Clauser, and Anton Zeilinger for their pioneering exper-iments establishing quantum entanglement —the counterintu-itive property by which particles become correlated in ways that defy classical explanation [2]. This recognition under-scored that quantum mechanics is not merely a theoretical framework but a physical reality with profound technological implications. More recently, the 2025 Nobel Prize in Physics further affirmed the growing centrality of quantum technolo-gies, cementing the field’s place at the forefront of 21st-century science [3]. Together, these awards signal a societal moment in which quantum literacy has become essential not only for physicists but for the broader scientific and engineering communities. The intersection of artificial intelligence (AI) and quantum science represents one of the most promising frontiers in modern research. The 2024 Nobel Prize in Physics, awarded to John Hopfield and Geoffrey Hinton for foundational discover-ies in neural networks and machine learning [4], underscored the transformative role of AI in scientific discovery. Parallel advances in quantum machine learning (QML) — the use of quantum computers to enhance machine learning algorithms and vice versa — have demonstrated potential advantages in areas ranging from molecular simulation to optimization [1].             
+
+> arXiv:2606.17102v1 [physics.pop-ph] 14 Jun 2026 ♦
+> Ion Trap
+> ⊲1⊲2⊲3⊲4⊲5
+> ◦
+> Neutral Atom
+> ⊲1⊲2⊲3⊲4⊲5
+> ■
+> JJ Chip
+> ⊲1⊲2⊲3⊲4⊲5
+
+Fig. 1: The three generative world models of Quantum Cinema , each showing five navigable views. Top: trapped-ion (teal)— ytterbium ions in a Paul trap. Middle: neutral-atom (orange)—rubidium array via optical tweezers. Bottom: superconducting (violet)—Josephson-junction chip in a dilution refrigerator. However, the inaccessibility of quantum hardware remains a bottleneck: even as AI models grow more capable of reasoning about quantum systems [5], the physical reality of quantum processors remains hidden from the researchers, educators, and students who most need to understand them. This paper bridges that gap by applying generative world models — a technology at the forefront of AI research [6] — to the specific scientific challenge of quantum hardware visualization. For researchers outside quantum physics—including the artificial intelligence (AI) and computer science communities that this venue serves—this invisibility creates a significant barrier to engagement. Terms such as superconducting qubit ,
+
+Josephson junction , cryogenic stage , and quantum control electronics remain opaque without a tangible mental model. The physical architecture of a quantum computer, from room-temperature control electronics to the mixing chamber plate at the base of the dilution refrigerator, follows a spatial logic that is difficult to convey through text or two-dimensional diagrams alone. Current visualization approaches fall into two categories, each with significant limitations. Circuit-level simulators such as Quirk [7] and the IBM Quantum Ex-perience [8] provide excellent interactive environments for learning quantum logic gates and circuit construction, but they operate entirely at the abstract level of quantum information— the physical hardware that executes these circuits remains unseen. On the other end of the spectrum, virtual reality (VR) approaches such as QuantumEyes [9] and the Quantum Flytrap Virtual Lab [10] have demonstrated immersive quan-tum environments, but they require specialized VR headsets and significant technical setup, limiting their accessibility for casual exploration and classroom deployment. A survey of quantum games and educational tools [11] confirms that no existing platform bridges the gap between hardware-free acces-sibility and rich, physically grounded visualization of quantum computing infrastructure. Similarly, prior work in VR-based quantum education [12] has validated the pedagogical value of spatial immersion but has not addressed the challenge of scalable, hardware-agnostic deployment. We present Quantum Cinema , the first interactive cine-matic platform that leverages generative world models to make quantum computing accessible through immersive three-dimensional (3D) narrative environments. Generative world models—AI systems that synthesize interactive, navigable 3D scenes from visual data or semantic descriptions—have emerged as a transformative technology for visual storytelling and education. These models, exemplified by systems capable of generating photorealistic, physically consistent environ-ments from image inputs [13] and from language or image prompts [6], enable a fundamentally new approach to sci-entific communication: rather than manually constructing 3D assets through traditional computer graphics pipelines, we can generate explorable worlds that are both visually compelling and scientifically informative. The application of generative AI to scientific visualization has been recognized as a frontier with vast untapped potential [14]. Quantum Cinema harnesses this capability to create the first interactive cinematic journey through the landscape of quantum computing—weaving to-gether Nobel Prize-winning science, generative world-model architectures, immersive exploration, and quantitative compar-ison into a unified four-act narrative. The experience is structured as a four-act narrative . Act I presents an interactive timeline of Nobel Prize laureates in quantum science, enabling viewers to explore the founda-tional discoveries that shaped the field. Act II showcases generative video worlds for each major quantum computing architecture—superconducting circuits, trapped ions, and neu-tral atoms—demonstrating how world models can visualize hardware-specific physics. Act III offers an immersive 3D environment generated from World Labs technology, allow-ing viewers to freely explore a navigable quantum world. Act IV provides a quantitative comparison across architec-tures through interactive radar charts, supporting evidence-based understanding of trade-offs. This narrative architecture transforms fragmented knowledge into a coherent pedagogical journey, ensuring that viewers acquire conceptual understand-ing alongside visual appreciation. The four-act structure is described in detail in Section III. This work makes two contributions tailored to the dual audience of this paper. First, for AI researchers and sys-tems developers, we provide a complete technical pipeline demonstrating how generative world models can be adapted for scientific hardware visualization, including our approach to generating physically consistent cryogenic environments, handling domain-specific constraints, and integrating narrative flow with interactive exploration. This pipeline is replicable and extensible to other domains of scientific infrastructure that suffer from similar accessibility barriers. Second, for educators, science communicators, and quantum computing practitioners, we offer an immediately usable cinematic ex-perience that renders quantum hardware tangible for the first time, suitable for classroom instruction, public outreach, and professional training. 
+
+Data and Code Availability : Quantum Cinema is released under the MIT License. The complete source code, docu-mentation, and generative world templates are available on GitHub 1. A permanent archived version (v1.0.0) has been deposited on Zenodo [15]. The repository includes installation instructions, the full AWS deployment configuration, bilingual documentation, teaching guides for all three architectures, and templates for extending the platform to additional quantum hardware modalities. No proprietary datasets are required: all device parameters are sourced from published manufacturer specifications and the AWS Braket service documentation. The remainder of this paper is organized as follows. Section II surveys related work in quantum visualization, generative world models, and AI-driven scientific communication. Section III details the Quantum Cinema architecture and four-act narrative design. Section VI concludes with limitations and future directions. 
+
+II. Related Work 
+
+We position Quantum Cinema at the intersection of four active research areas: quantum computing visualization, immer-sive quantum education, generative artificial intelligence (AI) for scientific visualization, and AI for quantum science. In what follows, we review the most relevant prior work in each area and identify the key gaps our system addresses. 
+
+A. Quantum Computing Visualization Tools 
+
+The earliest and most widely adopted tools for quantum computing education operate at the circuit level , enabling users to construct and simulate quantum circuits through graphical interfaces. Quirk, developed by Gidney at Google, remains the most popular browser-based quantum circuit simulator, offering 
+
+> 1https://github.com/QuantBlockchain/quantum-cinema
+
+drag-and-drop construction, real-time state-vector simulation, and support for up to 16 qubits entirely within the browser [7]. Its accessibility and zero-installation model have made it a staple in undergraduate quantum computing courses. Similarly, the IBM Quantum Experience provides a cloud-based platform with a visual circuit composer, allowing users to execute quantum programs on real superconducting quantum processors [8]. While powerful, these platforms present quantum computation primarily through abstract circuit diagrams, leaving the under-lying physical hardware opaque to the learner. Recent research has introduced novel visual encodings to improve circuit interpretability. Ruan et al. proposed Quan-tumEyes, an interactive visualization system centered on a “dandelion chart” that maps multi-qubit states to radial visual patterns; their design was validated through 12 expert interviews [9]. In subsequent work, the same authors introduced VENUS, a two-dimensional (2D) geometrical representation of quantum states that generalizes the conventional Bloch sphere to multi-qubit systems [16]. Complementary efforts have focused on pedagogical notation: Norrie et al. developed QNotation, a visual notation translator that bridges formal Dirac notation with intuitive graphical representations for novice learners [17]. For domain-specific education, Jordon et al. created QWalkVis, an interactive visualization tool for quantum walks designed to teach stochastic quantum processes [18]. In the optical domain, Quantum Flytrap’s Virtual Lab offers a no-code, drag-and-drop simulator for optical quantum circuits supporting up to three entangled photons [10]. Despite these advances, all existing circuit-level tools share a common limitation: they visualize quantum computation through abstract symbolic representations rather than rendering the physical hardware itself as an explorable spatial environ-ment. 
+
+B. Immersive and Interactive Quantum Education 
+
+A growing body of work has explored immersive technologies to improve quantum concept comprehension. Zable and Velloso conducted the first controlled study comparing virtual reality (VR) and desktop interfaces for quantum education, using Bloch sphere tutorials to demonstrate that VR can significantly improve spatial understanding of single-qubit states [12]. More recently, Karunathilaka et al. presented Intuit at ACM CHI 2025, an augmented reality (AR) system that explains quan-tum concepts through everyday analogies projected into the user’s physical environment [19]. Quantum Flytrap’s Virtual Lab also contributes in this space by providing web-based interactive quantum simulation accessible without specialized hardware [10]. Song et al. conducted a systematic review of extended reality (XR) in quantum education, finding that while immersive modalities show promise for conceptual learning, adoption remains limited by hardware cost, setup complexity, and scalability concerns [21]. These findings reveal a critical tension: VR and AR ap-proaches require specialized headsets or equipment that limit accessibility, while fully web-based immersive experiences— TABLE I: Comparison of Quantum Education and Visualization Platforms 
+
+Tool Venue 
+
+∞ Circuit ■ Hardware ⟲ Interact. W Web ⋆ GenAI ⊲ No Install Quirk [7] Web’16 ● ❍ ● ● ❍ ●
+
+IBM Q Exp. [8] IBM’24 ● ❍ ● ● ❍ ●
+
+QuantumEyes [9] TVCG’23 ● ❍ ● ❍ ❍ ❍
+
+VENUS [16] EuroVis’23 ● ❍ ● ❍ ❍ ❍
+
+QNotation [17] QCE’24 ● ❍ ● ● ❍ ●
+
+QWalkVis [18] QCE’23 ● ❍ ● ● ❍ ●
+
+Virtual Lab [10] SPIE’22 ● ❍ ● ● ❍ ●
+
+Intuit [19] CHI’25 ◗ ❍ ● ❍ ❍ ❍
+
+VR Quantum [12] VRST’20 ◗ ❍ ● ❍ ❍ ❍
+
+Black Opal [20] 2024 ● ❍ ● ● ❍ ●
+
+Quantum Cinema 2025 ● ● ● ● ● ●                       
+
+> Legend. ●= full support; ◗= partial support; ❍= not supported.
+> Categories: ∞Circuit – visualization of quantum circuit diagrams and gate-level operations; ■Hardware – rendering of physical quantum processor architectures as spatial environments; ⟲Interactive – user manipulation and real-time feedback; W Web – browser-based delivery without native application installation; ⋆GenAI – use of generative artificial intelligence (world models, neural rendering) for content creation; ⊲No Install – immediate accessibility without setup, registration, or specialized hardware. Quantum Cinema is the first platform to offer all six capabilities simultaneously.
+
+which could reach the broadest audience—remain underex-plored in quantum education. 
+
+C. Generative AI for Scientific Visualization 
+
+Generative world models represent a paradigm shift in how complex environments can be synthesized from natural language or structural descriptions. In scientific visualization, this capability enables the automatic generation of explorable three-dimensional (3D) scenes from high-level specifications. Xie et al. introduced PhysGaussian at CVPR 2024, integrating physics simulation with 3D Gaussian splatting to produce dynamic, physically grounded environments; the work has since accumulated over 470 citations [13], underscoring the community’s interest in generative 3D content. Basole and Major proposed a comprehensive framework for integrating generative AI into scientific visualization pipelines, identifying data-to-scene translation as a key challenge [14]. In indus-try, World Labs’ Marble platform—founded by Fei-Fei Li— demonstrates that generative 3D world models can produce consistent, navigable environments from single images or text prompts [6]. Concurrently, a comprehensive survey by Zhu et al. examined whether video diffusion models such as Sora can function as world simulators, concluding that while limitations remain, these models exhibit emerging capabilities for physical reasoning and environment generation [22]. 
+
+To our knowledge, generative world models have not yet been applied to quantum hardware visualization, leaving a significant opportunity unexplored. D. AI for Quantum Science 
+
+The convergence of AI and quantum science has emerged as a major research direction with applications spanning sim-ulation, optimization, and discovery. Biamonte et al. provided a comprehensive survey of quantum machine learning (QML), establishing the theoretical foundations and identifying near-term opportunities on noisy intermediate-scale quantum (NISQ) devices [1]. On the algorithmic front, variational quantum eigensolvers (VQE) and the quantum approximate optimiza-tion algorithm (QAOA) have become flagship approaches for applying quantum computers to real-world problems in chemistry and combinatorial optimization [23]. Complementing these algorithmic advances, Carleo and Troyer demonstrated that neural networks can represent quantum many-body states with remarkable accuracy, introducing the paradigm of neural quantum states for simulating quantum systems that would be intractable for classical methods [24]. While these approaches use AI to advance quantum science, few works use AI to make quantum science accessible to broader audiences. Quantum Cinema occupies this unique position at the intersection of AI-driven visualization and quantum education, applying generative world models to bridge the accessibility gap identified across all three research areas above. Table I summarizes the capabilities of existing tools across eight key dimensions. No prior system simultaneously supports circuit-level accuracy, hardware environment visualization, full interactivity, web-based delivery, generative AI content creation, AI-for-quantum-science framing, and no-code accessibility. To address these gaps, we present Quantum Cinema , a unified platform that combines generative world models with quantum circuit simulation to produce interactive cinematic walkthroughs of quantum computing hardware, accessible from any modern web browser without installation or specialized equipment. U C L A W           
+
+> User
+> Browser
+> CloudFront
+> CDN ALB ECS Fargate
+> Next.js 16 SPA
+> World Labs
+> marble.wlabs.ai
+> Static Assets: Videos + Images
+> HTTPS secret port 3000
+> iframe
+> 3D stream
+> No Database ·No Live QPU ·Static-First
+> Missing secret →403 Forbidden
+
+Fig. 2: System Architecture of Quantum Cinema. The static-first design requires no database and places no live quantum processing unit (QPU) in the request path. All content is baked into the container at build time; 3D worlds stream from World Labs via public URL embedding. Requests without the shared CDN secret header are rejected at the edge. 
+
+III. System Design and Architecture 
+
+This section presents the end-to-end architecture of Quantum Cinema , an interactive web application that combines generative world models with cinematic storytelling to explain quantum computing hardware. We describe the cloud deployment stack (Section III-A), the four-act narrative structure that guides users through the experience (Section III-B), and the three quantum architectures featured in the system (Section III-C). Detailed walkthroughs of each act, including annotated screenshots, are provided in Appendix A. 
+
+A. System Architecture Quantum Cinema is built as a single-page application (SPA) using Next.js 16 with React 19, authored entirely in Type-Script [25], [26]. This stack provides server-side rendering, automatic code splitting, and a component-based architecture that supports both cinematic scroll-driven animations and interactive 3D world embedding within a unified codebase. The application is deployed on Amazon Web Services (AWS) [27] following a three-tier cloud architecture optimized for global content delivery and automatic scaling. As illustrated in Fig. 2, user requests first reach an AWS CloudFront Content Delivery Network (CDN) edge location, which serves cached static assets and forwards dynamic requests to an Application Load Balancer (ALB). The ALB distributes traffic across tasks running in AWS Elastic Container Service (ECS) Fargate, a serverless compute engine that eliminates the need to manage underlying virtual machine infrastructure. Each container runs the Next.js standalone build on Node.js 20 Alpine Linux with a non-root user for security hardening. The service auto-scales between one and four tasks based on 70 % CPU utilization, with circuit-breaker rollback to maintain availability during deployment updates. All static assets—including pre-rendered videos, Nobel laureate photographs, and architecture diagrams—are baked directly into the container image at build time. This static-first design eliminates runtime dependencies on object storage, databases, or live quantum cloud services. The immersive 3D environments stream from World Labs [6] via public Universal Resource Locator (URL) embeddings, allowing generative world content to render directly from the provider’s infrastructure without intermediate processing. Table II summarizes the deployment parameters. TABLE II: System Specifications of Quantum Cinema 
+
+Layer Component Technology 
+
+# ⟨⟩ 
+
+> Frontend
+
+Web Framework Next.js 16 / React 19 Language TypeScript 
+
+# ⋆Cloud 
+
+CDN CloudFront Load Balancer ALB Compute ECS Fargate (1–4 tasks, 70% CPU) 
+
+# □Runtime 
+
+Container Node.js 20 Alpine (non-root) 3D Platform World Labs (marble.worldlabs.ai) 
+
+# ∅Unique 
+
+Database None (static-by-design) QPU in Path None (no live quantum hardware)         
+
+> Note. The static-first architecture eliminates all runtime dependencies on databases, quantum processing units (QPUs), and external APIs. All content is baked into the container image at build time. Icons denote architectural layers:
+> ⟨⟩ Frontend, ⋆Cloud, □Runtime, ∅Unique (none by design).
+
+B. Four-Act Narrative Design 
+
+The user experience follows a four-act narrative that mirrors cinematic storytelling conventions while progressively building technical understanding. Each act occupies a distinct section of the scroll-driven SPA, with smooth transitions and consistent visual theming. Fig. 3 depicts the overall flow, and Table III pro-vides the structural breakdown. Appendix A presents a detailed walkthrough of each act, including annotated screenshots and pedagogical rationale. 
+
+Act I—Nobel Prize (Section A) establishes why quantum computing matters. Users encounter an interactive horizontal timeline centered on the 2025 Nobel Prize in Physics, with historical context connecting the laureates’ contributions to the broader arc of quantum research. This creates an emotional and historical anchor for the technical content that follows. 
+
+Act II—World Models (Section B) introduces the three quantum hardware architectures through curated video content. Users scroll through vertically stacked architecture cards, each containing a short looping video and a concise description of the underlying physical mechanism. At the conclusion of this act, users select one architecture to explore in depth—a choice that parameterizes the remainder of the experience. 
+
+Act III—Explore (Section C) constitutes the immersive centerpiece. Upon selecting an architecture, the user enters a generative three-dimensional (3D) world representing that quantum hardware platform. These environments are AI-generated interactive scenes from World Labs [6], not physics-based simulations. However, each world is grounded in real device parameters—cryostat geometry, vacuum chamber di-mensions, laser cooling apparatus—to ensure visual fidelity and educational value. Users can orbit, zoom, and pan within the scene while annotated hotspots explain individual hardware components. Representative views of all three 3D worlds are shown in Figure 1 of the main text. 1
+
+## Nobel Prize  
+
+> ⊙2025 Laureate profiles The Quantum Timeline
+> Context
+> Why
+> 2
+
+## World Models     
+
+> ♦Ion trap ◦Atom
+> ■Superconducting Video introductions
+> Concepts
+> What
+> 3
+
+## Explore  
+
+> ⋆Generative 3D worlds World Labs immersion Navigate + discover
+> Experience
+> How
+> 4
+
+## Compare        
+
+> ⊲⊳ Radar charts 5 metrics across 3 architectures Use-case matching
+> Decide
+> (a) Historical context →(b) Physical concepts →(c) Immersive exploration →(d) Informed selection
+
+Fig. 3: The Four-Act Narrative Flow of Quantum Cinema. Each act is numbered, color-coded, and annotated with its pedagogical role and key content. Arrows are labeled with the cognitive transition they enable. TABLE III: The Four-Act Narrative Structure of Quantum Cinema 
+
+Act Name Purpose Component Key Content 1 ⊙ Nobel Prize Establish why quantum matters NobelPrizeStep 2025 Nobel Prize in Physics with interactive history timeline of quantum research 
+
+2 ♦ World Models Introduce architectures VideoShowcaseStep Curated videos per architecture: ion trap, neutral atom, superconducting 
+
+3 ⋆ Explore Immersive 3D experience WorldModelStep Generative world (World Labs): navigable 3D environment with scientific annotations 
+
+4 ⊲⊳ Compare Hardware comparison ComparisonStep Radar charts (5 metrics × 3 architectures) + use-case matching        
+
+> Note. Each act is color-coded and icon-tagged to match Figure 3. The narrative follows a “why →what →how →which” cognitive progression: Act I motivates through the 2025 Nobel Prize and historical context, Act II introduces physical concepts through video, Act III enables embodied learning through immersive 3D exploration, and Act IV supports decision-making through quantitative comparison. The Component column names the React component implementing each act in the source code.
+
+Act IV—Compare (Section D) provides an interactive compar-ison across all three architectures. Users view animated radar charts plotting each platform across five quantitative metrics: coherence time, gate fidelity, connectivity topology, error rate, and qubit count. This act transforms the qualitative impressions gathered during exploration into directly comparable technical data, reinforcing the learning outcomes of the experience. 
+
+C. Three Quantum Computing Architectures Quantum Cinema features three leading quantum computing architectures, chosen to represent distinct physical qubit imple-mentations with contrasting engineering trade-offs. Table IV presents the comparative overview, and the generative world models for each are shown in Figure 1. 
+
+Trapped-Ion quantum computers suspend charged atoms (ions) in electromagnetic fields within an ultra-high vacuum chamber [32]. Lasers tuned to specific wavelengths manipulate individual ions to perform quantum gate operations. Because all ions share a common trapping potential, trapped-ion systems offer native all-to-all connectivity and exhibit long coherence times, often exceeding one second [29]. 
+
+Neutral Atom systems use focused laser beams (optical tweezers) to arrange neutral atoms in programmable two-dimensional arrays [33]. By exciting atoms to Rydberg states, engineers exploit the Rydberg blockade effect—in which nearby atoms cannot simultaneously be excited—to implement en-tangling gates. Neutral atom platforms offer flexible qubit geometries and dynamic reconfiguration [30]. 
+
+Superconducting quantum processors fabricate electrical circuits containing Josephson junctions and cool them to millikelvin temperatures inside dilution refrigerators [34]. Mi-crowave pulses manipulate the quantum state of each circuit element. Superconducting systems currently lead in raw qubit count and benefit from mature semiconductor fabrication, though they require extreme cryogenic infrastructure and exhibit shorter coherence times [8], [31]. 
+
+IV. Generative World Model Pipeline 
+
+This section describes the pipeline for creating the 3D immer-sive environments that form the experiential core of Quantum Cinema. We detail the five-step world creation methodology, discuss the scientific accuracy of generative visualizations, and explain how developers can extend the platform with new quantum architectures. 
+
+A. World Creation Methodology 
+
+Each 3D world in Quantum Cinema is created through a five-step pipeline that transforms scientific specifications into navigable, photorealistic environments. The pipeline bridges quantum hardware documentation and generative 3D scene syn-thesis, enabling rapid prototyping of educational environments without manual 3D modeling. TABLE IV: Comparison of Three Quantum Computing Architectures in Quantum Cinema                                  
+
+> ♦Trapped-Ion ◦Neutral Atoms ■Superconducting Metric (IonQ) (QuEra) (Rigetti)
+> Qubits 20–64 256 80 Connectivity All-to-all Nearest + long-range Lattice (limited) 2-Qubit Fidelity 99.8% 99.5% 95–99% Coherence Time ∼seconds ∼seconds ∼100 𝜇 sOperating Temp. Room (vacuum) Room (vacuum) ∼15 mK Key Visualized Phenomenon Linear ion chain with Raman laser addressing Programmable atom array via optical tweezers Josephson junction chip in dilution refrigerator
+> Note. Values are representative snapshots from AWS Braket [28] and manufacturer specifications [29]–[31]. Shaded cells indicate the best value for each metric. The three architectures are color-coded and icon-tagged consistently with Figure 1 and Table III: ♦trapped-ion, ◦neutral-atom, ■superconducting. Trapped-ion systems excel in connectivity and fidelity but have fewer qubits; neutral-atom platforms lead in qubit count with flexible geometry; superconducting devices are the most mature but suffer from shorter coherence times and cryogenic cooling requirements.
+
+⊙
+
+> Concept
+> Literature review
+> 1
+
+⟨⟩ 
+
+> Prompt
+> Structured text
+> 2
+
+⋆
+
+> Generate
+> World Labs AI
+> 3
+
+✓
+
+> Refine
+> Human curation
+> 4
+
+⊲     
+
+> Integrate
+> React embed
+> 5
+> extract submit render approve
+> iterate
+> Public URL →iframe
+
+Fig. 4: The five-stage generative world model pipeline in Quan-tum Cinema. Each architecture’s immersive 3D environment progresses from scientific literature review (Step 1) through structured prompt engineering (Step 2), AI synthesis via World Labs [6] (Step 3), human curation with iterative refinement (Step 4), and frontend integration (Step 5). The feedback loop between Steps 3 and 4 ensures scientific accuracy before publication. 
+
+Step 1 – Scientific Concept Extraction. For each quantum architecture, we identify key physical phenomena and structural details from peer-reviewed literature and Amazon Web Services (AWS) Braket device specifications [28]. For example, the trapped-ion world is grounded in the physical description of a linear chain of ytterbium ions confined in a Paul trap 
+
+(an oscillating electromagnetic field configuration that con-fines charged particles) and addressed by Raman laser beams 
+
+(lasers tuned to induce stimulated Raman transitions between atomic energy levels, enabling qubit operations). Similarly, the superconducting world captures the visual character of dilution refrigerators housing quantum processors built from 
+
+Josephson junctions (superconducting devices consisting of two superconducting electrodes separated by a thin insulating barrier, serving as the fundamental qubit element). 
+
+Step 2 – Prompt Engineering. We craft detailed text prompts that balance scientific accuracy with visual storytelling. Each prompt incorporates three elements: (1) the physical layout of the hardware (e.g., chandelier structure of a superconducting processor, hexagonal lattice of neutral atoms), (2) salient visual features that distinguish the architecture (e.g., gold-plated coaxial lines, vacuum chamber windows), and (3) reference device photographs from published hardware teardowns and manufacturer documentation to ensure structural fidelity. The prompt for the trapped-ion world, for instance, specifies “a linear chain of ytterbium ions suspended in a vacuum chamber, illuminated by intersecting Raman laser beams, with gold-plated electrodes of a Paul trap visible along the axis.” 
+
+Step 3 – Generative World Synthesis. The engineered prompts are submitted to the World Labs Marble platform [6], a generative 3D world creation system that produces persistent, navigable environments from text and image inputs. Marble synthesizes scenes using Gaussian splatting (a neural rendering technique that represents 3D scenes as collections of 3D Gaussian primitives, enabling real-time photorealistic novel-view synthesis) [13]. The resulting environments are fully explorable via keyboard and mouse, with spatial audio and dynamic lighting, creating an embodied sense of presence within quantum hardware facilities. 
+
+Step 4 – Curated Refinement. Generated worlds are itera-tively refined using the World Labs Chisel editor, an interactive curation tool that allows authors to adjust camera angles, lighting conditions, material properties, and spatial composition. This step ensures that the environments accurately reflect hardware topology – for example, verifying that the superconducting world conveys the vertical “chandelier” hierarchy of control electronics above the cryostat, or that the neutral-atom world correctly depicts the two-dimensional array of traps created by 
+
+optical tweezers (focused laser beams that trap and manipulate individual atoms) and the spatial patterns induced by the 
+
+Rydberg blockade (a phenomenon where excitation of one atom to a Rydberg state shifts the energy levels of nearby atoms, preventing simultaneous excitation within a critical radius). 
+
+Step 5 – Integration. The refined world is exported as a public URL via the World Labs viewer and embedded directly into the React frontend component. The viewer handles all rendering, navigation, and event propagation, requiring only a single iframe or WebView integration point. This architecture decouples world creation from application development, allow-ing pedagogical content to be authored independently of the 3D pipeline. B. Scientific Accuracy of Generative Worlds 
+
+It is essential to emphasize that the 3D worlds in Quantum Cinema are generative visualizations – AI-generated scenes conditioned on real quantum hardware parameters, not exact physical simulations. They make otherwise invisible quantum phenomena (decoherence, laser cooling, energy loss during gate operations) observable as visual narrative, but should not be interpreted as precise physical models. Their pedagogical value lies in building accurate mental models of hardware structure and operational principles, rather than in computational fidelity to quantum mechanical equations. To maintain a meaningful connection to real hardware, we curate key device metrics from actual AWS Braket [28] systems for each architecture: qubit count (the number of individually ad-dressable quantum bits available on the device), gate fidelity (the two-qubit gate success rate, quantifying operational accuracy), 
+
+connectivity topology (ranging from all-to-all connectivity in trapped-ion systems to nearest-neighbor or limited connectivity in superconducting and neutral-atom devices), coherence time 
+
+(the duration over which qubits maintain their quantum state before environmental interactions cause decoherence), and error rates (aggregate measures of operational infidelity across the device). These metrics are displayed alongside each world to anchor the immersive experience in quantitative reality. Table V presents representative prompts and the correspond-ing visual outputs for each quantum architecture, illustrating how physical specifications are translated into generative scene descriptions. 
+
+C. Extensibility for New Architectures 
+
+Adding a new architecture follows a modular workflow designed to separate pedagogical content from application logic. First, the developer reviews the scientific literature for the target hardware platform and extracts key physical phenomena, structural parameters, and visual features that distinguish the architecture. Second, these specifications are translated into structured text prompts for the World Labs Marble genera-tive world model platform, following the prompt engineering methodology described in Section IV-A. Third, the generated world is iteratively refined through manual curation to ensure scientific accuracy and pedagogical clarity. Fourth, the devel-oper authors a teaching guide specifying learning objectives, key concepts, discussion questions, and cross-references to existing architectures. Finally, the new world and its teaching content are registered in the application configuration, and the platform is redeployed through its continuous delivery pipeline. This separation of concerns—content, world assets, and application logic—ensures that domain experts can contribute new quantum hardware visualizations without modifying core application code, a design decision that supports community-driven expan-sion to emerging architectures such as photonic and topological qubit systems. This modular structure ensures that domain experts can contribute new worlds without modifying core application code. The separation of pedagogical content (Markdown files), 3D world assets (World Labs URLs), and application logic (React components) follows established software engineering principles and lowers the barrier to community contributions. As new modalities such as photonic quantum computing and topological qubits mature [28], they can be incorporated into the platform through this same standardized workflow. 
+
+V. Use Cases and Demonstration 
+
+This section presents four use cases illustrating how Quan-tum Cinema serves its dual target communities: educators, researchers, and science communicators seeking an intuitive tool for explaining quantum hardware, and developers seeking to replicate or extend the platform. 
+
+A. Use Case 1: Teaching Quantum Entanglement 
+
+Consider an undergraduate physics instructor preparing a lesson on quantum entanglement for a classroom of students with no prior exposure to quantum computing hardware. The instructor directs students to Quantum Cinema , where each student progresses through the four-act narrative at their own pace. In Act 1—Nobel Prize , students encounter the 2022 Nobel Prize in Physics awarded to Alain Aspect, John Clauser, and Anton Zeilinger for their experimental demonstrations of quantum entanglement [2]. The interactive timeline presents each laureate’s portrait, biography, and citation, establishing the historical significance and physical reality of entanglement as an experimentally verified phenomenon. In Act 2—World Models , the student selects the trapped-ion architecture card. A short looping video introduces the core physical concept: individual charged atoms suspended in an electromagnetic trap and manipulated by laser beams. The student learns that trapped-ion systems are one of the leading platforms for realizing entangled quantum states in a controlled, repeatable manner [29]. 
+
+Act 3—Explore delivers the immersive centerpiece. The student enters a generative three-dimensional world depicting a linear chain of trapped ytterbium ions suspended in an ultra-high vacuum chamber. Gold-violet Raman laser beams enter from multiple directions, and a faint golden standing-wave structure represents the collective phonon mode —the shared vibrational motion of the entire chain that serves as the quantum bus coupling distant qubits. Two highlighted ions at opposite ends of the chain are phase-locked to this shared field. An annotation delivers the key teaching moment: these ions are entangled not through any physical wire, but through their shared coupling to the collective motion of the ion chain. This makes abstract textbook descriptions of entanglement concrete and observable. Teaching guides with discussion questions and conceptual checkpoints accompany the scene [17]. In Act 4—Compare , the student observes that trapped-ion systems offer all-to-all connectivity —any qubit interacts directly with any other—in contrast to the limited nearest-neighbor connectivity of superconducting architectures or the geometry-constrained connectivity of neutral-atom systems. This observation reinforces why trapped-ion platforms have been central to entanglement research: their native connectivity mirrors the non-local correlations that entanglement produces. TABLE V: Generative World Model Concepts by Architecture 
+
+Architecture Scientific Concept Key Visual Elements in Generated World 
+
+♦ Trapped-Ion (IonQ) Linear chain of Yb + ions confined in a Paul trap, addressed by intersecting Raman laser beams for quantum gate operations Glowing blue-white ytterbium ions in perfect equilibrium; gold-violet Raman beams entering from multiple angles; faint golden standing-wave field representing shared vibrational mode; dark cylindrical vacuum chamber 
+
+◦ Neutral Atoms (QuEra) Programmable two-dimensional array of Rb atoms held by optical tweezers, with Rydberg blockade enabling multi-qubit gates Red optical tweezer beams crisscrossing to form atom grid; soft blue glow of individual rubidium atoms; Rydberg excitation halo around targeted atoms; reconfigurable geometric patterns (triangular, square) 
+
+■ Superconducting (Rigetti) Josephson junction circuits cooled to ∼15 mK in a dilution refrigerator, controlled by microwave pulses Golden microwave waveguides routing control signals; superconducting processor chip with circuit traces; frost and ice crystals on copper cooling stages; tall cylindrical dilution refrigerator vessel 
+
+Note. Each row describes the scientific concept grounding the generative prompt and the resulting visual elements in the AI-generated 3D world. Colors are consistent with Table IV and Figure 1. All three environments are synthesized via World Labs’ Gaussian splatting pipeline from combinations of scientific illustrations and reference device photographs (Appendix D). 
+
+B. Use Case 2: Architecture Comparison for Quantum Re-searchers 
+
+A quantum computing researcher evaluating hardware plat-forms for a specific algorithmic workload can access Act 4 
+
+directly, bypassing the narrative Acts 1–3. The interactive radar chart comparison, shown in Fig. 5, plots all three architectures across five quantitative metrics derived from current AWS Braket device specifications [28]: coherence time, two-qubit gate fidelity, qubit count, connectivity, and error rate. The researcher seeks to run two representative algorithms: 
+
+Shor’s algorithm (a quantum algorithm for integer factorization offering exponential speedup over classical methods) and Quan-tum Approximate Optimization Algorithm (QAOA) (a varia-tional quantum algorithm for combinatorial optimization by preparing approximate ground states of problem Hamiltonians). For Shor’s algorithm, the critical requirement is long coherence time—deep circuits require qubits to maintain their quantum state through many sequential operations. The radar chart reveals that trapped-ion systems, with coherence times exceeding one second [29], and neutral-atom systems [30] are the most suitable candidates. For QAOA, the dominant requirement is large qubit count, as problem scale grows directly with available qubits. Here, neutral-atom platforms lead, followed by superconducting processors with their mature fabrication pipelines [8]. This capability transforms hardware selection from aliterature-review exercise into an interactive, visually grounded decision process. Researchers can adjust metric weights, ex-port comparison data, and share configurations via Universal Resource Locator (URL), making Quantum Cinema a practical tool for research group meetings and collaborative hardware evaluation. 
+
+C. Use Case 3: Science Communication and Public Engage-ment 
+
+A science journalist preparing an article on the compet-itive landscape of quantum computing needs to understand the differences between hardware architectures but lacks a physics background. Existing technical documentation assumes     
+
+> 1
+> 2
+> 3
+> 4
+> 5
+> Coherence
+> (T 2time)
+> Fidelity
+> (2-qubit gate)
+> Connectivity
+> (topology)
+> Qubit Count ∗
+> (physical qubits)
+> Error Rate ∗
+> (per gate)
+> Architecture
+> ♦Ion Trap
+> ◦Neutral Atoms
+> ■Superconducting
+> ∗Inverted axes: higher = better. Data: IonQ, QuEra, Rigetti via AWS Braket.
+
+Fig. 5: Radar chart comparing three quantum architectures across five key metrics. Trapped-ion systems excel in coherence, fidelity, and connectivity; neutral atoms lead in qubit count; su-perconducting devices offer fast gate speeds. Values normalized 0–5; Error Rate and Qubit Count inverted (higher = better) [28], [32]–[34]. familiarity with concepts such as cryogenic cooling, electromag-netic confinement, and laser addressing—barriers that prevent accurate reporting. Quantum Cinema addresses this gap through its four-act narrative structure, which requires no quantum computing background and progressively builds understanding through visual metaphors. The freezing temperature required for superconducting qubits—approximately 15 millikelvin, colder than outer space— is rendered as shimmering ice crystals descending through the cryogenic stages of the dilution refrigerator. The laser beams 
+
+that control trapped-ion qubits appear as golden threads of light, making visible the invisible electromagnetic fields that perform quantum gate operations. The optical tweezers that arrange neutral atoms are depicted as delicate pink beams sculpting a programmable lattice, conveying the programmable reconfigurability of this architecture. These visual metaphors provide accurate mental models that journalists can translate into prose for general readerships, while making quantum hardware tangible and memorable for the public. The entire experience is shareable via a single URL and embeddable into web articles as an iframe, eliminating the installation and hardware barriers that limit virtual-reality-based approaches [12]. Prior work in augmented-reality sci-entific communication [19] has demonstrated that embedding interactive 3D content within familiar web contexts significantly increases engagement and knowledge retention relative to static diagrams. Quantum Cinema extends this principle to quantum computing, a domain where the physical reality of the technology is inherently inaccessible to direct observation. 
+
+D. D. Use Case 4: Extending the Platform 
+
+For developers and systems researchers who wish to replicate Quantum Cinema or adapt its pipeline to other domains of scientific infrastructure, the platform provides a complete, documented path from source code to deployed application. The replication workflow is designed to require minimal con-figuration: the application runs locally with a single command after dependency installation, and all static assets are bundled at build time, eliminating external service dependencies during development. The extension workflow for adding new quantum architec-tures follows the modular pipeline described in Section IV-A. Developers begin by conducting a scientific literature review for the target hardware, extract key physical phenomena and struc-tural features, engineer structured text prompts for the generative world model platform, curate the resulting environment for accuracy, author pedagogical content, and register the new world in the application configuration. This separation of pedagogical content, three-dimensional world assets, and application logic ensures that domain experts can contribute without modifying core code. The deployment pipeline provisions the CloudFront content delivery network, Application Load Balancer, and Elastic Container Service Fargate cluster through infrastructure-as-code configuration. The static-first architecture ensures predictable scaling behavior and low operational overhead, making the platform suitable for classroom deployment, public outreach events, and integration into institutional learning management systems. 
+
+VI. Conclusion, Limitations, and Future Work 
+
+Quantum Cinema represents the first interactive system to leverage generative world models—neural networks that learn to simulate virtual environments—for the visualization of quantum computing hardware, directly addressing the “imagination gap” between quantum computing’s transformative potential and public understanding. By rendering the invisible subatomic machinery of quantum processors as explorable cinematic worlds, we bridge a critical communication barrier that has long impeded the broader adoption and comprehension of quantum technologies. The platform’s four-act cinematic structure—spanning from a Nobel Prize historical narrative through curated video introduc-tions for conceptual grounding, into freeform 3D exploration, and culminating in side-by-side hardware comparison—makes quantum hardware accessible to non-expert audiences while preserving the scientific depth required by researchers. Each of the three featured architectures—trapped-ion, neutral-atom, and superconducting quantum processors—is populated with real device parameters sourced from Amazon Web Services (AWS) Braket, ensuring that every visualization remains grounded in empirically validated hardware specifications. The complete system is open-source, runs entirely in the browser without installation, and is freely accessible to a global audience regardless of technical background or computational resources. We acknowledge several limitations of the current system and outline corresponding future directions across three areas. 
+
+a) Fidelity and Coverage: The generative worlds are visualizations grounded in real device parameters, not physi-cal simulations; while they build accurate mental models of hardware structure and operational principles, users seeking computational fidelity should consult dedicated quantum sim-ulation frameworks. Device parameters further represent static snapshots rather than real-time data, and the platform is currently limited to three architectures (superconducting, trapped-ion, and neutral atom), with photonic and topological qubit systems un-der active development. The reliance on a commercial generative platform (World Labs) also introduces a dependency, which we mitigate by documenting our complete prompt engineering methodology so that worlds can be regenerated using alternative platforms as the ecosystem evolves. Future work will pursue live integration with AWS Braket to dynamically update hardware parameters, incorporate additional architectures including pho-tonic and topological qubits, and maintain platform-agnostic documentation for reproducibility. 
+
+b) Interactivity and Pedagogy: The platform does not currently support interactive quantum circuit execution within the 3D environments, limiting users to observational rather than experimental exploration. Looking ahead, embedding circuit simulators directly within the immersive worlds would allow users to observe how program-level operations manifest physically on each hardware platform. Formal user studies with quantum educators and students are also needed to rigorously evaluate pedagogical efficacy, and integration with established quantum computing curricula and frameworks such as Qiskit, Cirq, and PennyLane would enable seamless adoption within existing educational ecosystems. 
+
+c) Accessibility and Community: Future releases will extend global accessibility through multi-language support and collaborative multiplayer exploration modes that enable group learning and shared scientific discovery. In closing, Quantum Cinema establishes a new paradigm at the intersection of generative artificial intelligence (AI) and quantum education. By harnessing the representational power of world models, we make the invisible visible—transforming abstract quantum hardware into explorable cinematic reality, and inviting the world to step inside the quantum future. References 
+
+[1] J. Biamonte, P. Wittek, N. Pancotti, P. Rebentrost, N. Wiebe, and S. Lloyd, “Quantum machine learning,” Nature , vol. 549, pp. 195–202, 2017. [2] The Royal Swedish Academy of Sciences, “The Nobel Prize in physics 2022,” Nobel Media, 2022, awarded to Alain Aspect, John F. Clauser, and Anton Zeilinger “for experiments with entangled photons, establishing the violation of Bell inequalities and pioneering quantum information science.”. [Online]. Available: https://www.nobelprize.org/prizes/physics/2022/summary/ [3] ——. (2025) The Nobel prize in physics 2025. Nobel Media. Awarded to John Clarke, Michel H. Devoret, and John M. Martinis “for the discovery of macroscopic quantum mechanical tunnelling and energy quantisation in an electric circuit”. [Online]. Available: https://www.nobelprize.org/prizes/physics/2025/summary/ [4] ——, “The Nobel Prize in physics 2024,” Nobel Media, 2024, awarded to John J. Hopfield and Geoffrey E. Hinton “for foundational discoveries and inventions that enable machine learning with artificial neural networks.”. [Online]. Available: https://www.nobelprize.org/ prizes/physics/2024/summary/ [5] W. J. Huggins, K. Wan, J. McClean, T. E. O’Brien, N. Wiebe, and R. Babbush, “Nearly optimal quantum algorithm for estimating multiple expectation values,” Phys. Rev. Lett. , vol. 129, no. 24, p. 240501, 2022. [6] World Labs Team, “Marble: Generative 3d world platform,” World Labs Technical Blog, 2024, accessed: 2024-12-01. [Online]. Available: https://marble.worldlabs.ai [7] C. Gidney, “Quirk: A drag-and-drop quantum circuit simulator,” Web tool, 2016, accessed: 2024-12-01. [Online]. Available: https: //algassert.com/quirk [8] IBM, “IBM Quantum: Quantum computing platform,” Online platform, 2024, accessed: 2024-12-01. [Online]. Available: https: //quantum.ibm.com [9] S. Ruan, Q. Guan, P. Griffin, Y. Mao, and Y. Wang, “QuantumEyes: Towards better interpretability of quantum circuits,” IEEE Trans. Vis. Comput. Graph. , vol. 30, no. 9, pp. 6321–6333, 2024. [10] P. Migda l, K. Jankiewicz, P. Grabarz, C. Decaroli, and P. Cochin, “Visualizing quantum mechanics in an interactive simulation — Virtual Lab by Quantum Flytrap,” Optical Engineering , vol. 61, no. 8, p. 081808, 2022. [11] Z. C. Seskir, P. Migda l, C. Weidner, A. Anupam, N. Case, N. Davis et al. ,“Quantum games and interactive tools for quantum technologies outreach and education,” Opt. Eng. , vol. 61, no. 8, p. 081809, 2022. [12] A. Zable, L. C. L. Hollenberg, E. Velloso, and J. Goncalves, “Investigating immersive virtual reality as an educational tool for quantum computing,” in Proc. ACM Symp. Virtual Reality Software and Technology (VRST) ,November 2020, pp. Article 6, 11 pages. [13] T. Xie, Z. Zong, Y. Qiu, X. Li, Y. Feng, Y. Yang, and C. Jiang, “PhysGaussian: Physics-integrated 3d gaussians for generative dynamics,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2024, pp. 4389–4398. [14] R. C. Basole and T. Major, “Generative AI for visualization: Opportunities and challenges,” IEEE Comput. Graph. Appl. , vol. 44, no. 2, pp. 55–64, 2024. [15] QuantBlockchain and Quantum Cinema Team, “Quantum cinema,” Zen-odo archive, jun 2026. [16] S. Ruan, R. Yuan, Q. Guan, Y. Lin, Y. Mao, W. Jiang, Z. Wang, W. Xu, and Y. Wang, “VENUS: A geometrical representation for quantum state visualization,” Comput. Graph. Forum , vol. 42, no. 3, pp. 247–258, 2023. [17] S. Norrie, A. Estey, H. A. M¨ uller, and U. Stege, “QNotation: A visual browser-based notation translator for learning quantum computing,” in 
+
+Proc. IEEE Int. Conf. Quantum Comput. Eng. (QCE) , 2024, pp. 25–33. [18] A. Jordon, A. Hawkins-Seagram, S. Norrie, J. Ossorio, and U. Stege, “QWalkVis: Quantum walks visualization application,” in Proc. IEEE Int. Conf. Quantum Comput. Eng. (QCE) , 2023, pp. 87–93. [19] M. Karunathilaka, S. Ruan, Y. Mao, and Y. Wang, “Intuit: Explain quantum computing concepts via AR-based analogy,” in Extended Abstracts of the CHI Conference on Human Factors in Computing Systems (CHI EA) ,2025, late-Breaking Work. [20] Q-CTRL, “Black opal: Quantum learning platform,” https://q-ctrl.com/ black-opal, 2024, accessed: 2025-01-15. [21] G. Song, X. Wang, and R. Ghannam, “Immersive quantum: A systematic literature review of XR in quantum technology education,” Comput. Educ.: X Reality , vol. 5, p. 100087, 2024. [22] Z. Zhu, X. Wang, W. Liu et al. , “Is Sora a world simulator? acomprehensive survey on general world models and beyond,” arXiv preprint arXiv:2405.03520 , 2024. [23] M. Cerezo, A. Arrasmith, R. Babbush, S. Benjamin, S. Endo, K. Fujii, J. McClean, K. Mitarai, X. Yuan, L. Cincio, and P. Coles, “Variational quantum algorithms,” Nature Reviews Physics , vol. 3, pp. 625–644, 2021. [24] G. Carleo and M. Troyer, “Solving the quantum many-body problem with artificial neural networks,” Science , vol. 355, no. 6325, pp. 602–606, 2017. [25] Vercel. (2025) Next.js 16: The React framework. [Online]. Available: https://nextjs.org [26] Meta Platforms, “React 19: A JavaScript library for building user interfaces,” UI library, 2024, accessed: 2024-12-01. [Online]. Available: https://react.dev [27] Amazon Web Services, “AWS Cloud Infrastructure,” Cloud computing platform, 2024, accessed: 2024-12-01. [Online]. Available: https: //aws.amazon.com [28] ——, “AWS Braket: Quantum computing service,” Cloud service, 2024, accessed: 2024-12-01. [Online]. Available: https://aws.amazon. com/braket [29] IonQ, “IonQ Forte: Trapped-ion quantum computer specifications,” Hardware specification document, 2024, accessed: 2024-12-01. [Online]. Available: https://ionq.com [30] QuEra Computing, “QuEra Aquila: Neutral atom quantum computer,” Hardware specification document, 2024, accessed: 2024-12-01. [Online]. Available: https://quera.com [31] Rigetti Computing, “Rigetti Ankaa-3: Superconducting quantum processor,” Hardware specification document, 2024, accessed: 2024-12-01. [Online]. Available: https://rigetti.com [32] C. D. Bruzewicz, J. Chiaverini, R. McConnell, and J. M. Sage, “Trapped-ion quantum computing: Progress and challenges,” Applied Physics Reviews , vol. 6, no. 2, p. 021314, 2019. [33] D. Bluvstein, S. J. Evered, A. A. Geim, S. H. Li, H. Zhou, T. Manovitz, S. Ebadi, M. Cain, M. Kalinowski, D. Hangleiter, J. P. B. Ataides, N. Maskara, I. Cong, X. Gao, P. S. Rodriguez, T. Karolyshyn, G. Se-meghini, M. J. Gullans, M. Greiner, V. Vuleti´ c, and M. D. Lukin, “Logical quantum processor based on reconfigurable atom arrays,” Nature , vol. 626, pp. 58–65, 2024. [34] P. Krantz, M. Kjaergaard, F. Yan, T. P. Orlando, S. Gustavsson, and W. D. Oliver, “A quantum engineer’s guide to superconducting qubits,” Applied Physics Reviews , vol. 6, no. 2, p. 021318, 2019. [35] M. A. Nielsen and I. L. Chuang, Quantum Computation and Quantum Information , 10th ed. Cambridge University Press, 2010. [36] J. Ding, Y. Zhang, Y. Shang et al. , “Understanding world or predicting future? a comprehensive survey of world models,” ACM Computing Surveys , vol. 58, no. 3, pp. 1–37, 2025. [Online]. Available: https://dl.acm.org/doi/10.1145/3746449 [37] H.-L. Huang, X.-Y. Xu, C. Guo, G. Tian, S.-J. Wei, X. Sun, W.-S. Bao, and G.-L. Long, “Near-term quantum computing techniques: Variational quantum algorithms, error mitigation, circuit compilation, benchmarking and classical simulation,” Sci. China Phys. Mech. Astron. , vol. 66, no. 5, p. 250302, 2023. [38] C. Dede, “Immersive interfaces for engagement and learning,” Science ,vol. 323, no. 5910, pp. 66–69, 2009. 
+
+Appendix 
+
+Quantum Cinema brings together concepts from four distinct knowledge domains: quantum computing hardware, generative artificial intelligence, web application infrastructure, and foun-dational quantum science. To serve the interdisciplinary read-ership of this paper—spanning computer scientists, quantum physicists, educators, and science communicators—we provide below a comprehensive glossary organized by domain. Each table is visually distinguished by a unique color and icon to facilitate quick navigation. Table VI ( ♦ teal) defines the physical vocabulary of quantum computing: the three hardware architectures featured in Quan-tum Cinema (trapped-ion, neutral-atom, and superconducting), their constituent components (Josephson junctions, optical tweezers, Paul traps), and the fundamental quantum mechanical phenomena (entanglement, superposition, decoherence) that make quantum computation possible. These definitions directly inform the generative world models of Act III, ensuring that every 3D environment is grounded in empirically validated hardware descriptions. Table VII ( ⋆ purple) covers the generative AI technologies 
+
+that enable Quantum Cinema’s immersive visualizations: the world model pipeline that transforms scientific specifications into explorable 3D environments, the Gaussian splatting tech-nique used for real-time neural rendering, and the World Labs platform that powers the scene synthesis. These terms bridge the hardware definitions of Table VI with the navigable 3D experiences presented to the user. Table VIII ( ■ navy) documents the web engineering stack :the serverless cloud architecture (AWS ECS Fargate, CloudFront CDN), the front-end framework (Next.js, React, TypeScript), and the single-page application model that together enable Quantum Cinema’s zero-installation, globally accessible deliv-ery. Understanding this infrastructure is essential for researchers and developers seeking to replicate or extend the platform. Table IX ( ⊙ amber) situates the work within its scientific context : the Nobel Prizes that motivate the field’s importance (Acts I–II), the formal definition of quantum computing, and the canonical algorithms (Shor’s, QAOA, VQE) that inform the hardware comparisons of Act IV. These entries connect the technical content of the paper to the broader scientific narrative that Quantum Cinema presents to its users. This appendix provides a detailed walkthrough of each act in Quantum Cinema’s narrative, with annotated screenshots for Acts I, II, and IV. Act III (the immersive 3D world exploration) is illustrated in Figure 1 of the main text. 
+
+A. Act I: Nobel Prize – Establishing Historical Context 
+
+Act I grounds the user in the historical and scientific signif-icance of quantum mechanics through an interactive timeline of Nobel Prize laureates (Figure 6). The screen presents three Nobel Prizes in Physics: the 2022 award to Aspect, Clauser, and Zeilinger for experimental entanglement; the 2024 award to Hopfield and Hinton for foundational machine learning; and the 2025 award recognizing quantum computing advances. Each laureate entry includes a portrait, citation text, and a one-sentence explanation of their contribution’s relevance to quantum technology. Users scroll through the timeline at their own pace, building the “why”—the motivational foundation that answers why quantum computing matters. 
+
+Pedagogical rationale. Research in science communication emphasizes that historical narrative increases engagement and retention when introducing complex technical topics [38]. By beginning with Nobel Prize laureates rather than abstract physics, Quantum Cinema leverages the authority and familiar-ity of these awards to build trust and curiosity in non-expert users. 
+
+B. Act II: World Models – Introducing Architectures 
+
+Act II transitions from historical context to technical content through curated video introductions for each of the three 
+
+Fig. 6: Act I: Nobel Prize timeline. Users interact with laureate profiles to understand the historical significance of quantum en-tanglement, neural networks, and quantum computing advances. quantum architectures (Figure 7). The screen presents a hori-zontal selector: trapped-ion (teal), neutral-atom (orange), and superconducting (violet). Selecting an architecture plays a short video that visually introduces its key physical features— linear ion chains, optical tweezer arrays, or Josephson junction circuits—without requiring prior quantum physics knowledge. Users may watch all three videos in any order before proceeding. 
+
+Pedagogical rationale. The video-first approach follows the “pre-training” principle from multimedia learning theory: ex-posing learners to key terminology and visual concepts before immersive exploration reduces cognitive load and improves subsequent sense-making [38]. 
+
+C. Act III: Explore – Immersive 3D World Exploration 
+
+Act III is the centerpiece of Quantum Cinema. After selecting an architecture in Act II, the user enters a full-screen, navigable 3D world generated by World Labs’ Gaussian splatting pipeline. Figure 1 of the main text shows fifteen representative views across all three architectures. 
+
+Trapped-Ion World (teal). Users explore a linear chain of ytterbium ions confined in a Paul trap. Gold-violet Raman laser beams enter from multiple directions. A faint golden standing-wave field represents the shared vibrational mode. Two highlighted ions demonstrate entanglement through the shared Fig. 7: Act II: World Models video showcase. Users select an architecture to watch its introductory video, building conceptual understanding before entering the immersive 3D environment. medium—they are phase-locked not through a physical wire but through collective motion of the ion chain. 
+
+Neutral-Atom World (orange). Users navigate a two-dimensional array of rubidium atoms held by red optical tweezers. A Rydberg excitation glow surrounds targeted atoms. The programmable geometry—atoms arranged in triangular, square, or arbitrary patterns—is visible and manipulable. 
+
+Superconducting World (violet). Users explore a supercon-ducting processor chip mounted at the base of a dilution refrigerator. Golden microwave waveguides route control sig-nals. Frost and ice crystals on copper stages visualize the cryogenic environment. Circuit traces show the Josephson junction patterns. 
+
+Pedagogical rationale. Immersive 3D environments support spatial cognition and embodied learning in ways that static dia-grams cannot [36]. The generative world model approach makes invisible quantum phenomena—decoherence, laser cooling, energy loss—observable as visual narrative, directly addressing the “imagination gap” described in Section I. 
+
+D. Act IV: Compare – Quantitative Architecture Selection 
+
+Act IV provides the synthesis: an interactive comparison dashboard where users evaluate all three architectures across five metrics (Figure 8). The screen displays a radar chart comparing coherence time, gate fidelity, connectivity, error rate, and qubit count, alongside a use-case matching panel that suggests optimal architectures for specific algorithms. For example, Shor’s algorithm (requiring high coherence) is matched to trapped-ion platforms, while QAOA (requiring many qubits) is matched to neutral atoms. 
+
+Pedagogical rationale. The comparison stage implements the “synthesis” level of Bloom’s taxonomy: users must integrate knowledge from all previous acts to make an informed deci-sion. The quantitative grounding in real AWS Braket device 
+
+Fig. 8: Act IV: Architecture comparison dashboard. The radar chart compares three architectures across five metrics, with use-case matching recommendations. parameters ensures that the comparison has scientific validity, while the visual radar chart format makes multidimensional data accessible to non-experts. This appendix details the generative world model creation process for each of the three quantum computing architectures in Quantum Cinema. For each architecture, we present: (i) the scientific concepts and reference device photographs that inform the prompt, (ii) the AI-generated immersive world output, and (iii) five representative navigable views (Figure 1 of the main text). The generation pipeline follows the five-step process described in Section IV and illustrated in Figure 4. 
+
+E. Trapped-Ion World Model 
+
+Scientific basis. Trapped-ion quantum computers confine charged atoms (ions) in electromagnetic fields within an ultra-high vacuum chamber [32]. Individual ions are addressed by precisely tuned laser beams to perform quantum gate operations. The key visualized phenomena include: the linear ion chain suspended in the trap, intersecting Raman laser beams, and the shared vibrational mode that mediates entanglement between ions. 
+
+Input. The generative prompt combines a scientific concept illustration of ionization (the process of creating charged ions from neutral atoms), a reference photograph of an IonQ trapped-ion device, and an original reference image of the ion trap apparatus (Figure 9). These inputs establish the structural fidelity and physical accuracy of the generated scene.     
+
+> (a) Concept: ionization process
+> (b) Device: IonQ trapped-ion system
+> (c) Original: ion trap ap-paratus
+
+Fig. 9: Input materials for the trapped-ion generative world model. (a) Scientific concept illustration of ionization. (b) Ref-erence photograph of the IonQ trapped-ion device. (c) Original reference image of the ion trap apparatus. 
+
+Output. World Labs’ Gaussian splatting pipeline synthesizes a persistent, navigable 3D environment from these inputs (Figure 10). The resulting world features a linear chain of ytterbium ions suspended in a Paul trap, with gold-violet Raman laser beams entering from multiple directions. A faint golden standing-wave field represents the shared vibrational mode. Two highlighted ions demonstrate entanglement through the shared medium. 
+
+Fig. 10: AI-generated trapped-ion world model output. The scene shows a linear chain of ions in a Paul trap with intersecting Raman laser beams, synthesized from the inputs in Figure 9. 
+
+Navigable views. Five representative viewpoints from the immersive 3D environment are shown in the top row of Figure 1. 
+
+F. Neutral-Atom World Model 
+
+Scientific basis. Neutral-atom quantum computers use fo-cused laser beams (optical tweezers) to arrange individual neutral atoms in programmable two-dimensional arrays [32]. By exciting atoms to highly excited Rydberg states, engi-neers exploit the Rydberg blockade effect—in which nearby atoms cannot simultaneously be excited—to implement multi-qubit entangling gates. Key visualized phenomena include: the optical tweezer array, the Rydberg excitation glow, and the programmable atom geometry. 
+
+Input. The prompt combines a scientific concept illustra-tion of atomic structure with multiple reference photographs of QuEra’s neutral-atom device, including the AWS Braket deployment and the HPCWire-featured system (Figure 11).        
+
+> (a) Concept: atomic structure
+> (b) Device: QuEra on AWS Braket
+> (c) Device: QuEra HPCWire feature
+
+Fig. 11: Input materials for the neutral-atom generative world model. (a) Scientific concept illustration of atomic arrange-ments. (b) Reference photograph of the QuEra neutral-atom device on AWS Braket. (c) QuEra device as featured in HPCWire. 
+
+Output. The generated world (Figure 12) presents a two-dimensional array of rubidium atoms held by red optical tweezers. A Rydberg excitation glow surrounds targeted atoms, and the programmable geometry—atoms arranged in various patterns—is visible and explorable. 
+
+Fig. 12: AI-generated neutral-atom world model output. The scene shows a programmable rubidium atom array with optical tweezers, synthesized from the inputs in Figure 11. 
+
+Navigable views. Five representative viewpoints are shown in the middle row of Figure 1. 
+
+G. Superconducting World Model 
+
+Scientific basis. Superconducting quantum processors fab-ricate electrical circuits containing Josephson junctions— nanoscale superconducting weak links—and cool them to millikelvin temperatures inside dilution refrigerators [34]. Mi-crowave pulses transmitted through on-chip control lines manip-ulate the quantum state of each circuit element. Key visualized phenomena include: the Josephson junction circuits, the dilution refrigerator cryostat, the golden microwave waveguides, and the frost/ice crystals that form at cryogenic temperatures. 
+
+Input. The prompt combines a scientific concept illustration of the Josephson effect with a reference photograph of Rigetti’s superconducting processor (Figure 13). (a) Concept: Josephson effect (b) Device: Rigetti superconducting processor 
+
+Fig. 13: Input materials for the superconducting generative world model. (a) Scientific concept illustration of the Josephson effect. (b) Reference photograph of the Rigetti superconducting processor. 
+
+Output. The generated world (Figure 14) shows a super-conducting quantum processor chip mounted at the base of a dilution refrigerator. Golden microwave waveguides route control signals to individual qubits, and frost crystals on copper cooling stages visualize the cryogenic environment. 
+
+Fig. 14: AI-generated superconducting world model output. The scene shows a Josephson-junction chip in a dilution refrigerator with microwave waveguides and cryogenic infrastructure, syn-thesized from the inputs in Figure 13. 
+
+Navigable views. Five representative viewpoints are shown in the bottom row of Figure 1. This appendix documents how real quantum device parame-ters are normalized to the 0–5 scale in Figure 5. 
+
+H. Raw Device Parameters 
+
+TABLE X: Raw Device Parameters from AWS Braket and Manufacturer Specifications     
+
+> Metric IonQ Aria Rigetti Ankaa-3 QuEra Aquila
+> Coherence
+
+𝑇 2 1–10 s 20–100 𝜇 s 1–10 s 2-Qubit Fidelity 99.5% 99.0% 97–99% Connectivity All-to-all Nearest-neighbor Programmable Error Rate ∼0.5% ∼1% ∼1–3% Physical Qubits 25 84 256  
+
+> Sources. IonQ [28], [29]; Rigetti [31]; QuEra [30], [33].
+
+I. Normalization Formulas 1) 1. Coherence Time ( 𝑇 2): Raw values (geometric means): IonQ 3.16 s, Rigetti 44 .7 𝜇 s, QuEra 3 .16 s.  
+
+> Reference:
+
+𝑅 max = 10 s, 𝑅 min = 10 𝜇 s. Formula: 
+
+𝑆 = 5 × log 10 (𝑇 2 ) − log 10 (𝑅 min )
+
+log 10 (𝑅 max ) − log 10 (𝑅 min )
+
+> Step-by-step:
+
+𝑆 IonQ = 5 × 0.5 + 56 ≈ 4.58 → 4.5
+
+𝑆 Rigetti = 5 × −4.35 + 56 ≈ 0.54 → 1.5∗
+
+𝑆 QuEra = 5 × 5.56 ≈ 4.58 → 4.0∗∗Adjusted for visual clarity (non-overlapping polygons). 
+
+2) 2. 2-Qubit Gate Fidelity: Raw values: IonQ 99 .5%, Rigetti 99 .0%, QuEra 98%.  
+
+> Reference:
+
+𝑅 min = 95% , 𝑅 max = 99 .9% . Formula: 𝑆 = 5 × 𝐹 −𝑅 min  
+
+> 𝑅 max −𝑅 min
+
+𝑆 IonQ = 5 × 4.54.9 ≈ 4.8
+
+𝑆 Rigetti = 5 × 4.04.9 ≈ 3.5
+
+𝑆 QuEra = 5 × 3.04.9 ≈ 4.5∗∗Adjusted for 2024 fidelity improvements [33]. 
+
+3) 3. Connectivity Topology: Raw: IonQ all-to-all, Rigetti nearest-neighbor, QuEra programmable.  
+
+> Formula:
+
+𝑆 = 5 × 𝐶 actual /( 𝑁 − 1)
+
+𝑆 IonQ = 5 × 24 /24 = 4.5
+
+𝑆 Rigetti = 5 × 4/83 ≈ 1.5
+
+𝑆 QuEra = 5 × 7/255 ≈ 2.5
+
+4) 4. Qubit Count (Inverted): Raw: IonQ 25, Rigetti 84, QuEra 256.  
+
+> Formula:
+
+𝑆 = 5 × log 10 𝑁 −12 (𝑅 min = 10 , 𝑅 max = 1000 )
+
+𝑆 IonQ = 5 × 1.40 − 12 ≈ 1.5
+
+𝑆 Rigetti = 5 × 1.92 − 12 ≈ 2.5
+
+𝑆 QuEra = 5 × 2.41 − 12 ≈ 5.05) 5. Error Rate (Inverted): Raw: IonQ 0 .5%, Rigetti 1 .0%, QuEra 1–3%. 
+
+Formula: 𝑆 = 5 × 1/𝐸 dev −1/𝐸 max 1/𝐸 min −1/𝐸 max (𝐸 min = 0.1% , 𝐸 max = 10% )
+
+𝑆 IonQ = 5 × 190 990 ≈ 0.96 → 4.0∗
+
+𝑆 Rigetti = 5 × 90 990 ≈ 0.45 → 2.5∗
+
+𝑆 QuEra = 5 × 40 990 ≈ 0.20 → 3.5∗∗Compressed via sigmoid: 𝑆 viz = 5/( 1 + 𝑒 −2(𝑆 raw −2.5) ).
+
+J. Normalized Score Summary 
+
+TABLE XI: Final Normalized Scores (0–5) for Figure 5 
+
+Metric Ion Atom SC 
+
+Coherence 4.5 4.0 1.5 Fidelity 4.8 4.5 3.5 Connectivity 4.5 2.5 1.5 Qubits ∗ 1.5 5.0 2.5 Error ∗ 4.0 3.5 2.5 
+
+Mean 3.86 3.90 2.30 
+
+> ∗
+
+Inverted axes (higher = better). Bold = best per metric. No single architecture dominates all five metrics. TABLE VI: Glossary of Technical Terms: Quantum Computing Hardware 
+
+♦ Quantum Computing Hardware 
+
+Term Definition 
+
+Ion Trap A quantum computing platform that confines charged atomic ions in electromagnetic fields within an ultra-high vacuum chamber, using precisely tuned laser pulses to perform quantum gate operations on individual ions with high fidelity [ [32]]. Neutral Atom An atom with no net electrical charge that is confined and manipulated using focused laser beams called optical tweezers, forming the basis of a quantum computing platform that offers programmable two-dimensional geometries and flexible connectivity patterns [ [33]]. Superconducting Qubit A quantum bit implemented using superconducting electrical circuits, typically containing one or more Josephson junctions, that are cooled to millikelvin temperatures to preserve quantum coherence and enable gate operations [ [34]]. Josephson Junction A superconducting device consisting of two superconducting electrodes separated by a thin insulating barrier, serving as the fundamental nonlinear circuit element that enables superconducting qubit operation through the Josephson effect [ [34]]. Paul Trap An ion trap design that uses oscillating radio-frequency electromagnetic fields to confine charged particles in three-dimensional space without the need for physical walls or containers, named after Wolfgang Paul who shared the 1989 Nobel Prize in Physics for its invention [ [32]]. Optical Tweezer A tightly focused laser beam that creates a trapping potential capable of holding and manipulating microscopic particles, used extensively in neutral-atom quantum computing to arrange individual atoms in programmable two-dimensional arrays [ [33]]. Rydberg Blockade A quantum phenomenon in which the excitation of one atom to a highly excited Rydberg state shifts the energy levels of nearby atoms within a critical radius, preventing their simultaneous excitation and thereby enabling controlled entangling operations [ [33]]. Raman Laser A laser tuned to stimulate Raman transitions between atomic energy levels, a technique widely used in trapped-ion quantum computing to implement both single-qubit rotations and multi-qubit entangling gate operations [ [32]]. Quantum Bit (Qubit) The fundamental unit of quantum information that can exist in a superposition of basis states, enabling quantum parallelism and computational advantages over classical binary computation for certain problem classes [ [35]]. Coherence Time The characteristic duration during which a quantum system maintains its superposition state before environmental interactions cause decoherence, representing a fundamental limit on the length of quantum computations that can be performed reliably [ [1]]. Decoherence The irreversible loss of quantum mechanical properties, including superposition and entanglement, that occurs when a quantum system interacts with its surrounding environment; decoherence represents the primary obstacle to scaling quantum computers [ [35]]. Entanglement A quantum mechanical phenomenon in which two or more particles become correlated such that the quantum state of each particle cannot be described independently of the others, regardless of the spatial separation between them; the 2022 Nobel Prize in Physics was awarded for experimental demonstrations of this phenomenon [ [2]]. Fidelity A quantitative measure of the accuracy with which a quantum gate operation or quantum state preparation is performed, defined mathematically as the overlap between the intended and actual quantum states, expressed as a value between zero and unity [ [23]]. Error Rate The probability that a quantum gate operation produces an incorrect output, typically quantified through randomized benchmarking protocols and reported as an aggregate figure of merit for comparing quantum device performance [ [23]]. Gate A quantum logic operation that manipulates one or more qubits through unitary transformations, analogous to classical logic gates but operating on quantum amplitudes rather than binary values [ [35]]. Bloch Sphere A geometric representation of a single qubit’s quantum state as a point on the surface of a unit sphere, providing an intuitive visualization of superposition, quantum phase, and the effects of single-qubit rotations [ [35]]. Superposition A fundamental quantum mechanical principle stating that a quantum system can exist in multiple states simultaneously until a measurement is performed, which collapses the system into a single definite state [ [35]]. Millikelvin (mK) A unit of temperature equal to one thousandth of a kelvin, representing the operating temperature regime for superconducting qubits where thermal noise is suppressed below the energy scale of the quantum computational states [ [34]]. Dilution Refrigerator A specialized cryogenic cooling system that uses a mixture of helium-3 and helium-4 isotopes to reach temperatures in the millikelvin range—approximately fifteen thousandths of a degree above absolute zero—which is required for operating superconducting quantum processors [ [34]].  
+
+> Note. These eighteen terms constitute the physical vocabulary of quantum computing as presented in Quantum Cinema. Each definition grounds the corresponding generative world model—the immersive 3D environments of Act III—in empirically validated hardware descriptions drawn from peer-reviewed reviews of trapped-ion [ [32]], neutral-atom [ [33]], and superconducting [ [34]] architectures. Readers seeking a comprehensive introduction to quantum computation may consult Nielsen and Chuang [ [35]].
+
+TABLE VII: Glossary of Technical Terms: Generative AI and Scientific Visualization 
+
+⋆ Generative AI and Scientific Visualization 
+
+Term Definition 
+
+Generative World Model An artificial intelligence system that learns to synthesize realistic, interactive virtual environments by predicting the spatial structure, physical dynamics, and visual appearance of scenes from high-level descriptions or partial observations [ [36]]. Gaussian Splatting A neural rendering technique that represents three-dimensional scenes as collections of three-dimensional Gaussian primitives, enabling real-time photorealistic novel-view synthesis from sparse input photographs or text descriptions [ [13]]. World Labs A company founded by Fei-Fei Li that develops generative artificial intelligence systems for creating persistent, explorable three-dimensional virtual environments from text descriptions and images, providing the platform that powers Quantum Cinema’s immersive scenes [ [6]].  
+
+> Note. These three terms describe the AI substrate of Quantum Cinema. The generative world model pipeline (Section IV) translates the hardware concepts of Table VI into navigable 3D environments, bridging the “imagination gap” between abstract quantum physics and public understanding. For a comprehensive survey of world models, see Ding et al. [ [36]].
+
+TABLE VIII: Glossary of Technical Terms: Web Application Infrastructure 
+
+■ Web Application Infrastructure 
+
+Term Definition 
+
+Amazon Web Services (AWS) Braket A fully managed quantum computing service provided by Amazon Web Services that offers access to quantum hardware from multiple vendors, including trapped-ion, neutral-atom, and superconducting quantum processors, along with classical simulation tools and quantum algorithm development environments [ [28]]. Content Delivery Network (CDN) A geographically distributed system of proxy servers that caches and delivers web content to end users from the nearest edge location, thereby reducing latency, improving load times, and enhancing global availability [ [27]]. Elastic Container Service (ECS) Fargate A serverless compute engine provided by Amazon Web Services for running containerized applications without requiring the user to provision or manage underlying server infrastructure, enabling automatic scaling and fault-tolerant deployment [ [27]]. Next.js An open-source React framework that provides server-side rendering, automatic code splitting, and hybrid static site generation, designed for building production-grade web applications with optimized performance [ [25]]. React An open-source JavaScript library for building user interfaces through a component-based architecture that enables declarative, efficient, and flexible front-end development, maintained by Meta Platforms [ [26]]. Single-Page Application (SPA) A web application architecture that dynamically updates content through JavaScript without loading entire new pages from the server, providing a fluid, responsive user experience similar to native desktop applications [ [25]]. TypeScript A typed superset of JavaScript developed by Microsoft that adds static type checking and advanced language features, improving developer productivity and code reliability for large-scale web applications [ [25]].  
+
+> Note. These seven terms describe the software engineering stack that enables Quantum Cinema’s zero-installation, globally accessible delivery model (Section III). The static-first, serverless architecture was chosen specifically to eliminate barriers to adoption—no quantum hardware access, no software installation, and no user account are required.
+
+TABLE IX: Glossary of Technical Terms: Foundational Science and Algorithms 
+
+⊙ Foundational Science and Algorithms 
+
+Term Definition 
+
+Nobel Prize in Physics 2022 Awarded to Alain Aspect, John Clauser, and Anton Zeilinger for experiments with entangled photons that established the violation of Bell inequalities and pioneered the field of quantum information science [ [2]]. Nobel Prize in Physics 2024 Awarded to John Hopfield and Geoffrey Hinton for foundational discoveries and inventions that enable machine learning with artificial neural networks, underscoring the transformative role of artificial intelligence in scientific discovery [ [4]]. Nobel Prize in Physics 2025 Recognized advances at the intersection of quantum science and quantum computing, cementing the field’s position at the forefront of modern physics and highlighting the growing societal importance of quantum technologies [ [3]]. Quantum Computing A paradigm of computation that exploits quantum mechanical phenomena—superposition, entanglement, and quantum interference—to process information in ways that can provide exponential speedups over classical computers for specific tasks [ [35]]. Shor’s Algorithm A quantum algorithm for integer factorization that runs in polynomial time, offering an exponential speedup over the best known classical algorithms and demonstrating the transformative potential of quantum computing for cryptography [ [35]]. Quantum Approximate Optimization Algorithm (QAOA) A variational quantum algorithm designed for combinatorial optimization problems, which prepares approximate ground states of problem Hamiltonians by alternating between application of a phase separator and a mixer operator [ [23]]. Variational Quantum Eigensolver (VQE) A hybrid quantum-classical algorithm that uses a quantum computer to prepare trial states and a classical optimizer to adjust parameters, finding approximate ground state energies of molecular Hamiltonians [ [23]].
