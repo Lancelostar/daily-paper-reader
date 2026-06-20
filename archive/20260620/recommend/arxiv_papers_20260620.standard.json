@@ -1,0 +1,306 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-20T20:25:46.653649+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 3,
+    "deep_cap": 7,
+    "deep_selected": 3,
+    "quick_candidates": 4,
+    "quick_skim_target": 12,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.20563v1",
+      "source": "arxiv",
+      "title": "JanusMesh: Fast and Zero-Shot 3D Visual Illusion Generation via Cross-Space Denoising",
+      "abstract": "Creating 3D visual illusions, a single 3D mesh that reveals entirely different semantics from various viewing angles, is a fascinating but tough challenge. Existing optimization-based methods are slow and can produce oversaturated colors. In contrast, naive stitching approaches fail to produce geometrically coherent objects. This results in visible unnatural seams and semantic leaks. In this paper, we present a fast and training-free framework for generating text-driven 3D visual illusions. Our approach decouples the generation into two stages. First, we propose a cross-space dual-branch denoising process. This process dynamically decodes 3D latents into voxel space for CLIP-guided orientation alignment and Signed Distance Field (SDF) blending, which ensures seamless geometric fusion. Second, we introduce a view-conditioned texture synthesis module that projects and aggregates view-specific 2D diffusion priors onto the fused geometry. Extensive experiments demonstrate that our method generates highly realistic, dual-semantic 3D illusions in just 3-5 minutes. It significantly outperforms existing methods in geometric integrity, semantic recognizability, and efficiency. Project page: https://siang1105.github.io/JanusMesh.github.io/",
+      "authors": [
+        "Siang-Ling Zhang",
+        "Huai-Hsun Cheng",
+        "Tsung-Ju Yang",
+        "Yu-Lun Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T17:59:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.20563v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "zero-shot text-driven 3D visual illusion generation",
+      "llm_evidence_cn": "零样本文本驱动的三维视觉错觉生成",
+      "llm_evidence": "零样本文本驱动的三维视觉错觉生成",
+      "canonical_evidence": "零样本文本驱动的三维视觉错觉生成",
+      "llm_tldr_en": "JanusMesh generates 3D visual illusions from text quickly via cross-space dual-branch denoising without training, producing geometrically coherent meshes.",
+      "llm_tldr_cn": "JanusMesh提出了一种快速、无需训练的文本驱动三维视觉错觉生成框架。通过跨空间双分支去噪过程，动态解码3D隐变量到体素空间，结合CLIP引导的方向对齐和符号距离场。该方法克服了现有优化方法速度慢、颜色饱和以及拼接方法几何不一致的缺点，实现了零样本生成，为3D创意内容生成提供了新途径。",
+      "llm_tldr": "JanusMesh提出了一种快速、无需训练的文本驱动三维视觉错觉生成框架。通过跨空间双分支去噪过程，动态解码3D隐变量到体素空间，结合CLIP引导的方向对齐和符号距离场。该方法克服了现有优化方法速度慢、颜色饱和以及拼接方法几何不一致的缺点，实现了零样本生成，为3D创意内容生成提供了新途径。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20531v1",
+      "source": "arxiv",
+      "title": "VisDom: Sparse Novel View Synthesis with Visible Domain Constraint",
+      "abstract": "Sparse novel view synthesis (NVS) remains challenging due to the ambiguity of recovering 3D geometry from few input views. While NeRF- and Gaussian Splatting (GS)-based methods perform well with dense supervision, they often overfit in sparse settings, producing floating artifacts and inconsistent geometry. Silhouette consistency is commonly used as a regularizer, but it remains insufficient, as silhouette-consistent regions can extend beyond the true object geometry. We introduce VisDom, a learning-free geometric constraint that augments classical carving-based visual hull reconstruction by enforcing a minimum multi-view visibility requirement. Specifically, we define a visible domain as the subset of 3D space observed by at least $K$ views and use it as an additional filtering criterion on top of standard silhouette-based reconstruction. This provides a stronger spatial prior in sparse-view settings. We integrate VisDom into both implicit (NeRF) and explicit (GS) pipelines by restricting volumetric sampling and guiding Gaussian placement during optimization. Experiments on three challenging datasets show consistent improvements in sparse-view NVS, enabling high-quality object-centric reconstruction from as few as four input images. Our method is domain-agnostic, requires only silhouettes, and introduces no learned parameters, making it a simple complement to existing approaches. Applying VisDom on top of GaussianObject further improves performance on Omni3D and MipNeRF360, while matching or surpassing it at 22 $\\times$ lower training cost.",
+      "authors": [
+        "Mariia Gladkova*",
+        "Tarun Yenamandra*",
+        "Edmond Boyer",
+        "Robert Maier",
+        "Tony Tung",
+        "Daniel Cremers"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T17:45:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.20531v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "proposes a learning-free geometric constraint for sparse novel view synthesis, a key 3D generation task",
+      "llm_evidence_cn": "提出一种无学习几何约束用于稀疏新视角合成，属于3D生成的关键任务",
+      "llm_evidence": "提出一种无学习几何约束用于稀疏新视角合成，属于3D生成的关键任务",
+      "canonical_evidence": "提出一种无学习几何约束用于稀疏新视角合成，属于3D生成的关键任务",
+      "llm_tldr_en": "VisDom introduces a learning-free constraint that enforces multi-view visibility for sparse novel view synthesis, outperforming NeRF and GS methods in geometry consistency.",
+      "llm_tldr_cn": "本文针对稀疏新视角合成中的过拟合和几何不一致问题，提出VisDom，一种无学习的可见域约束，通过最少K视角观测来增强经典视觉外壳重建。实验表明，该方法有效减少浮动伪影，优于基于NeRF和高斯溅射的方法。",
+      "llm_tldr": "本文针对稀疏新视角合成中的过拟合和几何不一致问题，提出VisDom，一种无学习的可见域约束，通过最少K视角观测来增强经典视觉外壳重建。实验表明，该方法有效减少浮动伪影，优于基于NeRF和高斯溅射的方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19383v1",
+      "source": "arxiv",
+      "title": "3D Scene Graphs: Open Challenges and Future Directions",
+      "abstract": "3D Scene Graphs (3DSGs) have emerged as a powerful representation for spatial AI by combining geometric grounding with semantic and relational abstractions of the environment. Their expressiveness has made them relevant to a broad range of problems in robotics and computer vision, including manipulation, navigation, task planning, scene understanding, and many others. However, the field remains fragmented: different communities adopt distinct formulations, construction pipelines, and evaluation protocols, making it difficult to compare methods, identify common assumptions, and assess remaining challenges for robust real-world deployment. This survey provides a unified and critical review of 3DSGs, with particular emphasis on open challenges and future directions. We first formalize 3DSGs under a common definition and analyze the principal modeling choices that characterize existing formulations, including node and edge attributes, hierarchical structure, dynamic scene representations, and affordance-aware extensions. We then review how 3DSGs are built from raw sensory observations, discussing the most common terminologies, conventions, and techniques. Finally, we examine downstream applications and evaluation strategies, from intrinsic graph quality to task-level performance. To support the community, we also provide a dedicated website that organizes and extends the surveyed content, accessible at https://3dscenegraphs.com/.",
+      "authors": [
+        "Dennis Rotondi",
+        "Francesco Argenziano",
+        "Sebastian Koch",
+        "Nathan Hughes",
+        "Martin Buechner",
+        "Johanna Wald",
+        "Lukas Rosenberger Schmid",
+        "Daniele Nardi",
+        "Abhinav Valada",
+        "Liam Paull",
+        "Federico Tombari",
+        "Luca Carlone",
+        "Kai O. Arras"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-06-15T08:14:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.19383v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "survey on 3D scene graphs, a representation used in world models",
+      "llm_evidence_cn": "关于3D场景图的综述，世界模型中的关键表示",
+      "llm_evidence": "关于3D场景图的综述，世界模型中的关键表示",
+      "canonical_evidence": "关于3D场景图的综述，世界模型中的关键表示",
+      "llm_tldr_en": "Comprehensive survey of 3D scene graphs, unifying formulations and highlighting challenges for robust real-world deployment in robotics and spatial AI.",
+      "llm_tldr_cn": "该综述全面回顾了3D场景图（3DSG）领域，统一了不同社区的定义、构建和评估方法，并重点讨论了鲁棒部署中的开放挑战。3DSG作为空间AI的表示，在机器人和计算机视觉中广泛用于操作、导航、任务规划等。文章为未来研究提供了方向。",
+      "llm_tldr": "该综述全面回顾了3D场景图（3DSG）领域，统一了不同社区的定义、构建和评估方法，并重点讨论了鲁棒部署中的开放挑战。3DSG作为空间AI的表示，在机器人和计算机视觉中广泛用于操作、导航、任务规划等。文章为未来研究提供了方向。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.18686v1",
+      "source": "arxiv",
+      "title": "ForecastBench-Sim: A Simulated-World Forecasting Benchmark",
+      "abstract": "Forecasting benchmarks for general-purpose AI systems usually inherit the constraints of the real world: outcomes resolve slowly, tail events are rare, and counterfactual questions are difficult to score. We introduce ForecastBench-Sim, a simulated-world forecasting benchmark built on game rollouts from Freeciv, a turn-based strategy game modelled on the Civilization series. Forecasters receive a fixed world report (a structured snapshot of the current game state) and answer questions about hidden future states; the benchmark then continues the simulation and scores forecasts. Because the world is simulated, the same setup can generate continuous or binary forecasting questions at arbitrary time horizons, paired intervention worlds for conditional or causal questions, and resolved examples of rare or disruptive outcomes. We describe the benchmark pipeline, question families, scoring protocol, and release artifacts, and report validation slices from model evaluations and an anonymized human pilot. ForecastBench-Sim is intended to complement real-world forecasting benchmarks by providing controlled, immediately resolvable tasks for studying probabilistic reasoning under dynamic world states.",
+      "authors": [
+        "Jaeho Lee",
+        "Nick Merrill",
+        "Ezra Karger"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-06-17T04:52:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.18686v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "simulated-world forecasting benchmark for AI systems",
+      "llm_evidence_cn": "基于模拟世界的AI预测基准",
+      "llm_evidence": "基于模拟世界的AI预测基准",
+      "canonical_evidence": "基于模拟世界的AI预测基准",
+      "llm_tldr_en": "ForecastBench-Sim is a benchmark built on Freeciv game rollouts, providing a simulated world for evaluating forecasting AI with rapid outcomes and counterfactual capabilities.",
+      "llm_tldr_cn": "ForecastBench-Sim是基于Freeciv游戏模拟的世界预测基准。它克服了真实世界预测的缓慢结果和罕见事件限制，提供快速反事实评估。预测者基于世界状态报告回答隐藏未来问题，基准持续模拟并评分。该基准支持连续和二进制预测，为评估AI世界模型预测能力提供了可扩展的测试平台。",
+      "llm_tldr": "ForecastBench-Sim是基于Freeciv游戏模拟的世界预测基准。它克服了真实世界预测的缓慢结果和罕见事件限制，提供快速反事实评估。预测者基于世界状态报告回答隐藏未来问题，基准持续模拟并评分。该基准支持连续和二进制预测，为评估AI世界模型预测能力提供了可扩展的测试平台。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15015v2",
+      "source": "arxiv",
+      "title": "NEXUS: Neural Energy Fields for Physically Consistent Contact-Rich 3D Object Dynamics",
+      "abstract": "Physics-grounded video generation requires controllable 3D object dynamics that remain physically consistent under contact, deformation, and external forcing. Existing trajectory-based methods often model isolated physical effects, making it difficult to compose conservative and non-conservative dynamics in contact-rich 3D scenes. We present NEXUS, a neural energy-field framework for contact-rich 3D object dynamics. NEXUS represents each object as a structural graph and constructs dynamic object-object and object-environment contact graphs. Inspired by Hamiltonian Neural Networks, NEXUS formulates motion through scalar energy and dissipation terms rather than directly predicting states or accelerations. Conservative effects, including gravity and elastic deformation, are composed as additive energy terms, while non-conservative effects such as damping and impact-induced energy loss are modeled with learned Rayleigh-style dissipation. Forces are derived by differentiating the energy and dissipation functions and rolled out with a multi-substep semi-implicit integrator. Across controlled trajectory benchmarks, NEXUS improves long-horizon accuracy over representative learned and physics-structured dynamics baselines under varying mechanical properties and physical-effect compositions. We further show that NEXUS trajectories provide effective guidance for contact-rich video generation, improving physical plausibility while maintaining competitive visual quality.",
+      "authors": [
+        "Qizhen Ying",
+        "Guangming Wang",
+        "Yangchen Pan",
+        "Victor Adrian Prisacariu",
+        "Brian Sheil",
+        "Yixiong Jing"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T23:24:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.15015v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "models 3D object dynamics with physics consistency, relevant to world model concept",
+      "llm_evidence_cn": "建模物理一致的3D物体动态，与世界模型概念相关",
+      "llm_evidence": "建模物理一致的3D物体动态，与世界模型概念相关",
+      "canonical_evidence": "建模物理一致的3D物体动态，与世界模型概念相关",
+      "llm_tldr_en": "NEXUS uses neural energy fields and Hamiltonian formulation to model contact-rich 3D object dynamics for physics-grounded video generation.",
+      "llm_tldr_cn": "本文针对物理接地视频生成中接触丰富的3D物体动态建模困难，提出NEXUS框架。将每个物体表示为结构图，构建接触图，并受哈密顿神经网络启发，通过标量能量和耗散项公式化运动，而非直接预测状态。该方法能组合保守和非保守动力学，生成物理一致的动态。",
+      "llm_tldr": "本文针对物理接地视频生成中接触丰富的3D物体动态建模困难，提出NEXUS框架。将每个物体表示为结构图，构建接触图，并受哈密顿神经网络启发，通过标量能量和耗散项公式化运动，而非直接预测状态。该方法能组合保守和非保守动力学，生成物理一致的动态。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.19451v1",
+      "source": "arxiv",
+      "title": "3D-DLP: Self-Supervised 3D Object-Centric Scene Representation Learning",
+      "abstract": "We introduce 3D-DLP, a self-supervised object-centric representation learning model that decomposes scene-level RGB-D or voxel observations into a set of 3D latent particles. Building on the Deep Latent Particles (DLP) framework, each particle encodes disentangled attributes, including 3D keypoint position, bounding box dimensions, and appearance features, and represents a distinct entity in the scene. The model learns interpretable per-particle segmentation maps through an end-to-end self-supervised reconstruction objective. We demonstrate on both simulated and real-world datasets that the learned latent space is interpretable and controllable: by manipulating particle positions and decoding, we can generate novel scene configurations. Furthermore, we show that leveraging these compact 3D latent particles for downstream robotic manipulation improves performance over baselines that either lack explicit 3D information or rely on memory-intensive dense 3D inputs without object-centric structure. Code and videos are available at https://eubooks3003.github.io/3d-dlp.",
+      "authors": [
+        "Ellina Zhang",
+        "Madhaven Iyengar",
+        "Amir Zadeh",
+        "Chuan Li",
+        "Deepak Pathak",
+        "David Held",
+        "Tal Daniel"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-17T18:00:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.19451v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "self-supervised 3D object-centric scene representation learning with generative capabilities",
+      "llm_evidence_cn": "自监督的三维物体中心场景表示学习，具有生成新场景的能力",
+      "llm_evidence": "自监督的三维物体中心场景表示学习，具有生成新场景的能力",
+      "canonical_evidence": "自监督的三维物体中心场景表示学习，具有生成新场景的能力",
+      "llm_tldr_en": "3D-DLP learns 3D latent particles from scene-level RGB-D or voxel data in a self-supervised manner, enabling interpretable scene decomposition and controllable novel scene generation.",
+      "llm_tldr_cn": "现有场景表示方法缺乏可解释性和可控性。本文提出3D-DLP，一种自监督的三维物体中心场景表示学习模型，将RGB-D或体素观测分解为一组三维潜在粒子，每个粒子编码位置、大小和外观等解耦属性。通过操作粒子位置并解码可生成新场景配置。在模拟和真实数据上，模型展现了良好的可解释性和泛化能力。",
+      "llm_tldr": "现有场景表示方法缺乏可解释性和可控性。本文提出3D-DLP，一种自监督的三维物体中心场景表示学习模型，将RGB-D或体素观测分解为一组三维潜在粒子，每个粒子编码位置、大小和外观等解耦属性。通过操作粒子位置并解码可生成新场景配置。在模拟和真实数据上，模型展现了良好的可解释性和泛化能力。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20084v1",
+      "source": "arxiv",
+      "title": "Residual-Space Evolutionary Optimization via Flow-based Generative Models",
+      "abstract": "Data editing with generative methods typically requires differentiable objectives and gradient-based search. However, these assumptions break down in flow-based settings, where edits are performed through forward and backward integration and often involve non-differentiable or black-box objectives. We introduce residual-space evolutionary optimization, a model-agnostic framework that addresses this gap by combining flow-based generative editing with evolutionary algorithms. Building on the observation that conditional flow matching (CFM) can disentangle condition-controlled factors from instance-specific residuals, our framework directly operates in residual space and separates two complementary search regimes: self-pollination performs local exploitation through feature-preserving residual refinement, and cross-pollination promotes broader exploration by recombining residuals across heterogeneous samples. As a proof of concept, we validate on MorphoMNIST, a benchmark dataset for counterfactual generation, and on crystal data, demonstrating that this exploration--exploitation decomposition provides a useful mechanism for balancing target alignment, instance preservation, and diversity, and extends beyond images to real-world scientific domains.",
+      "authors": [
+        "Zhuo Cao",
+        "Lena Krieger",
+        "Fernanda Nader",
+        "Xuan Zhao",
+        "Hanno Scharr",
+        "Ira Assent"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-18T11:02:11+00:00",
+      "link": "https://arxiv.org/pdf/2606.20084v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Flow-based generative model optimization with evolutionary algorithms, applicable to 3D generation",
+      "llm_evidence_cn": "基于流的生成模型进化优化，可应用于3D生成",
+      "llm_evidence": "基于流的生成模型进化优化，可应用于3D生成",
+      "canonical_evidence": "基于流的生成模型进化优化，可应用于3D生成",
+      "llm_tldr_en": "Residual-space evolutionary optimization enables flow-based data editing with non-differentiable objectives.",
+      "llm_tldr_cn": "本文针对基于流的生成模型编辑中需要可微目标的问题，提出残差空间进化优化框架，将条件流匹配的残差空间与进化算法结合。通过自花授粉和交叉授粉两种搜索策略，在多种非可微编辑任务（如图像、3D点云）上取得有效结果，为生成模型的后处理提供了通用优化方法。",
+      "llm_tldr": "本文针对基于流的生成模型编辑中需要可微目标的问题，提出残差空间进化优化框架，将条件流匹配的残差空间与进化算法结合。通过自花授粉和交叉授粉两种搜索策略，在多种非可微编辑任务（如图像、3D点云）上取得有效结果，为生成模型的后处理提供了通用优化方法。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

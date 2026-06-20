@@ -6,61 +6,41 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-19
-- 运行时间：2026-06-19 21:36:05 UTC
+- 最新运行日期：2026-06-20
+- 运行时间：2026-06-20 20:28:53 UTC
 - 运行状态：成功
-- 本次总论文数：13
-- 精读区：7
-- 速读区：6
+- 本次总论文数：7
+- 精读区：3
+- 速读区：4
 
 ### 今日简报（AI）
-今日精读7篇速读6篇，聚焦两项高分突破：3D网格拓扑生成及世界模型状态核心缺失。  
-最值得关注的是《TriFlow》提出的艺术家级3D网格拓扑生成（9.0分）与《Current World Models Lack a Persistent State Core》对世界模型持久状态的揭示（9.0分）。  
-建议优先精读这两篇，理解3D内容创作范式和模型局限，其余速读可做技术储备。
-- 详情：[/202606/19/README](/202606/19/README)
+今日研报聚焦3D视觉与场景理解，精读两篇高分论文：满分10分的零样本3D视觉幻觉生成方法JanusMesh，以及8分的3D场景图综述。最值得关注的是JanusMesh通过跨空间去噪实现快速零样本3D错觉生成，以及3D场景图在开放挑战中的未来方向。普通读者可优先探索零样本3D生成技术，或关注场景图在机器人交互中的应用潜力。
+- 详情：[/202606/20/README](/202606/20/README)
 
 ### 精读区论文标签
-1. [TriFlow: Generating Artist-Like 3D Mesh Topology via Nearest-Vertex Vector Fields](/202606/19/2606.20131v1-triflow-generating-artist-like-3d-mesh-topology-via-nearest-vertex-vector-fields)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：生成3D网格拓扑的生成模型
-2. [Current World Models Lack a Persistent State Core](/202606/19/2606.20545v1-current-world-models-lack-a-persistent-state-core)  
-   标签：评分：9.0/10、query:world-model
-   evidence：针对世界模型持久状态的诊断基准
-3. [S23DR 2026: End-to-End 3D Wireframe Prediction via DETR-Style Set Prediction with Contrastive Denoising](/202606/19/2606.14811v1-s23dr-2026-end-to-end-3d-wireframe-prediction-via-detr-style-set-prediction-with-contrastive-denoising)  
+1. [JanusMesh: Fast and Zero-Shot 3D Visual Illusion Generation via Cross-Space Denoising](/202606/20/2606.20563v1-janusmesh-fast-and-zero-shot-3d-visual-illusion-generation-via-cross-space-denoising)  
+   标签：评分：10.0/10、query:d-gen
+   evidence：零样本文本驱动的三维视觉错觉生成
+2. [3D Scene Graphs: Open Challenges and Future Directions](/202606/20/2606.19383v1-3d-scene-graphs-open-challenges-and-future-directions)  
+   标签：评分：8.0/10、query:world-model
+   evidence：关于3D场景图的综述，世界模型中的关键表示
+3. [VisDom: Sparse Novel View Synthesis with Visible Domain Constraint](/202606/20/2606.20531v1-visdom-sparse-novel-view-synthesis-with-visible-domain-constraint)  
    标签：评分：8.0/10、query:d-gen
-   evidence：基于DETR风格集合预测的三维线框生成
-4. [NEXUS: Neural Energy Fields for Physically Consistent Contact-Rich 3D Object Dynamics](/202606/19/2606.15015v2-nexus-neural-energy-fields-for-physically-consistent-contact-rich-3d-object-dynamics)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：物理驱动的3D物体动态视频生成
-5. [Splaxel: Efficient Distributed Training of 3D Gaussian Splatting for Large-scale Scene Reconstruction via Pixel-level Communication](/202606/19/2606.18588v1-splaxel-efficient-distributed-training-of-3d-gaussian-splatting-for-large-scale-scene-reconstruction-via-pixel-level-communication)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：大规模3D场景重建的高斯溅射分布式训练
-6. [Pixel-Level Residual Diffusion Transformer: Scalable 3D CT Volume Generation](/202606/19/2606.20112v1-pixel-level-residual-diffusion-transformer-scalable-3d-ct-volume-generation)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：利用扩散Transformer生成3D CT体积
-7. [Judging to Improve: A De-biased VLM-as-3D-Judge Protocol for Single-Image 3D Generation](/202606/19/2606.20364v1-judging-to-improve-a-de-biased-vlm-as-3d-judge-protocol-for-single-image-3d-generation)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：基于VLM的单图像3D生成评估与优化
+   evidence：提出一种无学习几何约束用于稀疏新视角合成，属于3D生成的关键任务
 
 ### 速读区论文标签
-1. [NeuMesh++: Towards Versatile and Efficient Volumetric Editing with Disentangled Neural Mesh-based Implicit Field](/202606/19/2606.19316v1-neumesh-towards-versatile-and-efficient-volumetric-editing-with-disentangled-neural-mesh-based-implicit-field)  
+1. [ForecastBench-Sim: A Simulated-World Forecasting Benchmark](/202606/20/2606.18686v1-forecastbench-sim-a-simulated-world-forecasting-benchmark)  
+   标签：评分：7.0/10、query:world-model
+   evidence：基于模拟世界的AI预测基准
+2. [3D-DLP: Self-Supervised 3D Object-Centric Scene Representation Learning](/202606/20/2606.19451v1-3d-dlp-self-supervised-3d-object-centric-scene-representation-learning)  
    标签：评分：7.0/10、query:d-gen
-   evidence：基于解耦神经网格隐式体的体素编辑方法
-2. [LooseControlVideo: Directorial Video Control using Spatial Blocking](/202606/19/2606.19495v1-loosecontrolvideo-directorial-video-control-using-spatial-blocking)  
-   标签：评分：7.0/10、query:d-gen
-   evidence：稀疏3D框控制文本到视频生成
-3. [Intrinsic 4D Gaussian Segmentation from Scene Cues](/202606/19/2606.18623v1-intrinsic-4d-gaussian-segmentation-from-scene-cues)  
+   evidence：自监督的三维物体中心场景表示学习，具有生成新场景的能力
+3. [NEXUS: Neural Energy Fields for Physically Consistent Contact-Rich 3D Object Dynamics](/202606/20/2606.15015v2-nexus-neural-energy-fields-for-physically-consistent-contact-rich-3d-object-dynamics)  
+   标签：评分：6.0/10、query:world-model
+   evidence：建模物理一致的3D物体动态，与世界模型概念相关
+4. [Residual-Space Evolutionary Optimization via Flow-based Generative Models](/202606/20/2606.20084v1-residual-space-evolutionary-optimization-via-flow-based-generative-models)  
    标签：评分：6.0/10、query:d-gen
-   evidence：利用场景线索的4D高斯分割用于动态3D表示
-4. [3D-DLP: Self-Supervised 3D Object-Centric Scene Representation Learning](/202606/19/2606.19451v1-3d-dlp-self-supervised-3d-object-centric-scene-representation-learning)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：自监督3D物体中心场景表示，具备生成新场景配置的能力
-5. [JanusMesh: Fast and Zero-Shot 3D Visual Illusion Generation via Cross-Space Denoising](/202606/19/2606.20563v1-janusmesh-fast-and-zero-shot-3d-visual-illusion-generation-via-cross-space-denoising)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：通过跨空间去噪生成3D网格
-6. [Cross-cue reconstruction of perceived 3D object structure from human visual cortex](/202606/19/biorxiv-10-64898-2026-06-08-730830-v2-cross-cue-reconstruction-of-perceived-3d-object-structure-from-human-visual-cortex)  
-   标签：评分：6.0/10、query:d-gen
-   evidence：使用预训练3D点云自编码器从脑活动重建，与生成式3D模型相关
+   evidence：基于流的生成模型进化优化，可应用于3D生成
 
 
 <div class="dpr-home-promo-card">
