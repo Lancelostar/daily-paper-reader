@@ -1,0 +1,988 @@
+Title: Autoregressive Modelling and Synthetic Generation of High-Fidelity, Statistically Equivalent 3D Microstructures for As-Manufactured Misalignments in Fiber-Reinforced Composites
+
+URL Source: https://arxiv.org/pdf/2606.20117v1
+
+Published Time: Fri, 19 Jun 2026 00:58:00 GMT
+
+Number of Pages: 49
+
+Markdown Content:
+# Autoregressive Modelling and Synthetic Generation of High-Fidelity, Statistically Equivalent 3D Microstructures for As-Manufactured Misalignments in Fiber-Reinforced Composites 
+
+Mohamad A. Raja a, ∗, Clemens Dransfeld a, Boyang Chen b, ∗∗ 
+
+> aDelft University of Technology (TU Delft), Faculty of Aerospace Engineering, Department of Aerospace Structures and Materials, Kluyverweg 1, Delft, 2629 HS, The Netherlands
+> bSoochow University, School of Optoelectronic Science and Engineering, No. 1 Shizi Street, Suzhou, 215006, China
+
+Abstract 
+
+This study presents an integrated framework for processing, modelling, and generating sta-tistically representative three-dimensional fiber microstructures from experimental X-ray-μCT observations. First, an analytical slice-segment ellipse-intersection method is introduced to ex-tract per-slice and per-fiber in-plane and out-of-plane misalignment profiles along the fiber depth. These descriptors are then used to construct a stochastic model that captures slice-wise misalign-ment distributions and their depth-wise evolution through, copula-based in-plane dependence, latent autoregressive continuity, and rare extreme-misalignment motifs. The model hyperpa-rameters are calibrated using Bayesian optimization, achieving close agreement with the original statistical descriptors, with deviations generally below 10%. The optimized statistical model is coupled with a physical generation strategy that begins with variable-radius fiber seeding layer and proceeds through an iterative slice-by-slice 3D growth scheme, where the statistical layer guides fiber evolution and Delaunay-based neighbourhood construction with ellipse-based contact resolution ensures non-overlapping, radius-augmented synthetic microstructures. The framework successfully generates about 2400 synthetic fibers while preserving strong statistical fidelity to the original X-ray-μCT data. The proposed pipeline provides a promising and scalable route for generating statistically equivalent, geometrically admissible, and simulation-ready fiber composite microstructures for virtual testing and analysis.         
+
+> ∗Corresponding author. Address: Kluyverweg 1, 2629 HS Delft, The Netherlands. Office: Building 62, NB0.42.
+> ∗∗ Corresponding author. Address: No. 1 Shizi Street, 2215006, China. No. 1 Shizi Street
+> Email addresses: M.A.Raja@tudelft.nl (Mohamad A. Raja), boyangchen@suda.edu.cn (Boyang Chen)
+> arXiv:2606.20117v1 [cs.CE] 18 Jun 2026
+
+Keywords: Microstructure generation, Fiber reinforced polymers (FRPs), Representative volume elements (RVEs), Statistically equivalent, Numerical methods 21. Introduction 
+
+Fiber-reinforced polymer composite (FRP) materials have become indispensable in the design and manufacturing of advanced structures and components, such as aircraft structures, with percentages of well over 50% in the most recent aircraft. This adoption reflects the superior strength-to-weight ratio, high specific stiffness, design flexibility, corrosion resistance, and fatigue performance of composites [1]. Yet, the outstanding macroscopic performance of these materials is ultimately governed not only by the constituent properties [2, 3], but also by the mechanisms that originate at the microscale, for instance, local deviations in fiber clustering [4, 5], fiber orientation, waviness, porosity [6, 7, 8, 9, 10], and the fiber-matrix interface [11, 12]. Among the various sources of variability, fiber misalignment is particularly critical because it couples geometric imperfection with strong anisotropy in load transfer. Small deviations from the intended “perfectly aligned” fiber direction can trigger complex local stress states, adversely and non-uniformly affecting the composite compressive strength depending on the microstructure spatial misalignment distribu-tion and fiber undulation [13, 14, 15, 16, 17, 18, 19, 20]. On that note, recent advances in high-resolution imaging have substantially improved our ability to interrogate such microstructural features directly. Techniques such as micro-computed tomography ( μCT) [21, 22], synchrotron and X-ray tomography, and complementary microscopy methods can now resolve fiber trajectories and local packing with increasing fidelity, enabling quantitative measurement of orientation distributions, waviness, inter-fiber spacing, and defect populations [23, 24, 25, 26, 27, 28, 29, 30, 31]. These imaging modalities make it possible to move beyond idealized assumptions by providing microstructure-informed inputs for computa-tional micromechanics and virtual testing, while also enabling failure analysis that supports microstructure-informed process optimization and more controlled manufacturing conditions through microstructure modeling and synthetic generation. Thus, several efforts have focused on three-dimensional microstructure modelling and gen-eration of composites incorporating fiber misalignments. For instance, Zheng et al. [26] used an optimized fiber path reconstruction algorithm applied to X-ray-μCT micrographs, in which fiber segmentation was implemented using a U-Net deep learning method and a tracking algo-rithm. Then, statistical fitting distributions, namely normal, lognormal, and Weibull, were used 3to analyze differential tortuosity, fiber angle, curvature, and wave magnitude. Seon and Makeev [32] developed a computer-graphics-based methodology for generating realistic three-dimensional micromodels of unidirectional CFRPs with stochastic fiber misalignment via Blender’s built-in engine for collision detection and rigid-body dynamics to avoid interpenetration, with models containing up to 600 non-intersecting fibers ( Vf > 50% ), where misaligned fibers are gener-ated using an emitter plane and Bézier-curve undulations, showing theoretical misalignment distributions with means and standard deviations below 1◦.A semi-random empirical framework was proposed by others [33, 34], in which fiber misalign-ment is represented using Bézier curves while minimizing the standard error of the likelihood and probability to match experimental measurements. Initially straight fibers were implemented in an RVE with approximately 80 fibers, then misalignment was introduced through the fibers’ control points with a constant contact distance definition of ≤ 2R. An electrostatic interac-tion analogy approach [35] was also proposed, showing how randomly placed ellipsoids acting as charged obstacles affect the generation of waved fibers by means of electrostatic interaction using a simplified Newtonian approach. In this approach, an initially random sphere, resembling the initial point of the fiber, is given a velocity and unit charge. Then, due to the electrostatic repulsive forces from the ellipsoids, the sphere moves and its path is tracked. This resulted in an RVE with periodic boundary conditions (PBCs) containing 50 fibers. Moreover, the authors in [36] presented a multiscale statistical characterization framework based on fitting approaches of X-CT scanning results to analyze fiber misalignment, in which, at the mesoscopic level, a modified elliptical symmetry angular Gaussian (ESAG) model effectively characterizes the fiber misalignment. At the microscale, local fiber waviness is described via a cosine-series representation. Fibers with high misalignment, labeled as abnormal fibers, were analyzed using the developed mathematical model, and their appearance was confirmed at the interface of different fiber bundles or resin-rich areas. Others [37] used a fused sequential addition and migration (fSAM) algorithm to generate hybrid composites with long-fiber reinforcement, with limited control on fiber curvature and a fiber volume fraction of up to 35%. Others preserved the original fiber locations and used reconstruction, overlap-removal, and meshing techniques to generate misaligned fiber microstructures [38]. Most works consider the modelling process of fiber misalignment through fitting approaches of global angle distributions, with limited means to characterize the microstructures, or through 4generating non-intersecting fiber microstructures mimicking the original experimental dataset. In the current work, a comprehensive framework is presented to systematically analyze X-ray-μCT datasets slice by slice, assembling rich data structures of local misalignments. Then, a stochastic synthetic model is devised via a modified Gaussian copula modelling scheme to capture planar misalignment correlations, while a per-fiber depth memory is applied through an autoregressive model to capture the fiber’s longitudinal direction behavior. The statistically equivalent modelling layer is calibrated via Bayesian optimization, including high-misalignment fibers. Then, a non-overlapping solver based on projected Gauss-Seidel (PGS) is developed to generate fibers based on slice-by-slice online modelling framework, resulting in rich, high-fidelity generated microstructures with statistically equivalent random fiber arrangements analogous to the real microstructure. Thus, the goal of this work is to provide an autonomous virtual-lab experience to seamlessly use the processing, synthetic modelling, and generation pipeline with any type of fiber-based microstructure, in order to generate physically consistent synthetic media that respect the local and global statistics, distributions, and realism of the original microstructure. A schematic of the framework is illustrated in Fig. 1. The three main sections of this work are as follows: (1) Processing: sequential per-fiber and per-slice fiber misalignment segmentation using an ellipse-intersection method and verification via the central difference method (CDM) as illustrated in Fig. 1(a). (2) Modelling: development of a stochastic modified Gaussian copula model of synthetic fibers, taking into consideration high-misalignment abnormal fibers, referred to as “motifs”. This is schematically shown in Fig. 1(b). The model is optimized using Bayesian optimization against the original microstructure. (3) Generation: development of a physical constraint engine based on an online slice-by-slice optimized model to generate random synthetic microstructures with statistical equivalence to the original microstructure, as shown in Fig. 1(c). 5Fig. 1: A schematic of the proposed pipeline illustrating the processing, modelling, and synthetic fiber-generation stages. The experimentally observed microstructure is first processed to extract fiber geometry and misalignment descriptors, then statistically modelled using a Bayesian-optimized calibration step, and finally used to gener-ate a statistically equivalent synthetic microstructure. (a) Cylindrical parameterization with an ellipse–plane intersection method to quantify in-plane and along-fiber misalignment. (b) Bivariate Gaussian copula model, including explicit treatment of high-misalignment fibers. (c) Initial layer seeding using dynamic generation (DG) based repulsion and random sequential adsorption (RSA) based insertion, followed by 3D slice-by-slice synthetic fiber generation driven by the online-calibrated model and enforced by a non-overlapping ellipse packing solver enabled by PGS. 
+
+2. Methodology 
+
+This section outlines the methodology used to analyze three-dimensional X-ray-μCT datasets of a unidirectional carbon fiber–reinforced composite prepreg. All computations were performed using open-source libraries together with in-house Python code. Fiber misalignment processing was carried out on an Intel(R) Core(TM) Ultra 5 125U (1.30 GHz) workstation with 16 GB RAM. The Bayesian-optimization-based modelling and the final statistically equivalent microstructure 6generation were executed on the DelftBlue high-performance computing (HPC) cluster at TU Delft [39]. The synthetic fiber microstructure modelling and generation runs used 2 CPUs and 3 GB memory per CPU on Phase-1 compute nodes (48 CPUs and 185 GB RAM per node), equipped with Intel Xeon Gold 6248R processors (24 cores, 3.0 GHz). The Bayesian optimization process required 3.25 hr and the final physical statistical generation required 5.28 hr. 
+
+2.1. Materials and X-ray-μCT data acquisition 
+
+The experimental dataset analyzed in this study originates from the work in [28], which re-ports the X-ray-μCT acquisition parameters, fiber path reconstruction procedure, and a detailed characterization of the three-dimensional spatial morphology of a thermoplastic CFRP tape at single-fiber resolution. Briefly, a tape segment measuring approximately 2.5 mm in width, or-thogonal to the main fiber direction, and 10 mm along the main fiber direction was extracted for microstructural analysis. The segmented volume was subsequently partitioned into six sub-volumes, each with dimensions of approximately 1200 μm × 160 μm × 500 μm (fiber depth direction). In the present work, the analysis is performed on one of these sub-volumes. 
+
+2.2. Fiber misalignment processing 
+
+Prior to fiber misalignment processing, a clean-up step is required to distinguish continuous from non-continuous fibers. It is important to note that the non-continuous fibers are not physically chopped or inherently short; rather, they are fibers whose tracked depth does not span the full volume due to limitations in imaging and reconstruction. A visual comparison of the original microstructure and the identified continuous and non-continuous fibers is provided in the Supplementary Material (Fig. S1). The following subsection describes the fiber misalignment frameworks and their derivation applied to the continuous fibers in the sub-volume. 
+
+2.2.1. Ellipse intersection method 
+
+This section describes the geometric procedure used to quantify fiber misalignment from three-dimensional X-ray-μCT centerline data. Each fiber is processed segment-wise by approx-imating the local trajectory between two consecutive centerline points as a straight cylindrical segment whose axis direction is the local unit tangent vector with radius R = D/ 2, ( D = 7 
+
+μm, only used in the visualization of the intersection, but does not affect misalignment deriva-tion, however, in physical generation Section 2.4 real variable fiber sizes are used). For a given 7slice plane, Z = zslice , segments that intersect the plane are identified and used to compute (i) the through-thickness inclination θZ (three-dimensional tilt from the global Z-axis) and (ii) the in-plane misalignment components θX and θY (tilts in the ZX and ZY planes). The method avoids numerical differentiation of noisy centreline coordinates and provides a robust per-slice description of misalignment suitable for subsequent statistical modelling. A schematic of the method is presented in Fig. 2(a). 
+
+> Fig. 2: Fiber misalignment quantification in the depth and in-plane directions using (a) the ellipse–intersection method and (b) the central-difference method.
+
+For two consecutive centerline points, p0 = ( x0, y 0, z 0) and p1 = ( x1, y 1, z 1), the vector between the points is defined as follows: 
+
+v = p 1 − p0, L = ∥v∥, u = v
+
+L = ( ux, u y, u z ) (1) Here, u is the local fiber axis direction used to compute misalignment at any slice crossed by the segment. In this work, the sampling resolution in the fiber direction is approximately 4 μm. Let ez = (0 , 0, 1) be the unit vector along the global Z-axis. The inclination of the local fiber axis relative to Z is computed from the dot product, resulting in the depth misalignment with 8respect to the Z-axis, as given in Eq. (2): 
+
+θZ = arccos ( |u · ez |) = arccos ( |uz |) (2) where θZ ∈ [0 ◦, 90 ◦]. The absolute value ensures that the inclination is independent of whether the local segment points upward or downward along Z, which is appropriate when only the magnitude of tilt is required. Signed in-plane misalignment components, θX and θY , are defined as the planar tilts in the 
+
+ZX and ZY planes, respectively. These angles are measured from the positive Z direction toward the positive X and Y directions and are computed directly from the atan2 formulation for numerical robustness and correct quadrant identification, as follows: 
+
+θX = atan2( ux, u z ), θY = atan2( uy, u z ) (3) More details on the practical derivation are provided in the Supplementary Material (Section 1). 
+
+2.2.2. Central difference method 
+
+To validate the ellipse-intersection method, the tangent of each fiber segment is computed via central-difference increments between neighboring nodes, as shown in Fig. 2(b): 
+
+∆Xi = Xi+1 − Xi−1, ∆Yi = Yi+1 − Yi−1, ∆Zi = Zi+1 − Zi−1 (4) Then, the local slopes in the global frame are estimated as 
+
+dX dZ ≈ ∆Xi
+
+∆Zi
+
+, dY dZ ≈ ∆Yi
+
+∆Zi
+
+(5) relating them to the misalignment through 
+
+θX = tan −1
+
+dX dZ 
+
+
+
+, θY = tan −1
+
+dY dZ 
+
+
+
+(6) For the depth-direction misalignment, at point Pi of a segment, the unnormalized tangent expressed in global coordinates is ui, and the standard basis vector for the Z-axis is ez :
+
+ui =
+
+
+
+dX/dZ dY /dZ 
+
+1
+
+ , ez =
+
+
+
+001
+
+ (7) 9Using the dot product between the two vectors gives 
+
+cos( θZ ) = ui · ez
+
+∥ui∥∥ ez ∥ = 1
+
+q
+
+1 + ( dX/dZ )2 + ( dY /dZ )2
+
+(8) Using the trigonometric identity 
+
+r =
+
+sdX dZ 
+
+2
+
++
+
+dY dZ 
+
+2
+
+(9) then 
+
+arccos 
+
+ 1
+
+√1 + r2
+
+
+
+= arctan( r) (10) Thus, 
+
+θZ = tan −1(r) = tan −1
+
+sdX dZ 
+
+2
+
++
+
+dY dZ 
+
+2
+
+ (11) Proof 1 in the Supplementary Material (Section 1) explains the equivalence of the depth misalignment relation, θZ , between the ellipse-intersection method and the central difference method. Repeating the above steps for all fibers and all slice planes produces a per-slice set of mis-alignment distributions, θX , θY , and θZ . These values are stored together with the corresponding slice index and fiber identifier and are subsequently used to compute per-slice statistics, such as mean, variance, and tails/outliers, and to calibrate probabilistic models of misalignment for synthetic microstructure generation. 
+
+2.3. Synthetic fiber misalignment modelling 
+
+In this section, the processed misalignment dataset is leveraged to construct a stochastic generative model that produces synthetic fibers whose slice-wise and along-fiber-length statistics match those of the original microstructure. The procedure is implemented sequentially, in which per-slice angle histograms are used to reproduce the marginal distributions of misalignment. First, the within-slice dependence between θX and θY is captured using a Gaussian copula. Second, along-fiber-length memory is introduced through an autoregressive formulation, ensuring that synthetic fibers retain realistic path continuity in the fiber direction. Third, to mitigate the tail-independence behavior inherent to Gaussian dependence models, where extreme events tend to behave nearly independently despite strong central correlation, an additional tail treatment is incorporated. Fourth, rare fibers exhibiting exceptionally high misalignment (motifs) are 10 identified in the experimental dataset and re-injected into the synthetic population using a probabilistic resampling strategy. Finally, a Bayesian optimization step is employed to tune key numerical coefficients associated with the autoregressive and tail components, yielding a calibrated model capable of generating statistically equivalent synthetic microstructures that closely mirror the original data. 
+
+2.3.1. Bivariate Gaussian copula model 
+
+Misalignment angles exhibit planar dependence on a per-slice basis; therefore, this depen-dence is modelled separately from the marginal distributions using a Gaussian copula. The effect of different copula types is beyond the scope of the present study. A schematic of the framework is illustrated in Fig. 3. 11 Fig. 3: A schematic of the framework for marginals transformation and modelling the per-slice joint ( θX , θY )with Gaussian copula. 
+
+The framework utilizes a standard probability integral transform, in which the marginal distributions are mapped to a uniform space using ranked data or the empirical cumulative dis-tribution function (ECDF). The ECDF serves as a non-parametric step function that estimates the cumulative probability of a sample by calculating the proportion of observations less than or equal to a specific value. To ensure that transformed values remain strictly within the inter-val (0 , 1) , a rank-based formula, specifically the Weibull plotting position, is applied, converting sorted empirical data into estimates of their cumulative probability. The resulting uniform space preserves the ordinal structure of the data and facilitates the computation of the copula, ensuring that it remains invariant under monotonic transformations of the marginals. 12 On the (U (s) 
+
+> X
+
+, U (s) 
+
+> Y
+
+) pairs, a dependence measure is estimated using Spearman’s ρ, which yields a value in [−1, 1] describing how tightly UX and UY vary together. Then, the inverse cumulative distribution function (CDF) of the standard normal distribution is used as a nonlinear mapping to transform the per-slice marginals into the standard Gaussian space. This rank-based correlation is then mapped to a Gaussian-copula correlation using the standard monotonic relationship between Spearman correlation and Gaussian correlation, as follows [40]: 
+
+ρ(s) 
+
+> G
+
+= 2 sin 
+
+π
+
+6 ρ(s)Spearman 
+
+
+
+(12) It is noted that the Gaussian copula definition follows: 
+
+Cρ (θX , θ Y ) = Φ ρ
+
+ Φ−1 (θX ) , Φ−1 (θY ) (13) where Φρ is the CDF of the joint standard bivariate normal distribution with correlation ρG,and Φ−1 is the inverse CDF of the standard univariate normal distribution. Then, from the per-slice latent covariance matrix, the Cholesky lower-triangular decomposi-tion is computed as follows: 
+
+Σs =
+
+ 1 ρ(s)
+
+> G
+
+ρ(s) 
+
+> G
+
+1
+
+ (14) 
+
+Ls = chol (Σ s) = 
+
+
+
+1 0
+
+ρ(s)
+
+> G
+
+r
+
+1 −
+
+
+
+ρ(s)
+
+> G
+
+2
+
+ (15) For a given fiber at a given slice s, a synthetic angle pair can be drawn by first sampling an independent standard normal vector as: 
+
+εs =
+
+εX
+
+εY
+
+ ∼ N (0 , I 2) (16) and then correlating it with the Cholesky factor in the latent space as: 
+
+Zs =
+
+ZX
+
+ZY
+
+ = Lsεs (17) This ensures that (ZX , Z Y ) ∼ N (0 , Σs), as shown in Proof 2 in the Supplementary Material (Section 2). In the case of mapping back from the latent Gaussian space to the original θ-space, the variables are first mapped to the uniform space and then to angles using the inverse ECDF. 13 2.3.2. Depth continuity via AR(1) model in latent space 
+
+So far, each slice can produce the correct (θX , θ Y ) independently, but real fibers vary smoothly along the fiber direction, with no sudden abrupt changes resembling a zig-zag motion. In other words, fibers exhibit a form of memory of their previous spatial positions. Thus, in this section, samples in the latent space are correlated along the fiber depth direction through a latent Gaussian-space correlation of the sampled (ZX , Z Y ) ∼ N (0 , Σs). This is achieved using a first-order autoregressive process, i.e., AR(1). In general, an autoregressive (AR) process is a model in which the next value depends on its own previous value(s), as follows [41, 42, 43]: 
+
+Zt = ϕ1Zt−1 + ϕ2Zt−2 + · · · + ϕpZt−p + noise (18) In this work, for a fixed slice index s, a first-order autoregressive framework is defined as: 
+
+Zs = ϕ Z s−1 + p1 − ϕ2 Z(s)noise , where Z(s)noise = Lsεs, εs ∼ N (0 , I 2), ϕ ∈ [0 , 1) (19) Here, Zs ∈ R2 is the latent Gaussian variable for slice s, and ϕ is the AR(1) memory coefficient, which is described as 
+
+ϕ = ϕglobal + σϕ ηi, ηi ∼ N (0 , 1) , (20) where σϕ is the jitter standard deviation. This means that ϕ = ϕlocal ,i , is fiber-by-fiber local lag-1 coefficient used in the AR(1) recursion for each fibre i rather than the fixed global value. This two-parameter representation (ϕglobal , σ ϕ) is more expressive than a single shared coefficient: 
+
+ϕglobal controls the ensemble-mean smoothness of all fibres, while σϕ controls the spread of individual fibre behaviors around that mean, producing a realistic population of fibres with varying degrees of curvature. The term Lsεs is the new correlated noise for this slice, while εs is standard Gaussian white noise. The factor p1 − ϕ2 is a variance-correction term, which is discussed together with the autocorrelation lag model in greater detail in Proof 3 of the Supplementary Material (Section 2). An illustration of the framework is shown in Fig. 4(a). 14 Fig. 4: (a) A schematic of the autoregressive depth model. (b) Gaussian copula tail boosting for joint tail coupling cases. 
+
+In an AR(1) model, the autocorrelation at each lag represents the “memory” of the system, where a positive correlation indicates that the series exhibits persistence. This means that the data resist sudden changes; the Gaussian vector (ZX , Z Y ) of a fiber at slice s inherits a fraction of the momentum from the previous slice, s − 1. Consequently, the series evolves in smooth waves rather than through erratic jumps. 
+
+2.3.3. Gaussian copula tail independence 
+
+Gaussian copulas are attractive because they preserve prescribed marginal distributions and capture bulk dependence through a latent Gaussian correlation. However, they are tail inde-pendent, meaning that they tend to underestimate the co-occurrence of joint extremes, such as simultaneous per-slice large misalignments. To address this limitation, a tail-gated coupling is introduced in the latent Gaussian space that activates only when samples enter the extreme quan-tiles and injects a small, directionally consistent common perturbation, as shown in Fig. 4(b). This selectively strengthens dependence in the joint tails while leaving the central, non-extreme behavior essentially unchanged, thereby providing a simple and tunable mechanism to better reproduce extreme co-misalignment without substantially altering the prescribed marginals. A 15 more detailed explanation of the framework and its derivation is provided in the Supplementary Material (Section 2). 
+
+2.3.4. Persistent high-misalignment runs “motifs” 
+
+The AR(1) latent process promotes depth-wise smoothness but remains largely Gaussian in its extreme-event structure. Thus, in the previous section, we have introduced a gated local per-slice extreme co-misalignment mechanism. However, in measured fiber microstructures, high misalignment typically appears as structured, contiguous segments “motifs” rather than isolated outliers. These are considered as fibers spanning multiple slices with the same highly-misaligned behavior. To reproduce these non-Gaussian, spatially coherent events, motifs are detected in the original reference data and re-injected during synthesis using a structured container referred to as the motif library. First, motifs are detected in the original microstructure. For each fiber and slice s, a robust slice-wise standardized exceedance score is computed based on the θZ marginal: 
+
+zscore (i) = 
+
+θZ (i) − p(s)50 
+
+IQR (s)
+
+> Z
+
+(21) where p(s)50 is the slice median of θZ and IQR (s) 
+
+> Z
+
+is the corresponding interquartile range. A motif candidate is declared when the following two conditions are simultaneously satisfied: 
+
+zscore (i) > K (IQR) (22) 
+
+Lfm = iend − istart + 1 ≥ Lf 
+
+> threshold
+
+(23) In this work, K = 1 . This implies that the exceedance persists for at least Lf 
+
+> threshold
+
+con-secutive depth indices, where Lfm is the detected motif run for a single fiber, it is to be noted that, a single fiber can have muliple motif runs. Lf 
+
+> threshold
+
+is set to the representative median motif length over all observed motifs in the scanned volume. Each detected run is stored as a motif m, together with the associated angle sequences and metadata, such as the motif planar misalignment, fiber-direction misalignment, zscore , motif length, starting slice, ending slice, and percentile statistics. A schematic of this process is illustrated in Fig. 5(a). It should be noted that motifs are detected fiber-by-fiber, rather than per slice, ensuring that contiguity is assessed along the fiber depth trajectory. 16 To characterize how frequently motifs occur as a function of slice index, the following quan-tities are computed: (i) an exceedance frequency, 
+
+p(s)exceed =#
+
+n
+
+i ∈ slice s : zscore (i) > K (IQR) and Lfm ≥ Lf
+
+> threshold
+
+o
+
+Ns
+
+(24) where Ns is the number of available fiber samples at slice s. Its important to note this is referred as exceedance frequency as it is computed per slice counting how many fibers do actually fulfill the above two conditions, so a single motif run can be multiply counted in multiple slices although its the same motif. A (ii) a motif-start probability that avoids multiple-counting motifs spanning multiple slices, by characterizing every motif by its start slice index: 
+
+Prob (s)motif -start = #{motifs that start at slice s}
+
+Ns
+
+(25) To decide motif activation during fiber modelling and generation, motif injection is controlled by the slice-dependent probability Prob (s)motif -start . At slice s, a random variable u ∼ U (0 , 1) is drawn, corresponding to a standard Monte Carlo decision process, and a motif is activated when 
+
+u < Prob (s)motif -start ,
+
+provided that (i) the generator is not already inside an active motif and (ii) Prob (s)motif -start > 0.When activated, a motif instance is selected from a shuffled motif library to avoid repeated ordering artifacts. This way its stochastic in the sense that, for a certain slice the real and simulated microstructure do not have to own the same motif features, ensuring randomness and generalization of the model while still respecting the statistical behavior of the original data. To blend the motif contribution on top of the previously generated Gaussian angles, a smooth blending technique is applied. Let θX, base and θY, base denote the baseline angles produced by the copula stage, AR(1), and conditionally tail-gated dependence enhancement, and let θX, motif and 
+
+θY, motif denote the angles from the selected motif. While a motif is active, the synthesized angles are blended as 
+
+θX ← (1 − λ)θX, base + λθ X, motif (26) 
+
+θY ← (1 − λ)θY, base + λθ Y, motif (27) To avoid abrupt jumps at motif onset, λ is ramped gradually over a fixed number of blending steps: 
+
+λi = i
+
+BlendSteps , where BlendSteps = Lf 
+
+> threshold
+
+(28) 17 where i is the local index since motif activation. This strategy injects rare, structured misalign-ment events while maintaining continuity and preserving the overall slice-level behavior outside the tails. Finally, the generated angles are mapped back to spatial fiber coordinates. After generat-ing θX (i) and θY (i) on the same depth grid as the reference, with increments ∆Z, the three-dimensional fiber centerline is reconstructed via 
+
+Xi+1 = Xi + tan( θX (i)) ∆ Z (29) 
+
+Yi+1 = Yi + tan( θY (i)) ∆ Z (30) with 
+
+Zi+1 = Zi + ∆ Z (31) This geometric step converts the synthesized local orientation field, expressed through the angles, into a spatial trajectory, thereby yielding a continuous three-dimensional fiber path consistent with the prescribed depth discretizations. 
+
+> Fig. 5: A schematic illustration of the (a) high-misalignment “motifs” analysis. (b) Bayesian optimization-based framework for model coefficients tuning.
+
+18 2.3.5. Bayesian-optimization-based hyperparameter tuning 
+
+The proposed generator contains a small set of hyperparameters that control (i) depth-wise persistence in the latent Gaussian process and (ii) the strength and activation of the joint-tail correction used to mitigate Gaussian tail independence. These parameters are fine-tuned via Bayesian optimization, namely ϕglobal , ϕJitter , UPivot , and τ .Here, ϕglobal governs the lag-1 dependence (depth memory persistance), and ϕJitter controls stochastic variability per-slice per-fiber, while UPivot (pivot quantile, which is synonyms to zpivot ,used here for easier interpretation of quantiles in uniform space) and τ (coupling strength) regulate the co-rare event tail-coupling mechanism. To select these parameters systematically, a scalar discrepancy objective, L, is minimized using Bayesian optimization (BO). At each BO iteration, candidate hyperparameters are pro-posed by a probabilistic surrogate model, i.e. a Gaussian process. The microstructure modelling pipeline is then executed using these parameters, and the evaluation metrics are computed by comparing the generated and reference microstructures. The surrogate model is subsequently updated with the resulting objective value. This procedure is repeated until a prescribed number of evaluations is reached (100 iterations in this work), yielding the hyperparameters that best match the target statistics. At each iteration, a complete synthetic microstructure of fiber centrelines is generated, and the synthetic and original reference microstructures are compared using complementary metrics that capture marginal distributions, depth-wise trends, dependence, and extremes, as follows. 
+
+Kolmogorov-Smirnov (KS) distance. The Kolmogorov–Smirnov (KS) distance is computed per angle component θX , θY , and θZ to quantify marginal agreement: 
+
+DKS (orig , synth) = M ax ( x=θX ,θ Y ,θ Z ) |CDF orig (x) − CDF synth (x)| (32) This metric captures the largest vertical gap differences in the overall shape of the marginal distributions between the real and synthetic data based on the CDF curves. It is computed globally for the full microstructure for each angle component, and is sensitive to differences in skewness and central mass even when the means and variances match. 19 Tail quantile error. The tail quantile error directly penalizes mismatches in extreme misalign-ment magnitudes: 
+
+TailErr = 13
+
+X
+
+> α∈{ X,Y,Z }
+
+1
+
+|Q|
+
+X  
+
+> q∈Q
+
+Qq
+
+ θsynth 
+
+> α
+
+ − Qq
+
+ θorig 
+
+> α
+
+
+
+range 
+
+
+
+θorig 
+
+> α
+
+ (33) where Q = {0.01 , 0.05 , 0.10 , 0.90 , 0.95 , 0.99 } This metric captures mismatches in the high-misalignment tails of the synthetic angle distributions relative to the original, evaluated symmet-rically across both the upper ( q ∈ { 0.90 , 0.95 , 0.99 }) and lower ( q ∈ { 0.01 , 0.05 , 0.10 }) quantile levels for each of the three angle components θX , θY , and θZ . It is included as a dedicated term in the BO objective because global goodness-of-fit statistics such as the KS distance are most sensitive at the median of the distribution and can tolerate substantial errors in the extreme quantiles while still reporting a low loss. Since the primary motivation for the joint-tail coupling stage is to correct the systematic under-representation of large misalignment angles that arises from the tail-independence of the Gaussian copula, a tail-specific penalty is necessary to steer the BO towards hyperparameter combinations that genuinely recover the observed frequency of extreme fibre angles. Each per-component error is normalised by the empirical range of the original distribution to make the penalty dimensionless and comparable across components with different angle scales, and the final metric is the mean over all three components and all six quantile levels. 
+
+Depth-profile normalised root-mean-square error. The depth-profile normalised root-mean-square error (NRMSE) penalises mismatches between the per-slice mean angle profiles of the synthetic and original microstructures: 
+
+NRMSE α =
+
+vuut 1
+
+S
+
+> S
+
+X
+
+> s=1
+
+¯θ(s) 
+
+> α, synth
+
+− ¯θ(s)
+
+> α, orig
+
+2
+
+range  ¯θα, orig 
+
+ , α ∈ { X, Y, Z } (34) where ¯θ(s) 
+
+> α
+
+denotes the mean angle of component α across all fibres in slice s, S is the number of slices, and the denominator is the range of the original mean profile {¯θ(s)
+
+> α, orig
+
+}Ss=1 . The scalar loss contribution entering the BO objective is the worst-case component as max α∈{ X,Y,Z } NRMSE α.A depth-wise trend failure in any single component is fully penalized regardless of how well the other two components perform. 20 Per-slice copula correlation deviation. To match slice-wise bivariate dependence structure, the per-slice Gaussian copula correlation copula deviation is then defined as the mean absolute difference between the synthetic and original Gaussian copula correlations over all slices: 
+
+|∆ρ| = 1
+
+S
+
+X
+
+> s∈S
+
+ρ(s)synth − ρ(s)orig (35) This metric captures the mismatch in XY bivariate dependence structure between the synthetic and original microstructures independently of the marginal distributions; it may be small even when the marginals do not closely match, or vice versa. 
+
+Joint tail mismatch. The joint tail mismatch metric directly penalizes errors in the co-occurrence of simultaneously extreme misalignment angles, i.e. the tendency of θX and θY to be extreme together. Four corner quadrant probability masses are then estimated for a threshold q:
+
+ˆp++ (q) = P (UX > q, U Y > q ), ˆp−− (q) = P (UX < 1−q, U Y < 1−q), (36) 
+
+ˆp+−(q) = P (UX > q, U Y < 1−q), ˆp−+(q) = P (UX < 1−q, U Y > q ). (37) The first pair ( ˆp++ , ˆp−− ) captures concordant co-occurrences; both components simultaneously in their upper or lower extreme tails; while the second pair ( ˆp+−, ˆp−+) captures discordant co-occurrences. The metric is then the weighted sum of absolute differences between the synthetic and original quadrant masses, 
+
+Ljointtail = ˆpsynth ++ − ˆporig ++ + ˆpsynth  
+
+> −−
+
+− ˆporig  
+
+> −−
+
++ ˆpsynth +− − ˆporig +− + ˆpsynth  
+
+> −+
+
+− ˆporig  
+
+> −+
+
+(38) with q = 0 .90 , treating all four corner types equally since concordant and discordant extreme co-occurrences are physically equivalent in terms of total fiber direction misalignment magnitude. These terms are combined into a single weighted objective: 
+
+L = wKS DKS + wNRMSE NRMSE + wTE TailErr + wρ |∆ρ| + wJT JointTail (39) This scalar loss enables automated calibration by simultaneously enforcing agreement in (i) marginal distributions, (ii) depth-wise behavior, (iii) slice-level dependence, and (iv) joint-extreme statistical properties, all of which are required for faithful synthetic microstructure reproduction. In the current work, all the coefficients are equal, i.e. all metrics have similar significance. 21 2.4. Physical microstructure generation 
+
+So far, statistical modelling has been employed to construct a data-informed generative layer that reproduces statistically equivalent characteristics of the measured microstructure. While the statistical layer provides realistic misalignment fields, the present section focuses on the geometric packing and overlap-resolution procedure that converts those statistics into physically admissible fiber arrangements. In this section, the statistical layer is embedded into a physical-space synthesis workflow. First, an initial seeding layer is populated with circular fiber cross-sections whose radii are sampled to reflect the observed variability of a real CFRP composite. Second, a slice-by-slice three-dimensional growth procedure is adopted in which, at each depth increment, an online version of the model developed in Section 2.3 is used to propose fiber-direction candidates and corresponding misalignments. Physical feasibility is enforced at every slice by guaranteeing a no-overlap configuration through an iterative ellipse non-overlap solver based on a projected Gauss–Seidel (PGS) scheme. 
+
+2.4.1. Stage I: Initial 2D packing seeding layer 
+
+The slice-by-slice three-dimensional growth algorithm requires an initial, physically admis-sible cross-sectional configuration at the base plane. A seed packing is therefore generated at 
+
+z = 0 , in which each fiber is represented by a circular disk with radius Ri and center 
+
+ci(0) = 
+
+xi(0) 
+
+yi(0) 
+
+
+
+The radii are sampled from the prescribed radius distribution observed in one of authors’ previous work [44, 45] in order to reproduce realistic polydispersity. The goal of Stage I is to construct a set of centers {ci(0) } that (i) satisfies the target number of requested fibers and (ii) enforces strict non-overlap between all circular cross-sections. At this initialization step, fibers are assumed to be vertical, such that the in-plane inclination angles are set to θX,i (0) = θY,i (0) = 0 , and hence the initial cross-sections are circular. The resulting z = 0 configuration serves as the geometric seed for the subsequent three-dimensional trajectory reconstruction. To impose the non-overlap constraint, for any pair of fibers (i, j ), the inter-center distance is defined as 
+
+dij = ∥ci − cj ∥2 (40) 22 A feasible packing must satisfy the pairwise separation constraint 
+
+dij ≥ Ri + Rj + δ (41) where δ ≥ 0 is an optional clearance margin introduced to prevent near-contact numerical issues and to provide a minimal matrix gap if desired. In this work, δ is set to 0.3 μm. Violations are quantified by the signed overlap measure 
+
+∆ij = Ri + Rj + δ − dij (42) with ∆ij ≤ 0 indicating feasibility and ∆ij > 0 indicating overlap. 
+
+Phase I: Dynamic growth (DG). To obtain a dense yet disordered packing without excessive rejection, a dynamic growth strategy is first employed. In DG, fibers are initialized with small radii r(0)  
+
+> i
+
+≪ Ri at provisional center locations c(0)  
+
+> i
+
+. The radii are then increased gradually toward their target values while continuously resolving collisions. At DG iteration k, the growth step is 
+
+rk+ 12 
+
+> i
+
+= min  Ri, r ki + ∆ r (43) where ∆r controls the growth rate and is chosen to balance convergence speed and collision stability. The notation rk+ 12 
+
+> i
+
+follows a split-step, or operator-splitting, convention. It denotes an inter-mediate sub-step within one full DG iteration k → k + 1 . The radii are advanced first, whereas the centers cki are not yet updated, so the state is only partially advanced. It is therefore a bookkeeping label used to distinguish a state that is neither the start of iteration k nor the fully resolved end-state k + 1 , but rather an intermediate state in which the radii have been advanced while the centers have not yet been corrected. After the radii are updated at each step, overlaps are removed through an iterative collision-resolution loop. For each overlapping pair (i, j ) with ∆ij > 0, the unit separation direction is computed as 
+
+nij = ci − cj
+
+∥ci − cj ∥2
+
+(44) and a symmetric repulsion update is applied: 
+
+ci ← ci + 12α∆ij nij , cj ← cj − 12α∆ij nij (45) 23 where 0 < α ≤ 1 is a damping factor that stabilizes the iterative corrections and mitigates oscillations in dense configurations. The correction loop is repeated, cycling through all relevant pairs, until all overlaps are removed for the current radii, i.e., ∆ij ≤ 0 for all pairs. The DG phase terminates when (i) ri = Ri for all fibers and (ii) the non-overlap constraint remains satisfied after collision resolution at the final radii. DG is particularly effective in polydisperse systems because gradual expansion allows the packing to self-organize into a dense configuration without imposing crystalline order, while the repulsion step provides a computationally simple mechanism to restore feasibility after each growth increment. In this work, a threshold of 90% of the target fiber volume fraction or target number of fibers is used for the DG phase in order to balance computational time, achieve high packing density, and retain additional randomness for Phase II. 
+
+Phase II: Random sequential adsorption (RSA). After DG, residual void space may remain, especially in finite domains or when the target counts or volume fraction are not fully met due to growth-limited placement. A second-stage RSA procedure is therefore applied to populate the remaining space while preserving disorder. In RSA, a candidate fiber with radius Rcand is proposed by sampling a candidate center ccand uniformly within the domain. The candidate is accepted only if it satisfies 
+
+∥ccand − cj ∥2 ≥ Rcand + Rj + δ, ∀j (46) otherwise, it is rejected and a new candidate location is sampled. RSA proceeds until the required number of fibers, or target areal fraction, is reached. A schematic of the framework is illustrated in Fig. 6(a). 24 Fig. 6: A schematic of the microstructure generation framework. (a) Initial layer microstructure generation. (b) slice-wise 3D growth and overlap detection and resolution for eclipses. 
+
+2.4.2. Stage II: Slice-wise 3D growth with online statistical sampling and geometric feasibility enforcement 
+
+Following the collision-free initialization at z = 0 , the fiber system is propagated through the depth using a slice-wise three-dimensional growth scheme. At each increment s → s +1, with slice thickness ∆z, the algorithm couples an online statistical generator calibrated in Section 2.3 with an ellipse-aware geometric solver to ensure that the evolving configuration remains physically admissible. Each slice is accepted and committed only after satisfying a strict no-overlap criterion; otherwise, the slice is resampled and the procedure is repeated. For a given slice transition s → s + 1 , the workflow consists of: (i) sampling fiber-direction candidates from the calibrated statistical model and then selecting the most feasible candidate for each fiber at that slice, (ii) projecting centers to provisional positions at slice s + 1 , (iii) resolving inter-fiber overlaps iteratively using PGS contact solver with elliptical cross-sections, and (iv) performing a verification step prior to committing the slice. 25 Online statistical sampling. Each fiber i carries a latent bivariate Gaussian state, which evolves in depth according to a first-order autoregressive update: 
+
+Z(s) 
+
+> i
+
+=
+
+Z(s)
+
+> i,x
+
+Z(s)
+
+> i,y
+
+ , Z(s+1)  
+
+> i
+
+= ϕlocal,i Z(s) 
+
+> i
+
++
+
+q
+
+1 − ϕ2 
+
+> local,i
+
+(Ls+1 εs+1 ) (47) where, optionally, the boosted joint-tail treatment described in Section 2.3.3 is applied. The latent state is then mapped component-wise to the uniform domain using the standard normal cumulative distribution function: 
+
+U (s+1)  
+
+> i,x
+
+= Φ 
+
+
+
+Z(s+1) 
+
+> i,x
+
+
+
+, U (s+1)  
+
+> i,y
+
+= Φ 
+
+
+
+Z(s+1) 
+
+> i,y
+
+
+
+(48) Finally, slice-wise empirical inverse CDFs are used to map the uniform variables to physical angles: 
+
+θ(s+1)  
+
+> X,i
+
+= F −1 
+
+> θX,s
+
+
+
+U (s+1) 
+
+> i,x
+
+
+
+, θ(s+1)  
+
+> Y,i
+
+= F −1 
+
+> θY,s
+
+
+
+U (s+1) 
+
+> i,y
+
+
+
+(49) Optionally, the generated angles are then blended with motifs as described in Section 2.3.4. These angles represent statistically consistent candidate orientations at the target depth and are generated online, or on-the-fly, at each slice using the calibrated per-slice marginals, dependence structure, statistical descriptors, and tuned hyperparameters. 
+
+Provisional center projection (pre-solver motion). Given the sampled angles θ(s+1)  
+
+> X,i
+
+and θ(s+1)  
+
+> Y,i
+
+,the fiber center is advanced by a kinematic projection over the slice thickness ∆Zslice :
+
+∆X(s) 
+
+> i
+
+= tan 
+
+
+
+θ(s+1) 
+
+> X,i
+
+
+
+∆Zslice , ∆Y (s) 
+
+> i
+
+= tan 
+
+
+
+θ(s+1) 
+
+> Y,i
+
+
+
+∆Zslice (50) 
+
+cpre , (s+1)  
+
+> i
+
+= c (s) 
+
+> i
+
++
+
+∆X(s)
+
+> i
+
+∆Y (s)
+
+> i
+
+ (51) This produces a provisional configuration at slice s+1 . If no geometric conflicts are detected, the slice can be accepted immediately; otherwise, an overlap-resolution stage is invoked, as described in the following section. Once the final centers c(s) 
+
+> i
+
+and c(s+1)  
+
+> i
+
+are determined, the realized geometric angles are com-puted from the actual chord connecting consecutive slice positions: 
+
+θgeom ,(s)  
+
+> X,i
+
+= arctan x(s+1)  
+
+> i
+
+− x(s)
+
+> i
+
+∆Zslice 
+
+!
+
+, θgeom ,(s)  
+
+> Y,i
+
+= arctan y(s+1)  
+
+> i
+
+− y(s)
+
+> i
+
+∆Zslice 
+
+!
+
+(52) These realized angles constitute the physically meaningful fiber orientations and are used for ellipse construction, overlap detection, and final statistical validation. 26 Overlap resolution using an ellipse-aware PGS solver. To enforce geometric feasibility at slice 
+
+s + 1 , a constrained separation problem is solved in which ellipse pairs must satisfy a directional non-overlap condition. For a tilted cylindrical fiber intersected by a planar slice, the resulting cross-section is an ellipse. Accordingly, each fiber cross-section at slice s + 1 is represented by an ellipse with semi-minor and semi-major axes 
+
+bi = Ri, ai =
+
+ Ri
+
+|uz,i |
+
+
+
+(53) where the unit direction vector is formed from the realized tilts in Eq. (52), and overlap detection and resolution are applied only to the overlapping pairs in the pre-committed slice-center set E.The unit direction vector between slices is given by 
+
+ui = 1
+
+q
+
+1 + tan 2 θgeom 
+
+> X,i
+
+ + tan 2 θgeom 
+
+> Y,i
+
+
+
+tan  θgeom 
+
+> X,i
+
+
+
+tan  θgeom 
+
+> Y,i
+
+
+
+1
+
+ , uz,i = 1
+
+q
+
+1 + tan 2 θgeom 
+
+> X,i
+
+ + tan 2 θgeom 
+
+> Y,i
+
+
+
+(54) The in-plane rotation of the ellipse is 
+
+φi = atan2  tan  θgeom 
+
+> Y,i
+
+ , tan  θgeom 
+
+> X,i
+
+ (55) The directional support radius along a unit vector n = ( nx, n y) is computed by rotating 
+
+n into the ellipse frame via n′ = T( φ)n , where T is the in-plane transformation matrix. The corresponding support function in the rotated local coordinate frame is 
+
+ρ(a, b, φ ; n) = 1
+
+q(n′ 
+
+> x)2
+> a2
+
++ (n′ 
+
+> y)2
+> b2
+
+(56) which gives the distance from the ellipse center to its boundary along direction n.For a candidate pair (i, j ), with inter-center distance 
+
+dij = ∥ci − cj ∥2
+
+and direction 
+
+nij = ci − cj
+
+dij 
+
+,
+
+the required separation is expressed as 
+
+dij ≥ γ (ri + rj ), ri = ρ(ai, b i, φ i; n ij ), rj = ρ(aj , b j , φ j ; −nij ) (57) 27 where γ ≥ 1 is a small safety factor, e.g. γ = 1 .02 , introduced to guard against numerical tolerance and discretizations effects. The signed gap, or constraint violation, is defined as 
+
+gij = γ (ri + rj ) − dij (58) with gij ≤ 0 indicating feasibility and gij > 0 indicating overlap. The PGS solver iterates over a sparse set of neighboring pairs and applies symmetric correc-tions for any violated constraint. For each violating pair, the displacement increment is 
+
+∆ = 12 ω g ij nij (59) where ω ∈ (0 , 1) is a relaxation parameter controlling update aggressiveness. The centers are then updated symmetrically: 
+
+ci ← ci + ∆ , cj ← cj − ∆ (60) A schematic of overlap detection and resolution for a neighboring pair is shown in Fig. 6(b). PGS iterates for a fixed number of passes, or until the maximum violation becomes sufficiently small: 
+
+gij, max < ε gap (61) A more detailed explanation of the implementation and verification frameworks are provided in the Supplementary Material (Section 3). A key coupling exists between the centers and the ellipse geometry: the ellipse parameters 
+
+ai, bi, and φi depend on the realized geometric angles, which themselves depend on the updated centers. To handle this dependency, a fixed-point iteration is performed at each sampling round: 1. compute the realized geometric angles from the current chord using Eq. (52); 2. build the ellipses, via ai, bi, and φi, from θgeom ;3. rebuild the neighbor set EDel using Delaunay triangulation on the current centers ccurr (s+1)  
+
+> i
+
+;4. run a PGS solve with the geometry fixed within that pass, update ccurr  
+
+> i
+
+(s + 1) , and stop early if the maximum center displacement falls below a negligible threshold εpgs .This inner fixed-point loop accounts for the fact that moving centers alters the chord direc-tion, and hence the ellipse shape and orientation, which in turn changes the contact constraints. Convergence is reached when the centers and geometry are mutually consistent. Crucially, this 28 loop does not constitute resampling: no statistical state is discarded or modified. If, after this loop, the subsequent all-pairs geometric verification still detects violations exceeding the toler-ance εgap , the entire round, including the proposed centers and associated latent state, is rejected without commitment, and a new statistical proposal is drawn. This outer resampling loop is the mechanism by which the algorithm enforces strict geometric feasibility at each slice. After convergence, a strict verification step (Supplementary Material (Section 3)) evalu-ates geometric feasibility based on the final realized geometry, i.e., ellipses reconstructed using 
+
+θgeom . The slice is accepted only if all checked pairs satisfy the non-overlap condition. If ver-ification fails, the slice is resampled, meaning that new statistical angles are drawn, and the projection →solve →verify cycle is repeated. Once slice s + 1 is accepted, the final centers c(s+1)  
+
+> i
+
+are committed, the latent AR states and motif states are advanced, the realized geometric angles are stored, and the algorithm proceeds to slice s+2 . This procedure enforces, by construction: (i) geometric non-overlap at every depth, (ii) statistical consistency with the calibrated modelling layer, and (iii) physically meaningful fiber orientations derived from the realized centerline geometry. 
+
+3. Results and discussion 
+
+3.1. Per-slice misalignment analysis of the original microstructure 
+
+In this section, per-slice fiber misalignment is analyzed using the two methods described in Section 2.2. We first present the aggregated planar misalignment distributions, θX and θY ,together with the through-thickness fiber-direction misalignment, θZ , across all slices within the sub-volume. Fig. 7(a) shows the depth-wise evolution of the aggregated mean ±σ for both methods, while Fig. 7(b) overlays the corresponding aggregated probability density functions (PDFs). Fig. 7(c) further compares the empirical cumulative distribution functions (CDFs) and indicates the location of the maximum Kolmogorov–Smirnov (KS) separation between the two methods. The results demonstrate strong agreement between the ellipse-intersection and central-difference approaches in both the depth-wise statistics and the aggregated distributions of θX , θY , and θZ .The aggregated mean misalignments are nearly identical for θX (Ellipse: 0.387 ◦ vs. CD: 0.386 ◦)and θY (Ellipse: 0.0499 ◦ vs. CD: 0.0485 ◦), whereas θZ exhibits a slightly larger but still modest 29 offset (Ellipse: 1.601 ◦ vs. CD: 1.563 ◦). The CDF-based comparison corroborates this resem-blance: the two-sample KS distances are small ( D = 0 .00449 for θX , D = 0 .00684 for θY , and 
+
+D = 0 .0139 for θZ ), corresponding to a maximum CDF separation of approximately 1.4% .Minor differences are expected because the two methods are not strictly equivalent. The ellipse-based approach introduces approximations through ellipse parameterization and the use of a fixed monotonic radius R when extracting misalignment, while the central-difference ap-proach relies on a per-segment cylinder model that assumes locally straight fiber segments. These modelling choices primarily influence higher-order geometric details and curvature sen-sitivity, which plausibly contributes to the slightly larger deviation observed for θZ . For the subsequent modelling and generation phases, the ellipse-intersection results are adopted because they explicitly incorporate R, providing a direct geometric descriptor of fiber shape. 30 Fig. 7: (a) Overlay of the aggregated mean ±σ versus depth for the ellipse-intersection method (EP, pink) and the central-difference method (CD, blue) for θX , θY , and θZ . (b) Overlaid aggregated misalignment distributions (PDFs) for θX , θY , and θZ obtained using the two methods. (c) Empirical CDF comparison for θX , θY , and θZ ,highlighting the maximum Kolmogorov–Smirnov (KS) separation between EP and CD. 
+
+3.2. Synthetic microstructure fiber misalignment modelling 
+
+The Bayesian optimization (BO) results after 100 iterations are summarized in Fig. 8, which reports both the optimizer’s search behavior and the resulting agreement between the experi-mental and synthetic datasets in the transformed uniform space and the corresponding latent Gaussian space. Figure 8(a) shows the trajectory of the expected-improvement (EI) acquisition function through the design space; each iteration corresponds to a full synthetic reconstruction of the sub-volume, i.e., generating all fibers across the depth and evaluating the objective. After 100 iterations, the best solution achieved a total loss of approximately 12.6%. The corresponding optimal hyperparameters and the individual loss components are reported in the Supplementary 31 Material (Section 4). To assess the quality of the marginal transformations, Fig. 8(b) presents the uniform-space diagnostics. The synthetic and experimental transformed marginals are nearly identical. For 
+
+Ux, the experimental percentiles are P25 = 0 .24990 and P75 = 0 .75010 , while the synthetic counterpart yields P25 = 0 .25031 and P75 = 0 .75010 . The same level of agreement is observed for Uy.Figure 8(c) compares the latent Z-space distributions and further confirms close agreement between the original and synthetic datasets. The maximum probability density is 0.408 for the experimental latent variables, ZX and ZY , and 0.409–0.407 for the synthetic counterpart, indicating that the calibrated model reproduces the dominant density level of the latent repre-sentation. Finally, the dependence structure between the planar tilts is evaluated in Fig. 8(d–f). 8(d) and 8(e) show the experimental and synthetic joint distributions of Zx and Zy using hexbin den-sity maps, while Fig. 8(f) plots the synthetic–experimental difference. The remaining discrepancy is minimal, on the order of ∼ 4 × 10 −4, and the improvement in the extremes highlights the role of explicitly treating joint-tail behavior beyond Gaussian tail independence and re-injecting high-misalignment motif fibers, thereby enabling agreement not only around the median but also in rare-event regions. 32 Fig. 8: Bayesian optimization (BO) calibration and distributional validation of the misalignment generative model. (a) Expected-improvement (EI) search trajectory through the hyperparameter design space over 100 BO iterations. (b) Uniform-space diagnostics after marginal transformation, comparing the experimental and synthetic Ux and Uy distributions (25th percentile, median, and 75th percentile; black reference lines). (c) Latent Z-space (Gaussian) distributions for Zx and Zy , showing close agreement in density levels between the experimental and synthetic data. (d–e) Hexbin density maps of the experimental and synthetic joint distributions of planar tilts Zx and Zy . (f) Difference map (synthetic minus experimental), highlighting improved agreement in the tails due to joint-tail treatment and inclusion of high-misalignment motif fibers. 
+
+Furthermore, by concatenating the per-slice misalignment angles θX , θY , and θZ across the full depth, the slice-wise information can be visualized as a two-dimensional density panel (angle versus depth) using hexbin maps. This representation captures both the most probable misalign-ment path, i.e., the mode of the distribution, and the statistical scatter of physically occurring angles at each depth. Figure 9 presents these results: Fig. 9(a–c) show the experimental dis-tributions, the synthetic statistically equivalent distributions, and the synthetic–experimental difference for θX , θY , and θZ , respectively. The results demonstrate that the proposed model reproduces the depth-wise evolution of the 33 dominant misalignment behavior, accurately tracking the path of the highest-density occurrences for all three angles while also retaining sufficient stochastic variability. Rare high-misalignment events are also represented. The residual discrepancy between the synthetic and experimental density is small, with a maximum per-slice absolute count differences of less than 4.17% of the accumulated angles. This figure is particularly important because it evaluates more than marginal agreement at isolated slices. It directly tests whether the model reproduces: (i) the most frequent depth-dependent trajectory of misalignment, (ii) distributional shape effects such as skewness and spread, and (iii) the presence and magnitude of extremes as a function of depth. It therefore provides a stringent and physically interpretable validation of statistical equivalence between the synthetic and original microstructures. 34 Fig. 9: Depth-resolved hexbin density maps of the per-slice misalignment angles, highlighting agreement in the most probable depth-dependent trajectory and the spread of extreme events: original microstructure (left), synthetic microstructure (center), and synthetic–original density difference (right) for (a) θX , (b) θY , and (c) θZ .
+
+Figure 10 compares the global and depth-resolved misalignment statistics between the exper-imental (original) and generated (synthetic) datasets for θX , θY , and θZ . The global probability density functions shown in Fig. 10(a) indicate close distributional agreement, as quantified by the two-sample KS statistic. The smallest discrepancy is observed for θY (D = 0 .0229 ), followed by θX (D = 0 .0328 ), while θZ shows the largest, but still moderate, difference ( D = 0 .0747 ). In addition to distributional similarity, the full support of the angles is largely preserved, 35 and the peak density levels remain essentially unchanged. For example, the maximum PDF for 
+
+θX differs only marginally between the experimental and synthetic datasets (0.411 versus 0.383 over their respective ranges). Similar behavior is found for θY , where both the minimum nonzero densities and peak densities are closely matched (maximum PDF: 0.357 for the original versus 0.336 for the synthetic dataset). For θZ , the synthetic distribution exhibits a lower maximum PDF (0.443 versus 0.502), consistent with a reduced concentration near the dominant inclination region.           
+
+> Fig. 10: Global and depth-resolved statistical comparison of the original and synthetic misalignment distributions: (a) global PDF histograms for θX,θY, and θZ; (b) depth-dependent μ(z)±σ(z)envelopes.
+
+Figure 10(b) evaluates whether the synthetic model reproduces the depth-wise evolution of misalignment. The maximum absolute difference between the μ(z) curves is small for θX and 
+
+θY , reaching 0.133 ◦ at z = 281 .250 μm and 0.107 ◦ at z = 238 .281 μm, respectively, confirming that the synthetic generator accurately tracks the depth-dependent trend of the planar tilts. For 
+
+θZ , the maximum mean deviation is larger, at 0.460 ◦ at z = 234 .375 μm, although it remains limited in magnitude relative to the overall depth profile. Importantly, the variability band is also well preserved: the μ±σ envelope span differs by only 8.406% for θX and 8.118% for θY , and remains within 2.675% for θZ . Collectively, these results demonstrate that the proposed model 36 not only closely matches the global marginals and dependence structure, but also captures the depth-resolved evolution of both the central tendency and the dispersion. 
+
+3.3. Synthetic microstructure generation 
+
+The initial seed layer and the fiber microstructure generation are shown in Fig. 11, following the procedure described in Section 2.4.1. Figure 11(a) compares the diameter distribution of the generated fibers with the input fiber-diameter PDF. The agreement is close, with the input dataset giving a fitted Gaussian mean diameter of μ = 7 .1016 and standard deviation σ = 0 .5144 ,while the generated packing gives μ = 7 .0734 and σ = 0 .4830 . The generated synthetic seed microstructure was capped at μ − 3σ and μ + 1 .5σ to limit excessively large fiber diameters, which are uncommon in aerospace-grade CFRPs. This explains why the generated packing does not contain very large fiber diameters. Figure 11(b) shows the fiber volume fraction (VF) evolution during the dynamic growth (DG) and random sequential adsorption (RSA) stages. The DG stage exhibits a gradual exponential increase, reflecting the incremental growth of the fibers toward their target diameters, whereas the RSA stage fills the remaining gaps through random insertion at a faster rate. The final generated microstructure is presented in Fig. 11(c), with a fiber count comparable to the experimental dataset (2395 fibers) and a final VF of 46%. The seed layer microstructure packing required around 23 min of HPC run time with the same configuration described earlier in Section 2. 37 Fig. 11: (a) Input and generated fiber-diameter distributions for the seed layer. (b) Fiber volume fraction evolution during the DG and RSA stages. (c) Final generated seed-layer microstructure (blue: DG; pink: RSA) with 2395 fibers and 46% volume fraction. 
+
+Figure 12 shows the final augmented synthetic microstructure generated through slice-by-slice three-dimensional growth using the statistical modelling layer and the developed overlap-resolution solver described in Section 2.4.2. While the original X-ray-μCT data provide only fiber centerline information, the present augmentation enables reconstruction of a more realistic three-dimensional misaligned fiber microstructure with physically consistent radii, overlap-free geometry, and a physically admissible fiber network informed by a statistically equivalent mod-elling layer. 38 Fig. 12: Final augmented synthetic microstructure generated by slice-by-slice 3D growth informed by the statis-tically equivalent modelling layer. 
+
+4. Conclusion 
+
+An integrated pipeline has been developed to transform X-ray-μCT fiber-path data into sta-tistically equivalent and physically admissible synthetic three-dimensional microstructures. The framework combines slice-wise fiber misalignment quantification, stochastic statistical modelling, and overlap-free geometric generation within a unified workflow, thereby addressing a key limita-39 tion in current microstructure-informed modelling: the absence of a direct route from experimen-tal imaging to realistic, simulation-ready synthetic media. The resulting microstructures retain the essential statistics of the original material while enhancing physical realism through consis-tent fiber radii and admissible fiber arrangements throughout the synthetic medium. This makes the approach valuable for virtual testing, micromechanics, and process-aware composite design, facilitating the synthetic generation of statistically representative and realistic three-dimensional fiber microstructures. In future work, the framework will be extended to larger fiber domains, including large-scale 12K tow reconstruction, and the generated synthetic microstructures will be further validated against the original raw X-ray-μCT dataset. The framework will also be enriched with additional local descriptors, such as porosity, tortuosity, fiber conglomerates, and related morphological interactions, to enhance realism and predictive capability. Moreover, the stochastic consistency of the model will be evaluated through the reproducibility of multiple independently generated synthetic microstructures. More broadly, the framework provides the basis for an autonomous virtual laboratory of realistic fiber architectures and is readily extendable to different classes of fiber-reinforced polymer composites and other heterogeneous synthetic materials, including short-fiber systems. 40 CRediT authorship contribution statement Mohamad A. Raja : Writing – original draft, Writing – review & editing, Data curation, Software, Validation, Methodology, Investigation, Formal analysis, Conceptualization, Visualiza-tion. Clemens Dransfeld : Writing – review & editing, Supervision. Boyang Chen : Writing – review & editing, Supervision, Methodology, Conceptualization. 
+
+Declaration of Competing Interest 
+
+The authors declare that they have no known competing financial interests or personal rela-tionships that could have appeared to influence the work reported in this paper. 
+
+Acknowledgements 
+
+The authors gratefully acknowledge the financial support provided by the Luchtvaart in Transitie (LiT) project. The authors also thank Dr. S. Gomarasca for providing the raw X-ray-
+
+μCT datasets and for her support. 
+
+Appendix A. Supplementary data 
+
+Supplementary material associated with this article is provided in a separate document, including additional details on the ellipse-intersection method, synthetic fiber modelling, mi-crostructure generation, and supplementary results. 
+
+Data availability 
+
+The data and associated codes form part of ongoing research and are therefore not cur-rently publicly available. They will be made publicly available upon completion of the related studies through the author’s website (https://www.mohamadraja.com/) and GitHub repository (https://github.com/MohamadA-RJ). 41 References 
+
+[1] J. Zhang, G. Lin, U. Vaidya, H. Wang, Past, present and future prospective of global carbon fibre composite developments and applications, Composites Part B: Engineering 250 (2023) 110463. doi:https://doi.org/10.1016/j.compositesb.2022.110463 .URL https://www.sciencedirect.com/science/article/pii/S1359836822008368 
+
+[2] C. González, J. LLorca, Mechanical behavior of unidirectional fiber-reinforced polymers un-der transverse compression: Microscopic mechanisms and modeling, Composites Science and Technology 67 (13) (2007) 2795–2806. doi:https://doi.org/10.1016/j.compscitech. 2007.02.001 .URL https://www.sciencedirect.com/science/article/pii/S0266353807000711 
+
+[3] A. jun Li, J. jun Zhang, F. zhou Zhang, L. Li, S. peng Zhu, Y. hua Yang, Effects of fiber and matrix properties on the compression strength of carbon fiber reinforced polymer composites, New Carbon Materials 35 (6) (2020) 752–761. doi:https://doi.org/10. 1016/S1872-5805(20)60526-1 .URL https://www.sciencedirect.com/science/article/pii/S1872580520605261 
+
+[4] B. A. Bednarcyk, J. Aboudi, S. M. Arnold, Analysis of fiber clustering in composite materi-als using high-fidelity multiscale micromechanics, International Journal of Solids and Struc-tures 69-70 (2015) 311–327. doi:https://doi.org/10.1016/j.ijsolstr.2015.05.019 .URL https://www.sciencedirect.com/science/article/pii/S0020768315002358 
+
+[5] A. Maligno, N. Warrior, A. Long, Effects of inter-fibre spacing on damage evolution in unidirectional (ud) fibre-reinforced composites, European Journal of Mechanics - A/Solids 28 (4) (2009) 768–776. doi:https://doi.org/10.1016/j.euromechsol.2008.10.009 .URL https://www.sciencedirect.com/science/article/pii/S0997753808001113 
+
+[6] M. Alves, C. Cimini Junior, S. Ha, Fiber waviness and its effect on the mechanical perfor-mance of fiber reinforced polymer composites: An enhanced review, Composites Part A: Applied Science and Manufacturing 149 (2021) 106526. doi:https://doi.org/10.1016/ j.compositesa.2021.106526 .URL https://www.sciencedirect.com/science/article/pii/S1359835X21002487 
+
+42 [7] P. Kulkarni, K. D. Mali, S. Singh, An overview of the formation of fibre waviness and its effect on the mechanical performance of fibre reinforced polymer composites, Composites Part A: Applied Science and Manufacturing 137 (2020) 106013. doi:https://doi.org/ 10.1016/j.compositesa.2020.106013 .URL https://www.sciencedirect.com/science/article/pii/S1359835X20302529 
+
+[8] H. Ahmadian, M. Yang, A. Nagarajan, S. Soghrati, Effects of shape and misalignment of fibers on the failure response of carbon fiber reinforced polymers, Computational Mechanics 63 (5) (2019) 999–1017. doi:10.1007/s00466-018-1634-1 .URL https://doi.org/10.1007/s00466-018-1634-1 
+
+[9] S. H. Lim, W. Kim, W. Kim, D. Jeon, S. S. Kim, Schematic construction of carbon fiber tow microstructure models and their effect on tensile strength of carbon fiber tow/epoxy com-posites: Quantification of carbon fiber distribution, misalignment, and interlacing, Com-posites Science and Technology 256 (2024) 110786. doi:https://doi.org/10.1016/j. compscitech.2024.110786 .URL https://www.sciencedirect.com/science/article/pii/S0266353824003567 
+
+[10] M. Yadav, N. P. Yelve, T. Gries, A. Tewari, Multiscale investigation of winding tension on porosity, misalignment, and mechanical performance of filament-wound cfrp composites, Composites Science and Technology 271 (2025) 111340. doi:https://doi.org/10.1016/ j.compscitech.2025.111340 .URL https://www.sciencedirect.com/science/article/pii/S0266353825003082 
+
+[11] W. Zhang, J. Zou, M. Liu, Z. Han, Y. Xiong, B. Liang, N. Hu, W. Zhang, Investigating the role of fibre-matrix interfacial degradation on the ageing process of carbon fibre-reinforced polymer under hydrothermal conditions, Composites Science and Technology 259 (2025) 110922. doi:https://doi.org/10.1016/j.compscitech.2024.110922 .URL https://www.sciencedirect.com/science/article/pii/S0266353824004925 
+
+[12] J.-H. Joo, S.-H. Kim, Y.-J. Yim, J.-S. Bae, M.-K. Seo, Interfacial interlocking of carbon fiber-reinforced polymer composites: A short review, Polymers 17 (3) (2025). doi:10. 3390/polym17030267 .URL https://www.mdpi.com/2073-4360/17/3/267 
+
+43 [13] T. Takahashi, M. Ueda, K. Iizuka, A. Yoshimura, T. Yokozeki, Simulation on kink-band formation during axial compression of a unidirectional carbon fiber-reinforced plastic con-structed by x-ray computed tomography images, Advanced Composite Materials 28 (4) (2019) 347–363. doi:10.1080/09243046.2018.1555387 .URL https://doi.org/10.1080/09243046.2018.1555387 
+
+[14] L. Varandas, G. Catalanotti, A. Melro, R. Tavares, B. Falzon, Micromechanical modelling of the longitudinal compressive and tensile failure of unidirectional composites: The effect of fibre misalignment introduced via a stochastic process, International Journal of Solids and Structures 203 (2020) 157–176. doi:https://doi.org/10.1016/j.ijsolstr.2020. 07.022 .URL https://www.sciencedirect.com/science/article/pii/S0020768320302997 
+
+[15] M. Ueda, Y. Suzuki, S. T. Pinho, Estimation of axial compressive strength of unidirectional carbon fiber-reinforced plastic considering the variability of fiber misalignment, Composites Part A: Applied Science and Manufacturing 175 (2023) 107821. doi:https://doi.org/ 10.1016/j.compositesa.2023.107821 .URL https://www.sciencedirect.com/science/article/pii/S1359835X23003974 
+
+[16] T. Sebaey, G. Catalanotti, C. Lopes, N. O’Dowd, Computational micromechanics of the effect of fibre misalignment on the longitudinal compression and shear properties of ud fibre-reinforced plastics, Composite Structures 248 (2020) 112487. doi:https://doi.org/ 10.1016/j.compstruct.2020.112487 .URL https://www.sciencedirect.com/science/article/pii/S0263822320311685 
+
+[17] X. Bai, M. A. Bessa, A. R. Melro, P. P. Camanho, L. Guo, W. K. Liu, High-fidelity micro-scale modeling of the thermo-visco-plastic behavior of carbon fiber polymer matrix com-posites, Composite Structures 134 (2015) 132–141. doi:https://doi.org/10.1016/j. compstruct.2015.08.047 .URL https://www.sciencedirect.com/science/article/pii/S026382231500728X 
+
+[18] S. Krishnappa, S. Gururaja, Compressive failure mechanisms in unidirectional fiber rein-forced polymer composites with embedded wrinkles, Composites Part B: Engineering 284 44 (2024) 111688. doi:https://doi.org/10.1016/j.compositesb.2024.111688 .URL https://www.sciencedirect.com/science/article/pii/S1359836824005006 
+
+[19] G. Han, Z. Guan, X. Li, R. Ji, S. Du, The failure mechanism of carbon fiber-reinforced composites under longitudinal compression considering the interface, Science and En-gineering of Composite Materials 24 (3) (2017) 429–437 [cited 2026-04-08]. doi:doi: 10.1515/secm-2015-0057 .URL https://doi.org/10.1515/secm-2015-0057 
+
+[20] M. Bishara, M. Vogler, R. Rolfes, Revealing complex aspects of compressive failure of polymer composites – part ii: Failure interactions in multidirectional laminates and vali-dation, Composite Structures 169 (2017) 116–128, in Honor of Prof. Leissa. doi:https: //doi.org/10.1016/j.compstruct.2016.10.091 .URL https://www.sciencedirect.com/science/article/pii/S0263822316322322 
+
+[21] A. T. Zehnder, V. Patel, T. J. Rose, Micro-ct imaging of fibers in composite laminates under high strain bending, Experimental Techniques 44 (5) (2020) 531–540. doi:10.1007/ s40799-020-00374-9 .URL https://doi.org/10.1007/s40799-020-00374-9 
+
+[22] D.-W. Kim, J. H. Lim, S.-W. Kim, Y. Kim, Micro-computed tomography-aided modeling for misaligned and noncircular fibers of unidirectional composites and validation under a transverse tensile loading, Composites Science and Technology 212 (2021) 108879. doi: https://doi.org/10.1016/j.compscitech.2021.108879 .URL https://www.sciencedirect.com/science/article/pii/S0266353821002359 
+
+[23] N. Q. Nguyen, M. Mehdikhani, I. Straumit, L. Gorbatikh, L. Lessard, S. V. Lomov, Micro-ct measurement of fibre misalignment: Application to carbon/epoxy laminates manufactured in autoclave and by vacuum assisted resin transfer moulding, Composites Part A: Ap-plied Science and Manufacturing 104 (2018) 14–23. doi:https://doi.org/10.1016/j. compositesa.2017.10.018 .URL https://www.sciencedirect.com/science/article/pii/S1359835X17303767 
+
+[24] M. Mehdikhani, C. Breite, Y. Swolfs, M. Wevers, S. V. Lomov, L. Gorbatikh, Combin-ing digital image correlation with x-ray computed tomography for characterization of fiber 45 orientation in unidirectional composites, Composites Part A: Applied Science and Manufac-turing 142 (2021) 106234. doi:https://doi.org/10.1016/j.compositesa.2020.106234 .URL https://www.sciencedirect.com/science/article/pii/S1359835X2030470X 
+
+[25] S. Gomarasca, D. Peeters, B. Atli-Veltin, C. Dransfeld, Characterising microstructural or-ganisation in unidirectional composites, Composites Science and Technology 215 (2021) 109030. doi:https://doi.org/10.1016/j.compscitech.2021.109030 .URL https://www.sciencedirect.com/science/article/pii/S0266353821003869 
+
+[26] T. Zheng, F. Jia, Z. Wang, Z. Chen, F. Guo, L. Guo, Statistical characteristics of realistic fiber misalignments of unidirectional composites: Fitting distributions and scanning length effects, Thin-Walled Structures 206 (2025) 112621. doi:https://doi.org/10.1016/j. tws.2024.112621 .URL https://www.sciencedirect.com/science/article/pii/S0263823124010619 
+
+[27] Y. Lee, T. Chatziathanasiou, C. Breite, M. Mehdikhani, Y. Swolfs, M. N. Mavrogordato, S. M. Spearing, I. Sinclair, Correlating fibre break development with fibre misalignment and resin-rich pockets using in situ holotomography, Composites Part A: Applied Science and Manufacturing 200 (2026) 109361. doi:https://doi.org/10.1016/j.compositesa. 2025.109361 .URL https://www.sciencedirect.com/science/article/pii/S1359835X25006554 
+
+[28] S. Gomarasca, D. Peeters, B. Atli-Veltin, T. Slange, G. Ratouit, C. Dransfeld, Charac-terising pore networks and their interrelation with the fibre architecture in unidirectional composites, Composites Part A: Applied Science and Manufacturing 190 (2025) 108669. 
+
+doi:https://doi.org/10.1016/j.compositesa.2024.108669 .URL https://www.sciencedirect.com/science/article/pii/S1359835X24006675 
+
+[29] P. J. Creveling, J. Fisher, C. Dahlkamp, M. W. Czabaj, Modeling as-manufactured fiber-reinforced microstructures based on x-ray microcomputed tomography, Composites Sci-ence and Technology 214 (2021) 109004. doi:https://doi.org/10.1016/j.compscitech. 2021.109004 .URL https://www.sciencedirect.com/science/article/pii/S0266353821003602 
+
+46 [30] T. Takahashi, A. Todoroki, C. Kawamura, R. Higuchi, T. Sugiyama, T. Miyanaga, K. Hat-tori, M. Ueda, T. Yokozeki, M. Honda, Unidirectional cfrp kinking under uniaxial compres-sion modeled using synchrotron radiation computed tomography imaging, Composite Struc-tures 289 (2022) 115458. doi:https://doi.org/10.1016/j.compstruct.2022.115458 .URL https://www.sciencedirect.com/science/article/pii/S0263822322002513 
+
+[31] Z. Zhao, H. Wu, M. Zhang, S. Fu, K. Zhu, Fiber orientation reconstruction from sem images of fiber-reinforced composites, Applied Sciences 13 (6) (2023). doi:10.3390/app13063700 .URL https://www.mdpi.com/2076-3417/13/6/3700 
+
+[32] G. Seon, A. Makeev, A computer graphics-based method for efficient generation of 3d micromodels of cfrps and investigation of the effect of random fiber misalignment phase on fiber-direction compressive strength, Composites Science and Technology 277 (2026) 111545. doi:https://doi.org/10.1016/j.compscitech.2026.111545 .URL https://www.sciencedirect.com/science/article/pii/S0266353826000308 
+
+[33] G. Catalanotti, T. Sebaey, An algorithm for the generation of three-dimensional statistically representative volume elements of unidirectional fibre-reinforced plastics: Focusing on the fibres waviness, Composite Structures 227 (2019) 111272. doi:https://doi.org/10.1016/ j.compstruct.2019.111272 .URL https://www.sciencedirect.com/science/article/pii/S0263822319321968 
+
+[34] T. Sebaey, G. Catalanotti, N. O’Dowd, A microscale integrated approach to measure and model fibre misalignment in fibre-reinforced composites, Composites Science and Technol-ogy 183 (2019) 107793. doi:https://doi.org/10.1016/j.compscitech.2019.107793 .URL https://www.sciencedirect.com/science/article/pii/S0266353819316537 
+
+[35] A. Kumar, A. DasGupta, A. Jain, Microstructure generation algorithm and micromechanics of curved fiber composites with random waviness, International Journal of Solids and Struc-tures 289 (2024) 112625. doi:https://doi.org/10.1016/j.ijsolstr.2023.112625 .URL https://www.sciencedirect.com/science/article/pii/S002076832300522X 
+
+[36] J. He, F. Zheng, W. Ma, G. Zhou, G. Fan, Z. Chen, Z. Liu, D. Li, Statistical modeling of 3d fiber geometry in pultruded gfrp composite: A multi-scale approach, Composites Sci-ence and Technology 256 (2024) 110734. doi:https://doi.org/10.1016/j.compscitech. 
+
+47 2024.110734 .URL https://www.sciencedirect.com/science/article/pii/S026635382400304X 
+
+[37] C. Lauff, M. Schneider, T. Böhlke, Microstructure generation of long fiber reinforced hybrid composites using the fused sequential addition and migration method, Journal of Thermo-plastic Composite Materials 38 (8) (2025) 2855–2893. arXiv:https://doi.org/10.1177/ 08927057251314425 , doi:10.1177/08927057251314425 .URL https://doi.org/10.1177/08927057251314425 
+
+[38] Y. Zhou, Z. Yan, P. Hubert, An artifactual fibre overlap removal algorithm for micro-computed tomography image post-processing and 3d microstructure generation with graph-ics processing unit acceleration, Materials and Design 247 (2024) 113376. doi:https: //doi.org/10.1016/j.matdes.2024.113376 .URL https://www.sciencedirect.com/science/article/pii/S0264127524007512 
+
+[39] Delft High Performance Computing Centre (DHPC), DelftBlue Supercomputer (Phase 2), 
+
+https://www.tudelft.nl/dhpc/ark:/44463/DelftBluePhase2 (2024). [40] A. Heinen, A. Valdesogo, Spearman rank correlation of the bivariate student t and scale mixtures of normal distributions, Journal of Multivariate Analysis 179 (2020) 104650. doi: https://doi.org/10.1016/j.jmva.2020.104650 .URL https://www.sciencedirect.com/science/article/pii/S0047259X20302311 
+
+[41] A. V. Metcalfe, P. S. Cowpertwait, Introductory Time Series with R, Use R!, Springer New York, NY, New York, NY, 2009. doi:10.1007/978-0-387-88698-5 .URL https://michaelakratofil.com/files/2009_Book_ IntroductoryTimeSeriesWithR.pdf 
+
+[42] J. D. Hamilton, Time Series Analysis, Princeton University Press, Princeton, NJ, 1994, chapter 3, pages 45, 48. doi:https://doi.org/10.1515/9780691218632 .URL https://princeton.edu 
+
+[43] R. Lanzafame, T. van Woudenberg, S. Verhagen, Modelling, Uncertainty and Data for Engineers (MUDE), Delft University of Technology, Delft, Netherlands, 2024, cC BY 4.0. 48 doi:10.5281/zenodo.16236358 .URL https://mude.citg.tudelft.nl/book/2024 
+
+[44] M. A. Raja, S. H. Lim, D. Jeon, S. Bae, W. Oh, I. Yang, D. Kang, J. Ha, H. E. Lee, I.-K. Oh, S. Kim, S. S. Kim, Thin, uniform, and highly packed multifunctional structural carbon fiber composite battery lamina informed by solid polymer electrolyte cure kinetics, ACS Applied Materials & Interfaces 16 (43) (2024) 59128–59142, pMID: 39255971. arXiv: https://doi.org/10.1021/acsami.4c08698 , doi:10.1021/acsami.4c08698 .URL https://doi.org/10.1021/acsami.4c08698 
+
+[45] M. A. Raja, W. Kim, W. Kim, S. H. Lim, S. S. Kim, Computational micromechanics and machine learning-informed design of composite carbon fiber-based structural battery for multifunctional performance prediction, ACS Applied Materials & Interfaces 17 (13) (2025) 20125–20137, pMID: 39988802. arXiv:https://doi.org/10.1021/acsami.4c19073 , doi: 10.1021/acsami.4c19073 .URL https://doi.org/10.1021/acsami.4c19073 
+
+49
