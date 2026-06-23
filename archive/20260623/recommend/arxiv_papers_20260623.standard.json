@@ -1,0 +1,887 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-23T21:29:07.240932+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 19,
+    "deep_cap": 7,
+    "deep_selected": 15,
+    "quick_candidates": 6,
+    "quick_skim_target": 12,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2606.21501v1",
+      "source": "arxiv",
+      "title": "UniviewVLA: A Unified Multiview Vision-Language-Action Model with World Modeling",
+      "abstract": "Occluded tasks remain a bottleneck in robot manipulation. Existing solutions either deploy additional physical cameras requiring training-inference camera parity, or rely on explicit 3D reconstruction with high computational cost. Moreover, both approaches rely on standard agent-view and wrist-view observations, while failing to capture occlusion information and future scene evolution. To this end, we propose UniviewVLA, a unified multiview Vision-Language-Action model with world modeling, which infers multiview scene evolution for action prediction from only standard two-camera observations. We demonstrate that by leveraging generated multiview future views from the world model, UniviewVLA reveals occluded cues and models future scene evolution, improving action prediction and removing the need for extra hardware or explicit reconstruction. Besides, to accelerate inference while preserving prediction accuracy, UniviewVLA develops Motion-Informative Token Compression, which compresses each generated view from 625 to 16 tokens and reduces per-view latency from 6-7s to 0.2-0.3s. UniviewVLA also proposes training-free Action-Entropy View Selection, which dynamically identifies the most action-informative view at different inference stages. Extensive experiments show that UniviewVLA achieves 95.8% on LIBERO and 4.60 on CALVIN ABCD to D, both standard occlusion-free benchmarks. On customized occlusion-focused tasks, it improves success rate from 40.0% to 73.3%, and average real-robot success rate by 33.4 points, demonstrating stronger occlusion-focused performance without sacrificing standard occlusion-free benchmarks.",
+      "authors": [
+        "Tao Xu",
+        "Runhao Zhang",
+        "Zhijian Huang",
+        "Jiayi Guan",
+        "Jiaxin Wang",
+        "Yifan Ding",
+        "Yong-Lu Li",
+        "Long Chen",
+        "Guang Chen",
+        "Jinghui Lu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-19T14:53:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.21501v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "world modeling for multiview scene evolution and action prediction",
+      "llm_evidence_cn": "世界建模用于多视图场景演变和动作预测",
+      "llm_evidence": "世界建模用于多视图场景演变和动作预测",
+      "canonical_evidence": "世界建模用于多视图场景演变和动作预测",
+      "llm_tldr_en": "UniviewVLA integrates world modeling into a unified multiview VLA model to infer future scene evolution for action prediction, handling occlusions.",
+      "llm_tldr_cn": "本文提出UniviewVLA，一种统一的多视图视觉-语言-动作模型，通过世界建模推断多视图场景演变，从而在仅使用标准双相机观测的情况下预测动作。该方法能够揭示遮挡线索并建模未来场景变化，在机器人操作任务中显著提升了处理遮挡的能力，同时避免了额外物理相机或高昂的3D重建成本。",
+      "llm_tldr": "本文提出UniviewVLA，一种统一的多视图视觉-语言-动作模型，通过世界建模推断多视图场景演变，从而在仅使用标准双相机观测的情况下预测动作。该方法能够揭示遮挡线索并建模未来场景变化，在机器人操作任务中显著提升了处理遮挡的能力，同时避免了额外物理相机或高昂的3D重建成本。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21596v1",
+      "source": "arxiv",
+      "title": "$φ$-Scene: Physically Grounded Image-to-3D Scene Reconstruction",
+      "abstract": "Reconstructing compositional 3D scenes from a single image is a fundamental challenge in 3D world modeling. Recent methods can recover high-fidelity, complete 3D objects and predict plausible scene arrangements, but most still treat scene reconstruction primarily as a visual and geometric prediction problem. Their outputs may therefore contain floating objects, interpenetrations, or unstable-contact artifacts, limiting their physical validity and downstream usability in simulation, robotics, and interactive environments. We present $φ$-Scene, a physically grounded approach to open-vocabulary and compositional image-to-3D scene reconstruction. The key premise is that a reconstructed scene should not be treated merely as a set of objects with predicted poses, but as a stable physical system. Accordingly, $φ$-Scene formulates reconstruction as topology-driven physical assembly: it infers how objects support one another, orders them accordingly, and progressively settles each object against its already stabilized support context. For each object in topological order, SDF-based optimization first resolves penetrations against the pre-settled support context, and rigid-body simulation then settles the object into a stable contact configuration under real-world physical constraints. Experiments on 3D-Front show that $φ$-Scene achieves the strongest overall performance among out-of-domain methods and remains highly competitive with in-domain baselines. Human and VLM evaluations further show strong preference for $φ$-Scene in visual quality, reference alignment, and physical plausibility. Finally, dedicated physical plausibility metrics covering static contact quality and dynamic stability demonstrate that $φ$-Scene substantially reduces penetration artifacts while producing much lower post-simulation drift, indicating more stable and physically grounded 3D scenes.",
+      "authors": [
+        "Haodong Li",
+        "Lulu Shao",
+        "Haolin Lu",
+        "Yu Fu",
+        "Yen-Ru Chen",
+        "Seemandhar Jain",
+        "Manmohan Chandraker"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T16:50:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.21596v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Physically grounded 3D scene reconstruction for world modeling",
+      "llm_evidence_cn": "物理约束的3D场景重建，直接面向世界模型",
+      "llm_evidence": "物理约束的3D场景重建，直接面向世界模型",
+      "canonical_evidence": "物理约束的3D场景重建，直接面向世界模型",
+      "llm_tldr_en": "φ-Scene proposes a physically grounded approach to image-to-3D scene reconstruction, ensuring physical validity such as no interpenetrations or floating objects, crucial for world models in simulation and robotics.",
+      "llm_tldr_cn": "单张图像到3D场景重建是3D世界建模的核心问题。φ-Scene提出了物理约束的重建方法，通过引入接触稳定性和重力等物理规则，避免了漂浮、穿插等伪影。实验表明，该方法在开放词汇场景中生成高质量且可交互的3D场景，显著提升了物理有效性，为机器人仿真等下游任务提供了更真实的世界模型。",
+      "llm_tldr": "单张图像到3D场景重建是3D世界建模的核心问题。φ-Scene提出了物理约束的重建方法，通过引入接触稳定性和重力等物理规则，避免了漂浮、穿插等伪影。实验表明，该方法在开放词汇场景中生成高质量且可交互的3D场景，显著提升了物理有效性，为机器人仿真等下游任务提供了更真实的世界模型。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21775v1",
+      "source": "arxiv",
+      "title": "Beyond the Next Step: Variable-Length Latent World Models for Long-Horizon Planning",
+      "abstract": "Recently, world models have emerged as a promising paradigm for building intelligent agents by learning predictive models that estimate future environment states conditioned on observations and actions. In particular, JEPA-style latent world models provide an efficient alternative to pixel space prediction by learning action-conditioned dynamics in compact representation spaces. However, existing latent world models typically rely on one-step prediction and must be recursively rolled out for long-horizon planning, which leads to compounding errors and a mismatch between training objectives and downstream planning tasks. To address this limitation, we propose Variable-length Latent World Models (VLWMs), a framework that learns to predict future latent states conditioned on action sequences of variable lengths. Instead of training only on one-step transitions, VLWMs directly model temporally extended dynamics, allowing the same predictor to evaluate action plans over different horizons. We further introduce a curriculum training strategy that progressively expands the action horizon, stabilizing optimization from short-range dynamics to long-range prediction. At test time, we design planning methods tailored to VLWMs to better exploit their variable-length predictive capabilities. Experiments on long-horizon control tasks show that VLWMs significantly improve latent space world models, achieving 13\\% average improvement over the state-of-the-art LeWM across different datasets, with especially large gains on tasks requiring extended planning. These results suggest that VLWM provides a simple yet effective paradigm for improving long-horizon prediction and planning in latent world models.",
+      "authors": [
+        "Tianqi Du",
+        "Qi Zhang",
+        "Yifei Wang",
+        "Yisen Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-19T21:50:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.21775v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "variable-length latent world models for long-horizon planning",
+      "llm_evidence_cn": "变长潜在世界模型用于长时程规划",
+      "llm_evidence": "变长潜在世界模型用于长时程规划",
+      "canonical_evidence": "变长潜在世界模型用于长时程规划",
+      "llm_tldr_en": "Proposes VLWMs that predict multiple future states in latent space, reducing compounding errors in long-horizon planning.",
+      "llm_tldr_cn": "该论文提出变长潜在世界模型（VLWMs），在潜在空间学习可变长度预测，避免递归滚动带来的累积误差。通过直接预测多个未来状态，匹配长时程规划任务。实验表明在多个规划任务中优于现有世界模型。该工作解决了世界模型在长时程规划中的关键局限。",
+      "llm_tldr": "该论文提出变长潜在世界模型（VLWMs），在潜在空间学习可变长度预测，避免递归滚动带来的累积误差。通过直接预测多个未来状态，匹配长时程规划任务。实验表明在多个规划任务中优于现有世界模型。该工作解决了世界模型在长时程规划中的关键局限。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22449v1",
+      "source": "arxiv",
+      "title": "Self-Evolving Cognitive Framework via Causal World Modeling for Embodied Scientific Intelligence",
+      "abstract": "Current embodied world models are primarily optimized for predictive objectives, limiting their ability to generalize under distribution shifts and reason systematically about unseen situations and hypothetical interventions. We argue that embodied intelligence should move beyond predictive world modeling toward self-evolving cognitive systems that continually construct and refine internal causal representations through interaction with the environment. To this end, we propose a self-evolving cognitive framework via causal world modeling for embodied scientific intelligence, which integrates three complementary components: causal world modeling, intervention-driven causal reasoning, and continual cognitive refinement. The proposed framework continuously revises and expands its internal causal world model through causal discovery, intervention-driven feedback, and counterfactual reasoning, supporting continual cognitive refinement and enabling cognition itself to evolve over time. Furthermore, we reinterpret embodied interaction not merely as a means of trajectory optimization, but as an epistemic process for causal hypothesis generation, intervention-driven experimentation, and continual knowledge acquisition. This work provides a conceptual and theoretical foundation for a transition from predictive intelligence toward epistemic intelligence, in which intelligence emerges through the continual construction, revision, and refinement of causal world models via interaction with the environment. Accordingly, an intervention-driven causal-epistemic benchmarking paradigm is suggested for evaluating self-evolving embodied scientific intelligence.",
+      "authors": [
+        "Yi Yu",
+        "Tetsunari Inamura"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-06-21T11:46:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.22449v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Proposes causal world modeling for embodied intelligence, directly addressing world model concept.",
+      "llm_evidence_cn": "提出因果世界建模用于具身智能，直接探讨世界模型概念。",
+      "llm_evidence": "提出因果世界建模用于具身智能，直接探讨世界模型概念。",
+      "canonical_evidence": "提出因果世界建模用于具身智能，直接探讨世界模型概念。",
+      "llm_tldr_en": "Presents a self-evolving cognitive framework with causal world modeling, intervention-driven reasoning, and continual refinement for embodied scientific intelligence.",
+      "llm_tldr_cn": "当前具身世界模型仅优化预测目标，难以应对分布偏移和系统性推理。本文提出一种自演化认知框架，融合因果世界建模、干预驱动的因果推理和持续认知精炼。该框架使智能体能够主动构建和完善内部因果表征，在未见情境和假设干预中实现更好的泛化和推理，为世界模型在科学具身智能中的应用开辟了新方向。",
+      "llm_tldr": "当前具身世界模型仅优化预测目标，难以应对分布偏移和系统性推理。本文提出一种自演化认知框架，融合因果世界建模、干预驱动的因果推理和持续认知精炼。该框架使智能体能够主动构建和完善内部因果表征，在未见情境和假设干预中实现更好的泛化和推理，为世界模型在科学具身智能中的应用开辟了新方向。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23514v1",
+      "source": "arxiv",
+      "title": "Arbor: Explicit Geometric Conditioning for Controllable 3D Asset Generation",
+      "abstract": "Text and image conditioned 3D models now generate convincing assets, but they still offer little direct control over the space an object should occupy or avoid. In authoring, this spatial intent is often known before generation starts. A chair should fit a seating envelope, a prop should leave clearance for motion, or a part should expose a contact surface. Prompts and image views are poor carriers for such constraints, requiring the need for an explicit control interface.   We present Arbor, a trainable attachment for text conditioned latent 3D generation. Arbor introduces constraint meshes as a native 3D control interface. The interface uses hull regions where geometry should exist, avoidance regions that should remain empty, and touch regions the object should contact. Unlike completion or whole object scaffold control, these meshes are not target evidence. They are local typed requirements and can include regions where no surface should appear. Arbor keeps this signal as geometry by converting constraint meshes into tokens and learning a routed attachment inside a frozen denoiser. Each latent region can therefore receive the part of the constraint that matters for its spatial location.   We evaluate Arbor on automatic and artist curated control benchmarks with hull, avoidance, and touch constraints, and compare the metric trends to a user preference study. Even without dedicated compliance losses, Arbor improves constraint obedience while preserving object quality and variation under fixed constraints.",
+      "authors": [
+        "Jan-Niklas Dihlmann",
+        "Andreas Engelhardt",
+        "Simon Donne",
+        "Hendrik P. A. Lensch",
+        "Mark Boss"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-22T16:00:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.23514v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "controllable 3D asset generation with explicit geometric constraints",
+      "llm_evidence_cn": "显式几何约束的可控3D资产生成",
+      "llm_evidence": "显式几何约束的可控3D资产生成",
+      "canonical_evidence": "显式几何约束的可控3D资产生成",
+      "llm_tldr_en": "Arbor introduces constraint meshes to text-conditioned latent 3D generation, enabling direct spatial control over object placement.",
+      "llm_tldr_cn": "文本和图像条件3D模型缺乏对物体空间位置的直接控制。Arbor提出一种可训练的附件，通过约束网格作为原生3D控制接口，允许指定占据区域、回避区域和接触区域。实验证明该方法能有效将空间意图融入生成过程，大大提升了3D资产生成的可控性。",
+      "llm_tldr": "文本和图像条件3D模型缺乏对物体空间位置的直接控制。Arbor提出一种可训练的附件，通过约束网格作为原生3D控制接口，允许指定占据区域、回避区域和接触区域。实验证明该方法能有效将空间意图融入生成过程，大大提升了3D资产生成的可控性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-02-11-705395-v2",
+      "source": "biorxiv",
+      "title": "Efficient Learning of Predictive Maps for Flexible Planning",
+      "abstract": "Cognitive maps enable flexible behavior by providing reusable internal representations of task structure. The successor representation, a predictive map that encodes expected future state occupancy, has been proposed as one way such maps might be computed in the brain, but its policy dependence severely limits flexible planning. We introduce a new model, the successor representation with importance sampling (SR-IS), which combines temporal-difference learning with importance sampling to construct policy-independent predictive maps. SR-IS learns the structure of the environment without being constrained by the agent's current decision policy. These representations can be efficiently updated when the environment changes, enabling rapid behavioral adaptation. We show that SR-IS outperforms existing models in planning tasks and provides a better account of the graded biases in human replanning that previous models could not explain. This work bridges theories of predictive maps with observed planning behavior and offers new insights into flexible decision making in the brain.",
+      "authors": [
+        "Bazarjani, A.",
+        "Piray, P."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-22T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.02.11.705395v2.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "predictive map for planning, policy-independent successor representation",
+      "llm_evidence_cn": "用于规划的策略无关预测地图（后继表示）",
+      "llm_evidence": "用于规划的策略无关预测地图（后继表示）",
+      "canonical_evidence": "用于规划的策略无关预测地图（后继表示）",
+      "llm_tldr_en": "Introduces SR-IS, a policy-independent predictive map learning method using importance sampling, enabling flexible planning.",
+      "llm_tldr_cn": "该论文提出SR-IS模型，结合时序差分学习和重要性采样，构建策略无关的预测地图（后继表示），使智能体能够学习环境结构而不受当前策略限制。该表示可高效更新以适应环境变化，实现快速行为适应。实验证明其灵活规划能力。该工作为世界模型中的预测表示提供了新框架。",
+      "llm_tldr": "该论文提出SR-IS模型，结合时序差分学习和重要性采样，构建策略无关的预测地图（后继表示），使智能体能够学习环境结构而不受当前策略限制。该表示可高效更新以适应环境变化，实现快速行为适应。实验证明其灵活规划能力。该工作为世界模型中的预测表示提供了新框架。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.18375v2",
+      "source": "arxiv",
+      "title": "PAIWorld: A 3D-Consistent World Foundation Model for Robotic Manipulation",
+      "abstract": "World foundation models (WFMs) are powerful simulators, yet they predominantly operate in a single-view setting and lack the multi-view 3D consistency required for robotic manipulation. While robotic systems rely on multiple cameras (egocentric, eye-to-hand, and wrist-mounted) for policy learning, current multi-view world models simply concatenate view tokens without explicit geometric reasoning. This causes cross-view object drift, depth inconsistency, and texture misalignment. We trace these failures to two deficiencies: the absence of an explicit inter-view communication mechanism and the lack of a 3D geometric prior. We argue that resolving both simultaneously is necessary and sufficient. To address this, we present PAIWorld, a framework that augments diffusion-transformer world models via three core components: (1) Geometry-Aware Cross-View Attention blocks that establish an explicit pathway across views, (2) Geometric Rotary Position Embedding that encodes camera ray directions and extrinsic poses into the attention mechanism, and (3) Latent 3D-REPA, which distills 3D-aware features from frozen 3D foundation models to ensure 3D consistency. Built upon a DiT-based world foundation model, PAIWorld achieves state-of-the-art multi-view 3D consistency on robotic manipulation benchmarks, ranking 1st on the WorldArena leaderboard and 2nd on the AgiBot-Challenge2026 leaderboard, while enabling downstream applications such as model-based planning, world action models, and multi-view policy post-training.",
+      "authors": [
+        "Yuhang Huang",
+        "Xuan Lv",
+        "Junyan Xu",
+        "Zhiyuan Yu",
+        "Jiazhao Zhang",
+        "Ruizhen Hu",
+        "Wancheng Feng",
+        "Shilong Zou",
+        "Hewen Xiao",
+        "Ziqiao Zhou",
+        "Kaiyun Huang",
+        "Zhiyu Peng",
+        "Juzhan Xu",
+        "Hang Zhao",
+        "Chenyang Zhu",
+        "Renjiao Yi",
+        "Yifei Huang",
+        "Douhui Wu",
+        "Yan Zhang",
+        "Kexu Cheng",
+        "Chunhe Song",
+        "Yunzhi Xue",
+        "Xiuhong Zhang",
+        "Leitao Guo",
+        "Yunji Chen",
+        "Bin Wu",
+        "Haibin Yu",
+        "Kai Xu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-16T18:23:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.18375v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "3D-consistent world foundation model for robotic manipulation",
+      "llm_evidence_cn": "用于机器人操作的3D一致世界基础模型",
+      "llm_evidence": "用于机器人操作的3D一致世界基础模型",
+      "canonical_evidence": "用于机器人操作的3D一致世界基础模型",
+      "llm_tldr_en": "Presents PAIWorld, a 3D-consistent world foundation model for robotic manipulation that incorporates explicit inter-view communication and 3D geometric priors to resolve cross-view inconsistencies in multi-view world models.",
+      "llm_tldr_cn": "针对当前多视点世界模型缺乏3D几何一致性导致跨视点目标漂移的问题，提出PAIWorld框架。该框架引入显式的视间通信机制和3D几何先验，实现多视点世界模型的3D一致建模。在机器人操作任务上，PAIWorld显著提升了跨视点场景预测的准确性和物理一致性，为机器人操作提供了更可靠的模拟器。",
+      "llm_tldr": "针对当前多视点世界模型缺乏3D几何一致性导致跨视点目标漂移的问题，提出PAIWorld框架。该框架引入显式的视间通信机制和3D几何先验，实现多视点世界模型的3D一致建模。在机器人操作任务上，PAIWorld显著提升了跨视点场景预测的准确性和物理一致性，为机器人操作提供了更可靠的模拟器。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20131v2",
+      "source": "arxiv",
+      "title": "TriFlow: Generating Artist-Like 3D Mesh Topology via Nearest-Vertex Vector Fields",
+      "abstract": "We present TriFlow, a new generative approach for producing compact 3D meshes with artist-like triangle topology directly from input geometry conditions such as signed distance fields. Our key insight is to represent mesh topology as a nearest-vertex vector field (NVF) defined over the surface, where each point encodes its association to the nearest triangle vertex in the local barycentric frame. We train a latent flow-matching model to synthesize this field, enabling topology generation conditioned on the input geometry. To extract a coherent mesh, we cluster surface regions using the generated NVF and guide a constrained quadric error metric (QEM) mesh simplification with topology-aware optimization. This yields output meshes that closely match the input geometry while exhibiting structured, artist-like connectivity. Experiments demonstrate that TriFlow achieves stronger generalization and significantly improved topology quality compared to state-of-the-art learning-based approaches, alongside 90% lower Chamfer Distance and an 8x speedup.",
+      "authors": [
+        "Haoxuan Li",
+        "Ziya Erkoç",
+        "Daniele Sirigatti",
+        "Vladislav Rosov",
+        "Lei Li",
+        "Angela Dai",
+        "Matthias Nießner"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-18T11:55:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.20131v2",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generating 3D mesh topology with flow matching",
+      "llm_evidence_cn": "使用流匹配生成3D网格拓扑",
+      "llm_evidence": "使用流匹配生成3D网格拓扑",
+      "canonical_evidence": "使用流匹配生成3D网格拓扑",
+      "llm_tldr_en": "Presents TriFlow, which generates artist-like triangle mesh topology via nearest-vertex vector fields and latent flow-matching, conditioned on input geometry.",
+      "llm_tldr_cn": "针对自动生成紧凑艺术家风格网格拓扑的难题，本文提出TriFlow，将网格拓扑表示为最近顶点向量场，并用潜流匹配模型合成，结合聚类和拓扑感知简化提取网格。实验表明，TriFlow能从符号距离场等条件输入生成高质量拓扑网格，在拓扑质量和几何保真度上超越现有方法。",
+      "llm_tldr": "针对自动生成紧凑艺术家风格网格拓扑的难题，本文提出TriFlow，将网格拓扑表示为最近顶点向量场，并用潜流匹配模型合成，结合聚类和拓扑感知简化提取网格。实验表明，TriFlow能从符号距离场等条件输入生成高质量拓扑网格，在拓扑质量和几何保真度上超越现有方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20764v1",
+      "source": "arxiv",
+      "title": "One Image is All You Need: Agentic One-Shot Image Generation via Text-Based World Models for Long-Tail Spatial Perception",
+      "abstract": "Reliable spatial decision automation, such as autonomous driving and maritime surveillance, critically depends on robust visual perception. However, real-world spatiotemporal data exhibits severe heterogeneity, often manifesting as extreme long-tail distributions for safety-critical scenarios. This data scarcity induces dataset shift that degrades detection performance and pose safety risks. While synthetic data generation offers a potential solution, existing generative approaches, such as diffusion models and Generative Adversarial Networks (GANs), often lack explicit spatial grounding and structural constraints, resulting in spatial and physical inconsistencies in generated scenes. To address these challenges, we introduce WMGen-v1, an agentic text-based world model framework for long-tail spatial data generation. WMGen-v1 employs a Large Vision-Language Model (LVLM) to construct a structured scene representation from a single reference image, while a Large Language Model (LLM) performs guidance-based scene expansion under physical plausibility and commonsense constraints. Subsequently, conditioned on the structured semantic representations produced by this reasoning process, a diffusion model generates diverse and physically grounded long-tail training data. Experiments on internal industrial datasets, ROADWork, and LaRS benchmarks demonstrate that WMGen-v1 outperforms baseline approaches. Notably, detectors trained solely on WMGen-v1 synthetic data approach real-only performance on aggregate dataset-level metrics, highlighting its potential to alleviate long-tail data scarcity for downstream spatial perception.",
+      "authors": [
+        "Keqin Zeng",
+        "Shuting Su",
+        "Shihao Lin",
+        "Ziyue Li",
+        "Rui Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR",
+        "cs.LG"
+      ],
+      "published": "2026-06-18T11:56:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.20764v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "text-based world models for image generation",
+      "llm_evidence_cn": "基于文本的世界模型用于图像生成",
+      "llm_evidence": "基于文本的世界模型用于图像生成",
+      "canonical_evidence": "基于文本的世界模型用于图像生成",
+      "llm_tldr_en": "Proposes an agentic one-shot image generation framework using text-based world models to produce spatially grounded data for long-tail perception.",
+      "llm_tldr_cn": "针对真实世界数据长尾分布导致检测性能下降的问题，本文提出基于文本世界模型的代理式单样本图像生成框架，通过显式空间约束生成物理一致的场景图像。实验在自动驾驶和海事监控数据集上验证了生成数据对目标检测的显著提升，表明文本世界模型可有效弥补稀缺场景数据。",
+      "llm_tldr": "针对真实世界数据长尾分布导致检测性能下降的问题，本文提出基于文本世界模型的代理式单样本图像生成框架，通过显式空间约束生成物理一致的场景图像。实验在自动驾驶和海事监控数据集上验证了生成数据对目标检测的显著提升，表明文本世界模型可有效弥补稀缺场景数据。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "What is a world model in artificial intelligence?",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21173v1",
+      "source": "arxiv",
+      "title": "Inverting the Bellman Equation: From $Q$-Values to World Models",
+      "abstract": "Model-based and model-free reinforcement learning are traditionally viewed as separate paradigms: instead of learning a model of the transition kernel $P$, model-free agents typically estimate value functions tied to a specific policy and reward. In this paper, we challenge this dichotomy by proving that value-based agents trained on a sufficiently rich set of reward functions, e.g. using goal-conditioned RL, implicitly encode a unique and accurate world model. To extract this model in practice, we introduce \\textit{$P$-learning}, an inverse analogue to $Q$-learning that samples from an agent's $Q$-values, policies and rewards to decode its internal model of the environment. We then provide sufficient conditions on the type and number of goals for which agents encode the true kernel $P$, covering both stochastic and deterministic MDPs over finite or continuous state spaces. Even when our assumptions are violated, we empirically demonstrate that agents trained on a handful of reward functions encode accurate dynamics in $\\texttt{Reacher}$, $\\texttt{MountainCar}$ and stochastic variants of $\\texttt{FourRooms}$. Surprisingly, we find that policies trained exclusively on a \\texttt{Reacher} agent's implicit world model are quasi-optimal on out-of-distribution, velocity-based goals despite position-only training -- suggesting that agents contain hidden generalisation capabilities and providing a new lens into the connection between model-based, model-free, and goal-conditioned RL.",
+      "authors": [
+        "Alistair Letcher",
+        "Mattie Fellows",
+        "Alexander D. Goldie",
+        "Jonathan Richens",
+        "Jakob N. Foerster",
+        "Oliver Richardson"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-19T07:26:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.21173v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "decoding world models from Q-values",
+      "llm_evidence_cn": "从Q值解码世界模型",
+      "llm_evidence": "从Q值解码世界模型",
+      "canonical_evidence": "从Q值解码世界模型",
+      "llm_tldr_en": "Proves that value-based RL agents encode implicit world models and introduces P-learning to extract them from Q-values, bridging model-free and model-based RL.",
+      "llm_tldr_cn": "基于价值的方法和基于模型的方法传统上被视为独立范式。本文证明，在丰富奖励函数集上训练的价值函数隐式编码了世界模型。通过引入P-learning，可以从Q值、策略和奖励中解码环境模型。该工作统一了两种强化学习范式。",
+      "llm_tldr": "基于价值的方法和基于模型的方法传统上被视为独立范式。本文证明，在丰富奖励函数集上训练的价值函数隐式编码了世界模型。通过引入P-learning，可以从Q值、策略和奖励中解码环境模型。该工作统一了两种强化学习范式。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21315v1",
+      "source": "arxiv",
+      "title": "Social World Model for Lifelong Social Intelligence",
+      "abstract": "Social intelligence is a core competency for language agents, yet current research primarily focuses on static capability evaluation rather than how these skills are continuously shaped and accumulated. This gap calls for a shift toward sustainable learning paradigms. Currently, two methodological pain points exist: social interaction trajectories lack unified structured representations to form iterable learning signals, and capability improvement and retention are typically studied in isolation, hindering the assessment of continuous evolution.   To bridge this gap, we propose the Social World Model. We decompose social interaction into five dimensions (scene setting, observation, mental state, action, and dialogue) to build a closed-loop learning framework. In this setup, agents collect interaction experiences, convert them into preference signals for model updating, and redeploy the updated policy for continued learning. Additionally, we provide a reusable data synthesis mechanism and a lifelong learning benchmark, transforming social capabilities from an \"object of evaluation\" into an \"object of sustainable training\".   Validating our framework on the ASCENT-Bench, the interactively trained Qwen2.5-7B model outperforms its baseline across all five core metrics. Notably, it matches the closed-source Gemini 3 Flash in completion rate, exceeds it in pass rate, and achieves zero forgetting across three difficulty levels. Unlike prior works that merely report static comparisons or capability decay, this end-to-end approach provides a trainable, verifiable, and retainable pathway, demonstrating that small open-source models can sustainably acquire competitive social coordination capabilities.",
+      "authors": [
+        "Yu Luo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-19T10:55:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.21315v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "explicitly proposes Social World Model",
+      "llm_evidence_cn": "明确提出社交世界模型",
+      "llm_evidence": "明确提出社交世界模型",
+      "canonical_evidence": "明确提出社交世界模型",
+      "llm_tldr_en": "Proposes Social World Model that decomposes social interaction into five dimensions for lifelong social intelligence in language agents, enabling continuous learning from structured interaction trajectories.",
+      "llm_tldr_cn": "目前语言智能体社交智能研究聚焦静态评估，缺乏持续学习能力，且社交轨迹缺乏结构化表示。本文提出社交世界模型，将社交互动分解为场景、观察、心理状态、行动和对话五个维度，构建闭环学习框架。该框架能形成可迭代的学习信号，同时提升和保留社交能力。实验表明模型在多个社交任务上实现了终身学习，推动语言智能体社交智能的可持续发展。",
+      "llm_tldr": "目前语言智能体社交智能研究聚焦静态评估，缺乏持续学习能力，且社交轨迹缺乏结构化表示。本文提出社交世界模型，将社交互动分解为场景、观察、心理状态、行动和对话五个维度，构建闭环学习框架。该框架能形成可迭代的学习信号，同时提升和保留社交能力。实验表明模型在多个社交任务上实现了终身学习，推动语言智能体社交智能的可持续发展。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22131v1",
+      "source": "arxiv",
+      "title": "Feed-forward Motion In-betweening for Any 4D",
+      "abstract": "4D dynamics (3D geometry evolving over time) is a fundamental representation of the physical world and plays a crucial role in world modeling (e.g., animation and games). Owing to the scarcity of large-scale, long-horizon 4D mesh data with arbitrary shapes, early text-to-4D methods rely on distillation or test-time optimization from video diffusion priors, making inference prohibitively slow. Recent feed-forward generators greatly reduce inference cost but offer limited spatiotemporal controllability, and short-horizon generation often leads to error accumulation in long-horizon sequences. We propose a novel feed-forward in-betweening framework for arbitrary 4D meshes with keyframe conditioning. Building on universal mesh-animation latents, we introduce a frame-wise mesh VAE that encodes each frame into topology-agnostic latent tokens anchored by a reference mesh for keyframe conditioning. We further introduce a keyframe-conditioned rectified flow model with an MMDiT backbone that synthesizes non-keyframe frames conditioned on sparse keyframes. Experiments show strong performance and improved controllability on both DyMesh16 and DyMesh32 benchmarks.",
+      "authors": [
+        "Hiroki Nishizawa",
+        "Hubert P. H. Shum",
+        "Yoshihiro Fukuhara",
+        "Hirokatsu Kataoka",
+        "Shigeo Morishima"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-20T16:18:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.22131v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Directly addresses world modeling with 4D dynamics",
+      "llm_evidence_cn": "直接讨论世界建模中的4D动态",
+      "llm_evidence": "直接讨论世界建模中的4D动态",
+      "canonical_evidence": "直接讨论世界建模中的4D动态",
+      "llm_tldr_en": "Proposes a feed-forward in-betweening framework for 4D meshes with keyframe conditioning, enabling fast and controllable motion generation for world modeling.",
+      "llm_tldr_cn": "针对4D动态（3D几何随时间演化）这一物理世界的基础表示，现有前馈生成器推理快但缺乏时空可控性且长序列误差累积。本文提出一种前馈式补间框架，基于通用网格动画潜码和帧网格VAE，通过关键帧条件实现任意4D网格的快速运动插值。实验表明该方法在效率和可控性上优于以往方法，为世界建模提供了一种高效、可控的动态生成工具。",
+      "llm_tldr": "针对4D动态（3D几何随时间演化）这一物理世界的基础表示，现有前馈生成器推理快但缺乏时空可控性且长序列误差累积。本文提出一种前馈式补间框架，基于通用网格动画潜码和帧网格VAE，通过关键帧条件实现任意4D网格的快速运动插值。实验表明该方法在效率和可控性上优于以往方法，为世界建模提供了一种高效、可控的动态生成工具。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23312v1",
+      "source": "arxiv",
+      "title": "From Pixels to Concepts: Growing Rich 3D Semantic Scene Graph Forests utilizing Foundation Models",
+      "abstract": "Operating in complex real-world environments requires robots to understand their surroundings on a functional semantic level. This demands a detailed multi-layer world model capturing the complex relations of its surroundings. Hierarchical 3D scene graphs address this challenge by integrating geometric, semantic, and relational data within a unified spatial framework. However, current 3D scene graph approaches often restrict themselves to rigid structures of pre-determined relationship classes, mostly neglecting important semantic connections, like causal connections or environmental contexts. This paper explores the potential of foundation models to build forests of 3D scene graphs with open semantic relationships to improve scene understanding and robotic task execution. We propose a method where instance-specific concept-nodes and relationships are first identified by a VLM and extended upon by a LLM, inferring broader, more abstract concept-nodes and relationships through reasoning. These object-nodes, concept-nodes, and relationships are then assembled into a forest of hierarchical 3D scene graphs, enhanced with concept-nodes to represent abstract concepts. Evaluations were conducted on the uHumans2 and ScanNet indoor dataset, validating the accuracy and relevance of the generated relationships. Downstream suitability of scene-graph forests for robotics applications is demonstrated in an open-vocabulary object-retrieval task utilizing both ScanNet data and a real-world indoor deployment using a Boston Dynamics Spot. This paper leverages foundation models to create more expressive, semantically deep 3D hierarchical scene graphs and demonstrates their potential to advance semantic and environmental understanding in robotics.",
+      "authors": [
+        "David Oberacker",
+        "Meike Deitersen",
+        "Niklas Spielbauer",
+        "Tristan Schnell",
+        "Georg Heppner",
+        "Arne Roennau"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-22T13:26:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.23312v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "builds multi-layer world model for robot understanding",
+      "llm_evidence_cn": "为机器人理解构建多层世界模型",
+      "llm_evidence": "为机器人理解构建多层世界模型",
+      "canonical_evidence": "为机器人理解构建多层世界模型",
+      "llm_tldr_en": "Uses foundation models to build forests of 3D semantic scene graphs with open relationships, creating a rich world model for robots.",
+      "llm_tldr_cn": "该论文利用基础模型（如视觉-语言模型）构建3D语义场景图森林，以表示开放语义关系，为机器人提供丰富的多层世界模型。相比传统刚性场景图，该方法捕捉因果连接和环境上下文等语义关系。实验表明能够提升机器人对复杂环境的语义理解能力。",
+      "llm_tldr": "该论文利用基础模型（如视觉-语言模型）构建3D语义场景图森林，以表示开放语义关系，为机器人提供丰富的多层世界模型。相比传统刚性场景图，该方法捕捉因果连接和环境上下文等语义关系。实验表明能够提升机器人对复杂环境的语义理解能力。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23489v1",
+      "source": "arxiv",
+      "title": "MeshFlow: Mesh Generation with Equivariant Flow Matching",
+      "abstract": "Meshes are among the most common 3D scene representations, but directly generating meshes is challenging because the representation contains important symmetries, including permutation invariance of faces and vertices. MeshFlow learns to generate triangle meshes directly as triangle soups, avoiding the need to serialize meshes into long autoregressive sequences. We adopt equivariant optimal-transport flow matching models that respect the key symmetries of triangle soups: arbitrary permutations of faces and permutations of the vertices within each face.   Toward this goal, we propose a simple yet effective modification to the Diffusion Transformer architecture, resulting in a scalable network capable of modeling a velocity field while maintaining the desired equivariance. We further introduce an optimal-transport-based training objective that improves convergence by eliminating supervision signals that violate these symmetries. MeshFlow achieves mesh quality comparable to state-of-the-art autoregressive mesh generators while providing about an 18$\\times$ speedup during inference. Project page is at https://qiisun.github.io/MeshFlow/.",
+      "authors": [
+        "Qi Sun",
+        "Kiyohiro Nakayama",
+        "Jing Nathan Yan",
+        "Qixing Huang",
+        "Alexander Rush",
+        "Leonidas Guibas",
+        "Gordon Wetzstein",
+        "Jing Liao",
+        "Guandao Yang"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV"
+      ],
+      "published": "2026-06-22T15:35:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.23489v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "mesh generation with equivariant flow matching",
+      "llm_evidence_cn": "使用等变流匹配生成网格",
+      "llm_evidence": "使用等变流匹配生成网格",
+      "canonical_evidence": "使用等变流匹配生成网格",
+      "llm_tldr_en": "Proposes MeshFlow, a method that generates triangle meshes directly via equivariant optimal-transport flow matching, respecting symmetries of triangle soups.",
+      "llm_tldr_cn": "针对直接生成三角形网格面临的置换不变性挑战，本文提出MeshFlow，采用等变最优传输流匹配模型学习生成三角形网格，避免序列化。通过改进扩散变换器架构，在保持所需等变性的同时建模速度场，实验在多个数据集上生成了高质量网格，为3D形状生成提供了新的高效范式。",
+      "llm_tldr": "针对直接生成三角形网格面临的置换不变性挑战，本文提出MeshFlow，采用等变最优传输流匹配模型学习生成三角形网格，避免序列化。通过改进扩散变换器架构，在保持所需等变性的同时建模速度场，实验在多个数据集上生成了高质量网格，为3D形状生成提供了新的高效范式。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-18-733163-v1",
+      "source": "biorxiv",
+      "title": "CellOS: Learning a World Model of Cellular State through Joint Embedding Prediction",
+      "abstract": "Foundation models learned from single-cell transcriptomes are central to the prospect of AI virtual cell that can represent, query and predict cellular state. However, most current single-cell foundation models learn from a single view of gene expression and are optimized primarily through reconstruction or next-token prediction. As a result, they capture expression abundance but can-not explicitly reconcile complementary views of cellular state. Here we present CellOS, a multi-view foundation model that learns cellular representations from paired expression and perception views. CellOS integrates complementary views through a scalable three-stage training strategy that combines causal cell-sentence language modelling, function-preserving dense-to-mixture-of-experts expansion and latent-space alignment via an LLM-JEPA objective. Using this framework, we trained a 12-billion-parameter model on 390.5 million single-cell transcriptomes. Across diverse benchmarks spanning cell-state annotation, batch integration and perturbation-response prediction, CellOS consistently outperformed state-of-the-art single-cell foundation models in cell-state annotation and perturbation-response prediction while preserving robust batch integration. Together, these results suggest that predictive alignment between complementary cellular views provides a scalable path toward representation-centric cellular world models and transferable AI virtual cells.",
+      "authors": [
+        "Zhou, Q.",
+        "Le, Y.",
+        "Qi, X.",
+        "Chang, S.",
+        "Lu, H.",
+        "Wu, Y.",
+        "Wang, H.",
+        "Ran, R.",
+        "li, x."
+      ],
+      "primary_category": "bioinformatics",
+      "categories": [
+        "bioinformatics"
+      ],
+      "published": "2026-06-23T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.18.733163v1.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model concept applied to cellular state",
+      "llm_evidence_cn": "世界模型概念应用于细胞状态",
+      "llm_evidence": "世界模型概念应用于细胞状态",
+      "canonical_evidence": "世界模型概念应用于细胞状态",
+      "llm_tldr_en": "CellOS learns a world model of cellular state via multi-view joint embedding, enabling prediction and query of cellular states beyond single-expression views.",
+      "llm_tldr_cn": "现有单细胞模型只从单一基因表达视图学习，无法整合互补的细胞状态信息。CellOS通过联合嵌入预测，从配对表达和感知视图学习多视图表示。该方法采用三阶段训练策略，结合因果细胞句子语言建模和功能保持，构建了细胞状态的世界模型。这项工作为AI虚拟细胞提供了新范式。",
+      "llm_tldr": "现有单细胞模型只从单一基因表达视图学习，无法整合互补的细胞状态信息。CellOS通过联合嵌入预测，从配对表达和感知视图学习多视图表示。该方法采用三阶段训练策略，结合因果细胞句子语言建模和功能保持，构建了细胞状态的世界模型。这项工作为AI虚拟细胞提供了新范式。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.20842v1",
+      "source": "arxiv",
+      "title": "From Uncertainty to Stability and Fidelity: Guiding Sparse-View 3D Gaussian Splatting with Fisher Information",
+      "abstract": "3D Gaussian Splatting (3DGS) has emerged as a promising technique for novel view synthesis. However, 3DGS requires dense input views to achieve high-quality rendering. In sparse-view scenarios, 3DGS often prones to overfitting, resulting in noticeable artifacts and degraded rendering quality. Previous methods explore to address this issue by introducing additional priors (e.g. depth priors) or integrating regularization techniques (e.g. Dropout). However, these methods are often applied without principled guidance. In particular, prior-based augmentation typically samples novel viewpoints randomly, while Dropout-based regularization randomly removes Gaussians. The compounded randomness introduces uncertainty and instability, limiting the fidelity of novel view synthesis. In this paper, we propose a novel method for sparse-view 3DGS that incorporates Fisher Information to quantitatively guide the utilization of geometric priors and regularization. Specifically, our method comprises two key components: (1) Stereo augmentation with Fisher Information. By leveraging Fisher Information, we actively select most informative supporting views and use depth priors to curate reliable pseudo ground truths, which reduces randomness in augmentation and improves stability and rendering fidelity; (2) Uncertainty-aware regularization. We reduce the instability of Dropout-based regularization by using Fisher Information to quantitatively measure the uncertainty of each 3D Gaussian, and adaptively adjust the removal probability, leading to more stable and effective regularization. With these two components, our method effectively mitigates overfitting and improves the stability of optimization in sparse-view 3DGS, resulting in superior rendering fidelity. Extensive experiments show that our method achieves state-of-the-art performance in sparse-view novel view synthesis benchmarks.",
+      "authors": [
+        "Junbao Zhou",
+        "Qingshan Xu",
+        "Yuan Zhou",
+        "Xiaolong Shen",
+        "Beier Zhu",
+        "Kesen Zhao",
+        "Yiming Zeng",
+        "Chen Bai",
+        "Cheng Lu",
+        "Hanwang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T18:27:17+00:00",
+      "link": "https://arxiv.org/pdf/2606.20842v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "sparse-view 3D Gaussian splatting with Fisher information guidance",
+      "llm_evidence_cn": "利用Fisher信息引导稀疏视图3D高斯泼溅",
+      "llm_evidence": "利用Fisher信息引导稀疏视图3D高斯泼溅",
+      "canonical_evidence": "利用Fisher信息引导稀疏视图3D高斯泼溅",
+      "llm_tldr_en": "Guides sparse-view 3DGS with Fisher information to reduce overfitting and improve rendering fidelity.",
+      "llm_tldr_cn": "该论文针对稀疏视图下3D高斯泼溅过拟合的问题，提出利用Fisher信息引导正则化，在训练过程中优先更新不确定性高的高斯参数，从而提升渲染质量。实验表明在稀疏输入下显著减少了伪影，提高了新视图合成的保真度。该方法为3D生成中的稀疏输入问题提供了原则性解决方案。",
+      "llm_tldr": "该论文针对稀疏视图下3D高斯泼溅过拟合的问题，提出利用Fisher信息引导正则化，在训练过程中优先更新不确定性高的高斯参数，从而提升渲染质量。实验表明在稀疏输入下显著减少了伪影，提高了新视图合成的保真度。该方法为3D生成中的稀疏输入问题提供了原则性解决方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.18231v1",
+      "source": "arxiv",
+      "title": "Adaptive Volumetric Mechanical Property Fields Invariant to Resolution",
+      "abstract": "Accurate mechanical properties (or materials) Young's modulus ($E$), Poisson's ratio ($ν$) and density ($ρ$) are essential for reliable physics simulation of digital worlds, but most 3D assets lack this information. We propose AdaVoMP, a method for predicting accurate dense spatially-varying ($E$, $ν$, $ρ$) for input 3D objects across representations, improving the resolution, accuracy, and memory efficiency over the state-of-the-art. The foundation of our technique is a sparse and adaptive voxel structure SAV that efficiently represents both the input 3D shape and the material field output. We replace the fixed-voxel model of the most accurate prior method, VoMP, with a novel sparse transformer encoder-decoder model that learns to generate a unique SAV autoregressively for every input shape to represent its materials, achieving a resolution $16^3\\times$ higher than prior art. Experiments show that AdaVoMP estimates more accurate volumetric properties, even with lesser test-time compute than all prior art. This allows us to convert high-resolution complex 3D objects into simulation-ready assets, resulting in realistic deformable simulations.",
+      "authors": [
+        "Rishit Dagli",
+        "Donglai Xiang",
+        "Vismay Modi",
+        "Xuning Yang",
+        "Gavriel State",
+        "David I. W. Levin",
+        "Maria Shugrina"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-06-16T17:56:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.18231v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics simulation for digital worlds",
+      "llm_evidence_cn": "数字世界的物理仿真材料属性",
+      "llm_evidence": "数字世界的物理仿真材料属性",
+      "canonical_evidence": "数字世界的物理仿真材料属性",
+      "llm_tldr_en": "AdaVoMP predicts spatially-varying mechanical properties for 3D objects using sparse adaptive voxel structures, improving resolution and accuracy for simulation in digital worlds.",
+      "llm_tldr_cn": "物理仿真需要准确的力学属性，但大多数3D资产缺乏这些信息。AdaVoMP提出稀疏自适应体素结构SAV，结合Transformer编码器-解码器模型，预测3D对象的空间变化弹性模量、泊松比和密度。该方法在分辨率、准确性和内存效率上超越先前方法，为数字世界仿真提供支持。",
+      "llm_tldr": "物理仿真需要准确的力学属性，但大多数3D资产缺乏这些信息。AdaVoMP提出稀疏自适应体素结构SAV，结合Transformer编码器-解码器模型，预测3D对象的空间变化弹性模量、泊松比和密度。该方法在分辨率、准确性和内存效率上超越先前方法，为数字世界仿真提供支持。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.22445v1",
+      "source": "arxiv",
+      "title": "DreamUV: Unwrap Artist-like UV by End-to-End Flow Matching",
+      "abstract": "UV parameterization is a fundamental step in 3D content creation, yet producing production-ready UV layouts remains challenging due to the gap between geometric distortion objectives and the stylistic preferences of professional artists. While classical methods optimize handcrafted energy functions, artist-authored UVs exhibit structural patterns such as straightened seams, axis-aligned islands, and flexible interior deformation, properties that are difficult to explicitly formulate. In this work, we present DreamUV, an end-to-end learning framework that formulates UV unwrapping as a generative Flow Matching problem. Rather than predicting a single optimal parameterization, DreamUV learns a mesh-conditioned transport process that maps noise samples to a distribution of artist-like UV layouts. To reflect real-world authoring practices, we introduce a boundary-aware training strategy that prioritizes seam geometry, and a Model-in-the-Loop Finetuning(MITL) scheme that explicitly accounts for discretization errors during sampling and stabilizes transport dynamics under heterogeneous supervision. We evaluate DreamUV on a large-scale dataset of professionally authored UV layouts. Experiments demonstrate that our method produces significantly straighter boundaries and tighter axis-aligned islands than both classical and learning-based baselines, while maintaining competitive distortion metrics. Qualitative results and a user study with professional artists further confirm that DreamUV generates UV layouts that are not only valid, but aligned with practical production requirements.",
+      "authors": [
+        "Quanyuan Ruan",
+        "Jiabao Lei",
+        "Xingyi Du",
+        "Xifeng Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-21T11:41:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.22445v1",
+      "tags": [
+        "keyword:d-gen",
+        "keyword:world-model",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generative flow matching for UV unwrapping in 3D content creation",
+      "llm_evidence_cn": "使用生成式流匹配进行3D内容创作中的UV展开",
+      "llm_evidence": "使用生成式流匹配进行3D内容创作中的UV展开",
+      "canonical_evidence": "使用生成式流匹配进行3D内容创作中的UV展开",
+      "llm_tldr_en": "DreamUV formulates UV unwrapping as a generative flow matching problem, learning a distribution of artist-like UV layouts conditioned on mesh geometry.",
+      "llm_tldr_cn": "本文提出DreamUV，将UV展开建模为生成式流匹配问题。该方法学习一个以网格几何为条件的传输过程，从噪声分布映射到艺术家风格的UV布局分布，能够生成具有直线接缝、轴对齐岛和灵活内部变形等专业特征的UV。实验表明，DreamUV在产生生产级UV方面优于传统优化方法和先前学习方法。",
+      "llm_tldr": "本文提出DreamUV，将UV展开建模为生成式流匹配问题。该方法学习一个以网格几何为条件的传输过程，从噪声分布映射到艺术家风格的UV布局分布，能够生成具有直线接缝、轴对齐岛和灵活内部变形等专业特征的UV。实验表明，DreamUV在产生生产级UV方面优于传统优化方法和先前学习方法。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.21378v1",
+      "source": "arxiv",
+      "title": "Enhancing Creativity in 3D Generative Design via a TRIZ-Inspired Text-to-CAD Framework",
+      "abstract": "Recent advances in large language models (LLMs) have demonstrated significant potential in supporting engineering design tasks, including computer-aided design (CAD) automation. However, most existing LLM-based 3D CAD generation approaches primarily focus on geometric precision and instruction-following performance, often overlooking the fundamental aspect of creative design exploration. This study presents a TRIZ-inspired text-to-CAD framework that leverages LLMs to generate high-quality, editable CAD models while systematically exploring creative design alternatives. The framework integrates the Theory of Inventive Problem Solving (TRIZ)-embedding deep human insights from extensive patent records-into LLM prompting strategies, enabling autonomous generation of innovative CAD variants that address technical contradictions. Through a comprehensive three-stage pipeline of design generation, enhancement, and optimization, the framework produces structurally diverse CAD models from well-crafted prompts. The present study implements and evaluates the first two stages, while positioning the design optimization stage as future work. A product design case study (chair) demonstrates that the TRIZ-inspired text-to-CAD framework generates multiple creative design alternatives by systematically applying TRIZ inventive principles such as segmentation, anti-weight, dynamics, and composite materials, achieving 4.0-14.7% mass reduction across all enhanced designs while maintaining structural integrity. The key findings suggest that integrating systematic innovation methodologies with LLM-based 3D CAD generation bridges the gap between precision-focused synthesis and creativity-focused exploration, advancing toward autonomous design systems where AI makes design decisions independently, supporting human decision-making in human-AI collaborative design for engineering applications.",
+      "authors": [
+        "Dongeon Lee",
+        "Leekyo Jeong",
+        "Soyoung Yoo",
+        "Sunwoong Yang",
+        "Namwoo Kang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-19T12:35:10+00:00",
+      "link": "https://arxiv.org/pdf/2606.21378v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "generative 3D design via text-to-CAD",
+      "llm_evidence_cn": "通过文本到CAD的生成式3D设计",
+      "llm_evidence": "通过文本到CAD的生成式3D设计",
+      "canonical_evidence": "通过文本到CAD的生成式3D设计",
+      "llm_tldr_en": "Presents a TRIZ-inspired text-to-CAD framework that leverages LLMs to generate creative 3D CAD models while exploring design alternatives.",
+      "llm_tldr_cn": "针对现有LLM驱动3D CAD生成缺乏创造性的问题，本文提出TRIZ启发的文本到CAD框架，将发明问题解决理论嵌入提示策略，在保证几何精度的同时系统探索创意设计空间。实验表明该框架能生成高质量、可编辑的创新CAD模型，推动了生成式3D设计的实用性。",
+      "llm_tldr": "针对现有LLM驱动3D CAD生成缺乏创造性的问题，本文提出TRIZ启发的文本到CAD框架，将发明问题解决理论嵌入提示策略，在保证几何精度的同时系统探索创意设计空间。实验表明该框架能生成高质量、可编辑的创新CAD模型，推动了生成式3D设计的实用性。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.21898v1",
+      "source": "arxiv",
+      "title": "Mesh2GS: White-Box 3DGS Construction via Plenoptic Sampling",
+      "abstract": "3D Gaussian Splatting (3DGS) has emerged as a promising method for high-quality, real-time 3D reconstruction. To associate 3DGS with mesh representations, existing methods primarily focus on 3DGS-to-mesh reconstruction from multi-view images. In contrast, the problem of converting a mesh into 3DGS has received comparatively less attention. Instead of relying on heuristic strategies that bind 3D Gaussians to the mesh, we propose a novel white-box 3DGS construction framework, termed Mesh2GS, which generates 3DGS directly from mesh geometry based on plenoptic sampling theory, achieving Nyquist-level performance for high-quality global illumination rendering. Firstly, we propose a plenoptic sampling guided 3DGS construction strategy that theoretically derives the minimum sampling rate of the sampled views and the distribution of 3D Gaussians. Second, we propose a novel 3DGS update procedure with albedo--shading decomposition for efficient global-illumination capture. Finally, we introduce a neural illumination enhancement module to handle non-Lambertian effects. Experimental results demonstrate that our method surpasses state-of-the-art baselines and is practically effective for both real-time shared rendering and non-Lambertian effects capturing specular highlights. The project code will be released upon acceptance.",
+      "authors": [
+        "Haoran Zhu",
+        "Youcheng Cai",
+        "Huangsheng Du",
+        "Jingyang Meng",
+        "Ligang Liu"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV"
+      ],
+      "published": "2026-06-20T06:30:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.21898v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "white-box 3DGS construction from mesh",
+      "llm_evidence_cn": "从网格构建白盒3DGS",
+      "llm_evidence": "从网格构建白盒3DGS",
+      "canonical_evidence": "从网格构建白盒3DGS",
+      "llm_tldr_en": "Mesh2GS proposes a white-box 3DGS construction from mesh geometry based on plenoptic sampling theory, achieving Nyquist-level rendering.",
+      "llm_tldr_cn": "本文提出Mesh2GS，一种基于全光采样理论的从网格几何构建3D高斯溅射（3DGS）的白盒框架。该方法理论上推导了最小高斯密度，实现了Nyquist级别的全局光照渲染。相比启发式策略，Mesh2GS能够生成更高质量的3DGS表示，在渲染保真度和效率上具有优势。",
+      "llm_tldr": "本文提出Mesh2GS，一种基于全光采样理论的从网格几何构建3D高斯溅射（3DGS）的白盒框架。该方法理论上推导了最小高斯密度，实现了Nyquist级别的全局光照渲染。相比启发式策略，Mesh2GS能够生成更高质量的3DGS表示，在渲染保真度和效率上具有优势。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.22091v1",
+      "source": "arxiv",
+      "title": "ACEsplat: Accelerated 3D Gaussian Scene Regression via RGB and Poses Only",
+      "abstract": "Per-scene 3D Gaussian Splatting (3DGS) enables high-fidelity rendering, but practical robotic and AR scene capture pipelines often depend on external geometric initialization (e.g., SfM point clouds or depth estimates), which can be slow and brittle in on-site deployment. We present ACEsplat, a fast per-scene optimization framework that reconstructs 3D Gaussian representations from RGB images and camera poses only, without requiring external 3D priors (e.g., precomputed SfM models or supervised depth maps). ACEsplat uses a two-stage pipeline: (1) a self-supervised scene coordinate regression (SCR) module builds an internal geometry prior within 4--5 minutes; (2) SCR features and coordinate priors are fused by a lightweight Gaussian initialization head, followed by per-scene 3DGS optimization. On static-view rendering, ACEsplat achieves 29.11 dB PSNR on Wayspots with real-time SLAM poses and 33.20 dB on Cambridge Landmarks with SfM-refined poses. On RealEstate10K sparse-view novel view synthesis, it achieves competitive image fidelity under a challenging 2-view setting. ACEsplat completes scene-specific SCR mapping and 3DGS reconstruction within 15--25 minutes on a single GPU, making it a practical RGB+pose-only solution for rapid scene setup in robotics and mixed-reality applications.",
+      "authors": [
+        "Mingkai Liu",
+        "Haohua Que",
+        "Dikai Fan",
+        "Haojia Gao",
+        "Tianle Zhu",
+        "Handong Yao",
+        "Qian Zhang",
+        "Ruopeng Zhang",
+        "Xianliang Huang",
+        "Fei Qiao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-20T15:16:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.22091v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "accelerated 3D Gaussian scene regression from RGB and poses only",
+      "llm_evidence_cn": "仅通过RGB和位姿加速的3D高斯场景回归",
+      "llm_evidence": "仅通过RGB和位姿加速的3D高斯场景回归",
+      "canonical_evidence": "仅通过RGB和位姿加速的3D高斯场景回归",
+      "llm_tldr_en": "Introduces ACEsplat, a fast 3D Gaussian scene regression framework that reconstructs 3DGS from only RGB images and poses using self-supervised scene coordinate regression, eliminating need for external 3D priors.",
+      "llm_tldr_cn": "现有3D高斯泼溅方法依赖SfM等外部几何初始化，缓慢且脆弱。ACEsplat提出两阶段流水线：自监督场景坐标回归模块快速构建内部几何先验，再融合先验特征进行轻量级高斯初始化。仅需RGB图像和相机位姿即可重建3D高斯表示。在多个数据集上，ACEsplat在保持渲染质量的同时，将初始化时间从数十分钟缩短至5分钟以内，便于实际机器人及AR场景应用。",
+      "llm_tldr": "现有3D高斯泼溅方法依赖SfM等外部几何初始化，缓慢且脆弱。ACEsplat提出两阶段流水线：自监督场景坐标回归模块快速构建内部几何先验，再融合先验特征进行轻量级高斯初始化。仅需RGB图像和相机位姿即可重建3D高斯表示。在多个数据集上，ACEsplat在保持渲染质量的同时，将初始化时间从数十分钟缩短至5分钟以内，便于实际机器人及AR场景应用。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}

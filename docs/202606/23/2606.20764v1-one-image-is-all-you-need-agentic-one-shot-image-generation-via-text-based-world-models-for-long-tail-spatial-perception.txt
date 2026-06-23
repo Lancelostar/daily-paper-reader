@@ -1,0 +1,262 @@
+Title: One Image is All You Need: Agentic One-Shot Image Generation via Text-Based World Models for Long-Tail Spatial Perception
+
+URL Source: https://arxiv.org/pdf/2606.20764v1
+
+Published Time: Tue, 23 Jun 2026 00:11:09 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# One Image is All You Need: Agentic One-Shot Image Generation via Text-Based World Models for Long-Tail Spatial Perception 
+
+Keqin Zeng, Shuting Su, Shihao Lin, Rui Zhao, Ziyue Li ∗
+
+Abstract — Reliable spatial decision automation, such as au-tonomous driving and maritime surveillance, critically depends on robust visual perception. However, real-world spatiotem-poral data exhibits severe heterogeneity, often manifesting as extreme long-tail distributions for safety-critical scenarios. This data scarcity induces dataset shift that degrades detection performance and pose safety risks. While synthetic data gener-ation offers a potential solution, existing generative approaches, such as diffusion models and Generative Adversarial Networks (GANs), often lack explicit spatial grounding and structural constraints, resulting in spatial and physical inconsistencies in generated scenes. To address these challenges, we introduce WMGen-v1, an agentic text-based world model framework for long-tail spatial data generation. WMGen-v1 employs a Large Vision-Language Model (LVLM) to construct a structured scene representation from a single reference image, while a Large Language Model (LLM) performs guidance-based scene expan-sion under physical plausibility and commonsense constraints. Subsequently, conditioned on the structured semantic represen-tations produced by this reasoning process, a diffusion model generates diverse and physically grounded long-tail training data. Experiments on internal industrial datasets, ROADWork, and LaRS benchmarks demonstrate that WMGen-v1 outper-forms baseline approaches. Notably, detectors trained solely on WMGen-v1 synthetic data approach real-only performance on aggregate dataset-level metrics, highlighting its potential to alleviate long-tail data scarcity for downstream spatial perception. 
+
+I. INTRODUCTION Modern automation systems are increasingly deployed in complex and open-world environments. In spatial automation domains, such as autonomous driving and unmanned surface vehicles, the reliability of downstream decision-making is strongly influenced by the robustness of upstream visual per-ception. However, visual data collected in these environments is typically highly heterogeneous, naturally resulting in a long-tail distribution in which safety-relevant rare scenarios and object categories are severely underrepresented. This imbalance weakens the perception capability of automation systems on rare but critical cases, increasing the risk of missed detections in rare but safety-critical cases. Collecting real-world data for such rare scenarios is costly, time-consuming, and often impractical. Synthetic data gener-ation therefore provides a promising alternative for improv-ing long-tail perception. Nevertheless, existing generation methods still face important limitations. Single-image GANs 
+
+Keqin Zeng is with Tsinghua University. Shuting Su is with SenseTime Research. Shihao Lin is with Sun Yat-Sen University. Rui Zhao is with SenseTime Research. E-mail: zhaorui@sensetime.com. Ziyue Li is with Technical University of Munich, Heilbronn Data Science Center, and Munich Data Institute. E-mail: ziyue.li@tum.de. 
+
+> ∗
+
+Corresponding author: Ziyue Li. Standard    
+
+> Diffusion
+> Existing Methods
+> LVLM LLM
+> LLM
+> Spatial Reasoning
+> VLM Scene
+> Understanding
+> Physically Plausible Spatially Consistent
+> Ours: World-Model-Guided Framework
+> Single Refer ence lmage Rar e long-tail objects
+> One-Shot Generation
+> Spatial Inconsistencies
+> Physical Hallucinations Refer ence lmage
+> One-Shot GAN
+
+Fig. 1. Conceptual comparison of long-tail data generation. Unlike conventional generative methods (top) that suffer from spatial and physical inconsistencies when synthesizing complex scenes, WMGen-v1 (bottom) better preserves spatial coherence and physical plausibility in our evaluated settings, yielding high-fidelity data for long-tail perception tasks. 
+
+approaches, such as One-Shot GAN [1], often struggle to preserve semantic fidelity and structural consistency under complex scene variations. Meanwhile, diffusion-based gener-ation pipelines without explicit spatial grounding are prone to semantic drift, layout inconsistencies, and physically implau-sible details, which limits their usefulness for downstream perception tasks. To address these challenges, we propose WMGen-v1, an agentic data generation framework that serves as a text-based world model for long-tail visual perception. WMGen-v1 leverages the complementary strengths of LVLMs, LLMs, and diffusion models. Given a single reference image, an LVLM first extracts geometric, semantic, and spatial con-straints from the observed scene. An LLM then performs structured scene reasoning to enrich the scene with plausible long-tail variations under physical and contextual priors. Finally, a diffusion model synthesizes reference-conditioned images from the resulting semantic descriptions, producing physically grounded and spatially coherent long-tail samples for downstream detector training. In this way, WMGen-v1 offers a practical generation pipeline that requires only one user instruction and one reference image, while improving the controllability and realism of synthetic data for safety-critical spatial scenarios. The main contributions of this paper are:  
+
+> •
+
+We propose WMGen-v1, an agentic text-based world-model framework for mitigating long-tail data scarcity in spatial perception. The framework unifies structured scene modeling, world-model expansion, and reference-conditioned image synthesis.  
+
+> •
+
+We introduce a multimodal scene modeling pipeline that constructs structured scene constraints from a single reference image and performs guidance-based world-
+
+> arXiv:2606.20764v1 [cs.CV] 18 Jun 2026
+
+model expansion under physical plausibility and com-monsense constraints, while preserving key structural anchors during generation.  
+
+> •
+
+Evaluations on ROADWork [2], LaRS [3], and internal datasets demonstrate that WMGen-v1 improves down-stream detection performance over baseline synthetic data generation methods. Notably, detectors trained solely on synthetic data generated by WMGen-v1 re-main competitive with real-data training. II. RELATED WORKS 
+
+A. Long-tail Object Detection 
+
+Robust object detection is the cornerstone of spatial au-tomation, yet automation systems frequently face unforeseen operational disruptions and highly variable environments. Existing long-tail detection methods can be grouped into data-level augmentation, which increases sample diversity by transforming or synthesizing training samples [4], [5]; loss reweighting, which adjusts the contribution of imbal-anced classes during optimization [6], [7]; and decoupled representation learning, which mitigates classifier bias by separating representation learning from classifier rebalancing [8], [9]. However, these methods remain constrained by available training data and cannot generate samples for previ-ously unseen scene configurations. In practical deployments, multi-agent or decentralized control architectures improve adaptability, but agents typically operate within predefined capability ranges set at initialization. When encountering rare, out-of-distribution spatiotemporal contexts, narrowly trained perception models fail to identify critical obstacles, forcing the system to act on flawed environmental models and leading to potential decision failures. Addressing the long-tail perception deficit through synthetic generation is therefore critical to expanding the safe operational bound-aries of automated systems. 
+
+B. Synthetic Data Generation 
+
+Synthetic data generation mitigates the scarcity of rare events. Traditional GAN-based approaches, exemplified by One-Shot GAN [1], learn distributions from limited sam-ples but often suffer from training instability, pixel-level overfitting, and limited capacity to generalize complex spa-tiotemporal relationships. Recent diffusion models, such as SDXL [10] and Wuerstchen [11], deliver superior image synthesis quality and diversity. Despite these advances, text-to-image generation lacks grounded physical constraints, leading to spatial inconsistencies and physical implausibility in complex multi-object scenes. These hallucinations, such as floating or overlapping objects, undermine downstream reliability. To address this, controllable diffusion models have incorporated geometric constraints and structural guidance for data augmentation in downstream perception tasks [12], [13]. For instance, GeoDiffusion encodes geometric con-ditions (e.g., 3D layout) into text prompts for generalized layout-to-image generation [12], while ControlAug employs visual priors and category-calibrated filtering to augment object detection data [13]. Although these methods enhance generator-side controllability, they heavily rely on explicit, predefined control inputs and typically require additional training or adaptation of the diffusion components. 
+
+C. LLM/VLM Scene Reasoning 
+
+The emergence of LLMs and LVLMs has revolutionized cognitive reasoning and task automation. Modern VLMs improve multimodal perception [14], [15], while spatially oriented VLM studies examine whether such models can encode geometric or viewpoint information [16]. In paral-lel, LLM-based planning methods translate natural-language instructions into structured plans or layout guidance for downstream generation [17], [18]. However, existing meth-ods typically use these models solely for prompt generation or multimodal planning, without explicitly modeling scene structure for synthetic dataset generation. To address this lim-itation, our approach leverages LVLMs to convert complex visual structures into precise textual descriptions, enabling explicit spatiotemporal reasoning while strengthening visual grounding to reduce hallucinations. By fusing representations within a shared discrete semantic space, these foundation models can guide generative processes to produce long-tail data that remains logically rigorous, contextually accurate, and bound by physical priors. III. ALGORITHM FRAMEWORK We present WMGen-v1, an agentic text-based World 
+
+Model framework for long-tail spatial data Gen eration. As shown in Figure 2, the system decomposes the long-tail generation task into three phases: Structured Scene Modeling, Agentic World-Model Expansion, and Reference-Conditioned Image Synthesis. The supplementary material includes a case study that follows a reference image through the complete generation pipeline, covering Iref , Jspatial ,
+
+Jexpand , Pgen , and the resulting synthesized image Isyn .
+
+A. Problem Formulation 
+
+In real-world spatial automation systems, let the target physical environment be represented by a dataset D. Due to natural long-tail distributions, D can be partitioned into head classes Chead and rare tail classes Ctail .Given a limited reference set Iref ⊂ RH×W ×3, where each image Iref ∈ I ref contains long-tail objects c ∈ C tail ,our objective is to synthesize a structurally consistent and physically grounded augmented dataset Dsyn to mitigate dataset shift. We frame this as a stochastic conditional mapping Φ. Given a guidance condition e ∈ E from a predefined guidance space, the generation of a novel long-tail image Isyn is formulated as: 
+
+Isyn ∼ Φ( · | Iref , e ). (1) 
+
+B. Structured Scene Modeling 
+
+To reduce spatial inconsistency and physical implausibility in the generated images, we first employ an LVLM to construct a structured scene model from the reference image. LVLM Module   
+
+> Structured Scene Modeling Agentic World-Model Expansion Reference-Conditioned Image Generation
+> Input Data
+
+Reference Image 
+
+"Detect Marine Animals" 
+
+Initial Prompt 
+
+> {"camera": Boat-mounted.. "scene": The boat.. "target":Three seagulls...}
+> {"camera": Boat-mounted.. "scene": The boat.. "target":Three seagulls...}
+> {"camera": Boat-mounted.. "scene": The boat.. "target":Three seagulls...}
+> +
+> ...
+
+Scene representation 
+
+LLM Module 
+
+Expansion Guidance 
+
+Expanded Scene representation Fig. 2. Overview of the proposed WMGen-v1 framework. The pipeline consists of three stages: (1) Structured Scene Modeling, where an LVLM constructs a structured scene representation from a single reference image; (2) Agentic World-Model Expansion, where an LLM performs guidance-based scene expansion under physical plausibility and commonsense constraints; and (3) Reference-Conditioned Image Generation, where a diffusion model synthesizes structurally consistent long-tail samples conditioned on both the reference image and the expanded prompts. 
+
+Let Pinit denote the initial prompt that instructs the LVLM to analyze scene composition, target semantics, camera prop-erties, and spatial structure. Given Iref and Pinit , the LVLM produces a structured scene representation under a predefined schema, denoted as Jspatial :
+
+Jspatial = FLV LM (Iref , P init ). (2) We represent Jspatial as: 
+
+Jspatial = {Sdes , W, V, A core , A expand , T }, (3) where Sdes denotes grounded scene descriptions, W is the global scene abstraction, V represents camera and viewpoint constraints, Acore and Aexpand denote the core and expand-able scene regions, respectively, and T = {ti}Mi=1 is a set of target-centric descriptors. Each ti = {ni, l i, d i, m i, u i}
+
+encapsulates fine-grained target information, including its name, task label, semantic description, grounding index, and visual attributes. 
+
+C. Agentic World-Model Expansion 
+
+To expand the generated data toward diverse out-of-distribution scenarios, we utilize an LLM to perform agentic expansion over the structured scene model. We define an expansion guidance space E, which specifies a set of semantic dimensions for scene expansion, such as weather, illumination, scene context, and object-level attributes. During the expansion phase, the LLM expands the scene under guidance e ∈ E . Conditioned on the structured scene anchor Jspatial and the guidance condition e, the LLM outputs a schema-constrained expanded scene representation, denoted as Jexpand :
+
+Jexpand = FLLM (Jspatial , e ). (4) We represent the expanded scene state as a set of scene descriptors: 
+
+Jexpand = {xi}Ni=1 , xi = {si, t exp i , v i}, (5) where si denotes the expanded scene description, texp i speci-fies the target object description under the new environment, and vi provides the corresponding camera-consistent render-ing instruction. The final generation prompt is then constructed from the expanded scene representation: 
+
+Pgen = G(Jexpand ). (6) Unlike pure prompt rewriting, FLLM performs constrained scene expansion under explicit physical plausibility and com-monsense guidance, ensuring that the target object remains compatible with the sampled environment while preserving the key structural cues inherited from Jspatial .
+
+D. Reference-Conditioned Image Generation 
+
+Finally, the constructed prompt Pgen and the original reference image Iref are fed into a diffusion model for reference-conditioned synthesis: 
+
+Isyn ∼ F Dif f (Iref , P gen , σ ), (7) where σ denotes the diffusion generation control parameter. This reference-conditioned mechanism guides the diffusion model to preserve the structural anchors and visual config-uration of Iref while rendering new contextual variations specified by Pgen . As a result, the synthesized image Isyn 
+
+maintains spatial consistency for downstream perception tasks while introducing substantial environmental diversity. IV. EXPERIMENTS 
+
+A. Dataset 
+
+We evaluate WMGen-v1 on three datasets that exhibit pronounced long-tail characteristics across safety-critical spatial perception scenarios, including autonomous driving in construction zones, maritime surveillance, and industrial monitoring. 
+
+1) ROADWork Dataset: The ROADWork dataset [2] fo-cuses on perception and navigation in construction zones for autonomous driving. It contains 5,318 training images and 2,098 validation images annotated with various traffic-control objects and construction-related entities. Similar to many real-world safety scenarios, ROADWork exhibits a highly skewed class distribution. Common objects such as traffic Cone s appear in 2,993 images, while critical yet rare categories including Police Officer and Bike Lane occur in fewer than 90 images. Such long-tail characteristics make the dataset a challenging benchmark for safety-critical object detection in complex road environments. 2) LaRS Dataset: The LaRS dataset [3] is a maritime obstacle detection benchmark covering diverse environments including lakes, rivers, and coastal waters. It contains 2,605 training images and 198 validation images, with annota-tions spanning both obstacle and environmental classes. The dataset exhibits a pronounced long-tail distribution. While head classes such as Water and Sky dominate the dataset, sev-eral safety-critical obstacle categories are severely underrep-resented. For instance, rare classes such as Float and Animal 
+
+appear in only 20 and 72 training images, respectively. This imbalance makes LaRS particularly suitable for evaluating long-tail perception under maritime surveillance conditions. 
+
+3) Internal Industrial Monitoring Dataset: In addition to public benchmarks, we also evaluate WMGen-v1 on an internal industrial monitoring dataset collected from real-world surveillance systems deployed in safety-critical envi-ronments. This private dataset contains monitoring images captured in practical operational scenarios, including reser-voir surveillance and industrial safety monitoring tasks such as fishing detection and smoke detection. Due to confiden-tiality constraints, this dataset is partially used for qualitative evaluation to assess the realism and practical utility of the generated images. To alleviate the severe long-tail imbalance, we selectively generate a limited number of synthetic data to augment the most underrepresented tail classes. This design allows us to evaluate whether a small amount of targeted synthetic data can effectively mitigate long-tail imbalance. For the LaRS dataset, we generated additional images for tail class including Animal and Float . For the Roadwork dataset, we targeted Police Officer, Police Vehicle, Bike Lane , and Other Roadwork Objects . Detailed statistics for the original and generated dataset can be found in Table I. 
+
+B. Detection Models and Evaluation Metrics 1) Detection Models: To evaluate the effectiveness of the generated long-tail data, we conduct experiments using two widely adopted object detection architectures representing different detection paradigms: a one-stage detector and a two-stage detector. For the one-stage setting, we use YOLO11s [19], alightweight YOLO-based detector designed for efficient dense prediction and real-time deployment. For the two-stage setting, we adopt Faster R-CNN with a ResNet-152 backbone [20], which employs a Region Proposal Network (RPN) to generate candidate regions followed by region-wise classification and bounding-box regression. Evaluating WMGen-v1 on both architectures allows us to verify that the improvements brought by the generated data are not tied to a specific detection framework and generalize across different detection paradigms. 
+
+2) Evaluation Metrics: Following the MS COCO evalua-tion protocol [21], we report mean Average Precision (mAP) as the primary evaluation metric. Specifically, we report mAP@50 and the stricter mAP@50:95 averaged across IoU thresholds from 0.5 to 0.95.                                                                                                   
+
+> TABLE I STATISTICS OF THE LARS AND ROADWORK DATASETS
+> Dataset Class Name Train (Real) Val Generated Roadwork
+> Police Officer 69 44 100 Police Vehicle 87 45 100 Cone 2993 1301 -Fence 1319 646 -Drum 949 440 -Barricade 1616 579 -Barrier 1365 480 -Work Vehicle 2790 1283 -Vertical Panel 1046 240 -Tubular Marker 1354 788 -Arrow Board 587 158 -Bike Lane 61 26 40 Work Equipment 464 221 -Worker 1146 545 -Other Roadwork Objects 48 14 40 Temp Traffic Msg Board 162 69 -Temp Traffic Sign 2384 758 -
+> Total Images 5318 2098 280 LaRS
+> Static Obstacle 2533 186 -Water 2605 198 -Sky 2492 176 -Boat/ship 1465 132 -Row boats 228 21 -Paddle board 110 16 -Buoy 730 48 -Swimmer 120 13 -Animal 72 440 Float 20 320 Other 279 37 -
+> Total Images 2605 198 60
+
+Given the severe class imbalance in both datasets, we further report per-class mAP@50 to explicitly measure per-formance improvements on rare tail categories. 
+
+C. Baselines and Implementation Details 1) Baseline Configurations: To evaluate the effectiveness of WMGen-v1, we establish five experimental settings: Real-only , Real + Baseline 1 , Real + Baseline 2 , Ours-only , and 
+
+Real + WMGen-v1 . The baselines are strategically selected to represent existing generative paradigms, ensuring fair comparisons under identical reference inputs and gener-ated sample quantities. Ours-only evaluates whether models trained purely on synthetic data generated by WMGen-v1 can achieve competitive performance compared with models trained on real data.  
+
+> •
+
+Baseline 1 (LLM-Augmented Diffusion). This base-line represents the prevalent generation paradigm [22]. It employs the same reference-conditioned diffusion model as WMGen-v1 but replaces our structured, dual-agent scene reasoning with a standard LLM-based prompt rewriting strategy. The LLM simply generates unconstrained textual variations from the user input to guide the diffusion model. Comparing against this setup highlights the critical necessity of our explicit multimodal spatial deduction and strict physical prior injection.  
+
+> •
+
+Baseline 2 (One-Shot GAN). This baseline adopts a representative one-shot image generation approach that learns internal patch distributions also from a single ref-erence image [1]. Unlike WMGen-v1, which leverages multimodal reasoning and diffusion-based generation, this method relies solely on internal image statistics to synthesize new samples. 
+
+2) Implementation Details: All experiments were con-ducted on NVIDIA V100 GPUs. All methods share the same reference images and generate the same number of augmented samples for the target tail classes to ensure a fair comparison. The backbone of the LVLM and LLM are ChatGPT-4o and ChatGPT-5.2. For data generation, WMGen-v1 employs FLUX.1 Kontext Pro as the underlying diffusion model, which we selected after preliminary experiments for its favor-able balance between generation quality and computational cost. For reproducibility, the full schemas, prompt templates, retry protocol, and implementation details are included in the supplementary material. To annotate the generated images, we adopt Grounding DINO [23], an open-vocabulary object detector, for auto-matic label generation. Specifically, all synthetic samples are pseudo-labeled using Grounding DINO with a confidence threshold of 0.3. This unified auto-annotation strategy is applied to all generated data across both datasets, ensuring consistency in the labeling process. For Baseline 2, we follow the original training config-uration. Empirical observations show that training beyond 60k iterations yields negligible improvements compared with longer runs such as 150k we tried before. Therefore, we adopt 60k iterations for generation on both datasets to balance generation quality and computational efficiency. For downstream evaluation, YOLO11s and Faster R-CNN are trained for 150 epochs using their default training config-urations. No task-specific hyperparameter tuning is applied, ensuring that performance differences primarily reflect the quality and effectiveness of the generated training data. 
+
+D. Ablation Study 
+
+To validate the necessity of the proposed architecture, we conduct an ablation study to isolate the contribution of the LLM reasoning module. Specifically, we introduce the 
+
+w/o LLM (LVLM-only) configuration. In this variant, the diffusion model is conditioned solely on the raw spatial layout ( Jspatial ) extracted by the LVLM, without the physical priors and logical scene modeling provided by the LLM. All other components and training settings remain iden-tical to the full pipeline, ensuring that the observed perfor-mance differences are attributable solely to the removal of the LLM reasoning module. 
+
+E. Qualitative Results 
+
+Figure 3 presents qualitative comparisons between the baselines and WMGen-v1 across three representative sce-narios. 
+
+1) Internal Monitoring Scenario: The reference image depicts a long-range surveillance view of small fishing targets on a reservoir surface. Baseline 1 exhibits strong perspective drift, generating close-range fishing scenes with large targets rather than preserving the distant monitoring viewpoint. Baseline 2 partially maintains the scene layout but produces blurred structures and distorted water–shore boundaries due to the limited representation capacity of one-shot GANs. The WMGen w/o LLM variant preserves the basic scene structure but introduces commonsense violations, such as people sitting directly in the water while fishing. In contrast, WMGen-v1 successfully expands the surrounding context while maintaining the correct surveillance perspective and realistic target scale. 
+
+2) ROADWork Scenario: The reference image contains a police vehicle within a road construction area. Baseline 1 frequently produces traffic-rule violations and layout in-consistencies, such as vehicles appearing on sidewalks or approaching directly from unrealistic viewpoints. Baseline 2 attempts to diversify the scene but introduces structural artifacts, such as duplicated traffic lights. The WMGen-v1 w/o LLM configuration improves the representation of the police vehicle but still generates logical inconsistencies, in-cluding vehicles appearing on sidewalks and missing the core construction-zone context. In contrast, WMGen-v1 preserves the critical construction scene while expanding the spatial layout without introducing structural or logical inconsisten-cies. As shown in Table II, Baseline 1 mainly relies on direct prompt rewriting and provides limited explicit control over object placement, scale, and physical constraints. In contrast, WMGen-v1 organizes the prompt into structured components, including scene context, target-specific physical priors, and camera parameters. 
+
+3) LaRS Maritime Scenario: The reference image shows extremely small animal targets on the ocean surface captured from an unmanned vessel viewpoint. Baseline 1 produces se-vere scale inconsistencies, generating large close-up animals with incorrect perspectives. Baseline 2 maintains appropriate object scales but generates overly blurred targets and exhibits limited diversity. The WMGen-v1 w/o LLM variant again suffers from scale inconsistencies similar to Baseline 1. In contrast, WMGen-v1 preserves the small-object scale and vessel viewpoint while introducing plausible variations in target positions and background conditions, resulting in more realistic maritime scenes. 
+
+F. Quantitative Results 1) Overall Performance Comparison: All reported results are obtained using detectors trained on datasets constructed by different data generation pipelines. The detector archi-tectures and training protocols are kept identical across all experiments, so that the observed performance differences can be attributed solely to the training data. As shown in Table III and Table IV, incorporating WMGen-v1-generated samples consistently improves detec-tion performance across both YOLO and Faster R-CNN. On the ROADWork dataset, the improvement is particu-larly evident for the two-stage detector. With Faster R-CNN, performance increases from 0.3602 to 0.4248 mAP@50, corresponding to an absolute gain of 0.0646 mAP@50. This result indicates that the samples generated by WMGen-v1 offer spatially informative supervision that is particularly beneficial in complex construction scenes. Reference Image Baseline 1 Baseline 2 WMGen-v1 w/o LLM WMGen-v1 
+
+> Internal Dataset ROADWork LaRS
+
+Fig. 3. Qualitative comparison of synthetic data generation across three different long-tail scenarios (rows). From left to right: the original reference image, LLM-Augmented Diffusion (Baseline 1), One-Shot GAN (Baseline 2), WMGen-v1 w/o LLM generation, and our proposed text-based world model pipeline. WMGen-v1 injects physical priors while improving spatial coherence, reducing the common hallucinations observed in the other baselines. TABLE II COMPARISON OF PROMPT STRUCTURES 
+
+Baseline 1 (LLM Augmented Diffusion) 
+
+Autonomous driving camera view approaching a road construction zone with cones, barriers, and lane shifts, where a marked police vehicle is parked on the shoulder supervising traffic control. Midday sunlight, clear sky, crisp shadows on asphalt, workers in reflective vests near excavators, realistic urban street with signage and temporary speed limit boards. 
+
+Ours (WMGen-v1) [Scene Context] 
+
+At a four-way downtown intersection, fresh asphalt patches and a fenced excavation redirect traffic into a single open lane. Orange cones form a taper toward the centerline while pedestrians wait at the crosswalk by a corner caf´ e. Overhead shop signs glow in late-afternoon sun... 
+
+[Target & Physical Prior] 
+
+One marked police SUV with a white body and dark side panels, reflective decals, and the word “POLICE” on the doors, sits just upstream of the cone taper beside the barricades. Blue roof lightbar flashes brightly. 
+
+It fills about 10% of the frame in the midground, angled parallel to traffic flow, fully visible. 
+
+[Camera Parameters] 
+
+Forward-facing in-car camera at ∼1.5 m height from the ego vehicle, centered in the open lane approaching the intersection. The police SUV and construction barriers occupy the mid-to-right portion... 
+
+On the LaRS dataset, Real + WMGen-v1 achieves the best overall results, reaching 0.5022 mAP@50 with YOLO and 0.5169 mAP@50 with Faster R-CNN. Compared with the Real-only baseline, these results correspond to absolute gains of 0.0332 and 0.0304 mAP@50, respectively. This improvement suggests that WMGen-v1 provides effective complementary training samples for rare maritime categories while maintaining plausible scene composition. By contrast, the gains brought by Baseline 1 and Baseline 2 are limited or inconsistent across datasets and detector architectures. This observation suggests that prompt rewrit-ing alone provides insufficient spatial grounding, while one-shot GAN-based generation has difficulty producing samples with both adequate diversity and structural consistency under extreme data scarcity. It is also noteworthy that detectors trained solely on WMGen-v1-generated data achieve performance close to those trained only on real data. For example, on ROADWork with YOLO, WMGen-v1-only attains 0.4270 mAP@50, compared with 0.4330 for Real-only. This result indicates that WMGen-v1 can preserve task-relevant scene structure and provide effective supervision even without access to real training images. 
+
+TABLE III COMPARISON ON THE ROADW ORK DATASET .
+
+Method YOLO Faster R-CNN 
+
+mAP@50 mAP@50-95 mAP@50 mAP@50-95 Real-only 0.4330 0.2729 0.3602 0.1926 Real + Baseline 1 0.4328 0.2704 0.3980 0.2196 Real + Baseline 2 0.4303 0.2721 0.3734 0.2044 WMGen-v1-only 0.4270 0.2636 0.3779 0.2088 
+
+Real + WMGen-v1 0.4400 0.2808 0.4248 0.2420 
+
+TABLE IV COMPARISON ON THE LARS DATASET .
+
+Method YOLO Faster R-CNN 
+
+mAP@50 mAP@50-95 mAP@50 mAP@50-95 Real-only 0.4690 0.3361 0.4865 0.3150 Real + Baseline 1 0.4672 0.3356 0.5068 0.3245 Real + Baseline 2 0.4574 0.3348 0.5065 0.3315 WMGen-v1-only 0.4487 0.3155 0.4607 0.2830 
+
+Real + WMGen-v1 0.5022 0.3539 0.5169 0.3335 
+
+2) Per-class Analysis on the ROADWork Dataset: Ta-ble V reports the per-class mAP@50 results on the ROAD-Work dataset using YOLO. Our data generation pipeline is designed to augment several sparse and safety-relevant TABLE V PER -CLASS M AP@50 R ESULTS ON THE ROADW ORK DATASET                                                                          
+
+> Class Real-only Baseline 1 Baseline 2 Real + WMGen-v1 Police Officer 0.1060 0.1110 0.0737 0.1990 Police Vehicle 0.2760 0.2560 0.2720 0.2580 Cone 0.6930 0.6890 0.6930 0.6910 Fence 0.3390 0.3390 0.3530 0.3620 Drum 0.7210 0.7220 0.7180 0.7090 Barricade 0.5330 0.5280 0.5100 0.5130 Barrier 0.4070 0.4090 0.4280 0.4120 Work Vehicle 0.4790 0.4950 0.4780 0.4890 Vertical Panel 0.6050 0.6170 0.6210 0.6160 Tubular Marker 0.5980 0.6070 0.6050 0.6010 Arrow Board 0.7090 0.6920 0.7100 0.7060
+> Bike Lane 0.4680 0.4430 0.3540 0.4830
+> Work Equipment 0.0474 0.0403 0.0662 0.0689 Worker 0.4220 0.4380 0.4180 0.4110
+> Other Roadwork Objects 0.0009 0.0055 0.0027 0.1310
+> Temp Traffic Msg Board 0.4440 0.4530 0.4940 0.3810 Temp Traffic Sign 0.5180 0.5140 0.5280 0.5160
+> mAP@50 (All) 0.4330 0.4330 0.4310 0.4440
+
+categories, including Police Officer, Police Vehicle, Other Roadwork Objects, and Bike Lane. WMGen-v1 yields clear improvements for several of these underrepresented categories. In particular, the mAP@50 for Other Roadwork Objects increases from 0.0009 to 0.1310, corresponding to an absolute gain of 0.1301, while Police Officer improves from 0.1060 to 0.1990, corresponding to an absolute gain of 0.0930. Smaller but consistent gains are also observed for Bike Lane, which increases from 0.4680 to 0.4830. These results suggest that WMGen-v1 is particularly effective for categories with limited training samples and relatively flexible spatial configurations. A notable exception is Police Vehicle, whose mAP@50 decreases from 0.2760 to 0.2580. One possible explanation is that this category depends more heavily on accurate shape regularity, fine-grained local texture, and category-specific visual cues. Although WMGen-v1 can constrain coarse scene placement through language-guided priors, the generated samples may still contain geometric inconsistencies or tex-ture deviations under challenging viewpoints. In addition, in a multi-object detection setting, police vehicles may co-occur with ordinary vehicles in the same scene, making the category boundary more ambiguous when distinctive visual cues are not rendered clearly. Such ambiguity may increase classification confusion and reduce the benefit of augmentation for this class. Overall, the per-class results indicate that WMGen-v1 is most beneficial for sparse categories whose recognition relies primarily on contextual placement and coarse semantic appearance, while its benefit is more limited for highly struc-tured rigid objects requiring fine-grained geometric fidelity. 
+
+3) Per-class Analysis on the LARS Dataset: Table VI reports the per-class mAP@50 results on the LARS dataset using YOLO. On this maritime benchmark, WMGen-v1 is mainly used to augment several sparse categories, including Float and Animal. WMGen-v1 improves multiple underrepresented cate-gories. In particular, Float increases from 0.0000 to 0.3840, indicating that the generated samples provide useful super-vision for a category that is nearly absent in the original training distribution. Animal also improves from 0.0837 to 0.1980, corresponding to an absolute gain of 0.1143. These results suggest that WMGen-v1 is effective for sparse maritime obstacles whose recognition depends primarily on coarse semantic appearance and contextual placement. Meanwhile, the performance of several non-augmented frequent categories, such as Water and Sky, remains broadly stable, while structurally constrained object classes, such as Boat/ship, show limited benefit. Among these, swimmer shows a noticeable AP drop after adding Animal/Float sam-ples. Supplementary diagnostics suggest that this behavior is associated with confusion among visually similar small water-surface objects rather than sample scarcity alone. Overall, the per-class results indicate that WMGen-v1 is particularly beneficial for sparse categories with limited training coverage, whereas its effect is more constrained for categories requiring precise geometric structure or fine-grained water–object interaction modeling.                                                   
+
+> TABLE VI PER -CLASS M AP@50 R ESULTS ON THE LARS D ATASET
+> Class Real-only Baseline 1 Baseline 2 Real + WMGen-v1
+> Static Obstacle 0.6570 0.6730 0.7120 0.6810 Water 0.9940 0.9940 0.9950 0.9930 Sky 0.9840 0.9670 0.9810 0.9510 Boat/ship 0.5750 0.5620 0.5500 0.5440 Row boats 0.4460 0.3980 0.4630 0.4410 Paddle board 0.5500 0.6390 0.5320 0.5470 Buoy 0.3070 0.3270 0.3250 0.3600 Swimmer 0.3590 0.4080 0.2830 0.2070
+> Animal 0.0837 0.0122 0.0375 0.1980 Float 0.0000 0.0000 0.0000 0.3840
+> Other 0.2070 0.1570 0.1490 0.2180
+> mAP@50 (All) 0.4690 0.4670 0.4570 0.5020
+
+4) Long-Tail Category Analysis on both the ROADWork and LaRS Datasets: We define rare long-tail classes as those with fewer than 100 training images in the original dataset and report their averaged performance separately. Under this definition, the ROADWork dataset contains four long-tail categories ( Police Officer , Police Vehicle , Bike Lane ,and Other Roadwork Objects ). As shown in Table VII, The average mAP of these classes increases from 0.213 under the Real Only baseline to 0.268 when incorporating our generated data, corresponding to an absolute gain of 0.055. Similarly, the LaRS dataset contains two long-tail categories (Animal and Float ). The average mAP increases from 0.0419 to 0.2910 with our method, corresponding to an absolute gain of 0.2491. When aggregating all six long-tail categories across both datasets, the overall mAP increases from 0.1558 to 0.2755, corresponding to an absolute gain of 0.1197. Most individual long-tail categories also exhibit consis-tent performance improvements compared with the baseline. These results demonstrate that our world-model-driven data generation framework is particularly effective at enriching rare categories, alleviating data scarcity, and improving de-tection performance on long-tail classes. 
+
+TABLE VII PER -CLASS M AP@50 R ESULTS ON LONG -T AIL CATEGORIES .                             
+
+> Long-Tail Class Real Images Generated Images Real Only Real + WMGen-v1
+> Police Officer 69 100 0.1060 0.1990
+> Police Vehicle 87 100 0.2760 0.2580 Bike Lane 61 40 0.4680 0.4830
+> Other Roadwork Objects 48 40 0.0009 0.1310
+> Animal 72 40 0.0837 0.1980
+> Float 20 20 0.0000 0.3840 mAP@50 (Avg) ––0.1558 0.2755
+
+V. CONCLUSION In this paper, we proposed WMGen-v1, an agentic text-based world model for long-tail visual perception. WMGen-v1 generates physically grounded training samples from a single user input and reference image. By explicitly injecting visual and physical priors, WMGen-v1 reduces common semantic drift, layout violations, and scale hallucinations observed in the evaluated baselines. Experiments on industrial, ROADWork, and LaRS datasets demonstrate that WMGen-v1 consistently enhances down-stream detection for both YOLO and Faster R-CNN. Com-bining real and synthetic data yields the best overall perfor-mance, effectively mitigating perception blind spots in rare, safety-critical scenarios and expanding the safe operational envelope of autonomous systems. Despite these promising results, limitations remain. Con-verting visual observations into discrete text descriptions can cause spatial information loss, particularly affecting objects that require precise geometric structures or complex physical interactions. The per-class results suggest that class frequency alone is insufficient for selecting augmentation targets. Moderate-frequency classes (e.g., Work Equipment) can remain challenging, while visually ambiguous non-target classes (e.g., Swimmer) may be affected by augmentation of related categories. Furthermore, the current open-loop pipeline lacks a feedback mechanism to verify the physical and semantic correctness of the generated scenes. REFERENCES [1] V. Sushko, J. Gall, and A. Khoreva, “One-shot gan: Learning to gen-erate samples from single images and videos,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2021. [2] A. Ghosh, S. Zheng, R. Tamburo, K. Vuong, J. Alvarez-Padilla, H. Zhu, M. Cardei, N. Dunn, C. Mertz, and S. G. Narasimhan, “Roadwork: A dataset and benchmark for learning to recognize, observe, analyze and drive through work zones,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023. [Online]. Available: https://www.cs.cmu.edu/ ∼roadwork/ [3] L. ˇZust, J. Pers, and M. Kristan, “Lars: A diverse panoptic mar-itime obstacle detection dataset and benchmark,” arXiv preprint arXiv:2308.09618 , 2023. [4] Y. Guo, Z. Zhang, Y. Shang, T. Zhao, S. Deng, Y. Yang, and J. Yin, “Srmf: A data augmentation and multimodal fusion approach for long-tail uhr satellite image segmentation,” IEEE Transactions on Geoscience and Remote Sensing , vol. 63, pp. 1–16, 2025. [Online]. Available: http://dx.doi.org/10.1109/TGRS.2025.3565600 [5] J. Yang, M. Yu, S. Li, J. Zhang, and S. Hu, “Long-tailed object detection for multimodal remote sensing images,” Remote Sens. ,vol. 15, no. 4539, p. https://doi.org/10.3390/rs15184539, 2023. [6] J. Tan, C. Wang, B. Li, Q. Li, W. Ouyang, C. Yin, and J. Yan, “Equalization loss for long-tailed object recognition,” in 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) . IEEE, jun 2020, pp. 11 659–11 668. [Online]. Available: http://dx.doi.org/10.1109/cvpr42600.2020.01168 [7] J. Hyun Cho and P. Kr¨ ahenb¨ uhl, Long-tail Detection with Effective Class-Margins . Springer Nature Switzerland, 2022, pp. 698–714. [Online]. Available: http://dx.doi.org/10.1007/978-3-031-20074-8 40 [8] C. Du, Y. Wang, S. Song, and G. Huang, “Probabilistic contrastive learning for long-tailed visual recognition,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 46, no. 9, pp. 5890–5904, sep 2024. [Online]. Available: http://dx.doi.org/10.1109/ TPAMI.2024.3369102 [9] C. Cong, S. Xuan, S. Liu, S. Zhang, M. Pagnucco, and Y. Song, “Decoupled optimisation for long-tailed visual recognition,” 
+
+Proceedings of the AAAI Conference on Artificial Intelligence ,vol. 38, no. 2, pp. 1380–1388, mar 2024. [Online]. Available: http://dx.doi.org/10.1609/aaai.v38i2.27902 [10] D. Podell, Z. English, K. Lacey, A. Blattmann, T. Dockhorn, J. M¨ uller, J. Penna, and R. Rombach, “Sdxl: Improving latent diffusion models for high-resolution image synthesis,” 2023. [Online]. Available: https://arxiv.org/abs/2307.01952 [11] P. Pernias, D. Rampas, M. L. Richter, C. J. Pal, and M. Aubreville, “Wuerstchen: An efficient architecture for large-scale text-to-image diffusion models,” arXiv preprint arXiv:2306.00637 , 2023. [Online]. Available: https://arxiv.org/abs/2306.00637 [12] K. Chen, E. Xie, Z. Chen, Y. Wang, L. Hong, Z. Li, and D.-Y. Yeung, “Geodiffusion: Text-prompted geometric control for object detection data generation,” Published as a conference paper at ICLR 2024 , 2024. [13] H. Fang, B. Han, S. Zhang, S. Zhou, C. Hu, and W.-M. Ye, “Data augmentation for object detection via controllable diffusion models,” in Proceedings of the IEEE/CVF winter conference on applications of computer vision , 2024. [14] Y. Li, Y. Zhang, C. Wang, Z. Zhong, Y. Chen, R. Chu, S. Liu, and J. Jia, “Mini-gemini: Mining the potential of multi-modality vision language models,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 48, no. 3, pp. 3530–3543, mar 2026. [Online]. Available: http://dx.doi.org/10.1109/TPAMI.2025.3637265 [15] X. Fu, Y. Hu, B. Li, Y. Feng, H. Wang, X. Lin, D. Roth, N. A. Smith, W.-C. Ma, and R. Krishna, “Blink: Multimodal large language models can see but not perceive,” in European Conference on Computer Vision . arXiv, 2024. [Online]. Available: https://arxiv.org/abs/2404.12390 [16] G. Xu, P. Jin, Z. Wu, H. Li, Y. Song, L. Sun, and L. Yuan, “Llava-cot: Let vision language models reason step-by-step,” 2024. [Online]. Available: https://arxiv.org/abs/2411.10440 [17] B. Xia, S. Wang, Y. Tao, Y. Wang, and J. Jia, “Llmga: Multimodal large language model based generation assistant,” 2023. [Online]. Available: https://arxiv.org/abs/2311.16500 [18] W. Chen, Y. Long, M. Liu, H. Ding, Y. Yang, H. Wei, Y.-F. Zhang, B. Wen, F. Yang, T. Gao, H. Li, and L. Chen, “Spatial chain-of-thought: Bridging understanding and generation models for spatial reasoning generation,” arXiv preprint arXiv:2602.11980 ,2026. [Online]. Available: https://weichens.github.io/spatial chain of thought/ [19] I. B. Hassani, S. Benhida, N. Lamii, K. Oqaidi, A. Ouiddad, and S. Ghiadi, “From yolo v1 to yolo v11: comparative analysis of yolo algorithm,” International Journal of Electrical and Computer Engineering (IJECE) , vol. 16, no. 1, pp. 450–462, 2026. [20] S. Ren, K. He, R. Girshick, and J. Sun, “Faster r-cnn: Towards real-time object detection with region proposal networks,” Advances in neural information processing systems , vol. 28, 2015. [21] X. Chen, H. Fang, T.-Y. Lin, R. Vedantam, S. Gupta, P. Doll´ ar, and C. L. Zitnick, “Microsoft coco captions: Data collection and evaluation server,” arXiv preprint arXiv:1504.00325 , 2015. [22] B. F. Labs, S. Batifol, A. Blattmann, F. Boesel, S. Consul, C. Diagne, T. Dockhorn, J. English, Z. English, P. Esser et al. , “Flux. 1 kontext: Flow matching for in-context image generation and editing in latent space,” arXiv preprint arXiv:2506.15742 , 2025. [23] S. Liu, Z. Zeng, T. Ren, F. Li, H. Zhang, J. Yang, Q. Jiang, C. Li, J. Yang, H. Su et al. , “Grounding dino: Marrying dino with grounded pre-training for open-set object detection,” in European conference on computer vision . Springer, 2024, pp. 38–55.
