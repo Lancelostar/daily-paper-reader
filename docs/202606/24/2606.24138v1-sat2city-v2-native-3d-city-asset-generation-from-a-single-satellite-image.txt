@@ -1,0 +1,461 @@
+Title: Sat2City v2: Native 3D City Asset Generation from a Single Satellite Image
+
+URL Source: https://arxiv.org/pdf/2606.24138v1
+
+Published Time: Wed, 24 Jun 2026 00:33:07 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+1
+
+# Sat2City v2: Native 3D City Asset Generation from a Single Satellite Image 
+
+Tongyan Hua †, Dongli Wu †, Jinjing Zhu, Yinrui Ren, Zhongcheng Hong, Ying-Cong Chen, Hui Xiong, Fellow, IEEE , and Wufan Zhao Input 
+
+Satellite 
+
+Image 
+
+Generated 
+
+Geometry 
+
+Generated 
+
+Appearance 
+
+Fig. 1. Given a single satellite image, Sat2City v2 generates explicit city-scale geometry and satellite-consistent textured appearance. The examples cover diverse urban layouts, from dense street blocks to landmark buildings and waterfront scenes. 
+
+Abstract —Generating explicit 3D city assets from a single satellite image is important for digital twins, urban simulation, and geospatial intelligence. Unlike satellite-to-street-view synthe-sis, the task requires a reusable textured mesh with plausible geometry and controllable appearance rather than a 3D proxy optimized only for rendering a small set of images or videos. The ICCV Sat2City framework made a first step by conditioning cascaded sparse-voxel latent diffusion on satellite-derived height maps, but its appearance was random, its training data were synthetic, and its task-specific VAE did not scale well to noisy real-world reconstructions. We present Sat2City v2, a journal extension that adapts a pretrained native structured-latent 3D foundation model to weakly aligned satellite images and textured meshes. We build a real-world dataset with 16,241 satellite-mesh pairs across 24 regions in 9 cities. Instead of learning a 3D repre-sentation from noisy city meshes, Sat2City v2 encodes each mesh into a pretrained native 3D latent space, fine-tunes a satellite-
+
+Tongyan Hua, Dongli Wu, Yinrui Ren, Ying-Cong Chen, Hui Xiong, and Wufan Zhao are with The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China (e-mail: thua388@connect.hkust-gz.edu.cn; dwu022@connect.hkust-gz.edu.cn; conorren001@gmail.com; yingcongchen@ust.hk; xionghui@ust.hk; wufanzhao@hkust-gz.edu.cn). Jinjing Zhu is with The Chinese University of Hong Kong, Hong Kong SAR, China (e-mail: jinjingzhu.mail@gmail.com). Zhongcheng Hong completed this work while with The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China, and is now with Auckland University of Technology, Auckland, New Zealand (e-mail: zhongcheng.hong@autuni.ac.nz). Ying-Cong Chen and Hui Xiong are also with the Department of Com-puter Science and Engineering, The Hong Kong University of Science and Technology, Hong Kong SAR, China. 
+
+> †
+
+Tongyan Hua and Dongli Wu contributed equally to this work. Corre-sponding author: Wufan Zhao. 
+
+conditioned geometry flow, and uses the decoded shape to anchor satellite-conditioned texturing. This retains Sat2City’s geometry-to-appearance cascade while enabling appearance-controllable generation from the satellite input. Experiments on metric-scale DSM reconstruction and generative city-asset benchmarks for geometry and appearance show that Sat2City v2 achieves the best overall performance among evaluated baselines. Overall, Sat2City v2 advances satellite-to-city generation from rendering-oriented 3D proxies to explicit textured mesh assets, supported by, to the best of our knowledge, the first documented satellite-mesh paired dataset collected from matched geographic crops for this asset-level task. Project page: https://ai4city-hkust.github.io/ Sat2City-v2/. 
+
+Index Terms —3D city generation, satellite image, 3D generative model, textured mesh, geospatial dataset, digital twin. 
+
+I. I NTRODUCTION 
+
+# GENERATING 3D urban scenes [1]–[5] has attracted increasing attention in recent years, driven by appli-cations in gaming [6], urban planning [7], [8], autonomous simulation [9], [10], and digital twin systems [11], [12]. Much prior work models cities as 3D-aware image-generation problems and primarily targets novel street-view images or roaming videos from satellite or cross-view inputs [7], [13]– [21]. These methods are valuable for view synthesis, but the learned 3D representations are usually optimized as rendering proxies. They often provide limited control over reusable scene contents, and the extracted geometry can be noisy, incomplete,        
+
+> arXiv:2606.24138v1 [cs.CV] 23 Jun 2026 2Satellite Image Paired Textured Mesh Zoom -in View
+> Fig. 2. Visualization of weakly aligned satellite-mesh pairs in the Sat2City v2 dataset . Each pair is collected from a matched geographic crop, but the satellite footprint and textured mesh have only partial overlap and are not pixel-perfectly aligned. The zoom-in views show that real Google Earth meshes provide useful asset-level supervision while retaining coarse geometry and photogrammetric artifacts.
+
+or difficult to edit. In this work, we focus on a more asset-centric problem: generating an explicit textured 3D city mesh from a single satellite image. The satellite image is a compact and widely available control signal that encodes road layout, building footprints, vegetation, water, roofs, and dominant appearance patterns. Turning this signal into a reusable 3D asset, however, requires both reliable surface geometry and satellite-consistent appearance. Fig. 1 illustrates the target output: a generated 3D city asset whose geometry and texture are both conditioned on the same overhead observation. Recent urban generation methods have introduced stronger geospatial priors to improve control. InfiniCity [2] lifts satellite-derived height fields into volumetric features and learns NeRF-based urban generators. CityDreamer [3] and its generative Gaussian variants [5] further decompose ur-ban scenes by semantic categories and improve visual fi-delity. Sat2Density [22] and Sat2Density++ [23] directly use satellite imagery to condition radiance fields for street-view rendering. More recently, Sat3DGen [24] improves satellite-to-street 3D proxies by adding geometry-oriented constraints and a perspective-view training strategy. Nevertheless, these approaches still learn implicit or proxy representations mainly under 2D supervision from satellite-ground image pairs. Their geometry is judged primarily through rendered views or depth maps, not through explicit asset quality. Consequently, even when the rendered images are photorealistic, the resulting 3D scenes can be distorted, fragmented, or unsuitable for downstream asset workflows. Our conference version, Sat2City [25], took a different path by learning explicit 3D geometry and appearance from 3D city data. It introduced a cascaded latent diffusion framework over sparse voxel grids, with a Re-Hash VAE bottleneck for stable appearance optimization and inverse sampling for smooth color supervision. In this sense, Sat2City was already a 3D-native sparse latent generator rather than a 2D rendering proxy, but its latents were task-specific and learned from clean synthetic city assets rather than from a pretrained compact asset manifold. This design demonstrated that direct 3D super-vision can produce city-scale explicit assets from a satellite ob-servation. However, Sat2City has three major limitations that become critical in the journal setting. First, it uses satellite-derived height maps as the conditioning signal; once the satellite image is collapsed into height, most appearance cues are lost. Second, the generated appearance is driven mainly by geometry and learned priors, so the input satellite image cannot directly control textures. Third, its dataset consists of synthetic city assets paired with simulated height maps, and therefore does not test whether the framework can scale to real-world satellite imagery and 3D city data. These limitations force the journal extension to start from data. Existing satellite-to-ground benchmarks, such as CVUSA [26], CVACT [27], and VIGOR [28], provide satellite and street-view image pairs but no textured mesh ground truth. The closest existing resource is the VIGOR-OOD evaluation set used by Sat3DGen, which augments the Seattle test split of VIGOR with DSMs, i.e., rasterized Digital Surface Models that encode surface height. However, it still does not provide a paired textured mesh asset for each satellite crop. Sat2City pro-vides 3D supervision, but it is synthetic and uses height-map observations rather than native satellite imagery. To bridge this gap, we construct a real-world dataset in which each sample contains a satellite image and a textured 3D city mesh associated with the same geographic crop. For each sample, we first specify a latitude-longitude bounding box and then export both the satellite overlay and the corresponding Google Earth [29] 3D mesh from this geographic box. This produces weak satellite-mesh pairs in which the two modalities cover the same geographic region, while photogrammetric noise and temporal mismatch reflect the natural characteristics of real city-scale reconstructions. Fig. 2 illustrates this collection protocol and the resulting data regime: the two modalities describe the same geographic region, but their footprints, acquisition histories, and reconstructed surface details are only weakly aligned. Given this data regime, the most natural extension is to inherit the Sat2City pipeline, which builds on the XCube sparse-voxel hierarchy [30], and further introduce appearance control in the spirit of SCube [31]. SCube extends the XCube sparse-voxel hierarchy toward image-conditioned scene recon-struction by associating posed-image evidence with a high-resolution voxel representation. Such an upgrade would keep this hierarchy, encode the satellite crop with DINOv3 fea-tures [32], insert those features into the voxel grid, and train a conditional generator to decode geometry and appearance from real satellite-mesh pairs. The failure mode comes from the data assumption behind this appearance path. SCube conditions on sparse posed images, so image evidence can be associated with 3D voxels through camera geometry before appearance is predicted on top of generated geometry. Our pairs are different: a single orthorectified satellite image is only weakly aligned with a textured mesh from the same geographic box, with no calibrated camera-to-mesh correspondence and no multi-view overlap. Directly injecting satellite features therefore becomes a top-down pseudo-projection; errors from temporal mismatch, ground-view visibility, tiling, and reconstruction artifacts enter the latent grid as supervision noise rather than useful appearance evidence. The problem is not limited to appearance. Even at the geometry level, an XCube-style latent remains close to an explicit sparse voxel hierarchy, where active voxels, hierarchy 3
+
+transitions, and latent tokens follow the observed surface occupancy. This design is relatively benign for the synthetic Sat2City distribution, whose scenes are mostly clean and regular building masses with limited vegetation, overpasses, or reconstruction residues. It becomes much less stable for real Google Earth meshes, where fragmented surfaces, pho-togrammetric artifacts, trees, elevated roads, and thin facade remnants, as shown in Fig. 2, are preserved by voxelization as additional active geometry. Consequently, the hierarchy grows with mesh noise instead of suppressing it, and the VAE bottleneck is forced to encode both the true urban structure and the incidental reconstruction fragments. Together, these constraints motivate a systematic redesign rather than a simple upgrade of the existing Sat2City pipeline. The model should not learn the 3D bottleneck, the geometry prior, and the satellite-conditioned generator solely from weak real pairs. Instead, it should satisfy three requirements. First, it should start from a pretrained native 3D representation whose asset manifold is learned from broad, high-quality 3D data, so real satellite-mesh pairs only adapt the manifold toward geospatial structure rather than learning it from noisy city meshes. Second, the representation should be compact and asset-level, preserving topology, geometry, and appearance without letting photogrammetric fragments explode into an explicit voxel hierarchy or pass through a task-specific ap-pearance bottleneck. Third, satellite conditioning should be learned as image-to-latent correspondence, such as attention or flow conditioning, rather than imposed by a brittle pseudo-projection from overhead pixels into voxel cells. Sat2City v2 realizes this redesign by turning a native structured-latent 3D prior into a geospatial generator, rather than by treating it as a plug-in image-to-3D model. We instantiate this prior with TRELLIS.2 [33], but the key adaptation is geospatial: we construct pairs in which the satellite image and textured mesh are collected from matched geographic crops, encode city meshes into the native latent space, fine-tune a satellite-conditioned geometry flow under weak alignment, and use the generated shape as the anchor for satellite-guided texturing. The contributions are summarized as follows:  
+
+> •
+
+We propose Sat2City v2, to the best of our knowledge the first appearance-controllable native structured-latent 3D framework that generates explicit textured city mesh assets from a single satellite image.  
+
+> •
+
+We construct a real-world dataset of 16,241 satellite-image–textured-mesh pairs collected from matched latitude-longitude bounding boxes across 24 regions and 9 cities.  
+
+> •
+
+We adapt a pretrained native structured-latent 3D prior to weak geospatial supervision by fine-tuning a satellite-conditioned geometry flow and anchoring appearance synthesis on the generated shape.  
+
+> •
+
+We establish a satellite-to-asset evaluation protocol and show that Sat2City v2 achieves strong metric-scale re-construction quality and generative mesh quality, with the best overall performance among the evaluated baselines. This work extends the ICCV 2025 conference version [25] in four major aspects. First, it changes the task setting from height-map-conditioned synthetic geometry generation with random appearance to direct satellite-image-conditioned textured mesh asset generation with controllable appearance. Second, it replaces the synthetic training data with real satellite images and textured Google Earth meshes collected from matched geographic boxes. Third, it preserves the conference version’s native 3D generation principle, but replaces its task-specific sparse-voxel hierarchy with a pretrained compact structured-latent prior, since the former must learn the geom-etry and appearance bottlenecks from noisy weak pairs while the latter brings a stronger asset-level 3D manifold. Fourth, it adds new real-world evaluation protocols and comparisons for metric-scale geometry, mesh generation quality, and satellite-conditioned appearance. II. R ELATED WORK 
+
+A. Satellite-Conditioned Urban Rendering Proxies 
+
+Early satellite-to-ground methods synthesize individual street-view images from overhead imagery [14], [16], and later work extends the task to panoramic videos and multi-view rendering [13], [22], [23]. These methods benefit from satellite images as scalable geographic conditioning signals, but most learn a renderable 3D proxy, such as an implicit density field, radiance field, triplane, or Gaussian representation, from sparse cross-view image supervision rather than predicting a reusable mesh asset. This proxy formulation is effective for image or video synthesis, yet its geometry is intrinsically weak: the satellite view observes roofs and ground layout, the street view observes facades and occluded regions, and sparse image losses can tolerate floaters, melted boundaries, and underconstrained roof or facade structures. Neural city generators such as InfiniCity [2], CityDreamer [3], and Gaus-sian city generators built on 3D Gaussian Splatting [4], [5], [34] produce visually appealing renderings, but their geometry is usually optimized indirectly through image losses. Earth-Crafter [35] pushes geospatial generation toward much larger Earth-scale extents through Aerial-Earth3D and a sparse-decoupled latent diffusion design, but its appearance remains represented by textural 2D Gaussian splats rather than by mesh textures. Concurrent industrial-scale systems such as ABot-Earth 0.5 [36] further demonstrate the potential of satellite-conditioned Earth-scale generation with 3D Gaussian Splatting representations. These works are highly relevant to digital-earth visualization, yet their output representations are still defined by implicit primitives, such as Gaussians or radiance fields, optimized for view synthesis rather than by explicit textured mesh assets. More importantly for learning, they do not release satellite crops paired with corresponding textured mesh assets, and therefore do not provide direct supervision for training an explicit satellite-to-mesh asset generator. 
+
+B. Explicit 3D City Asset Generation 
+
+Recent satellite-to-3D systems move closer to explicit 3D by exporting a scene representation or a mesh, but their super-vision and output target still differ from textured mesh asset generation. Sat2Density++ [23] separates illumination and sky modeling from satellite-conditioned radiance-field generation. 4
+
+Sat3DGen [24] further improves proxy geometry with gravity-based density variation, satellite-view depth regularization, spatial tokens, and perspective-view training. Nevertheless, these methods still primarily optimize a 3D proxy for ren-dering; even when a mesh is extracted for visualization, the asset is not learned under direct satellite-to-textured-mesh supervision. A different line first obtains or generates 3D geometry and then assigns colors, textures, or features to that geometry. Following the terminology in Sat3DGen [24], Sat2Scene [1] and the ICCV version of Sat2City [25] can be viewed as geometry-colorization approaches. Sat2Scene generates pointwise colors and features for a given or inferred point-cloud geometry and then renders arbitrary views. In its satellite-to-ground setting, the geometry is largely ob-tained by lifting elevation maps into vertical facades without a subsequent generative geometry refinement stage, which leaves limited geometric diversity. Because high-quality view rendering also requires dense point clouds, Sat2Scene is more suited to block-level rendering than to asset generation over a larger satellite-covered scene. Sat2City generates explicit city geometry and appearance, but it is trained on synthetic city data, uses height maps rather than real satellite appearance, and leaves appearance largely random with respect to the input image. Sat2RealCity [37] is a first substantive step toward native 3D generation from real satellite imagery rather than reconstruction through a rendering proxy, with appearance-controllable building entities guided by OSM spatial priors and semantic cues. However, its native 3D content is essentially building-level, whereas our target is the full scene covered by the satellite crop. Sat2City v2 inherits Sat2City’s asset-centric goal while replacing the synthetic height-map setting with real satellite-mesh pairs and direct appearance conditioning. Notably, a broader line of 3D scene generation studies per-sistent or controllable scene synthesis from images, sketches, layouts, or text prompts [6], [38]–[44]. These works are important for understanding 3D-aware generation, but they are not designed to turn geo-referenced satellite imagery into explicit city assets. 
+
+C. Native 3D Generative Priors 
+
+General 3D generative modeling has rapidly moved from per-scene optimization and 2D score distillation toward feed-forward native 3D generation. Per-scene optimization and score-distillation methods can produce impressive individ-ual objects or scenes [52]–[59], but their optimization cost and per-instance nature make them unsuitable for large-scale satellite-to-city inference. XCube [30] uses sparse voxel hierarchies and latent diffusion to generate high-resolution 3D shapes and outdoor scenes, and our conference version builds on this family of sparse latent 3D representations. However, XCube-style models still require learning the VAE and diffusion prior for the target distribution. When the target meshes are noisy real-world city reconstructions, learning this representation directly can overfit reconstruction artifacts and lose fine appearance. Recent image-to-3D models, includ-ing LRM [60], TripoSR [61], InstantMesh [62], Hunyuan3D 2.0 [63], MeshGen [64], and SF3D [65], show the value of                                                         
+
+> TABLE I DATASET -LEVEL COMPARISON OF SATELLITE -RELATED URBAN 3D DATA .
+> Dataset Source Satellite image Satellite-mesh pair CVUSA [26] Real ✓×
+> CVACT [27] Real ✓×
+> VIGOR [28] Real ✓×
+> VIGOR-OOD [24] Real ✓×
+> DFC 2019 / US3D [45] Real ✓×
+> Aerial-Earth3D [35] Real △×
+> UrbanScene3D [10] Real ××
+> UrbanBIS [46] Real ××
+> HoliCity [47] Real ××
+> OmniCity [48] Real ✓×
+> GAMUS [49] Real ✓×
+> NuiScene [50] Synthetic ××
+> Sat2RealCity building assets [37] Real ✓×
+> SynCity [51] Synthetic ××
+> Sat2City [25] Synthetic ××
+> Sat2City v2 Real ✓✓
+> “Satellite-mesh pair” denotes supervision in which a satellite crop is paired with a textured mesh asset from the corresponding geographic region. ✓
+> and ×indicate yes and no, respectively. △means the dataset uses aerial or top-down imagery but not a standard satellite crop as the generation input.
+
+large-scale 3D and multiview priors for asset generation. This trend also includes feed-forward reconstruction models [66], [67], diffusion or latent-set 3D generators [68]–[70], and autoregressive mesh generators [71]–[77]. TRELLIS [78] and TRELLIS.2 [33] are particularly relevant because they use structured sparse latents and decouple shape and material generation. Sat2City v2 adapts this native 3D foundation-model paradigm to the geospatial domain. 
+
+D. Geospatial Datasets for 3D Generation 
+
+Most satellite-to-ground datasets provide cross-view im-ages rather than 3D assets. CVUSA [26] and CVACT [27] pair satellite images with ground-level panoramas, while VIGOR [28] provides GPS-matched satellite tiles and multiple street-view panoramas with relative positions. Sat2Density++ [23] and Sat3DGen [24] use these image pairs for rendering-oriented 3D learning. Sat3DGen additionally pairs VIGOR-OOD satellite images, i.e., the Seattle test split of VIGOR, with public DSM data for geometric evaluation, but the DSM is a height raster rather than a textured mesh asset and is used for evaluation rather than released as a satellite-textured-mesh training set. DFC 2019/US3D [45] is a real satellite 3D reconstruction benchmark with multi-view WorldView-3 imagery and geometric labels, where US3D denotes the urban satellite 3D data used in the DFC 2019 benchmark rather than a separate row in our comparison. Its target is DSM/LiDAR-style reconstruction rather than textured mesh asset generation. The Sat2City dataset [25] provides synthetic height maps and handcrafted 3D point clouds, created from artist-made Blender assets [79] and large-scale surface sampling pipelines such as CloudCom-pare [80]. These synthetic assets are valuable for controlled experiments but do not represent real satellite imagery or real photogrammetric mesh artifacts. The conference supplemen-tary material of Sat2City explored real height-map transfer with Depth Anything [81] and remote-sensing data such as GAMUS [49], while recent concurrent datasets and generators 5Colorized          
+
+> Point Cloud
+> Height Map Estimated from
+> Satellite Image
+> Distribution
+> Visualization
+> Distribution
+> Visualization
+> (a) Satellite -Mesh Pairs
+> (b) Derived Point Clouds and Height Maps
+> (c) Rendered Views
+> Camera Distribution
+> Fig. 3. Overview of the Sat2City v2 dataset. (a) Satellite-mesh pairs : each scene provides a geographically matched satellite image and textured 3D city mesh. (b) Derived representations : from this pair, we derive auxiliary point-cloud and height-map representations for analysis and evaluation. (c) Camera-captured views : the dataset also stores rendered views captured by cameras sampled around the mesh along a hemispherical arc, illustrated by the orange trajectory, enabling asset-level inspection beyond the overhead satellite input.
+
+such as SynCity [51], NuiScene [50], Aerial-Earth3D [35], ABot-Earth 0.5 [36], and Sat2RealCity [37] still do not provide our training target: a satellite crop paired with a textured mesh asset from the same geographic area. ABot-Earth 0.5 combines proprietary acquisitions with curated public sources rather than introducing a single satellite-mesh paired dataset; among the open-source sources it summarizes, DFC 2019 is the satellite 3D benchmark, while important urban 3D datasets such as UrbanScene3D [10] and UrbanBIS [46] are primarily UAV/aerial city datasets. Table I summarizes the distinction. III. S AT 2C ITY V 2 D ATASET 
+
+A. Data Definition 
+
+Each Sat2City v2 sample is a tuple 
+
+Di = {Isat i , M tex i , B i}, (1) where Isat i is an orthorectified satellite image, M tex i is a tex-tured 3D city mesh, and Bi is the latitude-longitude bounding box shared by both modalities. The pair is weakly aligned: the satellite image and textured mesh describe the same geographic crop, but their exact geometry, time stamp, and reconstruction details may differ. This is a realistic assumption for practical digital-twin data, where imagery and 3D pho-togrammetric reconstructions are often collected by different pipelines and updated at different times. This definition is deliberately weaker than calibrated multiview supervision. It supports learning and asset-level comparison, but it should not be interpreted as pixel-level correspondence between overhead pixels and mesh surfaces. 
+
+B. Collection and Processing 
+
+The collection pipeline is based on Blender 4.2.1, Blender’s Python API, and the free Blosm add-on for importing map-platform city tiles and satellite overlays. 12 For each target city, we first define a regional latitude-longitude search window and partition it into non-overlapping city-block crops. The tiling step uses a latitude-dependent conversion between kilometers and degrees, so a desired physical crop size is converted into crop-level geographic bounding boxes. A Blender-based extraction pipeline then processes each crop independently, importing the Google 3D Tiles mesh and satellite overlay under the same coordinates, standardizing the material graph, and exporting the scene package summarized in Fig. 3. Each retained package contains the primary satellite-textured-mesh pair in Fig. 3(a), derived point-cloud and height-map representations in Fig. 3(b) for the v1.5 diagnostic training route, and rendered perspective views in Fig. 3(c) from virtual cameras distributed along a hemispherical trajectory around the mesh. To derive the auxiliary height maps in Fig. 3(b), we adapt a Depth Anything V2 [82] to remote-sensing elevation 
+
+> 1https://docs.blender.org/api/current/index.html
+> 2https://github.com/vvoovv/blosm/wiki/Documentation 6
+
+estimation following the Depth2Elevation framework [83], using spatially aligned optical RGB images and normalized digital surface model (nDSM) height maps from GAMUS [49] as supervision. The adapted model is then applied to all satellite images, yielding dense learned height proxies for the v1.5 diagnostic route rather than elevations directly exported from the meshes. In the current export format, the camera set contains 50 views with associated 4 × 4 pose matrices; these renderings are used when adapting view-supervised baselines, as discussed in Sec. VI. Crops with invalid satellite overlays, missing city tiles, severely broken meshes, or fragmented reconstructions are removed from the active set. The current active training configuration comprises 24 geo-graphic regions across nine cities, with a total of 14,669 can-didate training crops. New York contributes the largest share of samples, followed by Philadelphia, while the remaining cities broaden the long-tail coverage of geographic conditions and urban morphology. Each valid sample contains a satellite overlay and a textured mesh for the same geographic crop. After validity checks, 14,658 paired training samples contain both modalities; the remaining 11 expected crops are excluded because of incomplete or filtered collection outputs. The final geometry-flow training split contains 14,651 usable pairs after the method-level preprocessing filters described in Sec. V. In addition, 1,590 satellite-mesh pairs are used exclusively for testing and do not participate in training or model selection, yielding 16,241 train/test pairs in total. The test set includes samples from New York and Philadelphia, the two dominant training cities, and an unseen-city subset from Atlanta, which is entirely absent from the training set and is used to assess geographic out-of-distribution generalization. IV. P RELIMINARY STUDY : S YSTEM -L EVEL META 
+
+ABLATION 
+
+Before presenting the final architecture, we analyze arepresentation-preserving upgrade of the conference version as a system-level meta ablation. As summarized in Fig. 4, we refer to the ICCV Sat2City pipeline as v1, and to the naive image-conditioned variant that adds satellite image feature blending as v1.5. This study is not intended to provide an additional main baseline, since Sat2City v1, Sat2City v1.5, and Sat2City v2 use different input protocols; it serves instead as a diagnostic bridge from the conference design to the journal design. It isolates three design questions: whether the v1 geometry resolution should be upgraded, whether the 3D latent space should be learned from real city meshes alone or inherited from a pretrained asset prior, and whether the concatenation-style image conditioning used in v1.5 is suitable for weakly aligned satellite-mesh pairs. Fig. 5 visualizes the corresponding diagnostic observations. 
+
+A. Upgrading Geometry Resolution 
+
+Sat2City v1 [25] takes a satellite-derived height field as input and generates a colorized 3D city asset through cascaded latent diffusion. The first latent stage predicts a dense geomet-ric layout, the second refines sparse geometric structure, and later stages generate hierarchical appearance latents. Its VAE Auto -     
+
+> encoder … … … …
+> Diffusion
+> Process
+> Denoising
+> U-Net
+> … …
+> Condition
+> Blending
+> ΨD
+> X𝐷
+> XS
+> XC0
+> XC1
+> Re -Hash
+> Copy
+> Encoded Latents 𝒳 0Latents 𝒳 𝑇
+> Noised
+
+ℰ𝑑 
+
+> MLP
+
+ℰ𝑠 
+
+𝒟 𝑑 
+
+𝒟 𝑠 
+
+𝒟 𝑐                                                  
+
+> Input/Output
+> 𝑃 ℎ
+> ΨS
+> ΨC0
+> ΨC1
+> 𝒸
+> D:Dense S: Sparse
+> {෨𝐺 ,ሚ𝐴 𝑁 }
+> {෨𝐺 ,ሚ𝐴 𝑁 ,ሚ𝐴 𝐶 }
+> {𝐺 ,𝐴 𝑁 }
+> {𝐺 ,𝐴 𝑁 ,𝑃 𝐶 }
+> DINO
+> Condition
+> Blending
+> 𝑃 𝐼
+> 𝒸
+> V1
+> V1.5
+> Fig. 4. Sat2City v1 and the naive v1.5 upgrade. The upper block follows the ICCV Sat2City pipeline [25]: Phis the height-map condition point cloud; G
+> is the sparse voxel geometry; ANand ACdenote normal and color attributes;
+> PCis the colorized point cloud; tildes denote decoded or generated outputs. The dense VAE encoder Edand decoder Ddoperate on the dense geometry latent XD, while the sparse VAE encoder Esand decoder Dsoperate on the sparse geometry latent XS.Dcis the appearance decoder with an MLP color head. XC0, X C1, . . . are multi-level appearance latents produced by Re-Hash, and ΨD,ΨS,ΨC0,ΨC1, . . . are the cascaded denoising U-Nets. The orange v1.5 plug-in extracts satellite image features PIwith DINOv3, pseudo-projects them into the voxel latent hierarchy, and injects them through condition blending.
+
+and decoder design follows the sparse-voxel and structure-prediction tradition of XCube and NKSR-style surface recon-struction [30], [84], while its latent diffusion stages inherit the broader latent-diffusion and DDIM family [85], [86] with stable denoising parameterizations and backbones [87], [88]. This design works on the synthetic Sat2City dataset because handcrafted city meshes are clean, building masses are regular, and the simulated height map is spatially consistent with the 3D target. The first ablation asks whether the v1 geometry scale can be preserved for real satellite-mesh pairs. Keeping the original low-resolution sparse geometry is computationally attractive, but it is not compatible with the asset-level target of the journal version. Real city crops contain narrow roads, irregular roof structures, trees, elevated roads, facade residues, and small photogrammetric fragments. At the v1 resolution, these struc-tures are either quantized away or merged into coarse blocks, leaving insufficient geometry for satellite-consistent texturing. Fig. 5(a) illustrates this resolution bottleneck: preserving the v1 geometry scale yields over-smoothed city blocks that cannot represent asset-level urban details. Therefore, a real-data extension should upgrade geometry resolution, but this immediately raises a second question: whether the higher-resolution latent hierarchy can be learned reliably from noisy real city meshes alone. 
+
+B. Need for a Pretrained 3D Latent Prior 
+
+The second ablation increases the sparse voxel scale while keeping the v1 representation family. In v1.5, we attempted 512-resolution sparse voxel training on real textured city meshes, so that geometry and appearance could be encoded 7
+
+in a higher-resolution latent grid. This setting removes the resolution bottleneck in principle, but it asks the VAE, the latent hierarchy, and the conditional generator to learn the 3D representation directly from a modest set of noisy, weakly aligned city meshes. This is fundamentally different from the synthetic v1 setting. In real Google Earth meshes, photogram-metric artifacts, fragmented surfaces, vegetation, thin elevated structures, and incomplete facades are not rare outliers; they are part of the observed surface occupancy. After voxelization, these artifacts create additional active voxels and irregular hierarchy changes, so the structural complexity grows with the noise itself. Empirically, this no-pretraining variant does not meet the quality target needed for the journal system. Even before diffusion, encoding and decoding real textured meshes pro-duces blurred and hard-to-recognize reconstructions. When the nominal voxel resolution is increased from the 128-level con-ference configuration to a 512-level real-mesh configuration, the learned sparse hierarchy becomes unstable and produces fragmented voxel structures. As shown in Fig. 5(b), the higher-resolution hierarchy preserves many photogrammetric artifacts, but the resulting geometry is difficult to interpret as coherent buildings, trees, roads, or other urban facilities. These observations indicate that simply increasing the explicit sparse voxel resolution is insufficient. The model also needs a com-pact native 3D latent space whose geometric and appearance regularities are learned from broad, well-structured 3D assets before adaptation to weak geospatial pairs. 
+
+C. From Feature Concatenation to Learned Alignment 
+
+The third ablation tests whether appearance controllabil-ity can be added by inserting satellite image features into the v1 latent hierarchy. As shown by the orange plug-in in Fig. 4, v1.5 extracts DINOv3 features from the satellite image, pseudo-projects them into the voxel latent hierarchy, and concatenates them with VAE latents at multiple Re-Hash levels before latent diffusion. This strategy follows the spirit of sparse-voxel image-conditioned reconstruction [31], where calibrated posed images induce well-defined camera rays and can therefore be associated with 3D voxels before appearance is predicted. In v1.5, the satellite overlay is instead treated as an orthographic condition: parallel rays are assumed to pass through the image plane and enter the corresponding voxel columns. Our data regime violates the accuracy required by this pseudo-orthographic assumption. Each conditioning image is an orthorectified satellite overlay paired with a textured mesh from the same geographic crop, but the pair does not provide calibrated camera-to-mesh correspondence, multi-view overlap, or pixel-perfect surface alignment. Consequently, direct feature concatenation turns satellite conditioning into a brittle top-down pseudo-projection. Errors caused by temporal mismatch, tiling differences, ground-view visibility, and mesh reconstruction artifacts are injected into the latent grid as if they were reliable appearance observa-tions. The multi-level Re-Hash appearance bottleneck further amplifies this mismatch because the projected features are repeatedly compressed and propagated through the appearance (a) Geometry of Sat2City v1  (b) Geometry of Sat2City v1.5  (c) Appearance of Sat2City v1.5  
+
+> Fig. 5. System-level meta ablation from v1 to v1.5. (a) Preserving the v1 geometry resolution over-smooths real city layouts and cannot support asset-level details. (b) Increasing the resolution without a pretrained native 3D latent preserves photogrammetric artifacts in the hierarchy, producing ambiguous geometry whose semantic identity is difficult to recognize. (c) Concatenating pseudo-projected DINOv3 satellite features with latent grids under weak alignment leads to spatially shifted appearance rather than reliable satellite-controlled texturing.
+
+hierarchy. The model can produce colored outputs, but the colors collapse into low-resolution texture blobs and show weak control from the input satellite image. Fig. 5(c) shows this behavior: weak alignment causes the pseudo-projected satellite features to color geometry with visible spatial offsets rather than reliable surface correspondence. This diagnostic suggests that the appearance issue is not solved by adding an image encoder to the v1 pipeline. Satellite conditioning should instead be learned through attention-style image-to-latent alignment, so that the model can exploit the portions of the satellite image and mesh that are mutually consistent while ignoring unmatched regions. 
+
+D. Implications for Sat2City v2 
+
+The three ablations identify the requirements of the final design. First, the model must upgrade geometric resolution to support real asset-level details. Second, the higher-resolution representation should be regularized by a pretrained native 3D prior rather than learned from noisy Sat2City v2 meshes alone. Third, satellite conditioning should replace concatenation-based pseudo-projection with learned image-to-latent align-ment, because the supervision is geographic and weak rather than calibrated and pixel-accurate. These requirements align with the design space of TRELLIS.2 [33]: its pretrained structured latent space provides a compact native 3D prior, its latent flow supports high-resolution asset generation, and its image-conditioned attention modules allow the model to learn the reliable correspondences within weak satellite-mesh pairs. Sat2City v2 therefore realizes the three upgrades by fine-tuning TRELLIS.2 for satellite-conditioned shape generation and using the generated shape as the spatial anchor for satellite-guided texturing, as detailed in Sec. V. V. S AT 2C ITY V 2
+
+A. Overview 
+
+As shown in Fig. 6, Sat2City v2 factorizes satellite-to-asset generation into geometry adaptation and geometry-aware appearance synthesis. Unlike Sat2City v1 and the v1.5 diag-nostic variant, which formulate latent generation as cascaded diffusion, v2 adopts conditional rectified flow matching [89], [90]. Compared with iterative diffusion denoising, rectified flow learns a near-linear noise-to-data trajectory that can 8                         
+
+> Fig. 6. Pipeline of Sat2City v2. Conditioned on Isat , the fine-tuned geometry flow Fg,θ transports Zshape
+> 1to Zshape
+> 0, which the frozen Dgdecodes into
+> Mshape . The frozen appearance flow Fathen transports Ztex
+> 1to Ztex
+> 0under satellite and geometry conditions; Dadecodes material attributes that are baked onto Mshape to produce Mtex .
+
+be integrated with fewer sampling steps. Given a satellite image Isat , a frozen image encoder Φ extracts condition-ing tokens Csat = Φ( Isat ). At inference, a frozen sparse-structure generator S first samples a binary coarse occupancy grid conditioned on Csat . We denote its induced conditional distribution by pS ; a sample Ω ∼ pS (Ω | Csat ) collects the coordinates of occupied cells, which define where geometry-latent tokens are placed rather than the final geometry itself. Our satellite-conditioned geometry flow Fg,θ then transforms Gaussian features attached to these coordinates into a clean geometry latent Zshape  
+
+> 0
+
+, which a frozen geometry decoder Dg
+
+converts into an explicit mesh M shape :
+
+Zshape  
+
+> 0
+
+= Fg,θ (Zshape  
+
+> 1
+
+; Csat , Ω) ,M shape = Dg (Zshape  
+
+> 0
+
+). (2) The generated mesh is subsequently processed by a frozen geometry encoder Eg and passed to a frozen geometry-aware appearance flow Fa. Together with the same satellite tokens, this geometry condition guides the generation of a clean material latent Ztex  
+
+> 0
+
+. Surface baking of the decoded PBR attributes onto M shape is denoted by ⊕:
+
+Ztex  
+
+> 0
+
+= Fa
+
+ Ztex  
+
+> 1
+
+; Csat , Eg (M shape ) ,M tex = M shape ⊕ D a(Ztex  
+
+> 0
+
+). (3) Here, Zshape  
+
+> 1
+
+and Ztex  
+
+> 1
+
+denote Gaussian initial states, whereas 
+
+Zshape  
+
+> 0
+
+and Ztex  
+
+> 0
+
+are the clean terminal states obtained by integrating the respective velocity fields from t = 1 to t = 0 .Only Fg,θ is adapted on Sat2City v2; the remaining modules preserve the pretrained 3D asset prior. 
+
+B. Pretrained Native 3D Asset Prior 
+
+Rather than learning a city-specific latent space from weakly aligned satellite-mesh pairs, we inherit the native asset rep-resentation pretrained by TRELLIS.2 [33]. Its shape and material Sparse Compression VAEs were trained on approxi-mately 473K curated 3D assets and 355K assets with standard metallic–roughness PBR materials, respectively, drawn from Objaverse-XL [91], ABO [92], and HSSD [93]. The gener-ative prior was subsequently trained on approximately 800K assets, incorporating TexVerse [94], a large-scale collection of high-resolution textured 3D assets, together with additional quality filtering. This asset-scale pretraining exposes the rep-resentation to diverse topology, fine geometric structures, and physically based materials before satellite-domain adaptation. Within this representation, O-Voxels encode local dual-grid geometry and surface attributes over sparse active cells, while separate structured latent spaces decouple shape from mate-rial generation. Unlike Sat2City v1 and v1.5, we therefore do not retrain the geometry or material VAEs on noisy photogrammetric city meshes, which would allow collection artifacts to redefine the latent manifold. We freeze the sparse-structure generator, both latent encoders and decoders, and the appearance flow, adapting only the satellite-conditioned geometry flow Fg,θ .
+
+C. Satellite-Conditioned Geometry Flow 
+
+To preserve the pretrained 3D representation, each training mesh is encoded once as the clean data endpoint of the geometry flow. Specifically, we center the mesh, isotropically scale it to fit inside [−0.5, 0.5] 3, transform it to the canonical coordinate system, and discretize it on a 512 3 flexible dual grid. The frozen geometry encoder Eg maps the resulting O-Voxel, supported at active coordinates Ωi, to raw structured-latent features eZshape i , which are normalized using the fixed channel statistics (μg , σ g ) of the pretrained latent space to obtain the clean endpoint Zshape i, 0 = ( eZshape i − μg )/σ g .We cache (Ω i, Z shape i, 0 ) for all training scenes, leaving the geometry VAE and its latent manifold unchanged. Each satellite crop is resized to 512 × 512 , and a frozen DINOv3-L encoder [32] extracts patch tokens Csat i =Φ( Isat i ). Cross-attention conditions the geometry flow on these tokens, allowing image-to-latent correspondences to be learned without the pseudo-projection used by v1.5. For each clean endpoint Zshape i, 0 , we sample Gaussian features ϵi ∼ N (0 , I )
+
+on the same sparse support Ωi. Following conditional flow matching and rectified flow [33], [89], [90], we draw t ∼U(0 , 1) and construct 
+
+Zshape i,t = (1 − t)Zshape i, 0 + [ σmin + (1 − σmin )t] ϵi, (4) where σmin specifies the minimum noise scale. The corre-sponding target velocity is ui = (1 − σmin )ϵi − Zshape i, 0 . The geometry-flow objective is the mean-squared error between this target and the satellite-conditioned velocity field vgθ :
+
+Lgeo = Ei,t,ϵ i
+
+
+
+vgθ (Zshape i,t , t, C sat i ) − ui
+
+> 22
+
+
+
+. (5) The parameters θ are initialized from the pretrained 512-resolution image-conditioned geometry flow and are the only generative parameters updated on Sat2City v2. During infer-ence, the frozen sparse-structure predictor first samples the active coordinate set Ω from Csat ; Euler integration of vgθ9(a)  SatCity -Adapted Aerial Views     
+
+> (b) Native Street -Level Panorama Views
+> Fig. 7. Rendering degradation after SatCity v2 adaptation. (a) Aerial views from the adapted model. (b) Street-level views from its native 360 ◦
+> panorama. The poor adapted renderings reflect the mismatch between cylin-drical panorama training and our hemispherical pinhole-camera supervision; we therefore evaluate the released model only.
+
+from t = 1 to t = 0 then maps Gaussian features at these coordinates from Zshape  
+
+> 1
+
+to Zshape  
+
+> 0
+
+.
+
+D. Geometry-Anchored Material Synthesis 
+
+At city scale, dominant geometric cues such as footprints, massing, and height layout are low-frequency and remain sta-tistically informative under moderate geospatial misalignment. Appearance, by contrast, comprises high-frequency, surface-specific color and material signals for which weakly aligned satellite-mesh pairs provide inconsistent pixel-to-surface su-pervision. Although both geometry and material flows attend to image tokens, attention cannot recover correspondences absent from the training pairs; fine-tuning the material flow would therefore convert geospatial offsets into texture shifts, color leakage, and blurred details. We consequently retain the pretrained geometry-aware material pipeline of TREL-LIS.2 [33]. The generated mesh M shape is converted to an O-Voxel and encoded by the frozen geometry encoder Eg .On the same active coordinates, the frozen appearance flow 
+
+Fa transports the Gaussian material state Ztex  
+
+> 1
+
+to Ztex  
+
+> 0
+
+under two complementary conditions: the encoded shape latent is concatenated channel-wise with the evolving material state to preserve geometric correspondence, while the satellite tokens 
+
+Csat enter through cross-attention to guide appearance seman-tics. The frozen material decoder Da maps Ztex  
+
+> 0
+
+to sparse PBR fields comprising base color, metallic, roughness, and alpha. These attributes are trilinearly sampled at the UV-rasterized mesh surface and baked into texture maps, yielding M tex 
+
+without modifying the generated geometry. Thus, appearance control is obtained by conditioning a fixed material prior jointly on the satellite image and the generated shape. 
+
+E. Implementation Details 
+
+Our satellite-conditioned geometry flow contains 1.3B pa-rameters and operates on latents derived from a 512 3 O-Voxel grid. We train it for 30,000 steps with AdamW, a learning rate of 2 × 10 −5, weight decay 0.01, bfloat16 mixed precision, adaptive gradient clipping, and an exponential moving average rate of 0.9999. We set σmin = 10 −5 in Eq. (4) and drop the satellite condition with probability 0.1 for classifier-free guidance. The per-GPU batch size is 4, divided into two microbatches for gradient accumulation, and training uses four NVIDIA A800-SXM4-80GB GPUs, matching the hardware configuration of the conference version. We retain at most 8192 geometry-latent tokens per scene; this excludes seven oversized samples from the 14,658 valid pairs and leaves 14,651 training pairs. Satellite crops are used without object-centric background removal because the complete geographic footprint is part of the conditioning signal. At inference, geometry is generated with the 512-resolution pipeline using the EMA parameters when available. The frozen appearance stage re-encodes the generated mesh at resolution 1024 and exports 2048 × 2048 texture maps. VI. E XPERIMENTS 
+
+A. Baselines 
+
+We restrict main quantitative comparisons to methods that can consume the same satellite-image input or can be adapted to a clearly stated satellite-conditioned protocol. The ICCV Sat2City model and its naive v1.5 upgrade are therefore discussed only as historical motivation in Sec. IV: the former takes a satellite-derived height map rather than the native satel-lite image, while the latter is a preliminary diagnostic variant whose limitations are already evident in VAE reconstruction quality. Including them in the main tables would conflate different problem definitions. We include a baseline when its released pipeline can be driven by a single satellite image without mandatory semantic, RGB-D, or text conditions; its implementation and required resources are publicly available for reproducible evaluation; and the original work defines or discusses textured-mesh extraction from its learned 3D representation, making asset-level comparison technically meaningful. Under these criteria, we select Sat2Density++ [23] and Sat3DGen [24] as the latest state-of-the-art methods developed specifically for satellite-to-3D generation, and additionally compare with TRELLIS.2 [33] as a state-of-the-art general single-image-to-3D asset gen-erator. Notably, EarthCrafter [35] is not included because its released task formulations require semantic or RGB-D conditions, while the available ABot-Earth 0.5 [36] online interface 3 additionally relies on text guidance and its source code is not publicly available. Sat2Density++ is designed around cylindrical 360 ◦ street-view panoramas. Directly adapting it to our pinhole-camera renderings changes both the image formation model and the distribution of supervision rays, and the resulting train-ing does not attain stable convergence, as summarized in Fig. 7. We therefore evaluate Sat2Density++ using its released weights and follow its published procedure for extracting a textured mesh from the learned rendering proxy. Sat3DGen uses perspective cameras, but its supervision is dominated by street-level viewpoints and therefore differs from the low-altitude hemispherical camera distribution in Fig. 3(c). We consequently report both Sat3DGen (Original), using the re-leased weights, and Sat3DGen (SatCity), which retains the same architecture but is adapted using our rendered views and camera poses. TRELLIS.2 denotes its released pretrained image-to-3D pipeline applied directly to the same satellite                                               
+
+> 3ABot-Earth 0.5 online demo: https://abot-earth.amap.com/?tab=create. 10
+> TABLE II METRIC -SCALE DSM RECONSTRUCTION ON THE UNSEEN SEATTLE SPLIT . A LL METHODS USE THE SAME SATELLITE INPUT AND ARE EVALUATED BY
+> MAE ↓(M), RMSE ↓(M), <2.5m ↑(%), AND <7.5m ↑(%).
+> Method MAE ↓(m) RMSE ↓(m) <2.5m ↑(%) <7.5m ↑(%) Sat2Density++ [23] 4.72 6.76 49.69 83.65 Sat3DGen (Original) [24] 3.47 5.20 62.69 88.68 Sat3DGen (SatCity) [24] 3.42 5.04 69.90 85.46 TRELLIS.2 [33] 3.54 4.89 64.05 86.29
+> Sat2City v2 3.36 4.74 70.67 89.05
+
+crops without SatCity fine-tuning, and therefore also serves as the native-prior ablation for Sat2City v2. All baseline outputs are subsequently processed only by the common alignment and measurement procedures specified below. 
+
+B. Evaluation Protocol 
+
+Because satellite-conditioned textured-mesh generation lacks a unified benchmark, we evaluate three complementary aspects: metric-scale reconstruction, generated-mesh geome-try, and satellite-conditioned appearance. 
+
+Metric-scale DSM reconstruction. Following Sat3DGen [24], Table II evaluates 2,882 satellite–DSM pairs from the unseen Seattle split of VIGOR [28]. All methods are conditioned on the same resized satellite crop. Sat2Density++ and Sat3DGen produce satellite-view radial depth, which is normalized and mapped to metric height using the Sat3DGen scale convention; for TRELLIS.2 and Sat2City v2, a DSM is obtained by orthographically rasterizing the maximum vertical coordinate of the generated mesh. Residual georegistration error is compensated by a bounded planar translation and rotation search, followed by RANSAC estimation of a global vertical offset; this calibration is applied only during evaluation. We define the valid-pixel height error as ep = | bHp − Hp| and report its mean absolute error (MAE), root-mean-square error (RMSE), and the fractions satisfying ep < 2.5 m and ep < 7.5 m. 
+
+Generated-mesh geometry. Table III and Fig. 8 evaluate 1,590 held-out SatCity scenes, including Atlanta as a ge-ographically out-of-distribution subset absent from training. Each prediction and its paired reference mesh are registered in a canonical frame: the reference is centroid-translated, uniformly rescaled to the unit cube, and transformed from Blender’s Z-up frame to the TRELLIS frame, while the predic-tion receives the centering and scale normalization associated with its native representation. Residual orientation ambiguity is resolved by evaluating 36 yaw hypotheses and selecting the rotation that minimizes Chamfer Distance (CD). After simplifying each mesh to at most 100K faces, we uniformly sample 20K surface points for CD and 1,024 points for Earth Mover’s Distance (EMD). Following our conference protocol [25], we report Minimum Matching Distance (MMD) and Coverage (COV) under both distances, with a CD-based coverage threshold of 0.02. Visible surface detail is further assessed using the normal-map protocol of TRELLIS.2 [33]: four 512 ×512 views are rendered at radius 10, pitch 30 ◦, field of view (FOV) 6◦, and yaw angles 30 ◦, 120 ◦, 210 ◦, and 300 ◦.Normal PSNR and Normal LPIPS [95] are averaged across the four views and all scenes. 
+
+Generated-mesh appearance. Table IV and Fig. 9 assess satellite-to-asset semantic correspondence on the same scenes. Each score is referenced to the satellite image actually supplied to the corresponding model, thereby accounting for method-specific preprocessing. Predicted meshes are rendered as RGB and normal maps from four fixed orbit views at radius 2.5, pitch 45 ◦, FOV 40 ◦, and 512 ×512 resolution. Following TRELLIS.2 [33], OpenAI CLIP-ViT-L/14 [96] encodes the satellite image and each render into L2-normalized features. CLIP and CLIP-N are the mean view-wise cosine similarities obtained from RGB and normal renders, respectively, averaged over all scenes. 
+
+C. Main Results 
+
+Table II reports metric-scale DSM reconstruction. Sat2City v2 ranks first on all four metrics, achieving an MAE of 3.36 m and an RMSE of 4.74 m. Relative to the strongest competing result in each column, it reduces RMSE from 4.89 m to 4.74 m and increases the fraction of pixels below 2.5 m error from 69.90% to 70.67%. Its consistent improvement over zero-shot TRELLIS.2 across both error and threshold metrics shows that satellite-domain adaptation contributes beyond the pretrained native 3D prior. Generated-mesh geometry results are reported in Table III and Fig. 8. Sat2City v2 achieves the lowest MMD under both CD and EMD, the highest COV under both distances, and the highest Normal PSNR. These results indicate closer agree-ment with, and broader coverage of, the held-out reference-mesh distribution. The qualitative comparison further shows improved preservation of block layout and building massing, with fewer fragmented surfaces and implausible structures than the rendering-proxy baselines. TRELLIS.2 retains a lower Normal LPIPS, 0.1099 versus 0.1186 for Sat2City v2, despite the lower MMD and higher Normal PSNR of our method. This difference may reflect the sensitivity of perceptual normal-map features to the smoother surfaces favored by the generic asset prior, whereas SatCity adaptation preserves sharper local variations from photogrammetric city geometry. Table IV and Fig. 9 summarize satellite-conditioned appear-ance quality. Sat2City v2 attains the highest CLIP and CLIP-N scores, improving over zero-shot TRELLIS.2 from 0.7118 to 0.7342 and from 0.6660 to 0.6849, respectively. Because the material flow remains frozen, these gains quantify the end-to-end effect of satellite-conditioned geometry adaptation followed by geometry-anchored pretrained texturing, rather than texture-flow fine-tuning. The qualitative results exhibit stronger correspondence in roof, road, vegetation, and ground appearance while preserving coherent textured surfaces. 11 
+
+TABLE III GEOMETRY GENERATION COMPARISON ON THE 1,590 HELD -OUT SAT CITY SCENES . MMD AND COV ARE COMPUTED WITH CD AND EMD 
+
+> POINT
+
+-CLOUD DISTANCES FOLLOWING THE SAT 2C ITY CONFERENCE PROTOCOL . N ORMAL PSNR AND NORMAL LPIPS AVERAGE NORMAL -MAP SIMILARITY OVER FOUR FIXED 512 ×512 VIEWPOINTS FOLLOWING TRELLIS.2. 
+
+Method MMD (CD) ↓ MMD (EMD) ↓ COV (CD) % ↑ COV (EMD) % ↑ Normal PSNR ↑ Normal LPIPS ↓
+
+Sat2Density++ [23] 0.0148 0.0252 74.9 43.5 12.24 0.1495 Sat3DGen (Original) [24] 0.0061 0.0169 86.67 77.0 12.62 0.1593 Sat3DGen (Sat2City) [24] 0.0057 0.0161 87.17 77.2 12.66 0.1614 TRELLIS.2 [33] 0.0045 0.0144 95.0 80.8 14.38 0.1099 Sat2City v2 0.0038 0.0117 97.4 84.3 14.84 0.1186 Sat 2City v2 TRELLIS.2 Sat3DGen 
+
+(Sat2City) 
+
+Sat2Density++  Sat3DGen 
+
+(Original) 
+
+Input Image 
+
+Fig. 8. Qualitative geometry comparison on held-out SatCity inputs. Each row uses the same input crop and compares Sat2Density++, Sat3DGen (Original), Sat3DGen (Sat2City), TRELLIS.2, and Sat2City v2. Sat2City v2 more consistently recovers block-scale layout, building massing, and road-adjacent structure while reducing severe surface fragmentation. 
+
+D. Ablation Analysis 
+
+Our ablation evidence addresses two claims behind Sat2City v2. The system-level meta ablation in Sec. IV supports the technical redesign from the conference system to the journal system. Starting from Sat2City v1, Fig. 4 and Fig. 5 show that preserving the low-resolution geometry scale, learning a high-12 Sat 2City v2TRELLIS. 2Sat 3DGen  
+
+> (Sat 2City)
+> Sat 2Density++ Sat 3DGen
+> (Original)
+> Input Image
+
+Fig. 9. Qualitative appearance comparison on held-out SatCity inputs. Each row uses the same input crop and compares Sat2Density++, Sat3DGen (Original), Sat3DGen (Sat2City), TRELLIS.2, and Sat2City v2. Sat2City v2 better preserves satellite-consistent roof, road, vegetation, and waterfront cues while producing coherent textured mesh assets. TABLE IV APPEARANCE SEMANTIC CONSISTENCY ON THE 1,590 HELD -OUT 
+
+SAT CITY SCENES . CLIP AND CLIP-N USE OPEN AI CLIP-V IT-L/14 
+
+> FEATURES AND AVERAGE COSINE SIMILARITY ACROSS FOUR FIXED ORBIT VIEWS
+
+. CLIP USES RGB RENDERS , WHILE CLIP-N USES RENDERED NORMAL MAPS .            
+
+> Method CLIP ↑CLIP-N ↑
+> Sat2Density++ [23] 0.6237 0.5672 Sat3DGen (Original) [24] 0.7104 0.6017 Sat3DGen (Sat2City) [24] 0.7122 0.5840 TRELLIS.2 [33] 0.7118 0.6660
+> Sat2City v2 0.7342 0.6849
+
+resolution sparse latent directly from noisy real meshes, and inserting pseudo-projected satellite features into the voxel hi-erarchy do not provide a reliable path to asset-level generation. This diagnostic motivates the three central modeling choices of v2: a higher-resolution structured latent, a pretrained native 3D asset prior, and learned image-to-latent conditioning for weakly aligned satellite-mesh pairs. The TRELLIS.2 row in Tables II–IV provides a complemen-tary dataset-adaptation ablation. It keeps the same pretrained native 3D prior and applies the released image-to-3D pipeline directly to the satellite crops, but it does not learn from the Sat2City v2 satellite-mesh pairs. The consistent improvements of Sat2City v2 over this baseline therefore measure the effect 13 
+
+of adapting the pretrained asset prior with our geographically paired real-city data. Since the material flow is frozen in Sat2City v2, the appearance gains further indicate that the dataset mainly improves satellite-conditioned geometry and the geometry anchor used by the pretrained texturing stage, rather than relying on an additional texture-flow fine-tuning procedure. VII. D ISCUSSION 
+
+A. Why Weak Geo-Pair Supervision Works 
+
+At first glance, weak satellite-mesh pairing appears too noisy for supervised learning. The satellite image and mesh may disagree in time, occlusion, reconstruction quality, and exact alignment. Our experiments suggest that this supervision becomes useful when the model is not asked to learn a 3D prior from scratch. The pretrained native 3D latent space already encodes plausible local surface structure and material regularities. Fine-tuning then only needs to learn a coarse map-ping from overhead image evidence to regions of this latent manifold. This explains why the same data are insufficient for the naive v1.5 representation-learning route but effective for Sat2City v2. 
+
+B. Limitations 
+
+Sat2City v2 still has several limitations. The supervision is geographically matched but weakly aligned. Expanding Sat2City v2 with more publicly available satellite-mesh pairs from different cities and countries is likely to improve cover-age and reduce distribution bias, but it cannot fully remove the ceiling imposed by asynchronous imagery, map tiling, and photogrammetric reconstruction artifacts. Stronger metric accuracy would require more tightly coupled geospatial data, for example professional mapping assets in which satellite or aerial imagery, camera geometry, and 3D city reconstruction are maintained in a common coordinate system. Such data are difficult to release at scale, which makes weak geo-pair learning a practical but inherently limited academic setting. Explicit native 3D generation and rendering-oriented repre-sentations have complementary failure modes. Our textured meshes provide reusable geometry, topology, and material maps, but their view-level photorealism is still limited by the pretrained material prior and by the weak satellite-to-surface alignment. By contrast, radiance-field and Gaussian-splatting representations [34], [97] can absorb high-frequency appearance from dense aerial or street-level observations, yet their geometry is often optimized indirectly through rendering losses and can be unreliable in complex large-scale scenes. Recent mesh-to-Gaussian and mesh-guided Gaussian methods show that explicit surfaces can be converted into Gaussian splats or used to anchor editable rendering layers [98]–[102]. A promising direction is therefore a hierarchical and maintain-able city-generation framework: use native 3D generation to produce an explicit textured mesh as the coarse asset scaffold, convert or bind this scaffold to a Gaussian or radiance layer for high-frequency rendering, and update that layer over time with newly collected aerial images. In this design, the mesh con-strains global layout and metric structure, while the rendering layer absorbs time-varying visual details. This could combine the geometric robustness of asset-level generation with the visual fidelity and long-term updatability of rendering-based methods. VIII. C ONCLUSION 
+
+We presented Sat2City v2, a journal extension of Sat2City for appearance-controllable real-world 3D city asset generation from a single satellite image. The core shift is from a synthetic height-map-conditioned XCube-style framework to a real-data adaptation of a pretrained native structured-latent 3D founda-tion model. A preliminary naive upgrade revealed that directly fitting a task-specific sparse latent representation to noisy real city meshes leads to blurred texture reconstruction and fragmented high-resolution geometry. Sat2City v2 resolves this by encoding real city meshes into a strong pretrained 3D latent space and fine-tuning a satellite-conditioned geometry flow on weakly aligned pairs in which the satellite image and textured mesh are collected from matched geographic crops. Together with the Sat2City v2 dataset, this framework provides a practical path toward explicit, textured, satellite-controllable 3D city generation. Across metric-scale reconstruction and generative city-asset benchmarks for geometry and appear-ance, Sat2City v2 achieves the best overall performance among the evaluated baselines. REFERENCES [1] Z. Li, Z. Li, Z. Cui, M. Pollefeys, and M. R. Oswald, “Sat2scene: 3d urban scene generation from satellite images with diffusion,” in                     
+
+> Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 7141–7150. [2] C. H. Lin, H.-Y. Lee, W. Menapace, M. Chai, A. Siarohin, M.-H. Yang, and S. Tulyakov, “Infinicity: Infinite-scale city synthesis,” in
+> Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 22 808–22 818. [3] H. Xie, Z. Chen, F. Hong, and Z. Liu, “Citydreamer: Compositional generative model of unbounded 3d cities,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 9666–9675. [4] H. Xie, Z. Chen, F. Hong, and Z. Liu, “Gaussiancity: Generative gaussian splatting for unbounded 3d city generation,” arXiv preprint arXiv:2406.06526 , 2024. [5] H. Xie, Z. Chen, F. Hong, and Z. Liu, “Generative gaussian splatting for unbounded 3d city generation,” in Proceedings of the Computer Vision and Pattern Recognition Conference , 2025, pp. 6111–6120. [6] Y. Xu, Y. Ng, Y. Wang, I. Sa, Y. Duan, Y. Li, P. Ji, and H. Li, “Sketch2scene: Automatic generation of interactive 3d game scenes from user’s casual sketches,” arXiv preprint arXiv:2408.04567 , 2024. [7] F. Lu, K.-Y. Lin, Y. Xu, H. Li, G. Chen, and C. Jiang, “Urban architect: Steerable 3d urban scene generation with layout prior,” arXiv preprint arXiv:2404.06780 , 2024. [8] S. Yang, H. Yuan, T. Wang, R. Zhong, C. Song, Y. Fu, W. Ge, and X. Yuan, “Procedural generation of 3d scenes for urban landscape based on remote sensing images,” in 2024 IEEE International Conference on Advanced Video and Signal Based Surveillance (AVSS) .IEEE, 2024, pp. 1–7. [9] Y. Lu, X. Ren, J. Yang, T. Shen, Z. Wu, J. Gao, Y. Wang, S. Chen, M. Chen, S. Fidler et al. , “Infinicube: Unbounded and controllable dynamic 3d driving scene generation with world-guided video models,”
+> arXiv preprint arXiv:2412.03934 , 2024. [10] L. Lin, Y. Liu, Y. Hu, X. Yan, K. Xie, and H. Huang, “Capturing, reconstructing, and simulating: The urbanscene3d dataset,” in European Conference on Computer Vision , 2022. [11] Y. Shang, J. Chen, H. Fan, J. Ding, J. Feng, and Y. Li, “Urban-world: An urban world model for 3d city generation,” arXiv preprint arXiv:2407.11965 , 2024. 14
+
+[12] S. Zhang, M. Zhou, Y. Wang, C. Luo, R. Wang, Y. Li, X. Yin, Z. Zhang, and J. Peng, “Cityx: Controllable procedural content generation for unbounded 3d cities,” arXiv preprint arXiv:2407.17572 , 2024. [13] Z. Li, Z. Li, Z. Cui, R. Qin, M. Pollefeys, and M. R. Oswald, “Sat2vid: Street-view panoramic video synthesis from a single satellite image,” in 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , 2021, pp. 12 436–12 445. [14] X. Lu, Z. Li, Z. Cui, M. R. Oswald, M. Pollefeys, and R. Qin, “Geometry-aware satellite-to-ground image synthesis for urban areas,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2020, pp. 859–867. [15] M. Qian, J. Xiong, G.-S. Xia, and N. Xue, “Sat2density: Faithful density learning from satellite-ground image pairs,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 3683–3692. [16] Y. Shi, D. Campbell, X. Yu, and H. Li, “Geometry-guided street-view panorama synthesis from satellite imagery,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 44, no. 12, pp. 10 009–10 022, 2022. [17] N. Xu and R. Qin, “Geospecific view generation – geometry-context aware high-resolution ground view inference from satellite views,” 2024. [Online]. Available: https://arxiv.org/abs/2407.08061 [18] W. Li, J. He, J. Ye, H. Zhong, Z. Zheng, Z. Huang, D. Lin, and C. He, “Crossviewdiff: A cross-view diffusion model for satellite-to-street view synthesis,” arXiv preprint arXiv:2408.14765 , 2024. [19] B. Deng, R. Tucker, Z. Li, L. Guibas, N. Snavely, and G. Wetzstein, “Streetscapes: Large-scale consistent street view generation using au-toregressive video diffusion,” in ACM SIGGRAPH 2024 Conference Papers , 2024, pp. 1–11. [20] Y. Yang, Y. Yang, H. Guo, R. Xiong, Y. Wang, and Y. Liao, “Ur-bangiraffe: Representing urban scenes as compositional generative neural feature fields,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 9199–9210. [21] L. Li, W. Qiu, Y. Cai, X. Yan, Q. Lian, B. Liu, and Y.-C. Chen, “Syn-theocc: Synthesize geometric-controlled street view images through 3d semantic mpis,” arXiv preprint arXiv:2410.00337 , 2024. [22] M. Qian, J. Xiong, G.-S. Xia, and N. Xue, “Sat2density: Faithful density learning from satellite-ground image pairs,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 3683–3692. [23] M. Qian, B. Tan, Q. Wang, X. Zheng, H. Xiong, G.-S. Xia, Y. Shen, and N. Xue, “Seeing through satellite images at street views,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2026. [24] M. Qian, Z. Xia, C. Liu, S. Ma, W. Wang, Z. Ke, B. Tan, H. Zhang, and G.-S. Xia, “Sat3dgen: Comprehensive street-level 3d scene gen-eration from single satellite image,” in The Fourteenth International Conference on Learning Representations , 2026. [25] T. Hua, L. Jiang, Y.-C. Chen, and W. Zhao, “Sat2city: 3d city gener-ation from a single satellite image with cascaded latent diffusion,” in 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , October 2025, pp. 27 978–27 988. [26] S. Workman, R. Souvenir, and N. Jacobs, “Wide-area image geolo-calization with aerial reference imagery,” in Proceedings of the IEEE International Conference on Computer Vision , 2015, pp. 3961–3969. [27] L. Liu and H. Li, “Lending orientation to neural networks for cross-view geo-localization,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2019, pp. 5624–5633. [28] S. Zhu, T. Yang, and C. Chen, “Vigor: Cross-view image geo-localization beyond one-to-one retrieval,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , June 2021, pp. 3640–3649. [29] Google, “Google earth,” 2026, accessed: 2026-05-28. [Online]. Available: https://earth.google.com/ [30] X. Ren, J. Huang, X. Zeng, K. Museth, S. Fidler, and F. Williams, “Xcube: Large-scale 3d generative modeling using sparse voxel hier-archies,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 4209–4219. [31] X. Ren, Y. Lu, H. Liang, Z. Wu, H. Ling, M. Chen, S. Fidler, F. Williams, and J. Huang, “Scube: Instant large-scale scene recon-struction using voxsplats,” arXiv preprint arXiv:2410.20030 , 2024. [32] O. Sim´ eoni, H. V. Vo, M. Seitzer, F. Baldassarre, M. Oquab, C. Jose, V. Khalidov, M. Szafraniec, S. Yi, M. Ramamonjisoa, F. Massa, D. Haziza, L. Wehrstedt, J. Wang, T. Darcet, T. Moutakanni, L. Sen-tana, C. Roberts, A. Vedaldi, J. Tolan, J. Brandt, C. Couprie, J. Mairal, H. J´ egou, P. Labatut, and P. Bojanowski, “DINOv3,” arXiv preprint arXiv:2508.10104 , 2025. [33] J. Xiang, X. Chen, S. Xu, R. Wang, Z. Lv, Y. Deng, H. Zhu, Y. Dong, H. Zhao, N. J. Yuan, and J. Yang, “Native and compact structured latents for 3d generation,” arXiv preprint arXiv:2512.14692 , 2025. [34] B. Kerbl, G. Kopanas, T. Leimk¨ uhler, and G. Drettakis, “3d gaussian splatting for real-time radiance field rendering.” ACM Trans. Graph. ,vol. 42, no. 4, pp. 139–1, 2023. [35] S. Liu, C. Cao, C. Yu, W. Qian, J. Wang, and F. Wang, “Earthcrafter: Scalable 3d earth generation via dual-sparse latent diffusion,” in 
+
+Proceedings of the AAAI Conference on Artificial Intelligence , vol. 40, no. 9, 2026, pp. 7260–7268. [36] M. Qian, T. Ouyang, M. Sun, Z. Wang, J. Xiong, J. Han, Y. Zhang, J. Zhang, X. Wang, Y. Liu, L. Tang, F. Yu, Z. Ge, M. Du, Y. Liu, N. Fan, S. Wang, Y. Peng, C. Jia, Y. Liu, S. Zeng, H. Shi, J. Lai, H. Pan, Z. Wu, N. Guo, M. Xu, and H. Zhang, “ABot-Earth 0.5: Generative 3d earth model,” arXiv preprint arXiv:2606.09967 , 2026. [37] Y. Kang, X. Wang, Z. Wu, Y. Shi, and H. Zhu, “Sat2realcity: Geometry-aware and appearance-controllable 3d urban generation from satellite imagery,” arXiv preprint arXiv:2511.11470 , 2025. [38] L. Chai, R. Tucker, Z. Li, P. Isola, and N. Snavely, “Persistent nature: A generative model of unbounded 3d worlds,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,2023, pp. 20 863–20 874. [39] Z. Chen, G. Wang, and Z. Liu, “Scenedreamer: Unbounded 3d scene generation from 2d image collections,” IEEE transactions on pattern analysis and machine intelligence , 2023. [40] R. Fridman, A. Abecasis, Y. Kasten, and T. Dekel, “Scenescape: Text-driven consistent scene generation,” Advances in Neural Information Processing Systems , vol. 36, 2024. [41] Z. Hao, A. Mallya, S. Belongie, and M.-Y. Liu, “Gancraft: Unsuper-vised 3d neural rendering of minecraft worlds,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2021, pp. 14 072–14 082. [42] Y. Yang, F. Yin, J. Fan, X. Chen, W. Li, and G. Yu, “Scene123: One prompt to 3d scene generation via video-assisted and consistency-enhanced mae,” arXiv preprint arXiv:2408.05477 , 2024. [43] S. Zhang, Y. Zhang, Q. Zheng, R. Ma, W. Hua, H. Bao, W. Xu, and C. Zou, “3d-scenedreamer: Text-driven 3d-consistent scene generation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 10 170–10 180. [44] S. Yoon, J. Kim, and J. Park, “Extend3d: Town-scale 3d generation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2026, pp. 5892–5901. [45] B. Le Saux, N. Yokoya, R. H¨ ansch, and M. Brown, “2019 ieee grss data fusion contest: Large-scale semantic 3d reconstruction,” IEEE Geoscience and Remote Sensing Magazine , 2019. [46] G. Yang, F. Xue, Q. Zhang, K. Xie, C.-W. Fu, and H. Huang, “Urbanbis: A large-scale benchmark for fine-grained urban building instance segmentation,” ACM Transactions on Graphics , vol. 42, no. 4, 2023. [47] Y. Zhou, J. Huang, X. Dai, L. Luo, Z. Chen, and Y. Ma, “Holicity: A city-scale data platform for learning holistic 3d structures,” arXiv preprint arXiv:2008.03286 , 2020. [48] W. Li, Y. Lai, L. Xu, Y. Xiangli, J. Yu, C. He, G.-S. Xia, and D. Lin, “Omnicity: Omnipotent city understanding with multi-level and multi-view images,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2023, pp. 17 397–17 407. [49] Z. Xiong, S. Chen, Y. Wang, L. Mou, and X. X. Zhu, “Gamus: A geometry-aware multi-modal semantic segmentation benchmark for remote sensing data,” arXiv preprint arXiv:2305.14914 , 2023. [50] H.-H. Lee, Q. Han, and A. X. Chang, “Nuiscene: Exploring efficient generation of unbounded outdoor scenes,” arXiv:2503.16375 , 2025. [51] P. Engstler, A. Shtedritski, I. Laina, C. Rupprecht, and A. Vedaldi, “Syncity: Training-free generation of 3d worlds,” arXiv:2503.16420 ,2025. [52] B. Poole, A. Jain, J. T. Barron, and B. Mildenhall, “Dreamfusion: Text-to-3d using 2d diffusion,” arXiv preprint arXiv:2209.14988 , 2022. [53] H. Bai, Y. Lyu, L. Jiang, S. Li, H. Lu, X. Lin, and L. Wang, “Componerf: Text-guided multi-object compositional nerf with editable 3d scene layout,” arXiv preprint arXiv:2303.13843 , 2023. [54] X. Zhou, X. Ran, Y. Xiong, J. He, Z. Lin, Y. Wang, D. Sun, and M.-H. Yang, “Gala3d: Towards text-to-3d complex scene genera-tion via layout-guided generative gaussian splatting,” arXiv preprint arXiv:2402.07207 , 2024. [55] D. Cohen-Bar, E. Richardson, G. Metzer, R. Giryes, and D. Cohen-Or, “Set-the-scene: Global-local training for generating controllable nerf scenes,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 2920–2929. 15 
+
+[56] X. Yuan, H. Yang, Y. Zhao, and D. Huang, “Dreamscape: 3d scene cre-ation via gaussian splatting joint correlation modeling,” arXiv preprint arXiv:2404.09227 , 2024. [57] L. Jiang, H. Li, and L. Wang, “A general framework to boost 3d gs initialization for text-to-3d generation by lexical richness,” in Proceed-ings of the 32nd ACM International Conference on Multimedia , 2024, pp. 6803–6812. [58] D. Epstein, B. Poole, B. Mildenhall, A. A. Efros, and A. Holynski, “Disentangled 3d scene generation with layout learning,” arXiv preprint arXiv:2402.16936 , 2024. [59] X. Cheng, T. Yang, J. Wang, Y. Li, L. Zhang, J. Zhang, and L. Yuan, “Progressive3d: Progressively local editing for text-to-3d content creation with complex semantic prompts,” arXiv preprint arXiv:2310.11784 , 2023. [60] Y. Hong, K. Zhang, J. Gu, S. Bi, Y. Zhou, D. Liu, F. Liu, K. Sunkavalli, T. Bui, and H. Tan, “Lrm: Large reconstruction model for single image to 3d,” in The Twelfth International Conference on Learning Representations , 2024. [61] D. Tochilkin, D. Pankratz, Z. Liu, Z. Huang, A. Letts, Y. Li, D. Liang, C. Laforte, V. Jampani, and Y.-P. Cao, “Triposr: Fast 3d object reconstruction from a single image,” arXiv preprint arXiv:2403.02151 ,2024. [62] J. Xu, W. Cheng, Y. Gao, X. Wang, S. Gao, and Y. Shan, “Instantmesh: Efficient 3d mesh generation from a single image with sparse-view large reconstruction models,” arXiv preprint arXiv:2404.07191 , 2024. [63] Z. Zhao, Z. Lai, Q. Lin, Y. Zhao, H. Liu, S. Yang, Y. Feng, M. Yang, S. Zhang, X. Yang et al. , “Hunyuan3d 2.0: Scaling diffusion models for high resolution textured 3d assets generation,” arXiv preprint arXiv:2501.12202 , 2025. [64] Z. Chen, Y. Wang, W. Sun, F. Wang, Y. Chen, and H. Liu, “Meshgen: Generating pbr textured mesh with render-enhanced auto-encoder and generative data augmentation,” in Proceedings of the Computer Vision and Pattern Recognition Conference , 2025, pp. 5835–5848. [65] M. Boss, Z. Huang, A. Vasishta, and V. Jampani, “Sf3d: Stable fast 3d mesh reconstruction with uv-unwrapping and illumination disentanglement,” in Proceedings of the Computer Vision and Pattern Recognition Conference , 2025, pp. 16 240–16 250. [66] Y. Hong, K. Zhang, J. Gu, S. Bi, Y. Zhou, D. Liu, F. Liu, K. Sunkavalli, T. Bui, and H. Tan, “Lrm: Large reconstruction model for single image to 3d,” arXiv preprint arXiv:2311.04400 , 2023. [67] J. Xu, W. Cheng, Y. Gao, X. Wang, S. Gao, and Y. Shan, “Instantmesh: Efficient 3d mesh generation from a single image with sparse-view large reconstruction models,” arXiv preprint arXiv:2404.07191 , 2024. [68] L. Zhang, Z. Wang, Q. Zhang, Q. Qiu, A. Pang, H. Jiang, W. Yang, L. Xu, and J. Yu, “Clay: A controllable large-scale generative model for creating high-quality 3d assets,” ACM Transactions on Graphics (TOG) , vol. 43, no. 4, pp. 1–20, 2024. [69] B. Zhang, J. Tang, M. Niessner, and P. Wonka, “3dshape2vecset: A 3d shape representation for neural fields and generative diffusion models,” 
+
+ACM Transactions on Graphics (TOG) , vol. 42, no. 4, pp. 1–16, 2023. [70] B. Zhang and P. Wonka, “Lagem: A large geometry model for 3d rep-resentation learning and diffusion,” arXiv preprint arXiv:2410.01295 ,2024. [71] Y. Siddiqui, A. Alliegro, A. Artemov, T. Tommasi, D. Sirigatti, V. Rosov, A. Dai, and M. Nießner, “Meshgpt: Generating trian-gle meshes with decoder-only transformers,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 19 615–19 625. [72] Y. Chen, T. He, D. Huang, W. Ye, S. Chen, J. Tang, X. Chen, Z. Cai, L. Yang, G. Yu et al. , “Meshanything: Artist-created mesh generation with autoregressive transformers,” arXiv preprint arXiv:2406.10163 ,2024. [73] Y. Chen, Y. Wang, Y. Luo, Z. Wang, Z. Chen, J. Zhu, C. Zhang, and G. Lin, “Meshanything v2: Artist-created mesh generation with adjacent mesh tokenization,” arXiv preprint arXiv:2408.02555 , 2024. [74] S. Chen, X. Chen, A. Pang, X. Zeng, W. Cheng, Y. Fu, F. Yin, Y. Wang, Z. Wang, C. Zhang et al. , “Meshxl: Neural coordinate field for generative 3d foundation models,” arXiv preprint arXiv:2405.20853 ,2024. [75] J. Tang, Z. Li, Z. Hao, X. Liu, G. Zeng, M.-Y. Liu, and Q. Zhang, “Edgerunner: Auto-regressive auto-encoder for artistic mesh genera-tion,” arXiv preprint arXiv:2409.18114 , 2024. [76] H. Weng, Y. Wang, T. Zhang, C. Chen, and J. Zhu, “Pivotmesh: Generic 3d mesh generation via pivot vertices guidance,” arXiv preprint arXiv:2405.16890 , 2024. [77] Z. Wang, J. Lorraine, Y. Wang, H. Su, J. Zhu, S. Fidler, and X. Zeng, “Llama-mesh: Unifying 3d mesh generation with language models,” 
+
+arXiv preprint arXiv:2411.09595 , 2024. [78] J. Xiang, Z. Lv, S. Xu, Y. Deng, R. Wang, B. Zhang, D. Chen, X. Tong, and J. Yang, “Structured 3d latents for scalable and versatile 3d generation,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2025, pp. 21 469–21 480. [79] B. Foundation, “Blender - a 3d modeling and animation software,” 2025, version 4.2, accessed: 2025-02-19. [Online]. Available: https://www.blender.org [80] C. D. Team, “Cloudcompare (version 2.12.4) [gpl software],” 2025, retrieved on 2025-02-19. [Online]. Available: http://www. cloudcompare.org/ [81] L. Yang, B. Kang, Z. Huang, X. Xu, J. Feng, and H. Zhao, “Depth anything: Unleashing the power of large-scale unlabeled data,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 10 371–10 381. [82] L. Yang, B. Kang, Z. Huang, Z. Zhao, X. Xu, J. Feng, and H. Zhao, “Depth anything v2,” in Advances in Neural Information Processing Systems , 2024. [83] Z. Hong, T. Wu, Z. Xu, and W. Zhao, “Depth2elevation: Scale modula-tion with depth anything model for single-view remote sensing image height estimation,” IEEE Transactions on Geoscience and Remote Sensing , 2025. [84] J. Huang, Z. Gojcic, M. Atzmon, O. Litany, S. Fidler, and F. Williams, “Neural kernel surface reconstruction,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recogni-tion , 2023, pp. 4369–4379. [85] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, “High-resolution image synthesis with latent diffusion models,” in 
+
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2022, pp. 10 684–10 695. [86] J. Song, C. Meng, and S. Ermon, “Denoising diffusion implicit mod-els,” arXiv preprint arXiv:2010.02502 , 2020. [87] T. Salimans and J. Ho, “Progressive distillation for fast sampling of diffusion models,” arXiv preprint arXiv:2202.00512 , 2022. [88] P. Dhariwal and A. Nichol, “Diffusion models beat gans on image synthesis,” Advances in neural information processing systems , vol. 34, pp. 8780–8794, 2021. [89] Y. Lipman, R. T. Q. Chen, H. Ben-Hamu, M. Nickel, and M. Le, “Flow matching for generative modeling,” in International Conference on Learning Representations , 2023. [90] X. Liu, C. Gong, and Q. Liu, “Flow straight and fast: Learning to generate and transfer data with rectified flow,” in International Conference on Learning Representations , 2023. [91] M. Deitke, R. Liu, M. Wallingford, H. Ngo, O. Michel, A. Kusupati, A. Fan, C. Laforte, V. Voleti, S. Y. Gadre, E. VanderBilt, A. Kembhavi, C. Vondrick, G. Gkioxari, K. Ehsani, L. Schmidt, and A. Farhadi, “Objaverse-xl: A universe of 10m+ 3d objects,” in Advances in Neural Information Processing Systems , vol. 36, 2023. [92] J. Collins, S. Goel, K. Deng, A. Luthra, L. Xu, E. Gundogdu, X. Zhang, T. F. Y. Vicente, T. Dideriksen, H. Arora, M. Guillaumin, and J. Malik, “ABO: Dataset and benchmarks for real-world 3d object understand-ing,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 21 126–21 136. [93] M. Khanna, Y. Mao, H. Jiang, S. Haresh, B. Shacklett, D. Batra, A. Clegg, E. Undersander, A. X. Chang, and M. Savva, “Habi-tat synthetic scenes dataset (HSSD-200): An analysis of 3d scene scale and realism tradeoffs for objectgoal navigation,” arXiv preprint arXiv:2306.11290 , 2023. [94] Y. Zhang, L. Zhang, R. Ma, and N. Cao, “Texverse: A uni-verse of 3d objects with high-resolution textures,” arXiv preprint arXiv:2508.10868 , 2025. [95] R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, “The unreasonable effectiveness of deep features as a perceptual metric,” in 
+
+Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition , 2018, pp. 586–595. [96] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark, G. Krueger, and I. Sutskever, “Learning transferable visual models from natural language supervi-sion,” in Proceedings of the International Conference on Machine Learning , 2021, pp. 8748–8763. [97] B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoor-thi, and R. Ng, “Nerf: Representing scenes as neural radiance fields for view synthesis,” Communications of the ACM , vol. 65, no. 1, pp. 99–106, 2021. 16 
+
+[98] S. Scolari, “Mesh2splat: Fast mesh to 3d gaussian splat conversion,” https://github.com/electronicarts/mesh2splat, 2025, extended and up-dated version of the author’s Master’s thesis at KTH. [99] S. Scolari, “Mesh2splat: Gaussian splatting from 3d geometry and materials,” Master’s thesis, KTH Royal Institute of Technology, 2024. [Online]. Available: https://urn.kb.se/resolve?urn=urn:nbn:se: kth:diva-359582 [100] A. Gu´ edon and V. Lepetit, “Sugar: Surface-aligned gaussian splatting for efficient 3d mesh reconstruction and high-quality mesh rendering,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 5354–5363. [101] J. Waczy´ nska, P. Borycki, S. Tadeja, J. Tabor, and P. Spurek, “Games: Mesh-based adapting and modification of gaussian splatting,” arXiv preprint arXiv:2402.01459 , 2024. [102] J. Choi, Y. Lee, H. Lee, H. Kwon, and D. Manocha, “Meshgs: Adaptive mesh-aligned gaussian splatting for high-quality rendering,” 
+
+arXiv preprint arXiv:2410.08941 , 2024.
