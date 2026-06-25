@@ -1,0 +1,2185 @@
+Title: SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments
+
+URL Source: https://arxiv.org/pdf/2606.22488v1
+
+Published Time: Tue, 23 Jun 2026 02:37:54 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+# SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+Yundaichuan Zhan * 1 Minghe Gao * 1 Zhongqi Yue 2 Wendong Bu 1 Wenqiao Zhang 1 Guoming Wang 1
+
+Jisheng Dang 3 Juncheng Li 1 Siliang Tang 1 Yueting Zhuang 1
+
+## Abstract 
+
+Recent works have explored integrating Vision-Language Models (VLMs) with classical planners that rely on symbolic representations of planning problem to generate long-horizon plans for com-plex embodied tasks. However, in open-ended environments, these symbolic representations ob-tained from perception are often incomplete, lead-ing to suboptimal performance. To address this, we introduce SCOPE, a self-adaptive symbolic planning framework that supports refining action plans and evolving the symbolic world—the sym-bolic representations of open-ended environments. SCOPE comprises two synergistic modules: a Symbolic Execution Simulator (SESim) that con-ducts symbolic validation and real execution of action plans, leveraging the feedback to refine the plans and evolve the symbolic world; and a Self-Adaptive Symbolic Memory (SASMem) that further distills feedback into evolving symbolic knowledge to enhance long-horizon planning and modeling of the symbolic world. Experiments in open-ended environments show that SCOPE significantly improves the completeness of the symbolic world, the success rate of plans under environment perturbations, and cross-task ground-ing and adaptability across diverse embodied sce-narios. 
+
+## 1. Introduction 
+
+Vision-Language Models (VLMs), powered by large-scale multimodal pretraining (Du et al., 2022; Driess et al., 2023; Alayrac et al., 2022; Achiam et al., 2023; Hurst et al., 2024; Yang et al., 2025), excel at locating objects (Chen et al., 2024; Ao et al., 2025; Zeng et al., 2022), recognizing spatial relations (Lu et al., 2016; Cheng et al., 2024; Fei et al., 
+
+> *
+
+Equal contribution 1Zhejiang University, Hangzhou, China 
+
+> 2
+
+Chalmers University of Technology, Gothenburg, Sweden 
+
+> 3
+
+Lanzhou University, Lanzhou, China. Correspondence to: Juncheng Li <junchengli@zju.edu.cn >.
+
+Preprint. June 23, 2026. 
+
+2024), and interpreting goal-relevant cues from images and text (Yang et al., 2023). These capabilities make VLMs strong candidates for serving as the agent to plan actions for embodied tasks. However, open-ended environments are characterized by diverse and evolving task-relevant objects/relations/states that cannot be exhaustively pre-specified. In such embodied environments that involve intricate object properties and long sequences of interdependent actions, VLMs without task-specific training often generate ungrounded or hallu-cinated actions that violate causal logic (Wu et al., 2024; Huang et al., 2022b; Ahn et al., 2022; Liang et al., 2022; Wong et al., 2023; Huang et al., 2022a). These missteps tend to accumulate over time, ultimately undermining the reliability of planning. To address this, recent approaches incorporate classical sym-bolic planners alongside large models by generating sym-bolic representations of the planning problem (Fung et al., 2025; Xiong et al., 2025; Dwivedi et al., 2023; Zhang et al., 2023; Silver et al., 2022), in order to mitigate hallucinated actions and causal violations. Symbolic representations could be expressed using the Planning Domain Definition Language (PDDL) (Aeronautiques et al., 1998; Zhi-Xuan, 2022), which separates a planning problem into a domain file that defines predicates, action schemas and transition rules, and a problem file that specifies objects, initial states, and goal conditions. Nonetheless, as illustrated in Figure 1, these attempts to integrate large models with classical planners have revealed two challenges in modeling of symbolic representations and long-horizon planning: (1) Incomplete and Static Symbolic World : At the perception stage, existing meth-ods (Liu et al., 2023; Migimatsu & Bohg, 2022) construct the symbolic world by using a VLM to ground observa-tions and instructions into symbolic representations (ob-jects and their symbolic states/relations in the PDDL prob-lem). Yet in open-ended environments, many critical states and affordances are action-dependent and only revealed through interaction, making one-shot symbolic grounding inevitably incomplete. (2) Non-adaptive Symbolic Knowl-edge : While prior methods may incorporate feedback or it-erative refinement, the resulting experience is often recorded 1 
+
+> arXiv:2606.22488v1 [cs.AI] 21 Jun 2026 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments Image
+
+Construct 
+
+or Evolve Symbolic 
+
+> World
+> Env.
+
+(2): Adaptive Symbolic Knowledge 
+
+(1): Complete and Evolving 
+
+Symbolic W orld 
+
+(1): Incomplete and Static 
+
+Symbolic World 
+
+(2): Non-adaptive Symbolic 
+
+Knowledge  
+
+> Actively Explore Fixed Symbolic World Real Env.
+
+Gap 
+
+Existing Disadvantages Framework SCOPE Advantages  
+
+> SASMem
+> Complete Symbolic World Real Env.
+
+Bridge 
+
+> Feedback
+
+Refine Action Plan 
+
+> Symbolic
+> World
+> SASMem
+
+adapt ive 
+
+> + Task A
+> + Task B
+
+Isolated cross env cross task 
+
+> Feedback
+> SASMem
+> Feedback
+> + Task A
+> + Task B
+> Feedback
+> Feedback
+
+Evolve        
+
+> Figure 1. Comparison of existing method and SCOPE. In the middle illustration, black arrows denote the pipeline used by existing methods; blue arrows highlight SCOPE extensions.
+
+as task-specific traces and is not often distilled into symbolic-friendly knowledge that is aligned with symbolic planning. As a consequence, the stored information has limited density and transferability, providing weaker cross-task and cross-scene support for symbolic planning and symbolic world refinement (Sarch et al., 2024; Zhou et al., 2024). Inspired by the paradigm of reasoning with iterative sym-bolic correction (Zhou et al., 2024; Mao et al., 2019; Zhu et al., 2021), we propose SCOPE , a self-adaptive symbolic planning framework that constructs the symbolic world from perception and evolves the symbolic world and refines ac-tion plans through feedback from symbolic validation and real execution. Specifically, as shown in Figure 2, SCOPE 
+
+evolves the symbolic world as the agent actively explores the open-ended environment. Through the Symbolic Ex-ecution Simulator ( SESim ), it could validate the logical consistency between the plan and the symbolic world, and generate the feedback from both symbolic validation and real execution to achieve grounded reasoning and drive ex-ploration to construct a complete and evolving symbolic world . In addition, feedback is distilled into a Self-Adaptive Symbolic Memory ( SASMem ), enabling adaptive symbolic knowledge that enhances grounding across tasks and adapt-ability across diverse embodied environments. Importantly, the two modules in SCOPE form a tightly cou-pled closed-loop framework that continually improves over time. The SASMem distills feedback into symbolic knowl-edge that enhances VLM’s capability to generate more ac-curate symbolic worlds and action plans in future tasks. In turn, the SESim performs symbolic validation and real exe-cution. Then, it provides feedback not only for plan refining but also for updating SASMem. Extensive experiments validate that evolving symbolic world representations and abstracting reusable symbolic knowledge across tasks and across diverse embodied en-vironments, enable strong continual adaptation, its step success rate improves by 14.4% throughout a continual run. Furthermore, in open-ended environments, this self-adaptive behavior requires fewer symbolic refinements and exhibits improved robustness compared to the NESYC base-line (Choi et al., 2025), achieving an average increase of 11.3% in task success rate across all evaluated open-ended tasks. In general, our contributions are as follows: • SCOPE establishes a self-adaptive symbolic planning framework that evolves the symbolic world over time, providing a foundation for grounded planning within symbolic representations. • Within SCOPE , the SESim integrates symbolic valida-tion and real execution to narrow the representation gap between the symbolic world and the open-ended environment, and support more grounded action plans. • SCOPE further incorporates the SASMem, which dis-tills reusable feedback into action reasoning and world modeling knowledge aligned with symbolic planning, enabling cross-task grounding and adaptability across diverse embodied scenarios. 
+
+## 2. Related Works 
+
+2.1. Planning with Large Pretrained Models and Symbolic Feedback 
+
+Recent efforts have investigated enhancing the planning ca-pabilities of Large Pretrained Models through prompts and symbolic feedback (Akakzia et al., 2020; Jiang et al., 2019a; Mirchandani et al., 2021; Silver et al., 2023; Srinivas et al., 2018; Nair & Finn, 2019; Choi et al., 2025). For example, ProgPrompt (Singh et al., 2023) proposes a programmatic 2SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 0: [WalkToObject] agent apple kitchen        
+
+> 1: [Grab] agent apple
+> 2: [Walk ToObject] agent desk kitchen
+> ...
+
+Action Plan         
+
+> (:objects
+> kitchen - r oom agent -agent
+> desk , apple ... - object )
+> (:init
+> (clean_state desk ... )
+> (grabbable apple ... )
+> (objAtRoom desk kitchen )... )
+> (:goal
+> (OnTop apple desk) ... )
+
+Symbolic World 
+
+> Task description
+> Please help me place an apple on the table.
+
+(a) Evolving Symbolic World (b) Symbolic Execution Simulator 
+
+Self-Adaptive Symbolic 
+
+Memory 
+
+(c) Self-Adaptive Symbolic Memory 
+
+> Actively Explore
+> Update Observations Images
+
+Symbolic 
+
+Execution 
+
+Simulator 
+
+Refine 
+
+Action Plan 
+
+Evolve 
+
+Symbolic World 
+
+> State Predicates
+> Property Predicates
+> Relational Predicates
+
+Action Reasoning Knowledge 
+
+World Modeling Knowledge     
+
+> action 1action 2action n
+> State Property Relation
+
+Symbolic Validation Feedback 
+
+Real Execution Feedback 
+
+Feedback  
+
+> VLM
+> VLM Symbolic
+> Validation
+> Feedback N
+> Real
+> Execution
+> Feedback N
+
+Adaptive 
+
+Writing-gating 
+
+> outcome: ( success | fail)
+> error_type:
+> (unmet_precondition |
+> goal_not satisfied | )
+> fail_content:
+> (not_found | not_reachable | )
+> fail_step: (step n)
+> error_content: (predicates_set)
+> fail_action: (action_name)
+
+Figure 2. The overview of our framework. (a) Evolving Symbolic World: The agent actively explores the environment to refine the symbolic world, represented in PDDL problem file. Based on this symbolic world, the VLM generates a symbolic action plan for the embodied task. (b) Symbolic Execution Simulator: The generated plan is validated within the symbolic world using the PDDL validator and executed in the environment. SESim integrates feedback from symbolic validation and real execution to evolve the symbolic world and refine the action plan, narrowing the gap between symbolic and real environments. (c) Self-Adaptive Symbolic Memory: Feedback is distilled into abstract knowledge of action planning and world modeling. This knowledge is retrieved on demand to provide targeted hints for plan/world refinement. 
+
+prompt format that embeds executable examples and ac-tion templates in the LLM input. ISR-LLM (Zhou et al., 2024) further improves symbolic consistency through an iterative self-refinement process: Employ a classical valida-tor to refine the LLM-generated plan over multiple rounds. This symbolic feedback loop increases plan feasibility while maintaining generalization from language. However, these methods mainly focus on refining action plans for a single task and do not accumulate symbolic feedback over time. In contrast, SCOPE distills feedback into reusable symbolic knowledge that improves both sym-bolic world modeling and action reasoning across tasks and environments, enabling more robust and adaptive planning. 
+
+2.2. Symbolic Modeling for Embodied Planning 
+
+PDDL-based symbolic abstraction employs LLMs to trans-late natural language into symbolic domains and problem definitions, which are then solved using classical plan-ners (Liu et al., 2023; Hu et al., 2025; Zhang et al., 2025; Jiang et al., 2019b). However, symbolic representations in prior works are typically static and incomplete. They are of-ten handcrafted by experts, extracted from simulators using rule-based templates, or generated once from VLM percep-tion at task initialization. Such fixed abstractions are insuf-ficient for open-ended and dynamic environments that de-mand continual adaptation. In contrast, our method evolves the symbolic world over time using feedback from symbolic validation and real execution. This enables more grounded and adaptive planning in complex embodied tasks. 
+
+## 3. Method 
+
+We propose SCOPE , a self-adaptive symbolic planning framework that enhances symbolic world modeling and long-horizon planning in embodied tasks. As shown in Figure 2, SCOPE actively explores the open-ended environ-ment, constructs the symbolic world and generates an action plan (Section 3.1). The Symbolic Execution Simulator then provides feedback to evolve the symbolic world and refine the action plan (Section 3.2). SCOPE further distills feed-back into symbolic knowledge, to enhance long-horizon planning and symbolic world modeling across tasks and scenarios (Section 3.3). 
+
+3.1. Evolving Symbolic World 
+
+In the open-ended environment, a central challenge in in-tegrating large models with classical planners is how the symbolic world, the symbolic representations of planning problem, can accurately describe the real environment with-out gaps, thereby supporting classical planner verification 3SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+or planning. This requires symbolic world to expand along with the environment for its open-ended nature. We address this challenge with the evolving symbolic world. As illustrated in Figure 2, the first stage of our framework constructs an initial symbolic world Wsymbol from raw vi-sual observations and task description. Within Wsymbol , ob-jects are described by several types of predicates: (1) State Predicates, which capture dynamic properties of objects; (2) Property Predicates, which describe inherent object at-tributes; (3) Relational predicates, which express spatial and logical relationships between objects. Based on the current symbolic world, the agent decides to either (1) explore the environment to identify additional object representations or interact with objects to enhance the understanding of object attributes. Both contribute to evolving symbolic world; or (2) generate a symbolic ac-tion plan PA = ( a1, a 2, . . . , a n), follows a PDDL format, conditioned on Wsymbol .
+
+3.2. Symbolic Execution Simulator 
+
+A complete symbolic world is not derived solely from vi-sual perception, but also from active interaction with the environment. For example, discovering that an object is not graspable only after a failed attempt to grab it. This embodied feedback reveals latent properties that are often inaccessible to vision alone. To address this, Symbolic Ex-ecution Simulator(SESim) integrates feedback from both symbolic validation and real execution to reduce the gap be-tween the symbolic world and the open-ended environment. As shown in Figure 2, following the construction of the symbolic world Wsymbol and the generation of the initial ac-tion plan PA in Section 3.1, SCOPE employs the Symbolic Execution Simulator to perform symbolic validation within symbolic world. The SESim operates in two stages: (1) Symbolic Valida-tion. The SESim utilizes the classical PDDL validator to verify the logical consistency of PA within the current sym-bolic world Wsymbol , generating symbolic validation feed-back Fsymbol . Feedback indicates logical issues such as undefined objects, unmet preconditions, or incomplete goal satisfaction. Fsymbol is interpretable, and supports to refine action plan. (2) Real Execution. The SESim executes the action plan in the environment, generating real execution feedback Freal . Even when the action plan passes symbolic validation, real execution failures can expose gaps between the symbolic world and open-ended environment, such as missing property predicates or incorrect relationships. These structured feedback fields also trigger symbolic re-trieval from SASMem. SESim forms a symbol-aligned query from Fsymbol and Freal (failure signature and predicate-level mismatch evidence), retrieves the most relevant action/-grab wash sit drink ... 
+
+Action Reasoning Knowledge 
+
+World Modeling Knowledge    
+
+> State Property Relation cleanState
+> putIn
+> onTop switchable
+> Action name: putIn
+> fail_related_predicates(count) gating _stats
+> Predicates name: switchable
+> pre_action_prior (count)
+> -Grabbable(3)
+> -objAtRoom(2)
+> -grab(3)
+> -supportCount(3)
+> -realFailCount(3)
+> -symbolFailCount(2)
+> gating _stats
+> -missingCount(5)
+> -incorrectCount(2)
+> trigger _action s(count)
+> -switchOn (4)
+> -walkToObject (2)
+
+Figure 3. Overview of SASMem, illustrating its structure and symbolic knowledge components. 
+
+world entries, and aggregates them as FSASMem to guide localized plan/world updates: 
+
+P′
+
+> A
+
+, W′ 
+
+> symbol
+
+= VLM (PA, Fsymbol , Freal , FSASMem )
+
+SESim iterates this process, until validation succeeds or a budget is reached, thereby increasing robustness in the open-ended environment. By leveraging complementary symbolic validation and grounded feedback, SCOPE reduces represen-tational gaps and inconsistencies, enabling more accurate symbolic world modeling and more reliable long-horizon planning. 
+
+3.3. Self-Adaptive Symbolic Memory 
+
+Successfully completing an embodied task in a specific en-vironment, the agent can acquire valuable experience, such as understanding the logical structure of actions, reasoning over plans, and modeling the environment. A natural ques-tion arises: can such experience generalize to more complex tasks and environments? To support generalizable symbolic planning across diverse tasks and environments, SCOPE in-corporates the Self-Adaptive Symbolic Memory (SASMem) , a structured memory that distills predicate-level knowledge about action reasoning and world modeling .
+
+Action reasoning knowledge captures reusable regulari-ties of action failures and successes: for each action, it summarizes the most frequently implicated symbolic con-ditions (e.g., missing preconditions revealed by symbolic 4SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+validation) and the common successful local action patterns (i.e., which prerequisite steps tend to precede the action in successful plans). 
+
+World modeling knowledge captures persistent gaps be-tween the symbolic world and the real environment at the predicate level. It records which predicates are commonly missing or mis-specified under grounded interaction evi-dence, and which interaction actions most often surface such evidence, thereby providing targeted guidance for evolving the symbolic world. SASMem does not store raw experience directly, nor does it rely on the VLM to produce a summary; instead, it ap-plies rule-based distillation over structured Fsymbol , Freal 
+
+and experience to generate predicate-level memory entries. Memory updates follow a write-gating rule: an injected entry is reinforced only when it resolves the same failure pattern or pushes the first failure to a later step, and is other-wise down-weighted, with symbolic infeasibility and real-execution mismatches treated distinctly. This mechanism prevents unbounded accumulation, automatically suppresses noisy memories, and yields a continually improving mem-ory that enhances long-horizon grounding and adaptation across tasks and environments. 
+
+## 4. Experiments 
+
+Our goal is to evaluate whether SCOPE improves symbolic world modeling and long-horizon planning in embodied tasks under dynamic and open-ended perception. In this sec-tion, we first present the experimental setup (Section 4.1), followed by comprehensive evaluations on two key fronts: (1) grounded planning under environment perturbations (Section 4.2), (2) robust symbolic world modeling (Sec-tion 4.3). In addition, we conduct an in-depth analysis (Section 4.4), which includes: qualitative examples, abla-tions on the Self-Adaptive Symbolic Memory (SASMem) and Symbolic Execution Simulator (SESim), and extensive evaluations across environments and tasks to assess the gen-eralization and robustness of the method. 
+
+4.1. Experiment Setting Environments. We evaluate on two embodied benchmarks, 
+
+VirtualHome (Puig et al., 2018) and ALFRED (Shridhar et al., 2020). For each benchmark, we construct evalua-tion settings along two axes: scene complexity (basic vs. 
+
+complex ) and environment settings (static , dynamic , open-ended ). 
+
+Scene complexity. Basic scenes feature simpler layouts with fewer interactive objects and shorter dependency chains, whereas complex scenes contain larger layouts with richer interactions and longer-horizon plans.  
+
+> (a) VirtualHome: Per-steps StepSR on Open-ended step stream
+
+symbolic world   
+
+> (b) ALFRED: Per-steps StepSR on Open-ended step stream
+> Figure 4. Symbolic world evolution in open-ended settings.
+
+Environment settings. Static settings keep the environ-ment state unchanged unless affected by the agent’s ac-tions. Dynamic settings introduce state changes during an episode, requiring the agent to re-ground and re-plan under non-stationary conditions. Open-ended settings stream a sequence of steps in which new task-required affordances or state dependencies are introduced in phases over time, requiring continual online adaptation and knowledge carry-over across tasks. The detailed construction protocol for these splits and changes is provided in the Appendix. 
+
+Baselines. We implement three baselines, categorized into two groups: (i) VLM-based planners: VILA (Hu et al., 2023); (ii) neuro-symbolic methods with symbolic feed-back/tools: ISR-LLM (Zhou et al., 2024)(we use a faithful VLM-adapted re-implementation of the original LLM-based method for embodied inputs) and NESYC (Choi et al., 2025). For fair comparison, we use the same backbone model GPT-4o, for all VLM components in the methods. 
+
+Evaluation Metrics. We report metrics for both symbolic world quality and planning performance. For planning, we follow common practice and report SR (%), the percent-age of tasks successfully completed, and GC (%), the suc-5SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments    
+
+> Table 1. Planning performance (SR/GC, %) on VirtualHome and ALFRED under basic/complex scenes and static/dynamic/open-ended settings. For open-ended evaluation, SR/GC are averaged over the entire step stream
+
+VirtualHome Static Dynamic Open-ended Methods Planner SR GC SR GC SR GC 
+
+Basic scenes VILA VLM 55.4 ± 1.2 69.2 ± 1.9 52.3 ± 1.3 55.1 ± 1.8 47.8 ± 1.4 52.4 ± 1.9 ISR-LLM VLM 65.8 ± 1.1 70.5 ± 1.6 61.7 ± 1.2 67.2 ± 1.5 58.1 ± 1.3 62.6 ± 1.7 NESYC Classical planner 90.1 ± 0.7 92.7 ± 0.6 77.8 ± 1.0 80.1 ± 1.2 56.3 ± 1.0 58.9 ± 1.1 
+
+SCOPE VLM 88.2 ± 0.8 89.4 ± 0.9 85.4 ± 0.9 86.9 ± 0.8 87.6 ± 0.8 89.2 ± 0.9 
+
+Complex scenes VILA VLM 45.2 ± 1.4 46.8 ± 2.1 40.6 ± 1.5 41.4 ± 2.0 38.1 ± 1.6 40.7 ± 2.2 ISR-LLM VLM 62.3 ± 1.3 67.1 ± 1.8 58.2 ± 1.4 62.8 ± 1.7 54.5 ± 1.5 56.0 ± 1.9 NESYC Classical planner 84.3 ± 0.8 85.5 ± 0.7 72.4 ± 1.2 77.7 ± 1.4 50.9 ± 1.2 53.5 ± 1.3 
+
+SCOPE VLM 86.5 ± 1.0 88.8 ± 1.1 82.1 ± 1.0 85.6 ± 0.9 79.4 ± 0.9 82.0 ± 1.0 ALFRED Static Dynamic Open-ended Methods Planner SR GC SR GC SR GC 
+
+Basic scenes VILA VLM 50.7 ± 1.3 57.4 ± 2.0 47.2 ± 1.4 50.8 ± 1.9 44.3 ± 1.5 45.9 ± 2.0 ISR-LLM VLM 63.2 ± 1.2 79.1 ± 1.7 58.6 ± 1.3 61.5 ± 1.6 61.8 ± 1.4 64.3 ± 1.8 NESYC Classical planner 88.4 ± 0.7 90.1 ± 0.6 71.7 ± 1.1 75.2 ± 1.3 50.1 ± 1.1 53.5 ± 1.2 
+
+SCOPE VLM 85.8 ± 0.9 89.1 ± 1.0 83.1 ± 0.9 85.7 ± 0.8 80.8 ± 0.8 84.4 ± 0.9 
+
+Complex scenes VILA VLM 36.5 ± 1.5 43.2 ± 2.2 33.8 ± 1.6 37.1 ± 2.1 30.9 ± 1.7 32.2 ± 2.3 ISR-LLM VLM 59.8 ± 1.4 63.6 ± 1.9 55.3 ± 1.5 58.0 ± 1.8 54.4 ± 1.6 56.8 ± 2.0 NESYC Classical planner 82.8 ± 0.8 83.6 ± 0.7 64.3 ± 1.3 67.8 ± 1.5 51.7 ± 1.3 52.1 ± 1.4 
+
+SCOPE VLM 78.4 ± 1.1 80.5 ± 1.2 76.9 ± 1.0 78.4 ± 0.9 75.6 ± 1.0 77.2 ± 1.1 
+
+cess rate of individual goal conditions. For open-ended step-stream evaluation, we additionally report StepSR (%), Step Success Rate, defined as the step-level success rate of executed actions in the environment: it measures the percentage of action steps that are successfully carried out, averaged over the entire step stream. For symbolic world modeling, we measure ClassicalSR (%), the fraction of tasks whose constructed symbolic world is sufficiently complete/-consistent for a classical planner to produce a valid plan; 
+
+SymRecall (%), the recall of benchmark-/expert-provided ground-truth task-relevant predicates in the symbolic world. 
+
+4.2. Planning under Environment Settings Robust planning across settings. Table 1 compares long-horizon planning under static , dynamic , and open-ended 
+
+settings. In static environments, the symbolic world is rela-tively complete and stable, so methods that rely on a clas-sical planner as the planner can leverage exact symbolic search to produce causally grounded action plans. How-ever, this advantage diminishes in dynamic settings, where non-stationary state changes quickly make the initial sym-bolic snapshot stale. Once key predicates become missing or outdated, classical planners tend to fail and crucially can-not effectively inform the VLM which specific predicates or state facts are absent. By contrast, the VLM can still propose actions, while symbolic validation and execution feedback can be used to pinpoint violated preconditions and mismatches, enabling targeted correction. This brit-tleness is further amplified in open-ended episode streams, where newly emerging affordances and state dependencies systematically exceed the initial symbolic coverage. 
+
+Open-ended Step-Stream Results. We report StepSR (%), 
+
+Step Success Rate , which measures whether each executed action step succeeds in the environment over the open-ended stream. VILA (VLM-only planner) remains largely flat across the stream, with only minor fluctuations, yet con-sistently exhibits weak step executability. ISR-LLM shows similarly limited variation across phases; while it benefits from validator-provided symbolic error signals, symbolic feedback alone is often insufficient to bridge the symbolic– real gap under continual novelty. In contrast, NESYC (classi-cal planner) performs strongly early on but degrades sharply after phase transitions, indicating brittleness when newly in-troduced affordances or dependencies exceed the initial sym-6SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+Table 2. Symbolic world quality measured by ClassicalSR and SymRecall on both benchmarks, averaged over open-ended settings. 
+
+Method Evolve World? ClassicalSR SymRecall ALFRED VirtualHome ALFRED VirtualHome 
+
+Basic scenes 
+
+SCOPE ✓ 94.8 ± 0.8 95.8 ± 0.7 69.2 ± 2.8 65.5 ± 3.1 
+
+w/o SESim ✗ 72.3 ± 3.9 74.2 ± 1.2 52.1 ± 3.5 53.3 ± 3.7 w/o SASMem ✓ 80.2 ± 1.8 85.3 ± 0.9 54.1 ± 3.2 50.2 ± 3.4 w/o SESim & SASMem ✗ 70.0 ± 5.4 72.8 ± 1.6 50.1 ± 4.8 48.1 ± 4.9 Complex scenes 
+
+SCOPE ✓ 89.0 ± 1.0 90.8 ± 0.8 52.3 ± 4.2 64.1 ± 3.5 
+
+w/o SESim ✗ 64.2 ± 5.1 74.3 ± 3.3 45.4 ± 4.8 51.2 ± 4.6 w/o SASMem ✓ 70.2 ± 1.4 75.6 ± 1.5 44.9 ± 4.7 48.9 ± 4.5 w/o SESim & SASMem ✗ 45.2 ± 5.8 61.6 ± 5.9 37.6 ± 5.5 40.7 ± 5.0 bolic coverage. SCOPE achieves the most robust behavior: although it may exhibit transient drops near phase bound-aries, it rapidly recovers in subsequent steps, demonstrating effective online adaptation under open-ended changes. 
+
+Planning over long horizons and increasing scene com-plexity. We further compare basic versus complex scenes to stress-test scalability under longer action horizons and richer object interactions. While baselines tend to degrade as complexity increases due to compounding grounding er-rors and limited symbolic coverage, SCOPE remains more robust by continuously updating symbolic predicates and revising plan steps based on newly observed evidence dur-ing execution. Overall, these results suggest that SCOPE 
+
+not only adapts to changing and open-ended environments, but also better sustains coherent and grounded long-horizon planning as scene complexity grows. 
+
+4.3. Symbolic World Evaluation 
+
+Symbolic worlds constructed directly by a VLM in open-ended settings are often incomplete or inconsistent, resulting in low ClassicalSR and fragile long-horizon planning (Ta-ble 2). Methods without symbolic world evolution remain constrained by a static world model and struggle to keep pace with newly introduced affordances and state dependen-cies over the stream. In contrast, SESim leverages feedback from symbolic validation and real execution to iteratively evolve the symbolic world, correcting missing predicates and faulty preconditions, which substantially improves Clas-sicalSR , especially in complex scenes. We further assess semantic alignment with SymRecall : one-shot perception commonly misses object attributes and relations, whereas feedback-driven refinement uncovers latent properties re-vealed through interaction (e.g., non-graspable objects), un-derscoring the importance of interaction-informed world evolution under continual novelty. ...   
+
+> (grabbable waterglass )
+> (OnTop pie plate) (OnTop waterglass desk )
+> (OnTop plate desk) (OnTop plate desk)
+> ...
+
+SCOPE’s Symbolic World More Robust    
+
+> Initial Symbolic World
+> actively explore Env. + feedback from symbolic world and real execution
+> (grabbable pie )(eatable pie )
+> (grabbable book )(grabbable book )
+> (OnTop pie plate) (OnTop plate desk)
+> Gap
+
+Figure 5. Symbolic world evolution example. SCOPE’s Plan More Grounded      
+
+> 4:[walk] agent sink
+> 6:[putback] agent barsoap
+> counter
+
+... 
+
+...          
+
+> Symbolic Execution Simulator Invalid: sink is not a valid object for wash
+> 5: [ wa sh ]agent sink
+> Task:
+> Wash hands
+> Action plan
+> 5.1 :[turnOn] agent faucet
+> 5.2 :[grab] agent barsoap
+> 5.3 :[wa sh] agent barsoap
+> Update symbolic world:
+> (switchable faucet)
+> (grabbable barsoap)
+> ...
+> Refined Action plan
+
+Figure 6. Action plan refinement example. 
+
+4.4. In-Depth Analysis and Generalization Qualitative Analysis. We qualitatively examine how 
+
+SCOPE enhances symbolic modeling and planning under environment perturbations, shown in Figure 5 and Figure 6. Compared to direct VLM outputs, SCOPE produces more complete symbolic world by feedback. This leads to better recovery of missing object attributes and relational represen-tations. In planning, symbolic validation allows SCOPE to detect and resolve causal gaps, resulting in more grounded and long-horizon action plan. 
+
+Analysis of Symbolic Execution Simulator. We assess the respective roles of symbolic validation and real execution feedback within SESim (Table 3). Using only real execution 7SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments                                       
+
+> Table 3. Ablation on SESim feedback sources on VirtualHome .Impact of using real execution feedback only, symbolic validation only, or both on ClassicalSR ,SymRecall , and GC .
+> Method ClassicalSR SymRecall GC
+> SESim(Real exec. only) 80.2 ±1.8 55.6 ±2.4 81.6 ±1.7 SESim(Validation only) 86.5 ±1.5 57.1 ±2.1 80.3 ±1.6 SESim(Full) 92.6 ±1.2 62.6 ±1.8 82.1 ±1.3
+> Table 4. Average plan/world update counts on VirtualHome under different memory designs ( #PlanRefine /#EnvEvolve ).
+
+Method #PlanRefine #EnvEvolve 
+
+RawMem 6.51 ± 0.45 3.91 ± 0.33 SummMem 4.21 ± 0.35 2.02 ± 0.24 SASMem 2.18 ± 0.28 0.86 ± 0.18 feedback allows the agent to detect that an action has failed and that a mismatch exists between the symbolic world and the real environment, but it cannot identify the underlying cause—whether the failure arises from a missing object or from incorrect object properties. Conversely, relying on symbolic validation exposes logical error in the plan, such as unmet preconditions or missing symbolic entities. However, evolving the symbolic world based only on symbolic vali-dation can inadvertently enlarge the gap between symbolic representations and open-ended environment. Combined, they provide complementary feedback that jointly guide more accurate symbolic world evolution and more robust planning. 
+
+Analysis of Self-Adaptive Symbolic Memory. We analyze the impact of SASMem by comparing it with two generic memory-augmented baselines, RawMem and SummMem ,which store and retrieve past experience to augment the VLM prompt without structured, predicate-level distillation (Table 4). Specifically, RawMem retrieves raw traces, while 
+
+SummMem retrieves VLM-produced summaries. In contrast, SASMem organizes feedback from symbolic validation and real execution in a predicate-level, symbol-aligned form with higher information density, enabling more efficient and precise guidance—reflected by fewer plan refinements and symbolic world updates. 
+
+Symbolic Hallucination Evaluation. We measure SymHal-luc (%), defined as the fraction of introduced/refined task-relevant predicates that are inconsistent with the ground truth, under basic and complex environments (Table 5). SASMem contributes to symbolic grounding through adap-tive knowledge prompting, its ability to suppress halluci-nated predicates remains limited, particularly when sym-bolic world diverge from the open-ended environments. In contrast, SESim plays a key role in mitigating symbolic hallucination by leveraging feedback from symbolic valida-tion and real execution. This feedback helps identify and   
+
+> Table 5. Impact of SESim and SASMem on SymHalluc (%).
+
+Method SymHalluc (%) VirtualHome ALFRED 
+
+SCOPE 3.68 ± 0.6 5.50 ± 0.8 
+
+w/o SASMem 5.72 ± 1.3 7.91 ± 1.4 w/o SESim 9.88 ± 1.9 10.43 ± 2.0 w/o SASMem & SESim 14.01 ± 2.6 16.28 ± 3.1                                                      
+
+> Table 6. Impact of different backbones on planning and symbolic world modeling.
+> Method SR GC ClassicalSR SymRecall Qwen3-VL-8B
+> ISR-LLM 57.7 ±1.1 63.2 ±1.4 67.2 ±2.8 53.1 ±2.7 SCOPE 76.8 ±2.3 78.7 ±1.7 89.3 ±2.5 59.6 ±3.2
+> GPT-4o
+> ISR-LLM 65.2 ±2.2 70.5 ±1.8 70.4 ±2.7 52.5 ±2.2 SCOPE 86.5 ±1.3 88.5 ±2.1 96.5 ±1.5 63.5 ±1.3
+
+revise symbolic hallucination, progressively narrowing the gap between the symbolic world and the real environment. 
+
+Impact of Different VLMs. We further examine backbone sensitivity on VirtualHome , and observe consistent trends across benchmarks. Table 6 shows that SCOPE consistently outperforms ISR-LLM across both backbones on planning performance (SR/GC) as well as symbolic world quality (ClassicalSR/SymRecall). Notably, the advantage persists with the smaller backbone (Qwen3-VL-8B), suggesting that the improvements are driven by our feedback-grounded closed-loop—i.e., iteratively evolving the symbolic world and refining plans using symbolic validation and real exe-cution—rather than relying solely on model scale. When switching to a stronger backbone (GPT-4o), both methods improve in absolute terms, yet SCOPE retains a clear mar-gin, indicating that the proposed refinement and memory distillation mechanisms generalize across backbone choices and further benefit from increased model capacity. 
+
+## 5. Conclusion 
+
+We present SCOPE , a self-adaptive symbolic planning framework that evolves symbolic world representations through feedback from both symbolic validation and real execution. By closing the loop between perception, reason-ing, and interaction, SCOPE addresses the limitations of static symbolic modeling and non-adaptive symbolic knowl-edge in open-ended environments, providing a general way to integrate large models with classical planners. Experi-ments demonstrate that evolving symbolic representations leads to more grounded long-horizon planning, and better generalization across tasks and environments. 8SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+## Acknowledgements 
+
+This work was supported by the National Key Research and Development Program of China (2025ZD0123100), Na-tional Natural Science Foundation of China (62436007), Zhejiang NSF (LQK26F020001), Key R&D Program of Zhejiang (2026SDXT005), Ningbo Yongjiang Talent Intro-duction Programme (2024A-401-G), Zhejiang University Education Foundation Qizhen Scholar Foundation. 
+
+## Impact Statement 
+
+This paper presents work whose goal is to advance the field of Machine Learning. There are many potential societal consequences of our work, none which we feel must be specifically highlighted here. 
+
+## References 
+
+Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., et al. Gpt-4 technical report. arXiv preprint arXiv:2303.08774 , 2023. Aeronautiques, C., Howe, A., Knoblock, C., McDermott, I. D., Ram, A., Veloso, M., Weld, D., Sri, D. W., Barrett, A., Christianson, D., et al. Pddl—the planning domain definition language. Technical Report, Tech. Rep. , 1998. Ahn, M., Brohan, A., Brown, N., Chebotar, Y., Cortes, O., David, B., Finn, C., Fu, C., Gopalakrishnan, K., Hausman, K., et al. Do as i can, not as i say: Grounding language in robotic affordances. arXiv preprint arXiv:2204.01691 ,2022. Akakzia, A., Colas, C., Oudeyer, P.-Y., Chetouani, M., and Sigaud, O. Grounding language to autonomously-acquired skills via goal generation. arXiv preprint arXiv:2006.07185 , 2020. Alayrac, J.-B., Donahue, J., Luc, P., Miech, A., Barr, I., Hasson, Y., Lenc, K., Mensch, A., Millican, K., Reynolds, M., et al. Flamingo: a visual language model for few-shot learning. Advances in neural information processing systems , 35:23716–23736, 2022. Ao, S., Salim, F. D., and Khan, S. Emac+: Embodied multimodal agent for collaborative planning with vlm+ llm. arXiv preprint arXiv:2505.19905 , 2025. Chen, B., Xu, Z., Kirmani, S., Ichter, B., Sadigh, D., Guibas, L., and Xia, F. Spatialvlm: Endowing vision-language models with spatial reasoning capabilities. In Proceed-ings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pp. 14455–14465, 2024. Cheng, A.-C., Yin, H., Fu, Y., Guo, Q., Yang, R., Kautz, J., Wang, X., and Liu, S. Spatialrgpt: Grounded spatial reasoning in vision-language models. Advances in Neu-ral Information Processing Systems , 37:135062–135093, 2024. Choi, W., Park, J., Ahn, S., Lee, D., and Woo, H. Nesyc: A neuro-symbolic continual learner for complex embodied tasks in open domains. arXiv preprint arXiv:2503.00870 ,2025. Driess, D., Xia, F., Sajjadi, M. S. M., Lynch, C., Chowdhery, A., Ichter, B., Wahid, A., Tompson, J., Vuong, Q., Yu, T., Huang, W., Chebotar, Y., Sermanet, P., Duckworth, D., Levine, S., Vanhoucke, V., Hausman, K., Toussaint, M., Greff, K., Zeng, A., Mordatch, I., and Florence, P. Palm-e: An embodied multimodal language model, 2023. URL https://arxiv.org/abs/2303.03378 .Du, Y., Liu, Z., Li, J., and Zhao, W. X. A survey of vision-language pre-trained models. arXiv preprint arXiv:2202.10936 , 2022. Dwivedi, R., Dave, D., Naik, H., Singhal, S., Omer, R., Patel, P., Qian, B., Wen, Z., Shah, T., Morgan, G., et al. Explainable ai (xai): Core ideas, techniques, and solu-tions. ACM computing surveys , 55(9):1–33, 2023. Fei, H., Wu, S., Zhang, H., Chua, T.-S., and Yan, S. Vit-ron: A unified pixel-level vision llm for understanding, generating, segmenting, editing. Advances in neural in-formation processing systems , 37:57207–57239, 2024. Fung, P., Bachrach, Y., Celikyilmaz, A., Chaudhuri, K., Chen, D., Chung, W., Dupoux, E., J ´egou, H., Lazaric, A., Majumdar, A., et al. Embodied ai agents: Modeling the world. arXiv preprint arXiv:2506.22355 , 2025. Hu, M., Chen, T., Zou, Y., Lei, Y., Chen, Q., Li, M., Mu, Y., Zhang, H., Shao, W., and Luo, P. Text2world: Bench-marking large language models for symbolic world model generation. arXiv preprint arXiv:2502.13092 , 2025. Hu, Y., Lin, F., Zhang, T., Yi, L., and Gao, Y. Look before you leap: Unveiling the power of gpt-4v in robotic vision-language planning. arXiv preprint arXiv:2311.17842 ,2023. Huang, W., Abbeel, P., Pathak, D., and Mordatch, I. Lan-guage models as zero-shot planners: Extracting action-able knowledge for embodied agents. In International conference on machine learning , pp. 9118–9147. PMLR, 2022a. Huang, W., Xia, F., Xiao, T., Chan, H., Liang, J., Florence, P., Zeng, A., Tompson, J., Mordatch, I., Chebotar, Y., et al. Inner monologue: Embodied reasoning through planning with language models. arXiv preprint arXiv:2207.05608 ,2022b. 9SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+Hurst, A., Lerer, A., Goucher, A. P., Perelman, A., Ramesh, A., Clark, A., Ostrow, A., Welihinda, A., Hayes, A., Radford, A., et al. Gpt-4o system card. arXiv preprint arXiv:2410.21276 , 2024. Jiang, Y., Gu, S. S., Murphy, K. P., and Finn, C. Language as an abstraction for hierarchical deep reinforcement learn-ing. Advances in neural information processing systems ,32, 2019a. Jiang, Y.-q., Zhang, S.-q., Khandelwal, P., and Stone, P. Task planning in robotics: an empirical comparison of pddl-and asp-based systems. Frontiers of Information Technology & Electronic Engineering , 20(3):363–373, 2019b. Liang, J., Huang, W., Xia, F., Xu, P., Hausman, K., Ichter, B., Florence, P., and Zeng, A. Code as policies: Language model programs for embodied control. arXiv preprint arXiv:2209.07753 , 2022. Liu, B., Jiang, Y., Zhang, X., Liu, Q., Zhang, S., Biswas, J., and Stone, P. Llm+ p: Empowering large language models with optimal planning proficiency. arXiv preprint arXiv:2304.11477 , 2023. Lu, C., Krishna, R., Bernstein, M., and Fei-Fei, L. Visual relationship detection with language priors. In European conference on computer vision , pp. 852–869. Springer, 2016. Mao, J., Gan, C., Kohli, P., Tenenbaum, J. B., and Wu, J. The neuro-symbolic concept learner: Interpreting scenes, words, and sentences from natural supervision. arXiv preprint arXiv:1904.12584 , 2019. Migimatsu, T. and Bohg, J. Grounding predicates through actions. In 2022 International Conference on Robotics and Automation (ICRA) , pp. 3498–3504. IEEE, 2022. Mirchandani, S., Karamcheti, S., and Sadigh, D. Ella: Exploration through learned language abstraction. Ad-vances in neural information processing systems , 34: 29529–29540, 2021. Nair, S. and Finn, C. Hierarchical foresight: Self-supervised learning of long-horizon tasks via visual subgoal genera-tion. arXiv preprint arXiv:1909.05829 , 2019. Puig, X., Ra, K., Boben, M., Li, J., Wang, T., Fidler, S., and Torralba, A. Virtualhome: Simulating household activities via programs. In Proceedings of the IEEE con-ference on computer vision and pattern recognition , pp. 8494–8502, 2018. Sarch, G., Jang, L., Tarr, M., Cohen, W. W., Marino, K., and Fragkiadaki, K. Vlm agents generate their own memories: Distilling experience into embodied programs of thought. 
+
+Advances in Neural Information Processing Systems , 37: 75942–75985, 2024. Shridhar, M., Thomason, J., Gordon, D., Bisk, Y., Han, W., Mottaghi, R., Zettlemoyer, L., and Fox, D. Alfred: A benchmark for interpreting grounded instructions for everyday tasks. In Proceedings of the IEEE/CVF con-ference on computer vision and pattern recognition , pp. 10740–10749, 2020. Silver, T., Hariprasad, V., Shuttleworth, R. S., Kumar, N., Lozano-P ´erez, T., and Kaelbling, L. P. Pddl planning with pretrained large language models. In NeurIPS 2022 foundation models for decision making workshop , 2022. Silver, T., Chitnis, R., Kumar, N., McClinton, W., Lozano-P ´erez, T., Kaelbling, L., and Tenenbaum, J. B. Predicate invention for bilevel planning. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 37, pp. 12120–12129, 2023. Singh, I., Blukis, V., Mousavian, A., Goyal, A., Xu, D., Tremblay, J., Fox, D., Thomason, J., and Garg, A. Prog-prompt: program generation for situated robot task plan-ning using large language models. Autonomous Robots ,47(8):999–1012, 2023. Srinivas, A., Jabri, A., Abbeel, P., Levine, S., and Finn, C. Universal planning networks: Learning generalizable representations for visuomotor control. In International conference on machine learning , pp. 4732–4741. PMLR, 2018. Wong, L., Mao, J., Sharma, P., Siegel, Z. S., Feng, J., Ko-rneev, N., Tenenbaum, J. B., and Andreas, J. Learning adaptive planning representations with natural language guidance. arXiv preprint arXiv:2312.08566 , 2023. Wu, Q., Zhao, H., Saxon, M., Bui, T., Wang, W. Y., Zhang, Y., and Chang, S. Vsp: Assessing the dual challenges of perception and reasoning in spatial planning tasks for vlms. arXiv preprint arXiv:2407.01863 , 2024. Xiong, S., Zhou, J., Liu, Z., and Su, Y. Symplanner: Delib-erate planning in language models with symbolic repre-sentation. arXiv preprint arXiv:2505.01479 , 2025. Yang, A., Li, A., Yang, B., Zhang, B., Hui, B., Zheng, B., Yu, B., Gao, C., Huang, C., Lv, C., et al. Qwen3 technical report. arXiv preprint arXiv:2505.09388 , 2025. Yang, X., Wu, Y., Yang, M., Chen, H., and Geng, X. Explor-ing diverse in-context configurations for image caption-ing. Advances in Neural Information Processing Systems ,36:40924–40943, 2023. 10 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+Zeng, A., Attarian, M., Ichter, B., Choromanski, K., Wong, A., Welker, S., Tombari, F., Purohit, A., Ryoo, M., Sind-hwani, V., et al. Socratic models: Composing zero-shot multimodal reasoning with language. arXiv preprint arXiv:2204.00598 , 2022. Zhang, C., Li, Z., and Yuan, W. Vote-tree-planner: Optimiz-ing execution order in llm-based task planning pipeline via voting. arXiv preprint arXiv:2502.09749 , 2025. Zhang, X., Ding, Y., Amiri, S., Yang, H., Kaminski, A., Esselink, C., and Zhang, S. Grounding classical task planners via vision-language models. arXiv preprint arXiv:2304.08587 , 2023. Zhi-Xuan, T. Pddl. jl: An extensible interpreter and com-piler interface for fast and flexible ai planning . PhD thesis, Massachusetts Institute of Technology, 2022. Zhou, Z., Song, J., Yao, K., Shu, Z., and Ma, L. Isr-llm: Iter-ative self-refined large language model for long-horizon sequential task planning. In 2024 IEEE International Con-ference on Robotics and Automation (ICRA) , pp. 2081– 2088. IEEE, 2024. Zhu, Y., Tremblay, J., Birchfield, S., and Zhu, Y. Hier-archical planning for long-horizon manipulation with geometric and symbolic scene graphs. In 2021 IEEE International Conference on Robotics and Automation (ICRA) , pp. 6541–6548. Ieee, 2021. 11 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+## Appendix A. Limitations and Future Discussions 
+
+While SCOPE demonstrates improvements in symbolic plan-ning and long-horizon planning, there are several limitations that warrant further exploration. In this section, we discuss the current limitations of our framework and outline poten-tial directions for future work. 
+
+A.1. Limitations Real-World Execution Feedback. In a simulator, real execution feedback is directly provided by the program, such as when an action cannot be executed or when an object is not found. However, in the real world, feedback from real execution is more difficult to describe. Unlike in a simulated environment where actions and object states are explicitly programmed, real-world feedback involves sensory inputs, environmental interactions, and physical constraints that are not always easily translated into direct feedback or error messages. This complexity requires sophisticated sensor integration and real-time processing to accurately reflect the outcomes of actions. 
+
+A.2. Future Directions Integration with Reinforcement Learning (RL). Future work could explore integrating SCOPE with RL to enhance the agent’s ability to learn policies for symbolic task plan-ning. By combining symbolic planning with RL, the agent may not only refine its symbolic world representations but also optimize long-horizon planning by exploring more com-plex policies and rewards. 
+
+Expanding to Multi-Agent Environments. SCOPE could be extended to multi-agent environments, where the com-plexity of planning increases significantly. PDDL has the ability to model complex multi-agent interactions, and in-tegrating it into SCOPE could enable the system to handle planning scenarios that involve multiple agents with dis-tinct goals and constraints. This would make SCOPE more applicable to collaborative robotics and other multi-agent systems. 
+
+## B. Evaluation Setup 
+
+B.1. Task Category Specification 
+
+We summarize the average symbolic action length and the number of involved environment objects for each task cate-gory in Table 7. 
+
+VirtualHome. We use a subset of n = 186 tasks randomly sampled from the VirtualHome dataset. To assess the gen-eralization of symbolic planning across diverse tasks and semantic domains, we further organize these tasks into four     
+
+> Table 7. Average number of symbolic actions and objects in the environment involved in the scenes in VirtualHome and ALFRED .
+
+TaskName #Actions (avg.) #Objects (avg.) 
+
+VirtualHome Personal Hygiene 4.3 51.6 Food and Dining 7.2 66.8 Housekeeping 6.3 54.5 Leisure 5.3 33.7 ALFRED Pick & Place 16.2 42.2 Examine in Light 8.7 37.7 Clean & Place 18.1 57.1 Heat & Place 11.2 69.6 Cool & Place 20.4 80.6 Pick Two & Place 14.8 56.8 manually defined categories based on their object dependen-cies. (1) Personal Hygiene : Brush teeth, Wash hands, Go to toilet (2) Food and Dining : Cook some food, Drink, Set up table, Put groceries in fridge (3) Housekeeping : Wash clothes, Wash dishes by hand, Wash dishes with dishwasher, Turn on lightswitch (4) Leisure : Watch TV, Change TV channel, Listen to music, Read book, Relax on sofa, Pick up phone, Browse internet 
+
+ALFRED. We use a subset of n = 600 tasks randomly sampled from the ALFRED dataset. These tasks are selected from the following six categories: (1) Pick & Place , (2) Pick Two & Place , (3) Examine in Light , (4) Clean & Place , (5) 
+
+Heat & Place , and (6) Cool & Place . From each of these categories, we randomly select 100 tasks, ensuring a diverse set of scenarios to evaluate SCOPE . These tasks test the method’s ability to handle complex action sequences and to manage multiple objects in open-ended environments. 
+
+B.2. Open-ended Setting Construction 
+
+The open-ended setting is designed to evaluate adaptation when (i) the task distribution shifts over time and (ii) task-required affordances/state dependencies emerge beyond the agent’s initial symbolic coverage. Unlike the static/dynamic settings that evaluate each task independently, the open-ended setting evaluates a stream of tasks with phased nov-elty, where knowledge can be carried over across tasks. 
+
+Phase-based task stream. We construct an ordered task stream {τ1, τ 2, . . . , τ K } and partition it into K = 3 consec-utive phases. Each phase corresponds to a task category (Appendix B.1) and is intended to introduce a new category-specific novelty. Within a phase, tasks are randomly per-muted; across phases, the phase order is fixed for a given stream seed. For open-ended evaluation, we execute tasks sequentially and do not reset the agent’s symbolic knowl-12 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> Table 8. Schema of SASMem.
+
+Field Description Action reasoning knowledge 
+
+action name The target action that this entry describes. fail related predicates A multiset predicate count of predicates frequently implicated when action name fails. support count Number of times retrieving this entry leads to the same failure pattern being resolved (or the first failure pushed to a later step). real fail count Number of times the plan still fails at real execution after using this entry. symbol fail count Number of times the plan still fails in symbolic validation after using this entry. pre action prior A sequence prior extracted from successful plans: we count which action most frequently occurs immediately before action name .
+
+World modeling knowledge 
+
+predicate name The predicate that this entry models. trigger action Action count indicating which interaction actions most often trigger grounded evidence or real failures related to predicate name (typically derived from fail action ). missing count Number of times grounded execution evidence indicates predicate name is required but missing from symbolic world. incorrect count Number of times grounded execution evidence indicates symbolic world contains an incorrect instance/value of predicate name .
+
+edge/memory between tasks (the environment is reset per task as in standard evaluation, but the agent’s internal state persists), enabling knowledge carry-over across the stream. 
+
+Category-specific new action/affordance injection. To simulate the introduction of novel actions in an open-ended manner, we associate each task category ck (the k-th phase) with a category-specific symbolic action template a(k) 
+
+> new
+
+that represents a new affordance or a new state dependency re-quired by tasks in that category. We implement this novelty by gating the availability of action schemas (and their predi-cate interfaces) across phases: at initialization (phase 1), the agent is only provided with a core set of generic actions (e.g., navigation/manipulation primitives and common interaction actions). At the beginning of phase k, the environment con-tains tasks whose successful completion requires at least one instance of a(k) 
+
+> new
+
+(or its associated predicate-level depen-dency), while this action template is absent from the agent’s initial symbolic coverage. 
+
+B.3. Basic vs. Complex Environments. 
+
+For both VirtualHome and ALFRED , we further partition tasks into basic and complex environments in order to ana-lyze how SCOPE behaves under different levels of environ-ment complexity, as summarized in Table 10. For VirtualHome , we define complexity based on the spatial extent of the scene explored by the agent. During execution, we record the set of distinct rooms that the agent visits while completing the task. If the task can be accomplished within a single room, we label it as belonging to the basic 
+
+environment. If the agent needs to visit multiple rooms to complete the task, we label it as belonging to the complex 
+
+environment. The average symbolic action sequence length and the average number of environment objects involved per task for each category are summarized in Table 7. For ALFRED , we define complexity based on the number of objects in the environment involved in the scenes. We label a task as basic if this number is at most 30, and as 
+
+complex otherwise. The threshold of 30 is chosen such that both splits contain a sufficient number of tasks while the 
+
+complex split exhibits significantly higher object cardinality. 
+
+B.4. Evaluation Metrics 
+
+We provide precise definitions for all evaluation metrics used in our experiments: • Step Success Rate (StepSR) : The step-level success rate of actions executed in the environment, averaged over the entire open-ended step stream: StepSR = Nexec succ 
+
+Nexec 
+
+where Nexec is the total number of action steps actually 13 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> Table 9. Structured feedback schema used by SESim.
+
+Field Description Symbolic validation feedback 
+
+fail step Index of the first failing step in the action sequence during symbolic validation. fail action Name of the failing action. error type Error category returned by the PDDL val-idator, e.g., unmet precondition , unde-fined object , goal not satisfied , . . . error content Detailed error content. For un-met precondition , it lists the missing predicate instances (e.g., Graspable ). 
+
+Real execution feedback 
+
+outcome Execution outcome of the attempted plan in the environment: success or fail. fail content Failure reason reported by the environ-ment e.g., not found , not reachable , . . .  
+
+> Table 10. Average number of symbolic actions and distinct interac-tive objects per task, as well as the number of tasks in each group.
+
+task #Actions (avg.) #Objects (avg.) #Tasks 
+
+VirtualHome basic 5.3 34.7 57 complex 7.9 82.9 129 ALFRED basic 12.8 29.3 227 complex 15.9 68.9 273 executed in the environment over the step stream, and 
+
+Nexec succ is the number of those steps that succeed. • Classical Planner Support Rate (ClassicalSR) : The percentage of tasks in which the symbolic world is sufficiently complete to allow a classical planner to generate a valid plan: ClassicalSR = Nsupported 
+
+Ntotal 
+
+where Nsupported is the number of tasks with planner-supported symbolic models, and Ntotal is the total num-ber of tasks. • Task-Relevant Predicate Recall (SymRecall) : The percentage of ground-truth task-relevant predicates cor-rectly recovered in the symbolic world: SymRecall = |P pred ∩ P gt ||P gt |
+
+where Pgt is the set of ground-truth predicates relevant to task completion (e.g., goal achievement, action pre-conditions), and Ppred is the corresponding predicted set. • Symbolic Hallucination Rate (SymHalluc) : The per-centage of predicted task-relevant predicates that do not appear in the ground-truth symbolic world: SymHalluc = |P pred \ P gt ||P pred |
+
+This measures the extent to which the model gener-ates incorrect symbolic information related to the task, including hallucinated object states or spatial relations. 
+
+## C. Symbolic Execution Simulator Details 
+
+Figure 7 provides a qualitative example of the Symbolic Exe-cution Simulator (SESim). Starting from an initial symbolic world and plan, SESim first performs symbolic validation to detect logical inconsistencies and then executes the plan in the simulator to obtain grounded feedback, which together are used to refine action plan and evolve the symbolic world. 
+
+C.1. Symbolic Validation 
+
+The symbolic validation is implemented by wrapping an off-the-shelf PDDL validator. We use a standard VAL-style PDDL validator in all experiments. Given a symbolic world represented as a PDDL domain file and a problem file, to-gether with a PDDL plan, the validator checks whether the plan is logically consistent with the current symbolic world. Concretely, the validator expands the plan step by step and verifies that, for each action: (i) all preconditions are satisfied in the current symbolic state, (ii) all referenced objects are defined and correctly typed, and (iii) the final state satisfies the goal conditions specified in the problem file. If any of these checks fail, the validator returns a structured error trace containing unsatisfied preconditions, undefined or misspecified objects, and unmet goal predicates. We parse this trace into the symbolic validation feedback, which includes: (1) the index of the failing action, (2) the missing or violated predicates, and (3) the subset of goals that remain unsatisfied. 
+
+C.2. Real Execution 
+
+In the real execution, the same PDDL plan is executed step-by-step in the simulator environment. Because the PDDL actions are defined at a high level with explicit preconditions and effects, we design the symbolic domain such that each PDDL action corresponds closely to a primitive executable action in the simulator. This allows us to directly map each action to an environment action and apply it to the current simulated state. 14 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments ...  
+
+> (grabbable book_12 )
+> (OnTop plate_41 desk_42) ...
+
+Initial Symbolic World  
+
+> (walk to livingroom )
+> 0: walkto agent mouse
+> ...
+
+Plan 
+
+Symbolic Execution Simulator  
+
+> Random Initialization in Room
+> VLM
+> walk to livingroom
+
+Plan 
+
+> 0: walkto agent mouse_55
+> 1: switchOn computer_31
+> 2: grab agent mouse_55
+> 3: sit agent chair_51
+
+Plan   
+
+> VLM
+> (OnTop mouse_55 desk_53 )
+> (sittable chair_51 )...
+> mouse is not exist ...
+
+Real Execution 
+
+Symbolic Validation  
+
+> fail step:0
+> fail action: walkto ...
+
+Symbolic Execution Simulator 
+
+> Success
+
+Real Execution 
+
+Symbolic Validation  
+
+> fail step: 2
+> fail action: mouse ...
+
+Extended Symbolic World 
+
+> 0: walkto agent mouse_55
+> 1: switchOn computer_31
+> 2: grab agent mouse_55
+> 3: sit agent chair_51
+
+Plan 
+
+> (grabbable mouse_55 )
+
+Extended Symbolic World  
+
+> VLM
+
+Symbolic Execution Simulator 
+
+> Success
+
+Real Execution 
+
+Symbolic Validation 
+
+> Success
+> Execute action in Env.
+
+Task: Browse internet 
+
+Timeline 
+
+Figure 7. Example of how the Symbolic Execution Simulator (SESim) jointly uses symbolic validation and real execution feedback to refine both the action plan and the symbolic world. 
+
+For VirtualHome , we align PDDL actions with the built-in program-based API (e.g., Walk , Grab , SwitchOn ), and execute them sequentially in the environment. The simu-lator reports whether an action succeeds, fails because the target object cannot be found, or fails because the action is not applicable in the current state (e.g., trying to Open an already open container). We log the pre- and post-execution observations and convert them into real execution feedback 
+
+Freal , which captures observed state changes, failed manipu-lations, and missing affordances. For ALFRED tasks, we execute the plan using the ALF-World interface, adopting its discrete action format (e.g., 
+
+Goto , TakeObject , OpenObject , MoveObject ). The PDDL domain is constructed such that each high-level PDDL action has a one-to-one mapping to an ALFWorld ac-tion. During execution, ALFWorld returns success or failure signals together with updated observations. Overall, the real execution stage provides grounded feed-back that complements symbolic validation: even when a plan passes the PDDL validator, execution failures in the simulator reveal mismatches between the symbolic world and the embodied environment. 
+
+## D. Self-Adaptive Symbolic Memory Details 
+
+D.1. When SASMem Is Queried 
+
+SASMem is queried only when SESim produces a struc-tured failure signal, i.e., either (i) symbolic validation fails, yielding Fsymbol , or (ii) symbolic validation passes but real execution fails (or reveals unexpected postconditions), yield-ing Freal . Intuitively, SASMem is not used as a generic prompt augmentation; instead, it is activated by localized 
+
+failure evidence so that the returned information is directly actionable for plan/world refinement. 
+
+Query construction from structured feedback. Given a symbolic validation failure, SESim extracts a compact query key from the failing action and the validator-reported error: 
+
+qsymbol = ⟨fail action , error type , error content ⟩.
+
+Given a real execution failure or mismatch, SESim extracts an execution query key: 
+
+qreal = ⟨fail content ⟩
+
+where fail content summarizes the grounded failure evi-dence near the failure point (e.g., affordance mismatch, unexpected state change, or interaction refusal). SESim forwards these keys to a dedicated MemoryManager , which retrieves a small set of predicate-level patches/hints and returns them as FSASMem for the next refinement call. 
+
+D.2. What Is Returned 
+
+SASMem maintains two complementary stores: action mem-ory and world memory . The MemoryManager returns only a minimal set of high-density hints rather than raw trajecto-ries. 15 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments 
+
+Action reasoning memory. Action memory is indexed by symbolic failure signatures and is retrieved primarily us-ing qsymbol . For the most compatible entries (matched by the failing action and error type, and optionally refined by error content), each entry provides: (i) a short list of failure-associated predicates (the top predicates most frequently implicated by this failure signature), which serves as a hint for which symbolic facts are likely missing or inconsistent in the current world model; and (ii) a single successful prereq-uisite action pattern (top-1), describing the most common local prerequisite step that precedes this failing action in successful plans, which guides plan repair by suggesting which prerequisite should be ensured or inserted before the failing action. 
+
+World modeling memory. World memory is indexed by grounded mismatch evidence and is retrieved using qreal 
+
+jointly with the local failing action context. Each retrieved entry is predicate-aligned and provides: (i) a small set of predicate names with lightweight statistics indicating their tendency to be missing versus mis-specified under real in-teraction evidence (e.g., counts that accumulate missing-evidence vs error-evidence), which biases the VLM toward either adding a missing predicate instance or revising an incorrect one; and (ii) a single probing action suggestion 
+
+(top-1) that most frequently surfaces interaction evidence for the predicate, enabling targeted exploration to confirm or refute the suspected symbolic gap. 
+
+D.3. Write-gating with Credit Assignment 
+
+SASMem updates are governed by a write-gating mech-anism that performs credit assignment based on whether an injected hint actually improves the subsequent SESim outcome. Concretely, suppose a SESim iteration first fails at step t with 
+
+⟨fail step = t, fail action = at, error type = e⟩,
+
+and the MemoryManager injects an action-memory en-try associated with (at, e ). After refinement, SESim re-validates/re-executes and compares the next outcome against the original failure signature. The injected entry is treated as effective and its support statistic is increased if either: (i) the same error type e no longer occurs at the same failing action at (i.e., the original failure pattern is resolved), or (ii) the first failure moves to a strictly later step t′ > t (i.e., progress is made even if the task is not fully solved yet). Otherwise, if SESim still fails on the same action with the same symbolic error type, the entry is down-weighted via a symbolic-failure. 
+
+## E. PDDL Domain File 
+
+For completeness and reproducibility, we include the full PDDL domain definitions used in our experiments for both 
+
+VirtualHome and ALFRED . These domains specify the types, predicates, and actions used for embodied planning in each environment. 
+
+E.1. VirtualHome Domain  
+
+> 1
+
+(define (domain virtualHome)  
+
+> 2
+
+(:requirements :adl :strips :typing )  
+
+> 34
+
+(:types  
+
+> 5
+
+agent  
+
+> 6
+
+room  
+
+> 7
+
+object  
+
+> 8
+
+) 
+
+> 910
+
+(:predicates  
+
+> 11
+
+(sitting_state ?a - agent); ?a is seated.  
+
+> 12
+
+(lying_state ?a - agent); ?a is lying down.  
+
+> 13
+
+(sleeping_state ?a - agent) ; ?a is asleep.  
+
+> 14
+
+(clean_state ?obj - object) ; ?obj is clean  
+
+> 15
+
+(turnon_state ?obj - object) ; ?obj is turned on.  
+
+> 16
+
+(open_state ?obj - object) ; ?obj is open  
+
+> 17 18
+
+(grabbable ?obj - object) ; ?obj can be picked up.  
+
+> 19
+
+(sittable ?obj - object) ; ?obj can be sat on.  
+
+> 20
+
+(eatable ?obj - object) ; ?obj can be eaten.  
+
+> 21
+
+(readable ?obj - object) ; ?obj can be read.  
+
+> 22
+
+(drinkable ?obj - object) ; ?obj can be drunk.  
+
+> 23
+
+(switchable ?obj - object) ; ?obj can be switched on/off.  
+
+> 24
+
+(openable ?obj - object) ; ?obj can be opened.  
+
+> 25 26
+
+(agentAtRoom ?a - agent ?r - room) ; ?a is in room ?r  
+
+> 27
+
+(agentAtObject ?a - agent ?obj -object); ?a is at ?obj  
+
+> 28
+
+(holdsRight ?a - agent ?obj - object ) ; ?a holds ?obj in right hand  
+
+> 29
+
+(holdsLeft ?a - agent ?obj - object) ; ?a holds ?obj in left hand  
+
+> 30
+
+(isHoldingLeft ?a - agent) ; ?a holds an object in left hand  
+
+> 31
+
+(isHoldingRight ?a - agent) ; ?a holds an object in right hand  
+
+> 32
+
+(onTop ?obj1 - object ?obj2 - object ) ; ?obj1 is on top of ?obj2  
+
+> 33
+
+(insideObject ?obj1 - object ?obj2 -object); ?obj1 is inside ?obj2  
+
+> 34
+
+(objAtRoom ?obj - object ?r - room); ?obj is in room ?r  
+
+> 35
+
+)
+
+> 36
+
+16 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> 37
+
+(:action walkToRoom  
+
+> 38
+
+:parameters (?a - agent ?from - room ?to - room)  
+
+> 39
+
+:precondition (and  
+
+> 40
+
+(not(sitting_state ?a))  
+
+> 41
+
+(agentAtRoom ?a ?from))  
+
+> 42
+
+:effect (and  
+
+> 43
+
+(agentAtRoom ?a ?to)  
+
+> 44
+
+(not(agentAtRoom ?a ?from)))  
+
+> 45
+
+) 
+
+> 46 47
+
+(:action walkToObject  
+
+> 48
+
+:parameters (?a - agent ?obj -object ?r - room)  
+
+> 49
+
+:precondition (and  
+
+> 50
+
+(not (sitting_state ?a))  
+
+> 51
+
+(objAtRoom ?obj ?r)  
+
+> 52
+
+(agentAtRoom ?a ?r))  
+
+> 53
+
+:effect (agentAtObject ?a ?obj)  
+
+> 54
+
+) 
+
+> 55 56
+
+(:action runToRoom  
+
+> 57
+
+:parameters (?a - agent ?from - room ?to - room)  
+
+> 58
+
+:precondition (and  
+
+> 59
+
+(not(sitting_state ?a))  
+
+> 60
+
+(agentAtRoom ?a ?from))  
+
+> 61
+
+:effect (and  
+
+> 62
+
+(agentAtRoom ?a ?to)  
+
+> 63
+
+(not(agentAtRoom ?a ?from)))  
+
+> 64
+
+) 
+
+> 65 66
+
+(:action runToObject  
+
+> 67
+
+:parameters (?a - agent ?obj -object ?r - room)  
+
+> 68
+
+:precondition (and  
+
+> 69
+
+(not (sitting_state ?a))  
+
+> 70
+
+(objAtRoom ?obj ?r)  
+
+> 71
+
+(agentAtRoom ?a ?r))  
+
+> 72
+
+:effect (agentAtObject ?a ?obj)  
+
+> 73
+
+) 
+
+> 74 75
+
+(:action sit  
+
+> 76
+
+:parameters (?a - agent ?obj -object)  
+
+> 77
+
+:precondition (and  
+
+> 78
+
+(not (sitting_state ?a))  
+
+> 79
+
+(agentAtObject ?a ?obj)  
+
+> 80
+
+(sittable ?obj)  
+
+> 81
+
+) 
+
+> 82
+
+:effect (sitting_state ?a)  
+
+> 83
+
+) 
+
+> 84 85
+
+(:action standUp  
+
+> 86
+
+:parameters (?a - agent)  
+
+> 87
+
+:precondition (sitting_state ?a)  
+
+> 88
+
+:effect (not (sitting_state ?a))  
+
+> 89
+
+) 
+
+> 90 91
+
+(:action grab  
+
+> 92
+
+:parameters (?a - agent ?obj -object)  
+
+> 93
+
+:precondition (and  
+
+> 94
+
+(grabbable ?obj)  
+
+> 95
+
+(agentAtObject ?a ?obj)  
+
+> 96
+
+(or (not ( isHoldingLeft ?a)) (not ( isHoldingRight ?a)))  
+
+> 97
+
+) 
+
+> 98
+
+:effect (and  
+
+> 99
+
+(when (not(isHoldingRight ?a))  
+
+> 100
+
+(and(holdsRight ?a ?obj) (isHoldingRight ?a)))  
+
+> 101
+
+(when (and(isHoldingRight ?a) (not( isHoldingLeft ?a)))  
+
+> 102
+
+(and(holdsLeft ?a ?obj) (isHoldingLeft ?a)))  
+
+> 103
+
+) 
+
+> 104
+
+) 
+
+> 105 106
+
+(:action agent_open_object  
+
+> 107
+
+:parameters (?a - agent ?obj -object)  
+
+> 108
+
+:precondition (and  
+
+> 109
+
+(openable ?obj)  
+
+> 110
+
+(not(open_state ?obj))  
+
+> 111
+
+(agentAtObject ?a ?obj)  
+
+> 112
+
+(or (not (isHoldingRight ?a)) (not ( isHoldingLeft ?a)))  
+
+> 113
+
+) 
+
+> 114
+
+:effect (open_state ?obj)  
+
+> 115
+
+) 
+
+> 116 117
+
+(:action agent_close_object  
+
+> 118
+
+:parameters (?a - agent ?obj -object)  
+
+> 119
+
+:precondition (and  
+
+> 120
+
+(openable ?obj)  
+
+> 121
+
+(open_state ?obj)  
+
+> 122
+
+(agentAtObject ?a ?obj)  
+
+> 123
+
+(or (not (isHoldingRight ?a)) (not ( isHoldingLeft ?a)))  
+
+> 124
+
+) 
+
+> 125
+
+:effect (not(open_state ?obj))  
+
+> 126
+
+) 
+
+> 127 128
+
+(:action putOn  
+
+> 129
+
+:parameters (?a - agent ?obj1 -object ?obj2 - object)  
+
+> 130
+
+:precondition (and  
+
+> 131
+
+(or (holdsRight ?a ?obj1) (holdsLeft ?a ?obj1))  
+
+> 132
+
+(agentAtObject ?a ?obj2)  
+
+> 133
+
+) 
+
+> 134
+
+:effect (and  
+
+> 135
+
+(when(holdsRight ?a ?obj1)  
+
+> 136
+
+(and(not(holdsRight ?a ?obj1))( not(isHoldingRight ?a))))  
+
+> 137
+
+(when(not(holdsRight ?a ?obj1))  
+
+> 138
+
+(and(not(holdsLeft ?a ?obj1))( not( isHoldingLeft ?a))))  
+
+> 139
+
+(onTop ?obj1 ?obj2)  
+
+> 140
+
+) 
+
+> 141
+
+) 
+
+> 142 143
+
+(:action putIn  
+
+> 144
+
+:parameters (?a - agent ?obj1 -object ?obj2 - object)  
+
+> 145
+
+:precondition (and  
+
+> 146
+
+(or (holdsRight ?a ?obj1) (holdsLeft ?a ?obj1)) 
+
+17 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> 147
+
+(agentAtObject ?a ?obj2)  
+
+> 148
+
+(open_state ?obj2)  
+
+> 149
+
+) 
+
+> 150
+
+:effect (and  
+
+> 151
+
+(when(holdsRight ?a ?obj1)  
+
+> 152
+
+(and(not(holdsRight ?a ?obj1))( not(isHoldingRight ?a))))  
+
+> 153
+
+(when(not(holdsRight ?a ?obj1))  
+
+> 154
+
+(and(not(holdsLeft ?a ?obj1))( not( isHoldingLeft ?a))))  
+
+> 155
+
+(insideObject ?obj1 ?obj2)  
+
+> 156
+
+) 
+
+> 157
+
+) 
+
+> 158 159
+
+(:action switchOn  
+
+> 160
+
+:parameters (?a - agent ?obj -object)  
+
+> 161
+
+:precondition (and  
+
+> 162
+
+(switchable ?obj)  
+
+> 163
+
+(not(turnon_state ?obj))  
+
+> 164
+
+(agentAtObject ?a ?obj)  
+
+> 165
+
+) 
+
+> 166
+
+:effect (turnon_state ?obj)  
+
+> 167
+
+) 
+
+> 168 169
+
+(:action switchOff  
+
+> 170
+
+:parameters (?a - agent ?obj -object)  
+
+> 171
+
+:precondition (and  
+
+> 172
+
+(switchable ?obj)  
+
+> 173
+
+(turnon_state ?obj)  
+
+> 174
+
+(agentAtObject ?a ?obj)  
+
+> 175
+
+) 
+
+> 176
+
+:effect (not(turnon_state ?obj))  
+
+> 177
+
+) 
+
+> 178 179
+
+(:action drink  
+
+> 180
+
+:parameters (?a - agent ?obj -object)  
+
+> 181
+
+:precondition (and  
+
+> 182
+
+(drinkable ?obj)  
+
+> 183
+
+(agentAtObject ?a ?obj)  
+
+> 184
+
+) 
+
+> 185
+
+:effect (and)  
+
+> 186
+
+) 
+
+> 187 188
+
+(:action touch  
+
+> 189
+
+:parameters (?a - agent ?obj -object)  
+
+> 190
+
+:precondition (agentAtObject ?a ?obj ) 
+
+> 191
+
+:effect (and)  
+
+> 192
+
+) 
+
+> 193 194
+
+(:action lookAt  
+
+> 195
+
+:parameters (?a - agent ?obj -object)  
+
+> 196
+
+:precondition (agentAtObject ?a ?obj ) 
+
+> 197
+
+:effect (and)  
+
+> 198
+
+) 
+
+> 199 200
+
+(:action wipe  
+
+> 201
+
+:parameters (?a - agent ?obj -object)  
+
+> 202
+
+:precondition (and  
+
+> 203
+
+(or (holdsRight ?a ?obj) (holdsLeft ?a ?obj))  
+
+> 204
+
+(agentAtObject ?a ?obj)  
+
+> 205
+
+) 
+
+> 206
+
+:effect (clean_state ?obj)  
+
+> 207
+
+) 
+
+> 208 209
+
+(:action wash  
+
+> 210
+
+:parameters (?a - agent ?obj -object)  
+
+> 211
+
+:precondition (and  
+
+> 212
+
+(or (holdsRight ?a ?obj) (holdsLeft ?a ?obj))  
+
+> 213
+
+(agentAtObject ?a ?obj)  
+
+> 214
+
+) 
+
+> 215
+
+:effect (clean_state ?obj)  
+
+> 216
+
+) 
+
+> 217 218
+
+(:action read  
+
+> 219
+
+:parameters (?a - agent ?obj -object)  
+
+> 220
+
+:precondition (and  
+
+> 221
+
+(or (holdsRight ?a ?obj) (holdsLeft ?a ?obj))  
+
+> 222
+
+(agentAtObject ?a ?obj)  
+
+> 223
+
+(readable ?obj)  
+
+> 224
+
+) 
+
+> 225
+
+:effect (and)  
+
+> 226
+
+) 
+
+> 227 228
+
+(:action eat  
+
+> 229
+
+:parameters (?a - agent ?obj -object)  
+
+> 230
+
+:precondition (and  
+
+> 231
+
+(or (holdsRight ?a ?obj) (holdsLeft ?a ?obj))  
+
+> 232
+
+(agentAtObject ?a ?obj)  
+
+> 233
+
+(eatable ?obj)  
+
+> 234
+
+) 
+
+> 235
+
+:effect (and)  
+
+> 236
+
+) 
+
+> 237 238
+
+(:action sleep  
+
+> 239
+
+:parameters (?a - agent)  
+
+> 240
+
+:precondition (or (sitting_state ?a) (lying_state ?a))  
+
+> 241
+
+:effect (sleeping_state ?a)  
+
+> 242
+
+) 
+
+> 243 244
+
+(:action wakeup  
+
+> 245
+
+:parameters (?a - agent)  
+
+> 246
+
+:precondition (sleeping_state ?a)  
+
+> 247
+
+:effect (not(sleeping_state ?a))  
+
+> 248
+
+) 
+
+> 249
+
+)
+
+E.2. ALFRED Domain  
+
+> 1
+
+(define (domain alfred)  
+
+> 2
+
+(:requirements  
+
+> 3
+
+:adl  
+
+> 4
+
+:typing  
+
+> 5
+
+)
+
+18 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> 6
+
+(:types  
+
+> 7
+
+agent  
+
+> 8
+
+receptacle  
+
+> 9
+
+object  
+
+> 10
+
+) 
+
+> 11 12
+
+(:predicates  
+
+> 13
+
+(agentAtReceptacle ?a - agent ?r -receptacle) ; true if the agent is at the receptacle  
+
+> 14
+
+(objectAtReceptacle ?o - object ?r -receptacle) ; true if the object is at the receptacle  
+
+> 15 16
+
+(openable ?r - receptacle) ;true if a receptacle is openable  
+
+> 17
+
+(cleanable ?o - object) ; true if the object can be placed in a sink  
+
+> 18
+
+(heatable ?o - object) ; true if the object can be heated up in a microwave  
+
+> 19
+
+(coolable ?o - object) ; true if the object can be cooled in the fridge  
+
+> 20
+
+(pickupable ?o - object) ; true if the object can be picked up  
+
+> 21
+
+(toggleable ?o - object) ; true if the object can be turned on/off  
+
+> 22
+
+(cleanTool ?r - receptacle)  
+
+> 23
+
+(heatTool ?r - receptacle)  
+
+> 24
+
+(coolTool ?r - receptacle)  
+
+> 25 26
+
+(holds ?a - agent ?o - object) ;object ?o is held by agent ?a  
+
+> 27
+
+(holdsAny ?a - agent) ; agent ?a holds an object  
+
+> 28
+
+(opened ?r - receptacle) ; true if a receptacle is opened  
+
+> 29
+
+(isClean ?o - object) ; true if the object has been clean in sink  
+
+> 30
+
+(isHot ?o - object) ; true if the object has been heated up  
+
+> 31
+
+(isCool ?o - object) ; true if the object has been cooled  
+
+> 32
+
+(isOn ?o - object) ; true if the object is on  
+
+> 33
+
+) 
+
+> 34
+
+(:action GotoReceptacle  
+
+> 35
+
+:parameters (?a - agent ?from_recep - receptacle ?to_recep -receptacle ) 
+
+> 36
+
+:precondition (and  
+
+> 37
+
+(agentAtReceptacle ?a ?from_recep)  
+
+> 38
+
+(not (agentAtReceptacle ?a ?to_recep))  
+
+> 39
+
+) 
+
+> 40
+
+:effect (and  
+
+> 41
+
+(not (agentAtReceptacle ?a ?from_recep))  
+
+> 42
+
+(agentAtReceptacle ?a ?to_recep)  
+
+> 43
+
+) 
+
+> 44
+
+) 
+
+> 45 46
+
+(:action OpenReceptacle  
+
+> 47
+
+:parameters (?a - agent ?r -receptacle)  
+
+> 48
+
+:precondition (and  
+
+> 49
+
+(openable ?r)  
+
+> 50
+
+(agentAtReceptacle ?a ?r)  
+
+> 51
+
+(not (opened ?r))  
+
+> 52
+
+) 
+
+> 53
+
+:effect (and  
+
+> 54
+
+(opened ?r)  
+
+> 55
+
+) 
+
+> 56
+
+) 
+
+> 57
+
+(:action CloseObject  
+
+> 58
+
+:parameters (?a - agent ?r -receptacle)  
+
+> 59
+
+:precondition (and  
+
+> 60
+
+(openable ?r)  
+
+> 61
+
+(agentAtReceptacle ?a ?r)  
+
+> 62
+
+(opened ?r)  
+
+> 63
+
+) 
+
+> 64
+
+:effect (and  
+
+> 65
+
+(not (opened ?r))  
+
+> 66
+
+) 
+
+> 67
+
+) 
+
+> 68 69
+
+(:action TakeObject  
+
+> 70
+
+:parameters (?a - agent ?o - object ?r - receptacle)  
+
+> 71
+
+:precondition  
+
+> 72
+
+(and  
+
+> 73
+
+(pickupable ?o)  
+
+> 74
+
+(agentAtReceptacle ?a ?r)  
+
+> 75
+
+(objectAtReceptacle ?o ?r)  
+
+> 76
+
+(not (holdsAny ?a)) ; agent ’s hands are empty.  
+
+> 77
+
+(or (not (openable ?r)) ( opened ?r))  
+
+> 78
+
+) 
+
+> 79
+
+:effect  
+
+> 80
+
+(and  
+
+> 81
+
+(not (objectAtReceptacle ?o ?r))  
+
+> 82
+
+(holds ?a ?o)  
+
+> 83
+
+(holdsAny ?a)  
+
+> 84
+
+) 
+
+> 85
+
+)
+
+19 SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments  
+
+> 86 87
+
+(:action MoveObject  
+
+> 88
+
+:parameters (?a - agent ?o - object ?r - receptacle ) 
+
+> 89
+
+:precondition (and  
+
+> 90
+
+(holds ?a ?o)  
+
+> 91
+
+(agentAtReceptacle ?a ?r)  
+
+> 92
+
+(or (not (openable ?r)) (opened ?r))  
+
+> 93
+
+) 
+
+> 94
+
+:effect (and  
+
+> 95
+
+(objectAtReceptacle ?o ?r)  
+
+> 96
+
+(not (holds ?a ?o))  
+
+> 97
+
+(not (holdsAny ?a))  
+
+> 98
+
+) 
+
+> 99
+
+) 
+
+> 100 101
+
+(:action CleanObject  
+
+> 102
+
+:parameters (?a - agent ?o - object ?r - receptacle)  
+
+> 103
+
+:precondition (and  
+
+> 104
+
+(cleanable ?o)  
+
+> 105
+
+(cleanTool ?r)  
+
+> 106
+
+(agentAtReceptacle ?a ?r)  
+
+> 107
+
+(holds ?a ?o)  
+
+> 108
+
+) 
+
+> 109
+
+:effect (and  
+
+> 110
+
+(isClean ?o)  
+
+> 111
+
+) 
+
+> 112
+
+) 
+
+> 113 114
+
+(:action HeatObject  
+
+> 115
+
+:parameters (?a - agent ?o - object ?r - receptacle)  
+
+> 116
+
+:precondition (and  
+
+> 117
+
+(heatable ?o)  
+
+> 118
+
+(heatTool ?r)  
+
+> 119
+
+(agentAtReceptacle ?a ?r)  
+
+> 120
+
+(holds ?a ?o)  
+
+> 121
+
+) 
+
+> 122
+
+:effect (and  
+
+> 123
+
+(isHot ?o)  
+
+> 124
+
+(not (isCool ?o))  
+
+> 125
+
+) 
+
+> 126
+
+) 
+
+> 127 128
+
+(:action CoolObject  
+
+> 129
+
+:parameters (?a - agent ?o - object ?r - receptacle ) 
+
+> 130
+
+:precondition (and  
+
+> 131
+
+(coolable ?o)  
+
+> 132
+
+(coolTool ?r)  
+
+> 133
+
+(agentAtReceptacle ?a ?r)  
+
+> 134
+
+(holds ?a ?o)  
+
+> 135
+
+) 
+
+> 136
+
+:effect (and  
+
+> 137
+
+(isCool ?o)  
+
+> 138
+
+(not (isHot ?o))  
+
+> 139
+
+) 
+
+> 140
+
+) 
+
+> 141 142
+
+(:action ToggleObject  
+
+> 143
+
+:parameters (?a - agent ?o - object ?r - receptacle)  
+
+> 144
+
+:precondition (and  
+
+> 145
+
+(toggleable ?o)  
+
+> 146
+
+(agentAtReceptacle ?a ?r)  
+
+> 147
+
+(objectAtReceptacle ?o ?r)  
+
+> 148
+
+) 
+
+> 149
+
+:effect (and  
+
+> 150
+
+(when (isOn ?o)  
+
+> 151
+
+(not (isOn ?o)))  
+
+> 152
+
+(when (not (isOn ?o))  
+
+> 153
+
+(isOn ?o))  
+
+> 154
+
+) 
+
+> 155
+
+) 
+
+> 156 157
+
+)
+
+20

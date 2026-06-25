@@ -1,0 +1,656 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-25T21:19:58.077657+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 10,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 9,
+    "quick_skim_target": 12,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2606.25421v1",
+      "source": "arxiv",
+      "title": "Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making",
+      "abstract": "Recent studies on world modeling for Large Language Model (LLM) agents typically formulate the learning objective as next-observation prediction. However, this objective ties supervision to what a transition happens to reveal, which may omit the dynamics most relevant to the agent's current decision. To bridge this gap, we propose Agent-Authored World Modeling (AAWM), a training procedure that constructs supervision from the policy's own decision needs. Specifically, at each state, the agent identifies what it needs to understand about the environment before acting. These needs drive the retrieval of relevant transition evidence across trajectories, which is then synthesized into training targets that capture decision-oriented dynamics instead of reconstructing the next observation. This aligns the training objective with the dynamics the policy needs before acting, not with the contents of the next observation. Experimental results validate the effectiveness of AAWM across multiple environments and training settings. These results show that decision-aware world-model targets provide a more effective learning signal than next-observation prediction.",
+      "authors": [
+        "Guangfeng Cai",
+        "Kaibing Yang",
+        "Shuo He",
+        "Yu Li",
+        "Shengtian Yang",
+        "Jiaqi Lv",
+        "Lei Feng"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-24T05:31:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.25421v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "agent-authored world modeling for sequential decision making",
+      "llm_evidence_cn": "智能体自定世界建模用于序贯决策",
+      "llm_evidence": "智能体自定世界建模用于序贯决策",
+      "canonical_evidence": "智能体自定世界建模用于序贯决策",
+      "llm_tldr_en": "Agent-Authored World Modeling (AAWM) constructs supervision from the policy's own decision needs, retrieving relevant transition evidence to capture decision-oriented dynamics, going beyond next-observation prediction.",
+      "llm_tldr_cn": "针对现有LLM智能体世界建模仅预测下一观测而忽略与决策最相关动态的问题，本文提出智能体自定世界建模（AAWM）。该方法在每个状态让智能体识别决策前需理解的环境信息，据此跨轨迹检索相关转移证据，合成决策导向的训练目标。实验表明，AAWM使智能体更有效地理解环境动态，提升了序贯决策性能，为世界建模提供了新范式。",
+      "llm_tldr": "针对现有LLM智能体世界建模仅预测下一观测而忽略与决策最相关动态的问题，本文提出智能体自定世界建模（AAWM）。该方法在每个状态让智能体识别决策前需理解的环境信息，据此跨轨迹检索相关转移证据，合成决策导向的训练目标。实验表明，AAWM使智能体更有效地理解环境动态，提升了序贯决策性能，为世界建模提供了新范式。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21172v1",
+      "source": "arxiv",
+      "title": "BadDreamer: Transferable Backdoor Attacks against Video World Models for Autonomous Driving",
+      "abstract": "Video world models are increasingly used in autonomous driving to forecast future scene evolution and provide future-aware spatio-temporal representations for downstream action prediction. In perception-to-action pipelines, these representations can directly influence ego-vehicle waypoint planning, making the learned future dynamics a critical security-sensitive component. Despite their promise, the training-time security risks of autonomous-driving video world models remain largely unexplored. We present BadDreamer, a transferable spatio-temporal backdoor attack that targets the perception side of this pipeline. Unlike conventional backdoors that manipulate image labels, prompt outputs, or action supervision, BadDreamer poisons the learned transition dynamics of a video world model. It constructs trigger-erasure sequences in which an oncoming yellow delivery rider is visible in the observed context frames but erased from the future frames. After fine-tuning on a small fraction of such sequences, the compromised world model learns a hidden conditional association: when the physical trigger appears, it hallucinates a future where the rider disappears and the road appears clear. We further show that this corrupted future-aware representation can transfer to the downstream action module without directly modifying ego-trajectory labels, inducing unsafe non-evasive waypoint predictions. Our experiments instantiate this attack on a representative open-source perception-to-action pipeline, revealing a representation-level safety risk in autonomous-driving video world models and highlighting the need for backdoor-aware validation beyond clean generation quality.",
+      "authors": [
+        "Zhe Shuai",
+        "Xiaopeng Xie",
+        "Yikun Zeng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T07:24:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.21172v1",
+      "tags": [
+        "keyword:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "backdoor attack on video world models for autonomous driving",
+      "llm_evidence_cn": "针对自动驾驶视频世界模型的后门攻击",
+      "llm_evidence": "针对自动驾驶视频世界模型的后门攻击",
+      "canonical_evidence": "针对自动驾驶视频世界模型的后门攻击",
+      "llm_tldr_en": "BadDreamer presents a transferable spatio-temporal backdoor attack targeting perception in autonomous driving video world models, affecting future scene predictions.",
+      "llm_tldr_cn": "该论文揭示了自动驾驶视频世界模型的训练时安全风险，提出BadDreamer可转移时空后门攻击，通过毒化感知输入影响世界模型的未来场景预测，进而操纵下游规划。实验证明攻击可成功迁移至不同世界模型，强调了世界模型安全性的重要性。",
+      "llm_tldr": "该论文揭示了自动驾驶视频世界模型的训练时安全风险，提出BadDreamer可转移时空后门攻击，通过毒化感知输入影响世界模型的未来场景预测，进而操纵下游规划。实验证明攻击可成功迁移至不同世界模型，强调了世界模型安全性的重要性。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24257v1",
+      "source": "arxiv",
+      "title": "3DCarGen: Scalable 3D Car Generation via 3D-consistent Multi-view Synthesis",
+      "abstract": "High-quality 3D vehicle assets are essential for autonomous driving simulation. Although multi-view diffusion-based paradigms enable controllable single-image reconstruction, they typically produce limited viewpoints and exhibit cross-view geometric inconsistencies, thereby reducing reconstruction fidelity in real-world scenarios. In this work, we introduce 3DCarGen, a scalable single-view 3D car generation framework designed for real-world images by synthesizing an arbitrary number of 3D-consistent multi-view images. Specifically, given a single image as input, we first synthesize a set of images from fixed viewpoints. These images are then fed into a feed-forward reconstruction model, resulting in a coarse 3D representation based on 3D Gaussian Splatting. Conditioned on this explicit 3D prior, our multi-view diffusion model generates 3D-consistent images from arbitrary camera viewpoints. We further extend a fast mesh reconstruction algorithm by incorporating color-normal joint optimization to recover detailed and coherent 3D vehicle models from the synthesized dense views. Extensive experiments on synthetic and real-world datasets demonstrate that our approach achieves robust geometric consistency and reconstruction fidelity compared to existing methods. Code and models will be released.",
+      "authors": [
+        "Hongli Xiao",
+        "Youjian Zhang",
+        "Yaohui Jin",
+        "Xiaoguang Ren",
+        "Wenjing Yang",
+        "Long Lan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T07:44:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.24257v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Single-view 3D car generation with multi-view synthesis",
+      "llm_evidence_cn": "基于多视角合成的单视图三维汽车生成",
+      "llm_evidence": "基于多视角合成的单视图三维汽车生成",
+      "canonical_evidence": "基于多视角合成的单视图三维汽车生成",
+      "llm_tldr_en": "3DCarGen generates scalable 3D car assets from a single image via 3D-consistent multi-view synthesis and feed-forward reconstruction.",
+      "llm_tldr_cn": "高质量3D汽车资产对于自动驾驶仿真至关重要。本文提出3DCarGen，从单张图像出发，合成任意数量的3D一致多视图图像，再通过前馈重建模型得到粗3D高斯表示。该方法解决了跨视角几何不一致问题，实现了真实场景下的鲁棒3D汽车生成。",
+      "llm_tldr": "高质量3D汽车资产对于自动驾驶仿真至关重要。本文提出3DCarGen，从单张图像出发，合成任意数量的3D一致多视图图像，再通过前馈重建模型得到粗3D高斯表示。该方法解决了跨视角几何不一致问题，实现了真实场景下的鲁棒3D汽车生成。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24876v1",
+      "source": "arxiv",
+      "title": "FLAT: Feedforward Latent Triangle Splatting for Geometrically Accurate Scene Generation",
+      "abstract": "Generating explorable 3D scenes from a single image requires strong generative priors and accurate geometric representations suitable for downstream use. Current video diffusion models offer high-quality generation and implicitly encode multi-view geometric structure in latent space. However, existing feedforward latent scene decoders typically output volumetric 3D Gaussians that lack a well-defined surface, limiting their use in simulation or standard graphics pipelines. This motivates decoding surface-aligned primitives that are not only renderable but also closer to explicit geometric assets. We ask whether compressed video diffusion latents can be mapped directly to explicit surface primitives in a single pass. To this end, we introduce FLAT and, for the first time, show that triangle splats can be decoded directly from video diffusion latents. Compared with decoding 3D Gaussians, predicting flat primitives is notoriously more challenging due to high sensitivity to primitive orientations, oftentimes leading to poor gradient flow. FLAT solves with two key ingredients: a ray-centered rotation parameterization for triangle regression and a novel product window function that improves gradient flow during differentiable triangle rendering. On standard benchmarks, FLAT achieves significantly better geometric accuracy while maintaining competitive visual quality compared to state-of-the-art feedforward baselines. We further show that a lightweight test-time refinement step converts the predicted triangle soup into a fully opaque, game-engine-ready representation that supports real-time rendering. By evaluating 3DGS, 2DGS, and triangle splatting variants under an identical training setup, we provide the first systematic analysis of representation tradeoffs in feedforward scene generation. The project page is available at https://flat-splat.github.io",
+      "authors": [
+        "Orest Kupyn",
+        "Goutam Bhat",
+        "Philipp Henzler",
+        "Fabian Manhardt",
+        "Christian Rupprecht",
+        "Federico Tombari"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T17:53:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.24876v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Feedforward latent triangle splatting for geometrically accurate scene generation, directly tackling generative 3D models",
+      "llm_evidence_cn": "前馈潜在三角形飞溅实现几何精确场景生成，直接解决生成式3D模型问题",
+      "llm_evidence": "前馈潜在三角形飞溅实现几何精确场景生成，直接解决生成式3D模型问题",
+      "canonical_evidence": "前馈潜在三角形飞溅实现几何精确场景生成，直接解决生成式3D模型问题",
+      "llm_tldr_en": "FLAT maps video diffusion latents to explicit surface-aligned triangle primitives in a single feedforward pass, enabling geometrically accurate 3D scene generation.",
+      "llm_tldr_cn": "从单图生成可探索3D场景需要强生成先验和精确几何表示。FLAT提出将压缩视频扩散潜在直接映射到显式表面三角形原语，避免体积高斯无明确表面。该方法在单次前馈中生成具有清晰几何边界的场景，支持标准图形渲染管线，为3D内容生成提供高质量的几何资产。",
+      "llm_tldr": "从单图生成可探索3D场景需要强生成先验和精确几何表示。FLAT提出将压缩视频扩散潜在直接映射到显式表面三角形原语，避免体积高斯无明确表面。该方法在单次前馈中生成具有清晰几何边界的场景，支持标准图形渲染管线，为3D内容生成提供高质量的几何资产。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.26025v1",
+      "source": "arxiv",
+      "title": "In-Context World Modeling for Robotic Control",
+      "abstract": "Modern Vision-Language-Action (VLA) models often fail to generalize to novel setups, such as altered camera viewpoints or robot morphologies, because they are typically conditioned only on current observations and language instructions. By ignoring the underlying system configuration as a variable, these models implicitly assume a fixed execution context encountered during training, necessitating data-intensive fine-tuning for any new environment. In this work, we introduce In-Context World Modeling (ICWM), a framework that treats system identification as an in-context adaptation problem. ICWM enables robot policies to autonomously infer essential system variables from a short history of self-generated, task-agnostic interactions. Unlike traditional In-Context Learning that uses demonstrations to specify what task to perform, ICWM leverages the context window to understand how the system operates. By processing these interactions before task execution, the model implicitly captures the world dynamics of the current system, enabling adaptation to novel configurations without parameter updates. Extensive experiments in simulation and on real-world robot platforms demonstrate that ICWM significantly outperforms standard VLA baselines on novel camera viewpoints.",
+      "authors": [
+        "Siyin Wang",
+        "Junhao Shi",
+        "Senyu Fei",
+        "Zhaoyang Fu",
+        "Li Ji",
+        "Jingjing Gong",
+        "Xipeng Qiu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-06-24T16:53:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.26025v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "In-context world modeling for robotic control, enabling system identification without fine-tuning, core world model application",
+      "llm_evidence_cn": "上下文世界建模用于机器人控制，无需微调即可适应新环境，属于世界模型的核心应用",
+      "llm_evidence": "上下文世界建模用于机器人控制，无需微调即可适应新环境，属于世界模型的核心应用",
+      "canonical_evidence": "上下文世界建模用于机器人控制，无需微调即可适应新环境，属于世界模型的核心应用",
+      "llm_tldr_en": "ICWM treats system identification as in-context learning, allowing robot policies to infer system variables from interaction history without retraining.",
+      "llm_tldr_cn": "现有视觉-语言-动作模型难以泛化到新配置（如相机视角变化）。ICWM框架将系统辨识视为上下文适应问题，使机器人策略通过自生成的交互历史推断关键系统变量，无需数据密集型微调。实验证明ICWM在多种未见环境下成功适应，显著提升了零样本泛化能力。",
+      "llm_tldr": "现有视觉-语言-动作模型难以泛化到新配置（如相机视角变化）。ICWM框架将系统辨识视为上下文适应问题，使机器人策略通过自生成的交互历史推断关键系统变量，无需数据密集型微调。实验证明ICWM在多种未见环境下成功适应，显著提升了零样本泛化能力。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-05-21-726889-v2",
+      "source": "biorxiv",
+      "title": "Inside insight: decoding how insight emerges from competing world models",
+      "abstract": "When and how does insight emerge? We conceptualize insight as a sudden realization arising from restructuring a world model: an internal interpretation linking actions to outcomes. Yet these latent dynamics remain difficult to access, even with behavior and verbal report. Here we developed inside insight dynamics (IID), a machine-learning framework that estimates latent world-model dynamics from behavioral data. Using IID, we analyzed mouse behavior in indirect- and direct-rule tasks, each requiring a shift from an initial world model to a rule-consistent representation. IID inferred the \"when\" of insight-like shifts by estimating the timing of transitions between competing world models, and examined the \"how\" by comparing alternative learning processes underlying them. This analysis revealed distinct mechanisms of world-model learning: the indirect- and direct-rule tasks were better explained by gated learning and parallel learning, respectively. Thus, IID opens a route to quantifying latent insight dynamics from observable behavior alone.",
+      "authors": [
+        "Inutsuka, K.",
+        "Nishioka, T.",
+        "Macpherson, T.",
+        "Fujiwara, M.",
+        "Hikida, T.",
+        "Naoki, H."
+      ],
+      "primary_category": "neuroscience",
+      "categories": [
+        "neuroscience"
+      ],
+      "published": "2026-06-23T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.05.21.726889v2.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "decodes insight emergence from competing world models",
+      "llm_evidence_cn": "从竞争世界模型中解码洞察涌现",
+      "llm_evidence": "从竞争世界模型中解码洞察涌现",
+      "canonical_evidence": "从竞争世界模型中解码洞察涌现",
+      "llm_tldr_en": "Develops Inside Insight Dynamics (IID), a machine-learning framework to estimate latent world-model dynamics from behavioral data, revealing how insight emerges from restructuring world models.",
+      "llm_tldr_cn": "本文从认知科学角度概念化洞察为世界模型的重组，但传统方法难以捕捉潜在动态。为此提出内部洞察动力学（IID）框架，通过行为数据估计潜在的世界模型动态。在小鼠间接-直接规则任务中，IID能够推断洞察式转变的时间点，并比较不同学习过程。该工作为量化世界模型的转变机制提供了新工具。",
+      "llm_tldr": "本文从认知科学角度概念化洞察为世界模型的重组，但传统方法难以捕捉潜在动态。为此提出内部洞察动力学（IID）框架，通过行为数据估计潜在的世界模型动态。在小鼠间接-直接规则任务中，IID能够推断洞察式转变的时间点，并比较不同学习过程。该工作为量化世界模型的转变机制提供了新工具。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-18-733163-v2",
+      "source": "biorxiv",
+      "title": "CellOS: Learning a World Model of Cellular State through Joint Embedding Prediction",
+      "abstract": "Foundation models learned from single-cell transcriptomes are central to the prospect of AI virtual cell that can represent, query and predict cellular state. However, most current single-cell foundation models learn from a single view of gene expression and are optimized primarily through reconstruction or next-token prediction. As a result, they capture expression abundance but can-not explicitly reconcile complementary views of cellular state. Here we present CellOS, a multi-view foundation model that learns cellular representations from paired expression and perception views. CellOS integrates complementary views through a scalable three-stage training strategy that combines causal cell-sentence language modelling, function-preserving dense-to-mixture-of-experts expansion and latent-space alignment via an LLM-JEPA objective. Using this framework, we trained a 12-billion-parameter model on 390.5 million single-cell transcriptomes. Across diverse benchmarks spanning cell-state annotation, batch integration and perturbation-response prediction, CellOS consistently outperformed state-of-the-art single-cell foundation models. Together, these results suggest that predictive alignment between complementary cellular views provides a scalable path toward representation-centric cellular world models and transferable AI virtual cells.",
+      "authors": [
+        "Zhou, Q.",
+        "Le, Y.",
+        "Qi, X.",
+        "Chang, S.",
+        "Lu, H.",
+        "Wu, Y.",
+        "Wang, H.",
+        "Ran, R.",
+        "li, x."
+      ],
+      "primary_category": "bioinformatics",
+      "categories": [
+        "bioinformatics"
+      ],
+      "published": "2026-06-25T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.18.733163v2.full.pdf",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "explicitly uses 'world model' for cellular state",
+      "llm_evidence_cn": "明确使用'世界模型'概念描述细胞状态",
+      "llm_evidence": "明确使用'世界模型'概念描述细胞状态",
+      "canonical_evidence": "明确使用'世界模型'概念描述细胞状态",
+      "llm_tldr_en": "CellOS learns a multi-view world model of cellular state via joint embedding prediction, integrating expression and perception views for AI virtual cell.",
+      "llm_tldr_cn": "针对单细胞转录组基础模型仅从单一基因表达视图学习、无法整合互补细胞状态信息的问题，本文提出CellOS，一种多视图世界模型。它通过联合嵌入预测，将基因表达与感知视图配对学习，采用因果细胞语言建模与功能保持训练的三阶段策略。实验表明CellOS能有效表征和预测细胞状态，为AI虚拟细胞提供新范式。该工作将世界模型概念引入计算生物学。",
+      "llm_tldr": "针对单细胞转录组基础模型仅从单一基因表达视图学习、无法整合互补细胞状态信息的问题，本文提出CellOS，一种多视图世界模型。它通过联合嵌入预测，将基因表达与感知视图配对学习，采用因果细胞语言建模与功能保持训练的三阶段策略。实验表明CellOS能有效表征和预测细胞状态，为AI虚拟细胞提供新范式。该工作将世界模型概念引入计算生物学。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.22488v1",
+      "source": "arxiv",
+      "title": "SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments",
+      "abstract": "Recent works have explored integrating Vision-Language Models (VLMs) with classical planners that rely on symbolic representations of planning problems to generate long-horizon plans for complex embodied tasks. However, in open-ended environments, these symbolic representations obtained from perception are often incomplete, leading to suboptimal performance. To address this, we introduce SCOPE, a self-adaptive symbolic planning framework that supports refining action plans and evolving the symbolic world, i.e., the symbolic representations of open-ended environments. SCOPE comprises two synergistic modules: a Symbolic Execution Simulator (SESim) that conducts symbolic validation and real execution of action plans, leveraging the feedback to refine the plans and evolve the symbolic world; and a Self-Adaptive Symbolic Memory (SASMem) that further distills feedback into evolving symbolic knowledge to enhance long-horizon planning and modeling of the symbolic world. Experiments in open-ended environments show that SCOPE significantly improves the completeness of the symbolic world, the success rate of plans under environment perturbations, and cross-task grounding and adaptability across diverse embodied scenarios.",
+      "authors": [
+        "Yundaichuan Zhan",
+        "Minghe Gao",
+        "Zhongqi Yue",
+        "Wendong Bu",
+        "Wenqiao Zhang",
+        "Guoming Wang",
+        "Jisheng Dang",
+        "Juncheng Li",
+        "Siliang Tang",
+        "Yueting Zhuang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-21T13:16:10+00:00",
+      "link": "https://arxiv.org/pdf/2606.22488v1",
+      "tags": [
+        "keyword:world-model",
+        "query:world-model"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "symbolic world representation evolution for planning",
+      "llm_evidence_cn": "用于规划的符号世界表征演化",
+      "llm_evidence": "用于规划的符号世界表征演化",
+      "canonical_evidence": "用于规划的符号世界表征演化",
+      "llm_tldr_en": "SCOPE introduces a self-adaptive symbolic planning framework with an evolving symbolic world representation, refining action plans via feedback from a symbolic execution simulator.",
+      "llm_tldr_cn": "该论文针对开放环境中符号规划表示不完备导致次优性能的问题，提出SCOPE自适应符号规划框架，包含符号执行模拟器和世界演化模块，通过执行反馈不断修正和演化符号世界模型。实验证明该方法能有效提升长时域规划的成功率，揭示了世界模型在规划中的动态更新价值。",
+      "llm_tldr": "该论文针对开放环境中符号规划表示不完备导致次优性能的问题，提出SCOPE自适应符号规划框架，包含符号执行模拟器和世界演化模块，通过执行反馈不断修正和演化符号世界模型。实验证明该方法能有效提升长时域规划的成功率，揭示了世界模型在规划中的动态更新价值。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.21300v1",
+      "source": "arxiv",
+      "title": "SCOPE: Scale-Consistent One-Pass Estimation of 3D Geometry",
+      "abstract": "We present SCOPE (Scale-Consistent One-Pass Estimation of 3D Geometry), a novel approach for estimating 3D geometry from extended monocular video sequences, where existing methods struggle to maintain both geometric accuracy and temporal consistency across hundreds of frames. Our approach generates affine-invariant 3D point maps with shared parameters across entire sequences, enabling consistent scale-invariant representations. We introduce three key innovations: viewpoint-invariant geometry aligning multi-perspective points in a unified reference frame; appearance-invariant learning enforcing consistency across exponential timescales; and frequency-modulated positioning enabling extrapolation to sequences vastly exceeding training length. Experiments across diverse datasets demonstrate significant improvements, reducing relative point map error by 24.2% and temporal alignment error by 34.9% on ScanNet compared to state-of-the-art methods. Our approach handles challenging scenarios with complex camera trajectories and lighting variations while efficiently processing extended sequences in a single pass. Project page: https://scope3d.github.io/.",
+      "authors": [
+        "Zheng Zhang",
+        "Lihe Yang",
+        "Tianyu Yang",
+        "Chaohui Yu",
+        "Yixing Lao",
+        "Xiaoyang Guo",
+        "Biao Gong",
+        "Fan Wang",
+        "Hengshuang Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-19T10:23:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.21300v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "scale-consistent 3D geometry estimation from monocular video",
+      "llm_evidence_cn": "从单目视频进行尺度一致的3D几何估计",
+      "llm_evidence": "从单目视频进行尺度一致的3D几何估计",
+      "canonical_evidence": "从单目视频进行尺度一致的3D几何估计",
+      "llm_tldr_en": "SCOPE estimates affine-invariant 3D point maps from extended monocular video with scale consistency and temporal coherence.",
+      "llm_tldr_cn": "针对长序列单目视频中3D几何估计面临准确性和时间一致性挑战，本文提出SCOPE。该方法生成跨序列共享参数的仿射不变3D点图，通过视角不变几何、外观不变学习和频率调制定位三大创新，实现尺度一致和长程一致性。实验表明SCOPE在数百帧视频上保持了稳定几何，优于现有方法，为3D重建提供了高效可靠的解决方案。",
+      "llm_tldr": "针对长序列单目视频中3D几何估计面临准确性和时间一致性挑战，本文提出SCOPE。该方法生成跨序列共享参数的仿射不变3D点图，通过视角不变几何、外观不变学习和频率调制定位三大创新，实现尺度一致和长程一致性。实验表明SCOPE在数百帧视频上保持了稳定几何，优于现有方法，为3D重建提供了高效可靠的解决方案。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.19776v1",
+      "source": "arxiv",
+      "title": "Occ-VLM: Occupancy Grounded Vision Language Model for Indoor Scene Understanding",
+      "abstract": "Recently, vision-language models (VLMs) have made significant progress in 3D scene understanding, driving advances in applications such as embodied intelligence and robotic vision. However, existing approaches typically either rely directly on explicit 3D inputs (e.g., point clouds or RGB-D sequences), or introduce an additional 3D geometry encoder to derive 3D-aware visual tokens from 2D images. Such designs structurally decouple 3D geometric perception from the rich 2D semantics learned via vision-language pre-training, hindering the development of a unified 3D vision-language representation. In this work, we propose Occ-VLM, a novel framework for 3D scene understanding that operates purely on posed RGB images and employs a single 2D vision encoder. Specifically, Occ-VLM reconstructs 3D scene occupancy as an auxiliary geometric prior, which is utilized to spatially associate foreground 2D tokens with 3D space. These tokens are then decoded by a Large Language Model (LLM) for unified scene understanding. Extensive experiments demonstrate that Occ-VLM achieves both accurate geometric perception and robust vision-language reasoning: it attains state-of-the-art performance on multi-view occupancy prediction, while performing on par with 3D-input VLMs on 3D Visual Question Answering (VQA) and 3D dense captioning benchmarks.",
+      "authors": [
+        "Jianing Li",
+        "Zhou Fang",
+        "Yijiang Liu",
+        "Li Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T04:24:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.19776v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "occupancy grounded 3D scene understanding for world modeling",
+      "llm_evidence_cn": "占用引导的3D场景理解用于世界建模",
+      "llm_evidence": "占用引导的3D场景理解用于世界建模",
+      "canonical_evidence": "占用引导的3D场景理解用于世界建模",
+      "llm_tldr_en": "Occ-VLM proposes a VLM framework for 3D scene understanding using posed RGB images only, with a single 2D vision encoder and occupancy grounding to achieve unified 3D representation.",
+      "llm_tldr_cn": "针对现有VLM在3D场景理解中依赖显式3D输入或额外3D编码器导致三维感知与二维语义分离的问题，本文提出Occ-VLM，仅使用有位姿的RGB图像，通过单一2D视觉编码器和占用投影实现三维感知。该方法将三维几何信息隐式嵌入二维特征，无需显式3D模块，在室内场景理解任务上取得了竞争性能，为世界模型中的场景感知提供了轻量高效方案。",
+      "llm_tldr": "针对现有VLM在3D场景理解中依赖显式3D输入或额外3D编码器导致三维感知与二维语义分离的问题，本文提出Occ-VLM，仅使用有位姿的RGB图像，通过单一2D视觉编码器和占用投影实现三维感知。该方法将三维几何信息隐式嵌入二维特征，无需显式3D模块，在室内场景理解任务上取得了竞争性能，为世界模型中的场景感知提供了轻量高效方案。",
+      "llm_tags": [
+        "query:world-model"
+      ],
+      "matched_query_tag": "query:world-model",
+      "matched_query_text": "world model concept and applications",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.25300v1",
+      "source": "arxiv",
+      "title": "HiFiVe: High-Fidelity Vehicle Generation Leveraging Auto-Regressive 2D Generative Priors",
+      "abstract": "Existing 3D vehicle generation methods often suffer from low geometric fidelity and blurry textures, hindering their downstream applications. While recent works adopt multi-view diffusion models for high-fidelity texture, they are often constrained by fixed viewpoints, limited resolution, and a reliance on costly fine-tuning to achieve cross-view consistency. In this paper, we propose HiFiVe, a training-free framework for high-fidelity vehicle modeling through joint texture and geometry enhancement by imposing 3D geometric constraints to anchor 2D generative priors. Specifically, we propose an auto-regressive texture refinement pipeline that progressively synthesizes high-resolution textures from arbitrary viewpoints. To ensure cross-view consistency, the coarse geometry serves as a synchronization prior, conditioning each generation step on previously synthesized frames via depth-based warping and multi-view texture fusion. Moreover, the inherent symmetry of vehicles is exploited to mitigate error accumulation. Finally, high-frequency surface details are recovered by refining the mesh geometry using normal maps estimated from the enhanced textures. Extensive experiments on synthetic and real-world vehicle datasets demonstrate that our method significantly improves both geometric detail and texture quality compared to state-of-the-art baselines.",
+      "authors": [
+        "Hongli Xiao",
+        "Youjian Zhang",
+        "Qi Zheng",
+        "Zhaohui Hu",
+        "Yaohui Jin",
+        "Xiaoguang Ren",
+        "Wenjing Yang",
+        "Long Lan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T02:00:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.25300v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "high-fidelity 3D vehicle generation with auto-regressive 2D priors",
+      "llm_evidence_cn": "利用自回归2D先验的高保真3D车辆生成",
+      "llm_evidence": "利用自回归2D先验的高保真3D车辆生成",
+      "canonical_evidence": "利用自回归2D先验的高保真3D车辆生成",
+      "llm_tldr_en": "HiFiVe is a training-free framework for high-fidelity vehicle modeling that enhances texture and geometry jointly via auto-regressive refinement and 3D geometric constraints on 2D generative priors.",
+      "llm_tldr_cn": "现有3D车辆生成方法存在几何保真度低、纹理模糊等问题，且多视角扩散模型受限于固定视角和分辨率。本文提出HiFiVe，一个无需训练的高保真车辆生成框架，通过施加3D几何约束锚定2D生成先验，联合提升纹理和几何质量。其自回归纹理细化流水线从任意视角逐步合成高分辨率纹理，并保证跨视角一致性。实验证明HiFiVe生成车辆具有高几何保真度和清晰纹理。",
+      "llm_tldr": "现有3D车辆生成方法存在几何保真度低、纹理模糊等问题，且多视角扩散模型受限于固定视角和分辨率。本文提出HiFiVe，一个无需训练的高保真车辆生成框架，通过施加3D几何约束锚定2D生成先验，联合提升纹理和几何质量。其自回归纹理细化流水线从任意视角逐步合成高分辨率纹理，并保证跨视角一致性。实验证明HiFiVe生成车辆具有高几何保真度和清晰纹理。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.22481v1",
+      "source": "arxiv",
+      "title": "Lighting-Consistent Object Transfer Across Radiance Fields",
+      "abstract": "3D Gaussian Splatting (3DGS) is widely used to capture and render real scenes. Compositing objects from one capture into another has applications in many domains, such as VFX, architecture and interior design, or marketing. However, extracting an object from a source scene and naively pasting it into a target scene will fail to produce realistic results due to the different lighting conditions between the two scenes. To address this problem, we introduce a diffusion model that harmonizes naively composited images with inconsistent lighting. The model is trained with a heterogeneous dataset of image pairs (inconsistent composite input, consistent output), combining synthetic, generated, and real data. Our complete 3D solution allows a user to extract an object from the source scene and composite it into the target scene. From this, the (inconsistent) views of the target scene with the composite object are rendered. Our diffusion model harmonizes each one of these views, which are finally consolidated in a 3DGS representation with a post-optimization step. Our method provides visually compelling results, making object transfer between 3DGS easy to use and significantly improving quality compared to previous methods.",
+      "authors": [
+        "Nicolás Violante",
+        "George Kopanas",
+        "Linus Franke",
+        "Julien Philip",
+        "George Drettakis"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV"
+      ],
+      "published": "2026-06-21T12:50:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.22481v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "3D object transfer with lighting harmonization using diffusion",
+      "llm_evidence_cn": "使用扩散模型进行光照一致的三维物体迁移",
+      "llm_evidence": "使用扩散模型进行光照一致的三维物体迁移",
+      "canonical_evidence": "使用扩散模型进行光照一致的三维物体迁移",
+      "llm_tldr_en": "This work introduces a diffusion model to harmonize lighting for object transfer across radiance fields, enabling realistic 3D composition from different scenes.",
+      "llm_tldr_cn": "针对不同场景光照条件不同导致物体合成不真实的问题，本文提出一种扩散模型，对光照不一致的合成图像进行和谐化。模型在合成、生成和真实数据混合数据集上训练。完整的3D解决方案允许用户从源场景提取物体并粘贴到目标场景，同时保持光照一致性。实验表明该方法显著提升合成图像的逼真度。该工作增强了3DGS在实际合成中的应用。",
+      "llm_tldr": "针对不同场景光照条件不同导致物体合成不真实的问题，本文提出一种扩散模型，对光照不一致的合成图像进行和谐化。模型在合成、生成和真实数据混合数据集上训练。完整的3D解决方案允许用户从源场景提取物体并粘贴到目标场景，同时保持光照一致性。实验表明该方法显著提升合成图像的逼真度。该工作增强了3DGS在实际合成中的应用。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.21970v1",
+      "source": "arxiv",
+      "title": "Integrating Facial Generation into Full-Duplex Spoken Dialogue Systems",
+      "abstract": "Full-duplex spoken dialogue models, such as Moshi, enable natural, low-latency voice conversations. However, they remain limited to the audio modality, lacking the facial expressions that are integral to human communication. We present Moshi-Face, the first full-duplex dialogue model that jointly processes the user's audio and facial input while simultaneously generating speech and facial motion. We first construct a vector-quantized variational autoencoder (VQ-VAE) as a face codec that encodes 3D head meshes extracted from facial videos into compact discrete tokens, referred to as face tokens, and conversely reconstructs 3D meshes from these tokens. We then extend Moshi with a Face Transformer module that generates face tokens non-autoregressively, enabling Moshi-Face to produce synchronized audio and face tokens in real time. Experiments show that Moshi-Face achieves audiovisual alignment at low latency while preserving the dialogue quality of the original audio-only model.",
+      "authors": [
+        "Jingjing Jiang",
+        "Atsumoto Ohashi",
+        "Ryuichiro Higashinaka"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC",
+        "cs.CL",
+        "cs.CV",
+        "eess.AS"
+      ],
+      "published": "2026-06-20T09:59:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.21970v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D facial mesh generation integrated with dialogue system",
+      "llm_evidence_cn": "3D面部网格生成与对话系统集成",
+      "llm_evidence": "3D面部网格生成与对话系统集成",
+      "canonical_evidence": "3D面部网格生成与对话系统集成",
+      "llm_tldr_en": "Moshi-Face jointly processes audio and facial input, generating speech and 3D facial motion in full-duplex dialogue.",
+      "llm_tldr_cn": "现有全双工对话模型如Moshi仅支持音频，缺乏面部表情。本文提出Moshi-Face，首次实现联合处理用户音频和面部输入，同时生成语音和3D面部运动。通过VQ-VAE将3D头部网格编码为离散面部令牌，并设计Face Transformer非自回归生成令牌。该系统在真实对话场景中生成了与语音同步的面部动画，提升了对话自然度。",
+      "llm_tldr": "现有全双工对话模型如Moshi仅支持音频，缺乏面部表情。本文提出Moshi-Face，首次实现联合处理用户音频和面部输入，同时生成语音和3D面部运动。通过VQ-VAE将3D头部网格编码为离散面部令牌，并设计Face Transformer非自回归生成令牌。该系统在真实对话场景中生成了与语音同步的面部动画，提升了对话自然度。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.25430v1",
+      "source": "arxiv",
+      "title": "PRISM: Feed-Forward Single-Image 3D Reconstruction via Geometric Warp-Residual Modeling",
+      "abstract": "Reconstructing 3D scenes from a single image is a fundamental challenge in computer vision, with broad applications in virtual reality, robotics, and content creation. Recent methods achieve outstanding performance by leveraging camera-controlled video diffusion models, but rely on iterative diffusion sampling, which greatly limits their practical deployment. We observe that geometric forward warping alone can cover the majority of a target view directly from the input image, with only a compact residual left for the encoder to correct. Motivated by this observation, we propose PRISM, a feed-forward framework that decomposes multi-view latent prediction into a parameter-free geometric prior and a learned residual correction, with no diffusion sampling required at inference. To enable generalization from purely synthetic training data, we devise a two-stage training strategy combining latents supervised distillation for geometric generalization and perceptual fine-tuning for appearance quality optimization. Extensive experiments on three benchmarks demonstrate that PRISM achieves competitive reconstruction quality compared with diffusion-based methods, while reducing inference time dramatically to only 36 seconds per scene.",
+      "authors": [
+        "Zhijie Zheng",
+        "Xinhao Xiang",
+        "Jiawei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T05:48:20+00:00",
+      "link": "https://arxiv.org/pdf/2606.25430v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Feed-forward single-image 3D reconstruction, related to recent advances in 3D generation",
+      "llm_evidence_cn": "前馈单图像3D重建，与3D生成最新进展相关",
+      "llm_evidence": "前馈单图像3D重建，与3D生成最新进展相关",
+      "canonical_evidence": "前馈单图像3D重建，与3D生成最新进展相关",
+      "llm_tldr_en": "PRISM proposes a feed-forward framework for single-image 3D reconstruction by decomposing multi-view latent prediction into geometric warping and learned residual correction, avoiding iterative diffusion.",
+      "llm_tldr_cn": "单图像3D重建是计算机视觉的挑战，现有方法依赖迭代扩散采样，部署受限。PRISM提出前馈框架，将多视图潜在预测分解为参数无关的几何先验和可学习的残差校正，无需迭代采样。实验表明该方法在保持高质量的同时大幅提升速度，有利于VR、机器人等应用。",
+      "llm_tldr": "单图像3D重建是计算机视觉的挑战，现有方法依赖迭代扩散采样，部署受限。PRISM提出前馈框架，将多视图潜在预测分解为参数无关的几何先验和可学习的残差校正，无需迭代采样。实验表明该方法在保持高质量的同时大幅提升速度，有利于VR、机器人等应用。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "recent advances in 3D generation",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.22787v1",
+      "source": "arxiv",
+      "title": "Visual Geometry Transformer in the Wild: Distractor-Free 3D Reconstruction",
+      "abstract": "Current end-to-end multi-view 3D reconstruction methods achieve impressive results, but rely on a restrictive static assumption: the scenes is entire distractor-free with perfect cross-view geometry. This reliance on idealized inputs causes even the most advanced methods to fail in real-world settings, where transient distractors and occlusions present. To address this, we propose Visual Geometry Transformer in the Wild (VGTW), an end-to-end framework for robust reconstruction from inconsistent views. At its core, we isolate and suppress distractor-affected regions while preserving the consistent components across views. Specifically, we introduce a Distractor-aware Training (DAT) strategy that separates clean features from distractor-contaminated ones in the attention mechanism while enforcing feature consistency across images. To enable this, we train the model with an auxiliary mask prediction head, using supervision from a new dataset we collected with pixel-level distractor masks. The resulting VGTW model is a feed-forward network that directly outputs clean, distractor-free point clouds. Remarkably, it requires no additional 3D supervision, remains computationally efficient, and is compatible with existing pipelines. Extensive experiments validate our approach, demonstrating state-of-the-art performance and robust generalization in diverse, real-world scenarios.",
+      "authors": [
+        "Tianbo Pan",
+        "Xingyi Yang",
+        "Shizun Wang",
+        "Xinchao Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T02:52:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.22787v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "distractor-free 3D reconstruction from inconsistent views",
+      "llm_evidence_cn": "来自不一致视图的无干扰3D重建",
+      "llm_evidence": "来自不一致视图的无干扰3D重建",
+      "canonical_evidence": "来自不一致视图的无干扰3D重建",
+      "llm_tldr_en": "VGTW proposes an end-to-end framework for robust multi-view 3D reconstruction that isolates and suppresses distractor-affected regions via a Distractor-aware Training strategy, handling real-world occlusions and transient objects.",
+      "llm_tldr_cn": "现有端到端多视图3D重建方法假设场景无干扰且视图几何一致，无法处理现实中的临时遮挡和干扰物。本文提出VGTW，一种鲁棒重建框架，通过干扰物感知训练（DAT）策略分离并抑制受干扰区域，同时保留一致组件。该策略在训练中明确区分干净特征与受污染特征，使模型在测试时能有效忽略干扰。实验表明，VGTW在存在干扰的真实场景中显著优于先前方法。",
+      "llm_tldr": "现有端到端多视图3D重建方法假设场景无干扰且视图几何一致，无法处理现实中的临时遮挡和干扰物。本文提出VGTW，一种鲁棒重建框架，通过干扰物感知训练（DAT）策略分离并抑制受干扰区域，同时保留一致组件。该策略在训练中明确区分干净特征与受污染特征，使模型在测试时能有效忽略干扰。实验表明，VGTW在存在干扰的真实场景中显著优于先前方法。",
+      "llm_tags": [
+        "query:d-gen"
+      ],
+      "matched_query_tag": "query:d-gen",
+      "matched_query_text": "generative 3D models",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23688v1",
+      "source": "arxiv",
+      "title": "Lift4D: Harmonizing Single-View 3D Estimation for 4D Reconstruction In-the-Wild",
+      "abstract": "Reconstructing dynamic non-rigid objects from monocular video requires integrating visual cues from direct observations with data-driven priors over geometry and appearance. Prior approaches either learn to directly predict 4D representations from visual input or initialize a 3D representation that is subsequently deformed and refined based on video evidence. However, the former are constrained by the scarcity of 4D training data, while the latter leverage priors only for the initial reconstruction and rely solely on video supervision thereafter; neither handles complex in-the-wild scenarios with large deformations and occlusions well. We present Lift4D, a test-time optimization framework that addresses both limitations. First, we adapt an existing single-view 3D reconstruction model to yield temporally consistent per-frame predictions via causal latent conditioning, providing a coherent initialization for a deformable 3D Gaussian Splatting representation. We then ``sculpt'' this representation to match the input video through an occlusion-aware optimization that faithfully recovers visible surface details while completing unobserved regions using a view-conditioned diffusion prior. We demonstrate that Lift4D clearly improves over prior 4D reconstruction methods, particularly on challenging in-the-wild sequences with severe occlusions and non-rigid motion.",
+      "authors": [
+        "Yehonathan Litman",
+        "Xiaoxuan Ma",
+        "Manan Shah",
+        "Nicolas Ugrinovic",
+        "Kris Kitani",
+        "Fernando De la Torre",
+        "Shubham Tulsiani"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T17:59:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.23688v1",
+      "tags": [
+        "keyword:d-gen",
+        "query:d-gen"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "4D reconstruction from monocular video using 3D generation priors",
+      "llm_evidence_cn": "从单目视频进行4D重建，利用3D生成先验",
+      "llm_evidence": "从单目视频进行4D重建，利用3D生成先验",
+      "canonical_evidence": "从单目视频进行4D重建，利用3D生成先验",
+      "llm_tldr_en": "Lift4D harmonizes single-view 3D estimation for 4D reconstruction of dynamic non-rigid objects by adapting existing 3D priors and optimizing at test time.",
+      "llm_tldr_cn": "针对单目视频重建动态非刚性物体困难的问题，本文提出Lift4D，一种测试时优化框架。它通过适应现有3D先验来初始化表示，并基于视频证据细化。该方法有效处理大变形和遮挡。实验表明Lift4D在野外复杂场景下4D重建质量超过以往工作，为4D生成提供了新的强基线。",
+      "llm_tldr": "针对单目视频重建动态非刚性物体困难的问题，本文提出Lift4D，一种测试时优化框架。它通过适应现有3D先验来初始化表示，并基于视频证据细化。该方法有效处理大变形和遮挡。实验表明Lift4D在野外复杂场景下4D重建质量超过以往工作，为4D生成提供了新的强基线。",
+      "llm_tags": [
+        "query:d-gen:composite"
+      ],
+      "matched_query_tag": "query:d-gen:composite",
+      "matched_query_text": "Papers central to 请帮我查找3D生成有关的论文, especially work that connects or combines: generative 3D models; recent advances in 3D generation.",
+      "matched_requirement_id": "req-composite-d-gen",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

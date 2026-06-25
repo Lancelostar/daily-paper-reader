@@ -6,95 +6,68 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-24
-- 运行时间：2026-06-24 20:41:31 UTC
+- 最新运行日期：2026-06-25
+- 运行时间：2026-06-25 21:27:10 UTC
 - 运行状态：成功
-- 本次总论文数：25
-- 精读区：14
-- 速读区：11
+- 本次总论文数：16
+- 精读区：7
+- 速读区：9
 
 ### 今日简报（AI）
-今日聚焦物理AI智能体的测试时扩展定律与自进化世界模型的自主视频生成，两篇满分研究值得深读。精读文章揭示了主动推理在物理AI中的核心作用，以及通过反事实可控性实现模型自我进化的路径。建议普通读者优先关注这两篇10分论文，探索具身智能与世界模型构建的前沿突破。
-- 详情：[/202606/24/README](/202606/24/README)
+今日收录16篇论文，精读7篇，其中两篇高分论文聚焦世界模型在顺序决策与自动驾驶安全中的前沿突破。最值得关注的是满分论文《Beyond Next-Observation Prediction》提出的智能体自主世界建模方法，以及9分论文《BadDreamer》揭示的针对自动驾驶视频世界模型的可迁移后门攻击。建议读者优先精读这两篇，以掌握世界模型在鲁棒性与安全性方面的最新挑战与解决方案。
+- 详情：[/202606/25/README](/202606/25/README)
 
 ### 精读区论文标签
-1. [Active Inference as the Test-Time Scaling Law for Physical AI Agents](/202606/24/2606.22813v1-active-inference-as-the-test-time-scaling-law-for-physical-ai-agents)  
+1. [Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making](/202606/25/2606.25421v1-beyond-next-observation-prediction-agent-authored-world-modeling-for-sequential-decision-making)  
    标签：评分：10.0/10、query:world-model
-   evidence：使用主动推理的物理AI代理世界模型
-2. [Autonomous Video Generation with Counterfactual Controllability for Self-Evolving World Models](/202606/24/2606.24152v1-autonomous-video-generation-with-counterfactual-controllability-for-self-evolving-world-models)  
-   标签：评分：10.0/10、query:world-model
-   evidence：用于自我进化世界模型的反事实可控性
-3. [Qwen-AgentWorld: Language World Models for General Agents](/202606/24/2606.24597v1-qwen-agentworld-language-world-models-for-general-agents)  
-   标签：评分：10.0/10、query:world-model
-   evidence：基于语言模型的世界模型用于通用智能体
-4. [PAIWorld: A 3D-Consistent World Foundation Model for Robotic Manipulation](/202606/24/2606.18375v3-paiworld-a-3d-consistent-world-foundation-model-for-robotic-manipulation)  
+   evidence：智能体自定世界建模用于序贯决策
+2. [BadDreamer: Transferable Backdoor Attacks against Video World Models for Autonomous Driving](/202606/25/2606.21172v1-baddreamer-transferable-backdoor-attacks-against-video-world-models-for-autonomous-driving)  
    标签：评分：9.0/10、query:world-model
-   evidence：面向机器人操作的3D一致世界基础模型
-5. [Sensorimotor World Models: Perception for Action via Inverse Dynamics](/202606/24/2606.20104v1-sensorimotor-world-models-perception-for-action-via-inverse-dynamics)  
-   标签：评分：9.0/10、query:world-model
-   evidence：提出带逆动力学正则化的感知运动世界模型
-6. [World Action Models: A Survey](/202606/24/2606.20781v1-world-action-models-a-survey)  
-   标签：评分：9.0/10、query:world-model
-   evidence：关于世界行动模型的综述
-7. [$φ$-Scene: Physically Grounded Image-to-3D Scene Reconstruction](/202606/24/2606.21596v1--scene-physically-grounded-image-to-3d-scene-reconstruction)  
-   标签：评分：9.0/10、query:world-model
-   evidence：物理引导的单图像3D世界建模
-8. [NavWM: A Unified Navigation World Model for Foresight-Driven Planning](/202606/24/2606.24101v1-navwm-a-unified-navigation-world-model-for-foresight-driven-planning)  
-   标签：评分：9.0/10、query:world-model
-   evidence：整合潜在世界推理与多模态动作预测的统一导航世界模型
-9. [Trimming the Long-Tail of Visual World Modeling Evaluation](/202606/24/2606.24256v1-trimming-the-long-tail-of-visual-world-modeling-evaluation)  
-   标签：评分：9.0/10、query:world-model
-   evidence：视觉世界模型评估基准
-10. [3DCarGen: Scalable 3D Car Generation via 3D-consistent Multi-view Synthesis](/202606/24/2606.24257v1-3dcargen-scalable-3d-car-generation-via-3d-consistent-multi-view-synthesis)  
+   evidence：针对自动驾驶视频世界模型的后门攻击
+3. [3DCarGen: Scalable 3D Car Generation via 3D-consistent Multi-view Synthesis](/202606/25/2606.24257v1-3dcargen-scalable-3d-car-generation-via-3d-consistent-multi-view-synthesis)  
    标签：评分：9.0/10、query:d-gen
-   evidence：单视图3D汽车生成
-11. [OrbitForge: Text-to-3D Scene Generation via Reconstruction-Anchored Video Synthesis](/202606/24/2606.24799v1-orbitforge-text-to-3d-scene-generation-via-reconstruction-anchored-video-synthesis)  
+   evidence：基于多视角合成的单视图三维汽车生成
+4. [FLAT: Feedforward Latent Triangle Splatting for Geometrically Accurate Scene Generation](/202606/25/2606.24876v1-flat-feedforward-latent-triangle-splatting-for-geometrically-accurate-scene-generation)  
    标签：评分：9.0/10、query:d-gen
-   evidence：文本到3D场景生成
-12. [World Models in Pieces: Structural Certification for General Agents](/202606/24/2606.24842v1-world-models-in-pieces-structural-certification-for-general-agents)  
+   evidence：前馈潜在三角形飞溅实现几何精确场景生成，直接解决生成式3D模型问题
+5. [In-Context World Modeling for Robotic Control](/202606/25/2606.26025v1-in-context-world-modeling-for-robotic-control)  
    标签：评分：9.0/10、query:world-model
-   evidence：世界模型片段的结构化认证
-13. [FLAT: Feedforward Latent Triangle Splatting for Geometrically Accurate Scene Generation](/202606/24/2606.24876v1-flat-feedforward-latent-triangle-splatting-for-geometrically-accurate-scene-generation)  
-   标签：评分：9.0/10、query:d-gen
-   evidence：前馈潜在三角形飞溅实现几何精确的3D场景生成
-14. [Inside insight: decoding how insight emerges from competing world models](/202606/24/biorxiv-10-64898-2026-05-21-726889-v2-inside-insight-decoding-how-insight-emerges-from-competing-world-models)  
+   evidence：上下文世界建模用于机器人控制，无需微调即可适应新环境，属于世界模型的核心应用
+6. [Inside insight: decoding how insight emerges from competing world models](/202606/25/biorxiv-10-64898-2026-05-21-726889-v2-inside-insight-decoding-how-insight-emerges-from-competing-world-models)  
    标签：评分：9.0/10、query:world-model
-   evidence：从竞争世界模型中解码洞察力
+   evidence：从竞争世界模型中解码洞察涌现
+7. [CellOS: Learning a World Model of Cellular State through Joint Embedding Prediction](/202606/25/biorxiv-10-64898-2026-06-18-733163-v2-cellos-learning-a-world-model-of-cellular-state-through-joint-embedding-prediction)  
+   标签：评分：9.0/10、query:world-model
+   evidence：明确使用'世界模型'概念描述细胞状态
 
 ### 速读区论文标签
-1. [Stealthy World Model Manipulation via Data Poisoning](/202606/24/2606.18697v2-stealthy-world-model-manipulation-via-data-poisoning)  
+1. [SCOPE: Evolving Symbolic World for Planning in Open-Ended Environments](/202606/25/2606.22488v1-scope-evolving-symbolic-world-for-planning-in-open-ended-environments)  
    标签：评分：8.0/10、query:world-model
-   evidence：针对世界模型的数据投毒操纵规划
-2. [Sat2City v2: Native 3D City Asset Generation from a Single Satellite Image](/202606/24/2606.24138v1-sat2city-v2-native-3d-city-asset-generation-from-a-single-satellite-image)  
+   evidence：用于规划的符号世界表征演化
+2. [HiFiVe: High-Fidelity Vehicle Generation Leveraging Auto-Regressive 2D Generative Priors](/202606/25/2606.25300v1-hifive-high-fidelity-vehicle-generation-leveraging-auto-regressive-2d-generative-priors)  
    标签：评分：8.0/10、query:d-gen
-   evidence：利用扩散模型从单张卫星图像生成三维城市资产
-3. [Inclusive Interactive Collisions for Multi-View Consistent Compositional 3D Generation](/202606/24/2606.24206v1-inclusive-interactive-collisions-for-multi-view-consistent-compositional-3d-generation)  
+   evidence：利用自回归2D先验的高保真3D车辆生成
+3. [PRISM: Feed-Forward Single-Image 3D Reconstruction via Geometric Warp-Residual Modeling](/202606/25/2606.25430v1-prism-feed-forward-single-image-3d-reconstruction-via-geometric-warp-residual-modeling)  
    标签：评分：8.0/10、query:d-gen
-   evidence：多视图一致的组合式3D生成与碰撞交互
-4. [FiCA: Feed-forward instant Gaussian Codec Avatars from a Single Portrait Image](/202606/24/2606.24232v1-fica-feed-forward-instant-gaussian-codec-avatars-from-a-single-portrait-image)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：从单张图像前馈生成具有高斯编码的头像
-5. [MM-TRELLIS: Point-Cloud Guided Multi-Modal 3D Vehicle Generation in Autonomous Driving](/202606/24/2606.24301v1-mm-trellis-point-cloud-guided-multi-modal-3d-vehicle-generation-in-autonomous-driving)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：基于多模态（激光雷达和图像）的3D车辆生成
-6. [World Value Models for Robotic Manipulation](/202606/24/2606.24742v1-world-value-models-for-robotic-manipulation)  
-   标签：评分：8.0/10、query:world-model
-   evidence：将世界模型与价值估计结合用于机器人操作
-7. [FLUX3D: High-Fidelity 3D Gaussian Generation with Diffusion-Aligned Sparse Representation](/202606/24/2606.24874v1-flux3d-high-fidelity-3d-gaussian-generation-with-diffusion-aligned-sparse-representation)  
-   标签：评分：8.0/10、query:d-gen
-   evidence：扩散对齐的稀疏表示的图像到三维高斯生成
-8. [DreamUV: Unwrap Artist-like UV by End-to-End Flow Matching](/202606/24/2606.22445v1-dreamuv-unwrap-artist-like-uv-by-end-to-end-flow-matching)  
+   evidence：前馈单图像3D重建，与3D生成最新进展相关
+4. [SCOPE: Scale-Consistent One-Pass Estimation of 3D Geometry](/202606/25/2606.21300v1-scope-scale-consistent-one-pass-estimation-of-3d-geometry)  
    标签：评分：7.0/10、query:d-gen
-   evidence：将生成式流匹配用于3D内容中的UV参数化
-9. [Lighting-Consistent Object Transfer Across Radiance Fields](/202606/24/2606.22481v1-lighting-consistent-object-transfer-across-radiance-fields)  
+   evidence：从单目视频进行尺度一致的3D几何估计
+5. [Lighting-Consistent Object Transfer Across Radiance Fields](/202606/25/2606.22481v1-lighting-consistent-object-transfer-across-radiance-fields)  
    标签：评分：7.0/10、query:d-gen
-   evidence：跨辐射场的光照一致物体迁移
-10. [Deep Learning Approaches for 3D Medical Scene Completion: From Geometric Modeling to Generative Paradigms](/202606/24/2606.24180v1-deep-learning-approaches-for-3d-medical-scene-completion-from-geometric-modeling-to-generative-paradigms)  
+   evidence：使用扩散模型进行光照一致的三维物体迁移
+6. [Visual Geometry Transformer in the Wild: Distractor-Free 3D Reconstruction](/202606/25/2606.22787v1-visual-geometry-transformer-in-the-wild-distractor-free-3d-reconstruction)  
    标签：评分：7.0/10、query:d-gen
-   evidence：3D医学场景补全的生成范式综述
-11. [GeoT2V-Bench: Benchmarking 3D Consistency in Text-to-Video Models via 3D Reconstruction](/202606/24/2606.24829v1-geot2v-bench-benchmarking-3d-consistency-in-text-to-video-models-via-3d-reconstruction)  
+   evidence：来自不一致视图的无干扰3D重建
+7. [Lift4D: Harmonizing Single-View 3D Estimation for 4D Reconstruction In-the-Wild](/202606/25/2606.23688v1-lift4d-harmonizing-single-view-3d-estimation-for-4d-reconstruction-in-the-wild)  
+   标签：评分：7.0/10、query:d-gen
+   evidence：从单目视频进行4D重建，利用3D生成先验
+8. [Occ-VLM: Occupancy Grounded Vision Language Model for Indoor Scene Understanding](/202606/25/2606.19776v1-occ-vlm-occupancy-grounded-vision-language-model-for-indoor-scene-understanding)  
+   标签：评分：6.0/10、query:world-model
+   evidence：占用引导的3D场景理解用于世界建模
+9. [Integrating Facial Generation into Full-Duplex Spoken Dialogue Systems](/202606/25/2606.21970v1-integrating-facial-generation-into-full-duplex-spoken-dialogue-systems)  
    标签：评分：6.0/10、query:d-gen
-   evidence：通过3D重建评估文本到视频模型的3D一致性
+   evidence：3D面部网格生成与对话系统集成
 
 
 <div class="dpr-home-promo-card">
