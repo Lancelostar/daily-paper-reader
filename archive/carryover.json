@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-03T20:20:54.809195+00:00",
-  "updated_date": "20260703",
+  "generated_at": "2026-07-04T20:23:56.995289+00:00",
+  "updated_date": "20260704",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
@@ -12,6 +12,231 @@
       "updated_date": "20260625",
       "carryover_days": 9,
       "items": []
+    },
+    "vr": {
+      "updated_date": "20260704",
+      "carryover_days": 9,
+      "items": [
+        {
+          "id": "2607.00159v1",
+          "source": "arxiv",
+          "title": "Identifying and Resolving Pitfalls of Knowledge-Based VQA Benchmarks: Auditing, Repairing, and Augmenting",
+          "abstract": "Knowledge-Based Visual Question Answering (KB-VQA) aims to evaluate whether Visual Language Models (VLMs) can retrieve, ground, and reason over external structured knowledge beyond visual evidence. In practice, answer accuracy is widely adopted as the primary evaluation metric, implicitly treating correctness as a proxy for knowledge-grounded reasoning. However, for existing KB-VQA benchmarks, this proxy relies on critical assumptions that are often overlooked and rendered unreliable by benchmark issues: annotated answer must be derivable from the associated knowledge base, question must be well-posed with sufficient constraints, and visual setting must meaningfully require grounded disambiguation. In this work, we show that these assumptions are systematically violated in existing KB-VQA benchmarks. Our audit reveals substantial instances with missing or contradicted answers and underspecified questions that render accuracy a misleading metric. Furthermore, we find that existing datasets rely on visually trivial, single-entity scenes that bypass the need for sophisticated visual-to-knowledge mapping. We demonstrate that even with controlled architectures, these flaws lead to distorted model rankings and overestimations of reasoning capabilities. To address this, we introduce (1) a principled audit-and-repair protocol that restores answer derivability and question clarity, and (2) a controlled multi-entity augmentation protocol that introduces visual ambiguity to challenge initial retrieval and grounded reasoning. Re-evaluation under corrected and augmented settings yields markedly different performance trends. Our findings call for rethinking evaluation protocols and designing more interaction-aware KB-VQA benchmarks that prioritize verifiable reasoning over simple matching.",
+          "authors": [
+            "Qian Ma",
+            "S M Rayeed",
+            "Charles V. Stewart",
+            "Qiong Wu",
+            "Yao Ma"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL",
+            "cs.CV",
+            "cs.IR",
+            "cs.MM"
+          ],
+          "published": "2026-06-30T20:35:30+00:00",
+          "link": "https://arxiv.org/pdf/2607.00159v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "auditing and repairing knowledge-based VQA benchmarks",
+          "llm_evidence_cn": "审计和修复基于知识的VQA基准",
+          "llm_evidence": "审计和修复基于知识的VQA基准",
+          "canonical_evidence": "审计和修复基于知识的VQA基准",
+          "llm_tldr_en": "Audits KB-VQA benchmarks, identifies pitfalls like answer not derivable from knowledge base, and proposes repairs and augmentations for reliable evaluation.",
+          "llm_tldr_cn": "基于知识的VQA基准常隐含不可靠假设，导致答案正确性无法代理知识推理能力。本文系统审计了现有基准，发现答案不可推导、问题不充分等问题。提出修复和增强策略，改进后基准能更可靠评估视觉语言模型的知识推理能力，对视觉推理评估有重要参考价值。",
+          "llm_tldr": "基于知识的VQA基准常隐含不可靠假设，导致答案正确性无法代理知识推理能力。本文系统审计了现有基准，发现答案不可推导、问题不充分等问题。提出修复和增强策略，改进后基准能更可靠评估视觉语言模型的知识推理能力，对视觉推理评估有重要参考价值。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "evaluation benchmarks for visual reasoning",
+          "matched_requirement_id": "req-3",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00159v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00867v1",
+          "source": "arxiv",
+          "title": "EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection",
+          "abstract": "Long-video reasoning is fundamentally constrained by how models acquire and utilize visual evidence. Existing tool-augmented video frameworks often interleave temporal grounding and answer reasoning within a single trajectory, causing early semantic hypotheses to bias evidence localization. We term this failure mode premature semantic commitment, where biased grounding retrieves incomplete evidence and incomplete evidence further reinforces incorrect reasoning. To address this issue, we propose EFlow, an evidence-first video reasoning framework built upon Qwen3-VL. EFlow explicitly separates temporal grounding and logical reasoning through CoT for Temporal Grounding and CoT for Reasoning, enabling the model to retrieve relevant evidence before answer inference. In addition, EFlow introduces a confidence-aware reflection mechanism that re-evaluates the full video when retrieved evidence is potentially insufficient. We further construct dedicated trajectory datasets and train EFlow through supervised fine-tuning, reinforcement learning, and reinforcement fine-tuning. Extensive experiments across five video understanding benchmarks demonstrate that EFlow consistently improves long-video reasoning performance.",
+          "authors": [
+            "Wenhao Zhang",
+            "Kuanwei Lin",
+            "Xuyi Yang",
+            "Wei Gao",
+            "Ge Li"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-01T12:32:29+00:00",
+          "link": "https://arxiv.org/pdf/2607.00867v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "evidence-first video reasoning framework with separate grounding and reasoning",
+          "llm_evidence_cn": "证据优先的视频推理框架，分离定位与推理",
+          "llm_evidence": "证据优先的视频推理框架，分离定位与推理",
+          "canonical_evidence": "证据优先的视频推理框架，分离定位与推理",
+          "llm_tldr_en": "EFlow disentangles temporal grounding and logical reasoning for long-video reasoning, addressing premature semantic commitment by retrieving evidence before reasoning.",
+          "llm_tldr_cn": "长视频推理中，现有方法将时间定位与推理交织，导致早期假设偏差。本文提出EFlow，基于Qwen3-VL，将时间定位与逻辑推理显式分离：先进行时间定位收集证据，再进行推理。这种证据优先范式有效缓解了过早语义承诺问题，在长视频推理任务上取得了显著提升。",
+          "llm_tldr": "长视频推理中，现有方法将时间定位与推理交织，导致早期假设偏差。本文提出EFlow，基于Qwen3-VL，将时间定位与逻辑推理显式分离：先进行时间定位收集证据，再进行推理。这种证据优先范式有效缓解了过早语义承诺问题，在长视频推理任务上取得了显著提升。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "recent advances in visual reasoning",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00867v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.01191v1",
+          "source": "arxiv",
+          "title": "Perceive-to-Reason: Decoupling Perception and Reasoning for Fine-Grained Visual Reasoning",
+          "abstract": "Fine-grained visual reasoning remains challenging for vision-language models, especially when small but critical visual cues are buried in high-resolution images. Existing approaches rely on repeated cropping or test-time visual search to introduce local evidence, but they typically do not explicitly distinguish perception from reasoning. In this paper, we propose Perceive-to-Reason (P2R), a unified framework that formulates fine-grained visual reasoning as a two-stage process: the model first localizes question-relevant evidence as a Perceiver, and then answers the question as a Reasoner based on the annotated image and cropped regions. To better align training with this decoupled formulation, we further introduce Perception-Reasoning Alternating GRPO (PRA-GRPO), a role-aware reinforcement learning strategy that alternates between perception-focused and reasoning-focused updates using only final-answer supervision. Built on top of Qwen3-VL-Instruct-2B/4B/8B, P2R consistently improves performance across model scales. In particular, P2R-4B achieves 93.2% on V-Star, 81.9% on HR-Bench-4K, and 80.5% on HR-Bench-8K, substantially outperforming its corresponding backbone. Further experiments show that the benefits of P2R extend beyond high-resolution benchmarks to broader multimodal reasoning tasks. These results suggest that explicitly decoupling perception from reasoning provides an effective framework for fine-grained visual reasoning.",
+          "authors": [
+            "Hongxing Li",
+            "Xiufeng Huang",
+            "Dingming Li",
+            "Wenjing Jiang",
+            "Zixuan Wang",
+            "Haolei Xu",
+            "Hanrong Zhang",
+            "Haiwen Hong",
+            "Longtao Huang",
+            "Hui Xue",
+            "Weiming Lu",
+            "Jun Xiao",
+            "Yueting Zhuang",
+            "Yongliang Shen"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-01T17:24:26+00:00",
+          "link": "https://arxiv.org/pdf/2607.01191v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "decoupled perception and reasoning for fine-grained visual reasoning",
+          "llm_evidence_cn": "解耦感知与推理的细粒度视觉推理方法",
+          "llm_evidence": "解耦感知与推理的细粒度视觉推理方法",
+          "canonical_evidence": "解耦感知与推理的细粒度视觉推理方法",
+          "llm_tldr_en": "P2R explicitly decouples perception and reasoning stages for fine-grained visual reasoning, first localizing evidence then answering, achieving strong performance.",
+          "llm_tldr_cn": "细粒度视觉推理要求模型捕捉微小关键线索，现有方法未明确区分感知与推理。本文提出Perceive-to-Reason（P2R）框架，将过程分为两步：感知器定位问题相关证据，推理器基于裁剪区域作答。这种显式解耦训练增强了模型对细节的关注，在多个细粒度推理基准上取得最佳结果。",
+          "llm_tldr": "细粒度视觉推理要求模型捕捉微小关键线索，现有方法未明确区分感知与推理。本文提出Perceive-to-Reason（P2R）框架，将过程分为两步：感知器定位问题相关证据，推理器基于裁剪区域作答。这种显式解耦训练增强了模型对细节的关注，在多个细粒度推理基准上取得最佳结果。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "visual reasoning",
+          "matched_requirement_id": "req-1",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.01191v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.31986v1",
+          "source": "arxiv",
+          "title": "CoLT: Teaching Multi-Modal Models to Think with Chain of Latent Thoughts",
+          "abstract": "Chain-of-thought (CoT) reasoning has enabled multi-modal large language models (MLLMs) to tackle complex visual reasoning tasks by generating explicit intermediate reasoning steps in natural language. However, this text-based reasoning paradigm is inherently slow at inference time with even thousands of tokens and fundamentally constrained by the expressiveness of natural language. In this paper, we propose CoLT, (Chain of Latent Thoughts), a novel framework that teaches multi-modal models to reason through a chain of latent thought representations instead of verbose text tokens, which can perform thinking with as few as 3 steps. Naively forcing the model to think with latent states easily produces meaningless semantics and makes training unstable. To effectively regulate the latent reasoning process, we introduce a lightweight external decoder that provides step-level supervision for each latent reasoning step in two complementary directions: a forward mode that decodes latent thoughts into the textual reasoning of the next step, and a backward mode that aligns decoder hidden states with the model's latent thoughts given preceding textual context. We further incorporate internal supervision that encourages coherent step-by-step latent transitions. The decoder and internal supervision are removed during inference to maintain high efficiency of latent reasoning. Extensive experiments on eight benchmarks demonstrate that CoLT not only outperforms existing latent reasoning methods such as CODI and SIM-CoT, but also surpasses latent visual reasoning approaches that rely on auxiliary images with costly annotation requirements. Compared to text CoT methods, CoLT can notably reduce the inference time by 10.1$\\times$ and text decoding time by 22.6$\\times$. Code is released at https://github.com/hulianyuyy/CoLT.",
+          "authors": [
+            "Lianyu Hu",
+            "Shengqian Qin",
+            "Zeqin Liao",
+            "Qing Guo",
+            "Liang Wan",
+            "Wei Feng",
+            "Yang Liu"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-30T17:24:40+00:00",
+          "link": "https://arxiv.org/pdf/2606.31986v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "direct visual reasoning method with latent chain-of-thought",
+          "llm_evidence_cn": "直接视觉推理方法，使用潜在思维链",
+          "llm_evidence": "直接视觉推理方法，使用潜在思维链",
+          "canonical_evidence": "直接视觉推理方法，使用潜在思维链",
+          "llm_tldr_en": "Proposes CoLT, a framework that uses chain of latent thoughts instead of text tokens for visual reasoning, achieving efficient and expressive reasoning with as few as 3 steps.",
+          "llm_tldr_cn": "针对多模态大模型在视觉推理中依赖冗长文本思维链的问题，提出CoLT框架，用潜在思维表示代替文本标记，仅需3步即可完成推理。该方法通过稳定训练技巧解决了潜在状态语义空洞问题，在多个视觉推理基准上实现了高效且可扩展的推理性能。",
+          "llm_tldr": "针对多模态大模型在视觉推理中依赖冗长文本思维链的问题，提出CoLT框架，用潜在思维表示代替文本标记，仅需3步即可完成推理。该方法通过稳定训练技巧解决了潜在状态语义空洞问题，在多个视觉推理基准上实现了高效且可扩展的推理性能。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "visual reasoning",
+          "matched_requirement_id": "req-1",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31986v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00881v1",
+          "source": "arxiv",
+          "title": "OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping",
+          "abstract": "Spatial intelligence remains a persistent challenge for Multimodal Large Language Models (MLLMs), as it requires coherent spatial scene representations beyond basic object recognition. Existing methods typically build such representations through textual reasoning or 3D reconstruction. However, they often falter during multi-step reasoning, particularly when required to dynamically re-anchor evidence to the specific camera-, object-, or direction-centric reference frames demanded by complex queries. To address this, we propose OmniView-Space, a framework designed to maintain spatial consistency through multimodal egocentric evidence. Our approach consists of three core components: (1) Multi-Perspective Spatial Mapping (MPSM), which re-anchors reconstructed geometry into a query-aligned visual cognitive map and a textual spatial graph; (2) Tool-Guided Egocentric Reasoning, an interleaved policy trained to actively select the ego anchor required by the query and request the corresponding MPSM evidence; and (3) Cognitive-Map Distillation, which uses MPSM-generated trajectories and ego-frame rewards to train the model to reason with self-generated cognitive maps. Experiments on single- and multi-image spatial reasoning benchmarks show that OmniView-Space achieves state-of-the-art performance. Furthermore, the distilled model maintains this performance while reducing reliance on external geometry pipelines.",
+          "authors": [
+            "Xudong Li",
+            "Mengdan Zhang",
+            "Peixian Chen",
+            "Jiaxi Tan",
+            "Zihao Huang",
+            "Jingyuan Zheng",
+            "Yan Zhang",
+            "Xiawu Zheng",
+            "Xing Sun",
+            "Rongrong Ji"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-01T12:45:12+00:00",
+          "link": "https://arxiv.org/pdf/2607.00881v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "spatial reasoning approach for MLLMs, part of visual reasoning",
+          "llm_evidence_cn": "针对MLLM的空间推理方法，属于视觉推理范畴",
+          "llm_evidence": "针对MLLM的空间推理方法，属于视觉推理范畴",
+          "canonical_evidence": "针对MLLM的空间推理方法，属于视觉推理范畴",
+          "llm_tldr_en": "Proposes OmniView-Space to maintain spatial consistency through multi-perspective spatial mapping, enabling MLLMs to dynamically re-anchor evidence across different reference frames.",
+          "llm_tldr_cn": "多模态大模型在多步空间推理中难以保持空间一致性。本文提出OmniView-Space框架，通过多视角空间映射（MPSM）和模态自我中心证据，使模型能在不同参考系间动态重定位证据，显著提升了空间推理的准确性和鲁棒性。",
+          "llm_tldr": "多模态大模型在多步空间推理中难以保持空间一致性。本文提出OmniView-Space框架，通过多视角空间映射（MPSM）和模态自我中心证据，使模型能在不同参考系间动态重定位证据，显著提升了空间推理的准确性和鲁棒性。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "visual reasoning",
+          "matched_requirement_id": "req-1",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00881v1",
+          "carry_days": 1
+        }
+      ]
     }
   }
 }
