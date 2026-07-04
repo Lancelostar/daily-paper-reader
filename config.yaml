@@ -97,6 +97,27 @@ subscriptions:
             updated_at: '2026-06-08T10:58:42.311268+00:00'
       updated_at: '2026-06-08T10:56:28.850Z'
       paused: true
+    - tag: vr
+      description: 请帮我查找视觉推理方向的论文
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: visual reasoning
+          keyword_cn: 视觉推理
+          query: visual reasoning
+      intent_queries:
+        - query: recent advances in visual reasoning
+          query_cn: 视觉推理的最新进展
+          enabled: true
+          source: manual
+          note: ''
+        - query: evaluation benchmarks for visual reasoning
+          query_cn: 视觉推理的评估基准
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-07-04T08:49:05.823Z'
 source_backends:
   arxiv:
     papers_table: arxiv_papers
