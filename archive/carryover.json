@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-04T20:23:56.995289+00:00",
-  "updated_date": "20260704",
+  "generated_at": "2026-07-05T20:13:45.548629+00:00",
+  "updated_date": "20260705",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
@@ -14,7 +14,7 @@
       "items": []
     },
     "vr": {
-      "updated_date": "20260704",
+      "updated_date": "20260705",
       "carryover_days": 9,
       "items": [
         {
@@ -47,9 +47,9 @@
           "llm_evidence_cn": "审计和修复基于知识的VQA基准",
           "llm_evidence": "审计和修复基于知识的VQA基准",
           "canonical_evidence": "审计和修复基于知识的VQA基准",
-          "llm_tldr_en": "Audits KB-VQA benchmarks, identifies pitfalls like answer not derivable from knowledge base, and proposes repairs and augmentations for reliable evaluation.",
-          "llm_tldr_cn": "基于知识的VQA基准常隐含不可靠假设，导致答案正确性无法代理知识推理能力。本文系统审计了现有基准，发现答案不可推导、问题不充分等问题。提出修复和增强策略，改进后基准能更可靠评估视觉语言模型的知识推理能力，对视觉推理评估有重要参考价值。",
-          "llm_tldr": "基于知识的VQA基准常隐含不可靠假设，导致答案正确性无法代理知识推理能力。本文系统审计了现有基准，发现答案不可推导、问题不充分等问题。提出修复和增强策略，改进后基准能更可靠评估视觉语言模型的知识推理能力，对视觉推理评估有重要参考价值。",
+          "llm_tldr_en": "This work identifies and resolves pitfalls in KB-VQA benchmarks, auditing and repairing annotations, and augmenting with new questions to improve the reliability of visual reasoning evaluation.",
+          "llm_tldr_cn": "基于知识的视觉问答（KB-VQA）基准常因答案不可推导、问题模糊等问题导致评估不可靠。本文系统性地审计了现有基准中的缺陷，通过修复注释和增强新问题来提升基准质量，为视觉推理评估提供了更可靠的工具。",
+          "llm_tldr": "基于知识的视觉问答（KB-VQA）基准常因答案不可推导、问题模糊等问题导致评估不可靠。本文系统性地审计了现有基准中的缺陷，通过修复注释和增强新问题来提升基准质量，为视觉推理评估提供了更可靠的工具。",
           "llm_tags": [
             "query:vr"
           ],
@@ -83,13 +83,13 @@
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "evidence-first video reasoning framework with separate grounding and reasoning",
-          "llm_evidence_cn": "证据优先的视频推理框架，分离定位与推理",
-          "llm_evidence": "证据优先的视频推理框架，分离定位与推理",
-          "canonical_evidence": "证据优先的视频推理框架，分离定位与推理",
-          "llm_tldr_en": "EFlow disentangles temporal grounding and logical reasoning for long-video reasoning, addressing premature semantic commitment by retrieving evidence before reasoning.",
-          "llm_tldr_cn": "长视频推理中，现有方法将时间定位与推理交织，导致早期假设偏差。本文提出EFlow，基于Qwen3-VL，将时间定位与逻辑推理显式分离：先进行时间定位收集证据，再进行推理。这种证据优先范式有效缓解了过早语义承诺问题，在长视频推理任务上取得了显著提升。",
-          "llm_tldr": "长视频推理中，现有方法将时间定位与推理交织，导致早期假设偏差。本文提出EFlow，基于Qwen3-VL，将时间定位与逻辑推理显式分离：先进行时间定位收集证据，再进行推理。这种证据优先范式有效缓解了过早语义承诺问题，在长视频推理任务上取得了显著提升。",
+          "llm_evidence_en": "long-video reasoning with evidence-first framework",
+          "llm_evidence_cn": "长视频推理中的证据优先框架",
+          "llm_evidence": "长视频推理中的证据优先框架",
+          "canonical_evidence": "长视频推理中的证据优先框架",
+          "llm_tldr_en": "EFlow proposes an evidence-first video reasoning framework that separates temporal grounding from logical reasoning to avoid premature semantic commitment.",
+          "llm_tldr_cn": "现有工具增强的视频框架在长视频推理中常出现过早语义承诺，导致证据定位偏差。本文提出EFlow，一种证据优先的推理框架，将时间定位与逻辑推理显式分离。通过两个思维链分别进行时间定位和答案推理，模型先检索相关证据再进行推理，有效避免了早期假设对证据选择的干扰。在长视频推理基准上取得了显著提升。",
+          "llm_tldr": "现有工具增强的视频框架在长视频推理中常出现过早语义承诺，导致证据定位偏差。本文提出EFlow，一种证据优先的推理框架，将时间定位与逻辑推理显式分离。通过两个思维链分别进行时间定位和答案推理，模型先检索相关证据再进行推理，有效避免了早期假设对证据选择的干扰。在长视频推理基准上取得了显著提升。",
           "llm_tags": [
             "query:vr"
           ],
@@ -98,97 +98,6 @@
           "matched_requirement_id": "req-2",
           "selection_source": "carryover_cache",
           "paper_id": "2607.00867v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2607.01191v1",
-          "source": "arxiv",
-          "title": "Perceive-to-Reason: Decoupling Perception and Reasoning for Fine-Grained Visual Reasoning",
-          "abstract": "Fine-grained visual reasoning remains challenging for vision-language models, especially when small but critical visual cues are buried in high-resolution images. Existing approaches rely on repeated cropping or test-time visual search to introduce local evidence, but they typically do not explicitly distinguish perception from reasoning. In this paper, we propose Perceive-to-Reason (P2R), a unified framework that formulates fine-grained visual reasoning as a two-stage process: the model first localizes question-relevant evidence as a Perceiver, and then answers the question as a Reasoner based on the annotated image and cropped regions. To better align training with this decoupled formulation, we further introduce Perception-Reasoning Alternating GRPO (PRA-GRPO), a role-aware reinforcement learning strategy that alternates between perception-focused and reasoning-focused updates using only final-answer supervision. Built on top of Qwen3-VL-Instruct-2B/4B/8B, P2R consistently improves performance across model scales. In particular, P2R-4B achieves 93.2% on V-Star, 81.9% on HR-Bench-4K, and 80.5% on HR-Bench-8K, substantially outperforming its corresponding backbone. Further experiments show that the benefits of P2R extend beyond high-resolution benchmarks to broader multimodal reasoning tasks. These results suggest that explicitly decoupling perception from reasoning provides an effective framework for fine-grained visual reasoning.",
-          "authors": [
-            "Hongxing Li",
-            "Xiufeng Huang",
-            "Dingming Li",
-            "Wenjing Jiang",
-            "Zixuan Wang",
-            "Haolei Xu",
-            "Hanrong Zhang",
-            "Haiwen Hong",
-            "Longtao Huang",
-            "Hui Xue",
-            "Weiming Lu",
-            "Jun Xiao",
-            "Yueting Zhuang",
-            "Yongliang Shen"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-07-01T17:24:26+00:00",
-          "link": "https://arxiv.org/pdf/2607.01191v1",
-          "tags": [
-            "keyword:vr",
-            "query:vr"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "decoupled perception and reasoning for fine-grained visual reasoning",
-          "llm_evidence_cn": "解耦感知与推理的细粒度视觉推理方法",
-          "llm_evidence": "解耦感知与推理的细粒度视觉推理方法",
-          "canonical_evidence": "解耦感知与推理的细粒度视觉推理方法",
-          "llm_tldr_en": "P2R explicitly decouples perception and reasoning stages for fine-grained visual reasoning, first localizing evidence then answering, achieving strong performance.",
-          "llm_tldr_cn": "细粒度视觉推理要求模型捕捉微小关键线索，现有方法未明确区分感知与推理。本文提出Perceive-to-Reason（P2R）框架，将过程分为两步：感知器定位问题相关证据，推理器基于裁剪区域作答。这种显式解耦训练增强了模型对细节的关注，在多个细粒度推理基准上取得最佳结果。",
-          "llm_tldr": "细粒度视觉推理要求模型捕捉微小关键线索，现有方法未明确区分感知与推理。本文提出Perceive-to-Reason（P2R）框架，将过程分为两步：感知器定位问题相关证据，推理器基于裁剪区域作答。这种显式解耦训练增强了模型对细节的关注，在多个细粒度推理基准上取得最佳结果。",
-          "llm_tags": [
-            "query:vr"
-          ],
-          "matched_query_tag": "query:vr",
-          "matched_query_text": "visual reasoning",
-          "matched_requirement_id": "req-1",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.01191v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.31986v1",
-          "source": "arxiv",
-          "title": "CoLT: Teaching Multi-Modal Models to Think with Chain of Latent Thoughts",
-          "abstract": "Chain-of-thought (CoT) reasoning has enabled multi-modal large language models (MLLMs) to tackle complex visual reasoning tasks by generating explicit intermediate reasoning steps in natural language. However, this text-based reasoning paradigm is inherently slow at inference time with even thousands of tokens and fundamentally constrained by the expressiveness of natural language. In this paper, we propose CoLT, (Chain of Latent Thoughts), a novel framework that teaches multi-modal models to reason through a chain of latent thought representations instead of verbose text tokens, which can perform thinking with as few as 3 steps. Naively forcing the model to think with latent states easily produces meaningless semantics and makes training unstable. To effectively regulate the latent reasoning process, we introduce a lightweight external decoder that provides step-level supervision for each latent reasoning step in two complementary directions: a forward mode that decodes latent thoughts into the textual reasoning of the next step, and a backward mode that aligns decoder hidden states with the model's latent thoughts given preceding textual context. We further incorporate internal supervision that encourages coherent step-by-step latent transitions. The decoder and internal supervision are removed during inference to maintain high efficiency of latent reasoning. Extensive experiments on eight benchmarks demonstrate that CoLT not only outperforms existing latent reasoning methods such as CODI and SIM-CoT, but also surpasses latent visual reasoning approaches that rely on auxiliary images with costly annotation requirements. Compared to text CoT methods, CoLT can notably reduce the inference time by 10.1$\\times$ and text decoding time by 22.6$\\times$. Code is released at https://github.com/hulianyuyy/CoLT.",
-          "authors": [
-            "Lianyu Hu",
-            "Shengqian Qin",
-            "Zeqin Liao",
-            "Qing Guo",
-            "Liang Wan",
-            "Wei Feng",
-            "Yang Liu"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-30T17:24:40+00:00",
-          "link": "https://arxiv.org/pdf/2606.31986v1",
-          "tags": [
-            "keyword:vr",
-            "query:vr"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "direct visual reasoning method with latent chain-of-thought",
-          "llm_evidence_cn": "直接视觉推理方法，使用潜在思维链",
-          "llm_evidence": "直接视觉推理方法，使用潜在思维链",
-          "canonical_evidence": "直接视觉推理方法，使用潜在思维链",
-          "llm_tldr_en": "Proposes CoLT, a framework that uses chain of latent thoughts instead of text tokens for visual reasoning, achieving efficient and expressive reasoning with as few as 3 steps.",
-          "llm_tldr_cn": "针对多模态大模型在视觉推理中依赖冗长文本思维链的问题，提出CoLT框架，用潜在思维表示代替文本标记，仅需3步即可完成推理。该方法通过稳定训练技巧解决了潜在状态语义空洞问题，在多个视觉推理基准上实现了高效且可扩展的推理性能。",
-          "llm_tldr": "针对多模态大模型在视觉推理中依赖冗长文本思维链的问题，提出CoLT框架，用潜在思维表示代替文本标记，仅需3步即可完成推理。该方法通过稳定训练技巧解决了潜在状态语义空洞问题，在多个视觉推理基准上实现了高效且可扩展的推理性能。",
-          "llm_tags": [
-            "query:vr"
-          ],
-          "matched_query_tag": "query:vr",
-          "matched_query_text": "visual reasoning",
-          "matched_requirement_id": "req-1",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.31986v1",
           "carry_days": 1
         },
         {
@@ -234,6 +143,287 @@
           "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
           "paper_id": "2607.00881v1",
+          "carry_days": 2
+        },
+        {
+          "id": "2607.01813v1",
+          "source": "arxiv",
+          "title": "MMBench-Live: A Continuously Evolving Benchmark for Multimodal Models",
+          "abstract": "Evaluation benchmarks are essential for assessing vision-language models (VLMs), but most multimodal benchmarks are static, making them vulnerable to temporal staleness, data contamination, and costly maintenance. We present MMBench-Live, a continuously evolving multimodal benchmark built by a multi-agent-driven automated pipeline. Our framework treats benchmark evolution as task-guided dataset construction, integrating structured benchmark specification, feedback-controlled real-time data acquisition, and verifiable QA generation with executable reasoning. To maintain cross-version comparability, we introduce a distribution-consistent update strategy that extracts task-related visual patterns from the original benchmark to guide data collection and filtering. Instantiated from MMBench, MMBench-Live contains 5.9K newly generated evaluation instances with a high answer correctness rate, while each update costs about USD 30 and takes 1-2 hours. Extensive evaluations show that MMBench-Live preserves stable model rankings, maintains semantic alignment with the original benchmark, and exhibits weaker contamination-related memorization signals, suggesting a practical and scalable paradigm for sustainable multimodal benchmark evolution. The project is available at https://github.com/PRIS-CV/MMBench-Live.",
+          "authors": [
+            "Yuanzhi Liu",
+            "Shousheng Zhao",
+            "Bo Zhou",
+            "Kongming Liang",
+            "Zhanyu Ma"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.AI"
+          ],
+          "published": "2026-07-02T07:27:58+00:00",
+          "link": "https://arxiv.org/pdf/2607.01813v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "continuously evolving multimodal benchmark with executable reasoning",
+          "llm_evidence_cn": "持续演进的多模态基准，包含可执行推理",
+          "llm_evidence": "持续演进的多模态基准，包含可执行推理",
+          "canonical_evidence": "持续演进的多模态基准，包含可执行推理",
+          "llm_tldr_en": "MMBench-Live is a continuously evolving multimodal benchmark built by a multi-agent pipeline, addressing static benchmark issues like staleness and data contamination, enabling distribution-consistent updates and verifiable QA generation.",
+          "llm_tldr_cn": "现有多模态基准大多是静态的，容易过时和数据污染。本文提出MMBench-Live，一个通过多智能体自动化流水线构建的持续演进基准，包含结构化规范、实时数据获取和带可执行推理的可验证QA生成。它还引入分布一致的更新策略以保持跨版本可比性，显著提升了基准的时效性和可靠性。",
+          "llm_tldr": "现有多模态基准大多是静态的，容易过时和数据污染。本文提出MMBench-Live，一个通过多智能体自动化流水线构建的持续演进基准，包含结构化规范、实时数据获取和带可执行推理的可验证QA生成。它还引入分布一致的更新策略以保持跨版本可比性，显著提升了基准的时效性和可靠性。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "evaluation benchmarks for visual reasoning",
+          "matched_requirement_id": "req-3",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.01813v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00672v1",
+          "source": "arxiv",
+          "title": "DART: Difficulty-Adaptive Routing for Zero-Shot Video Temporal Grounding",
+          "abstract": "Zero-shot video temporal grounding (VTG) localizes events in untrimmed videos from natural language queries without task-specific training. Existing methods rely on frame-query feature matching, which suffices for simple events but struggles with complex multi-stage queries that require understanding temporal ordering and causal structure -- a disparity we call the reasoning gap. We propose DART (Difficulty-Adaptive Routing for Temporal Grounding), which bridges this gap by coupling difficulty-aware routing with structured reasoning in large vision-language models. A query-conditioned Determinantal Point Process (DPP) serves a dual role: selecting diverse, query-relevant keyframes as temporal evidence, and providing spectral entropy as a difficulty indicator. Simple queries are routed to a Fast path for direct prediction, while complex queries follow a Slow path with Temporal Markup Prompting, which decomposes localization into global event analysis, per-frame temporal role annotation, and boundary extraction. On Charades-STA and ActivityNet Captions, DART achieves state-of-the-art zero-shot performance across both identically distributed and multiple out-of-distribution settings, improving mIoU by up to 3.5 points over the strongest baseline while using over 7 times fewer frames. The project homepage is available at https://dart-vtg.github.io/.",
+          "authors": [
+            "Zhengbo Zhang",
+            "Mark He Huang",
+            "Zhigang Tu",
+            "Ming-Hsuan Yang"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-01T09:18:59+00:00",
+          "link": "https://arxiv.org/pdf/2607.00672v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "difficulty-adaptive routing for zero-shot video temporal grounding with reasoning",
+          "llm_evidence_cn": "基于难度自适应路由的零样本视频时间定位推理",
+          "llm_evidence": "基于难度自适应路由的零样本视频时间定位推理",
+          "canonical_evidence": "基于难度自适应路由的零样本视频时间定位推理",
+          "llm_tldr_en": "DART bridges the reasoning gap in zero-shot video temporal grounding by coupling difficulty-aware routing with structured reasoning in large vision-language models, enabling effective localization of complex multi-stage events.",
+          "llm_tldr_cn": "零样本视频时间定位在处理多阶段复杂查询时存在推理鸿沟。本文提出DART，通过查询条件化行列式点过程选择关键帧并估计难度，自适应路由到大型视觉语言模型进行结构化推理，有效处理了时序和因果理解。",
+          "llm_tldr": "零样本视频时间定位在处理多阶段复杂查询时存在推理鸿沟。本文提出DART，通过查询条件化行列式点过程选择关键帧并估计难度，自适应路由到大型视觉语言模型进行结构化推理，有效处理了时序和因果理解。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "visual reasoning",
+          "matched_requirement_id": "req-1",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00672v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00606v1",
+          "source": "arxiv",
+          "title": "Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap",
+          "abstract": "Recent work on Thinking with Images makes vision a dynamic part of reasoning, but does so through generation: the model invokes external tools, synthesizes code, or imagines new imagery, each at the cost of a tool protocol, brittle code, or an expensive training pipeline. A fourth route makes vision dynamic without generating anything, by retrieving labeled exemplar images and reasoning over them, yet it remains underexplored despite being train-free. We present ReVisIT, a train-free framework that realizes this retrieval-based route by treating each retrieved image-label pair as a unit of visual thought. ReVisIT combines structured class definitions, per-query multimodal retrieval of exemplars, and alternating user/assistant injection of those exemplars before joint multi-attribute decoding, and degrades gracefully to whichever components a task admits. On VL-ICL Bench Fast Open MiniImageNet, Qwen3-VL-30B-A3B with ReVisIT reaches 98.5% at 4-shot, statistically indistinguishable from the 72B LLaVA-OneVision SOTA (98.7%) on this near-saturated task at about 1/2.4 the parameters, while the same backbone without the scaffold sits at chance. The turns layer alone adds 26.1 points to GPT-4.1 on free-form concept induction (Bongard-OpenWorld), and the full stack yields a 4-6 point macro gain across three backbones on MAAC-Bench, a new license-clean 27-class, 5-attribute benchmark, significant by paired bootstrap on the curator-derived attributes. Component analysis shows that retrieval-plus-turns is the universal lever while structured definitions are need-adaptive, and that 83% of the retrieval gain comes from retrieval quality rather than from the presence of exemplars. MAAC-Bench is released with a rubric-grounded LLM verification protocol that replaces author spot-check on subjective attributes.",
+          "authors": [
+            "Bingchen Huang",
+            "Zhiling Wang",
+            "Yifu Chen",
+            "Yuanchao Du"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-01T08:31:09+00:00",
+          "link": "https://arxiv.org/pdf/2607.00606v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "training-free visual reasoning via retrieval",
+          "llm_evidence_cn": "基于检索的免训练视觉推理",
+          "llm_evidence": "基于检索的免训练视觉推理",
+          "canonical_evidence": "基于检索的免训练视觉推理",
+          "llm_tldr_en": "ReVisIT is a train-free framework for multimodal in-context learning that uses retrieved exemplar images as units of visual thought.",
+          "llm_tldr_cn": "现有动态视觉推理方法依赖生成或工具，成本高且不稳定。本文提出ReVisIT，一种免训练的检索式框架，将检索到的标注图像-标签对作为视觉思维单元。通过结构化类定义、逐查询多模态检索和交替用户-模型推理，实现了无需训练的动态视觉推理，有效缩小了开放式与封闭式模型之间的差距。",
+          "llm_tldr": "现有动态视觉推理方法依赖生成或工具，成本高且不稳定。本文提出ReVisIT，一种免训练的检索式框架，将检索到的标注图像-标签对作为视觉思维单元。通过结构化类定义、逐查询多模态检索和交替用户-模型推理，实现了无需训练的动态视觉推理，有效缩小了开放式与封闭式模型之间的差距。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "recent advances in visual reasoning",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00606v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.02402v1",
+          "source": "arxiv",
+          "title": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+          "abstract": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+          "authors": [
+            "Nick Stracke",
+            "Kolja Bauer",
+            "Stefan Andreas Baumann",
+            "Miguel Angel Bautista",
+            "Josh Susskind",
+            "Björn Ommer"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-02T16:35:52+00:00",
+          "link": "https://arxiv.org/pdf/2607.02402v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "introduces VICIS benchmark for visual concept inference from sets",
+          "llm_evidence_cn": "提出VICIS基准，评估从图像集推断视觉概念的能力",
+          "llm_evidence": "提出VICIS基准，评估从图像集推断视觉概念的能力",
+          "canonical_evidence": "提出VICIS基准，评估从图像集推断视觉概念的能力",
+          "llm_tldr_en": "Introduces VICIS task and benchmark for visual concept inference from image sets; shows VLMs struggle; proposes training framework that improves performance.",
+          "llm_tldr_cn": "当前视觉语言模型虽能理解文本指令，但难以从图像集推断共享概念并应用于新图像。本文提出了视觉概念推理基准VICIS，通过给定少量示例图像和查询图像，要求模型生成保持概念的新图像。实验表明现有模型在该任务上表现差，常忽略视觉上下文。为此，作者提出训练框架和架构，使模型学会从图像集推断视觉概念，显著提升性能。该工作揭示了视觉推理中的一个关键缺陷，并为未来研究提供了评估工具。",
+          "llm_tldr": "当前视觉语言模型虽能理解文本指令，但难以从图像集推断共享概念并应用于新图像。本文提出了视觉概念推理基准VICIS，通过给定少量示例图像和查询图像，要求模型生成保持概念的新图像。实验表明现有模型在该任务上表现差，常忽略视觉上下文。为此，作者提出训练框架和架构，使模型学会从图像集推断视觉概念，显著提升性能。该工作揭示了视觉推理中的一个关键缺陷，并为未来研究提供了评估工具。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "evaluation benchmarks for visual reasoning",
+          "matched_requirement_id": "req-3",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.02402v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00434v1",
+          "source": "arxiv",
+          "title": "Information-Regularized Attention for Visual-Centric Reasoning",
+          "abstract": "Vision-language models (VLMs) have become a paradigm for multimodal learning, yet remain unstable due to object hallucination, weak visual grounding, and catastrophic forgetting after full-parameter instruction tuning. We claim these failures result from a lack of explicit control over visual representation learning during the standard next-token prediction objective. As a result, visual embeddings thus become passively optimized and prone to injecting redundant or spurious signals. To counter this, we introduce Information-Regularized Attention (IRA), a stochastic attention mechanism that explicitly regulates the amount of visual information injected into the hidden states of intermediate transformer layers. This local reparameterization translates uncertainty about visual representations into local noise that is independent across data points. Beyond evaluating model performance, we also quantify embedding properties, where IRA produces smoother curvature trajectories and suppresses attention-sink across all layers, indicating a more stable transformation of the visual signal. Our results suggest that stochastic attention is not merely a regularizer but a key contributor to representation learning in a generative architecture, offering a new direction for building more reliable VLMs.",
+          "authors": [
+            "Guohao Sun",
+            "Xiaofang Wang",
+            "Yash Patel",
+            "Mengchen Liu",
+            "Zhiqiang Tao",
+            "Praveen Krishnan"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.LG"
+          ],
+          "published": "2026-07-01T04:45:41+00:00",
+          "link": "https://arxiv.org/pdf/2607.00434v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "information-regularized attention for visual-centric reasoning in VLMs",
+          "llm_evidence_cn": "信息正则化注意力机制用于VLM的视觉中心推理",
+          "llm_evidence": "信息正则化注意力机制用于VLM的视觉中心推理",
+          "canonical_evidence": "信息正则化注意力机制用于VLM的视觉中心推理",
+          "llm_tldr_en": "Proposes Information-Regularized Attention (IRA) to regulate visual information injection in VLM transformer layers, reducing hallucination and improving visual grounding.",
+          "llm_tldr_cn": "视觉语言模型（VLM）存在对象幻觉和视觉接地弱等问题，原因是视觉表示在学习中被动优化。本文提出信息正则化注意力（IRA），这是一种随机注意力机制，通过局部重参数化显式控制注入隐藏状态的视觉信息量。在多个视觉推理基准上，IRA减少了幻觉并增强了视觉接地，提升了模型稳定性。该方法是一种通用的注意力机制改进，直接针对视觉推理中的核心问题。",
+          "llm_tldr": "视觉语言模型（VLM）存在对象幻觉和视觉接地弱等问题，原因是视觉表示在学习中被动优化。本文提出信息正则化注意力（IRA），这是一种随机注意力机制，通过局部重参数化显式控制注入隐藏状态的视觉信息量。在多个视觉推理基准上，IRA减少了幻觉并增强了视觉接地，提升了模型稳定性。该方法是一种通用的注意力机制改进，直接针对视觉推理中的核心问题。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "recent advances in visual reasoning",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00434v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.02490v1",
+          "source": "arxiv",
+          "title": "Visually Grounded Self-Reflection for Vision-Language Models via Reinforcement Learning",
+          "abstract": "Large vision-language models can reason over multimodal inputs by generating textual chains of thought (CoT). A key capability exhibited in CoT reasoning is self-reflection: revisiting earlier decisions and correcting previous errors. However, existing LVLMs often fail to properly attend to visual inputs during reflection, limiting their ability to translate feedback into grounded corrections, especially for out-of-distribution images. To address this issue, we propose a novel reinforcement learning training framework VRRL, with two components explicitly designed to elicit visually grounded self-reflection. First, we randomly mask trajectory prefixes during training to emphasize recovery from incorrect intermediate predictions rather than making early mistakes. Second, we introduce buffered roll-ins from an experience replay buffer to expose the model to diverse failure states that it must learn to correct. We evaluate our approach on visual grounding tasks involving tables and charts, as well as spatial navigation benchmarks. While off-the-shelf and conventionally fine-tuned models degrade substantially under distribution shift, our method substantially improves average out-of-distribution accuracy over standard RL and reflection-oriented fine-tuning baselines by using self-reflection effectively.",
+          "authors": [
+            "Liyan Tang",
+            "Fangcong Yin",
+            "Greg Durrett"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL",
+            "cs.CV"
+          ],
+          "published": "2026-07-02T17:53:15+00:00",
+          "link": "https://arxiv.org/pdf/2607.02490v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "reinforcement learning for visually grounded self-reflection in VLMs",
+          "llm_evidence_cn": "使用强化学习实现VLM的视觉接地自反思",
+          "llm_evidence": "使用强化学习实现VLM的视觉接地自反思",
+          "canonical_evidence": "使用强化学习实现VLM的视觉接地自反思",
+          "llm_tldr_en": "Proposes VRRL, a reinforcement learning framework with masked trajectory prefixes to elicit visually grounded self-reflection in LVLMs, improving correction of intermediate errors.",
+          "llm_tldr_cn": "大型视觉语言模型（LVLM）在推理中能生成思维链，但自反思时往往忽略视觉输入，导致纠正不接地。本文提出VRRL框架，包含两个关键组件：随机遮蔽轨迹前缀以强调从错误中恢复，以及视觉接地奖励。通过强化学习训练，模型学会在反思中关注视觉证据。实验表明，VRRL在多个视觉推理基准上提升了模型的自我修正能力，且对分布外图像更具鲁棒性。",
+          "llm_tldr": "大型视觉语言模型（LVLM）在推理中能生成思维链，但自反思时往往忽略视觉输入，导致纠正不接地。本文提出VRRL框架，包含两个关键组件：随机遮蔽轨迹前缀以强调从错误中恢复，以及视觉接地奖励。通过强化学习训练，模型学会在反思中关注视觉证据。实验表明，VRRL在多个视觉推理基准上提升了模型的自我修正能力，且对分布外图像更具鲁棒性。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "recent advances in visual reasoning",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.02490v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.01707v1",
+          "source": "arxiv",
+          "title": "LASER: A Corrective Lens for LVLMs via Visual Attention Preservation and Sink Suppression",
+          "abstract": "Large vision-language models (LVLMs) exhibit strong reasoning ability but suffer from visual forgetting during long-horizon decoding, where attention progressively drifts away from visual evidence. Existing methods largely treat this issue as a late-stage attention decay problem or attempt to mitigate it through heuristic reminders or post-hoc attention lifting. Through systematic empirical analysis, we find that performance degradation under visual forgetting is largely driven by two overlooked factors: early-stage attention decay disrupts evidence acquisition, and attention concentration on a subset of task-irrelevant visual sink tokens. Motivated by these insights, we propose LASER, a post-training framework that regulates both the visual attention trajectory and intra-visual token attention distribution during reasoning. Technically, LASER introduces two complementary rewards: a Visual Grounding Reward, which encourages the model to maintain attention on semantically salient visual tokens throughout decoding, and a Sink Suppression Reward, which penalizes excessive attention concentration on visual sink tokens. Together, these rewards preserve early-stage grounding while preventing attention collapse onto uninformative regions. Extensive experiments on eight benchmark datasets demonstrate that LASER consistently outperforms strong baselines, validating attention-aware training as an effective remedy for visual forgetting.",
+          "authors": [
+            "Bowen Yuan",
+            "Zijian Wang",
+            "Yadan Luo",
+            "Shijie Wang",
+            "Zi Huang"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-07-02T04:59:56+00:00",
+          "link": "https://arxiv.org/pdf/2607.01707v1",
+          "tags": [
+            "keyword:vr",
+            "query:vr"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "LASER corrects visual forgetting via attention preservation and sink suppression",
+          "llm_evidence_cn": "LASER通过注意力保持和注意力沉没抑制修正视觉遗忘",
+          "llm_evidence": "LASER通过注意力保持和注意力沉没抑制修正视觉遗忘",
+          "canonical_evidence": "LASER通过注意力保持和注意力沉没抑制修正视觉遗忘",
+          "llm_tldr_en": "LASER is a post-training framework that addresses visual forgetting in LVLMs by preserving early-stage attention and suppressing task-irrelevant visual sink tokens.",
+          "llm_tldr_cn": "大型视觉语言模型在长序列解码中逐渐遗忘视觉证据，现有方法未充分关注早期注意力衰减和视觉沉没token。本文通过系统分析发现这两个因素是性能下降的主因，提出LASER后训练框架，分别通过注意力保持和注意力沉没抑制进行修正。实验表明，LASER有效缓解了视觉遗忘，提升了长文本下的视觉推理准确率，且无需修改模型架构。",
+          "llm_tldr": "大型视觉语言模型在长序列解码中逐渐遗忘视觉证据，现有方法未充分关注早期注意力衰减和视觉沉没token。本文通过系统分析发现这两个因素是性能下降的主因，提出LASER后训练框架，分别通过注意力保持和注意力沉没抑制进行修正。实验表明，LASER有效缓解了视觉遗忘，提升了长文本下的视觉推理准确率，且无需修改模型架构。",
+          "llm_tags": [
+            "query:vr"
+          ],
+          "matched_query_tag": "query:vr",
+          "matched_query_text": "recent advances in visual reasoning",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.01707v1",
           "carry_days": 1
         }
       ]
