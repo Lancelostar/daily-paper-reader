@@ -6,71 +6,75 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-06
-- 运行时间：2026-07-06 21:21:12 UTC
+- 最新运行日期：2026-07-07
+- 运行时间：2026-07-07 21:46:30 UTC
 - 运行状态：成功
 - 本次总论文数：17
 - 精读区：6
 - 速读区：11
 
 ### 今日简报（AI）
-今日共分析17篇论文，精读6篇，速读11篇。最值得关注的是H-GRPO的置换不变强化学习在具身视觉推理中的应用，以及知识型VQA基准的审计与修复工作。建议优先精读这两篇9分论文，并留意速读中关于跨视角不变性和模态切换的空间推理方法。
-- 详情：[/202607/06/README](/202607/06/README)
+今日17篇论文聚焦视觉推理与多模态学习，精读2篇9分研究《H-GRPO》和《ProLaViT》最具突破性。
+
+最值得关注的是H-GRPO的排列不变性强化学习框架，以及ProLaViT的渐进式潜在视觉思维学习——两者均针对视觉推理中的结构化理解与泛化难题。
+
+建议普通读者优先阅读这两篇精读论文，后续可探索速读中“主动视觉推理路由”和“检索图像作为思维”等高效方法，它们对实际应用中的计算成本与知识迁移有直接启发。
+- 详情：[/202607/07/README](/202607/07/README)
 
 ### 精读区论文标签
-1. [H-GRPO: Permutation-Invariant Reinforcement Learning for Grounded Visual Reasoning](/202607/06/2606.29915v1-h-grpo-permutation-invariant-reinforcement-learning-for-grounded-visual-reasoning)  
+1. [H-GRPO: Permutation-Invariant Reinforcement Learning for Grounded Visual Reasoning](/202607/07/2606.29915v1-h-grpo-permutation-invariant-reinforcement-learning-for-grounded-visual-reasoning)  
    标签：评分：9.0/10、query:vr
-   evidence：通过分解式证据基础进行扎根视觉推理
-2. [Identifying and Resolving Pitfalls of Knowledge-Based VQA Benchmarks: Auditing, Repairing, and Augmenting](/202607/06/2607.00159v1-identifying-and-resolving-pitfalls-of-knowledge-based-vqa-benchmarks-auditing-repairing-and-augmenting)  
+   evidence：基于分解式证据扎根的视觉推理
+2. [ProLaViT: Learning Progressive Latent Visual Thoughts in Structured Latent Space](/202607/07/2607.02907v1-prolavit-learning-progressive-latent-visual-thoughts-in-structured-latent-space)  
    标签：评分：9.0/10、query:vr
-   evidence：审计、修复和扩充基于知识的VQA基准
-3. [LASER: A Corrective Lens for LVLMs via Visual Attention Preservation and Sink Suppression](/202607/06/2607.01707v1-laser-a-corrective-lens-for-lvlms-via-visual-attention-preservation-and-sink-suppression)  
+   evidence：潜在视觉思维用于多步视觉推理
+3. [WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control](/202607/07/2607.03941v1-wsa1-a-3d-centric-world-spatial-action-model-for-generalizable-robot-control)  
+   标签：评分：9.0/10、query:world-model
+   evidence：面向机器人控制的世界-空间-动作模型
+4. [Beyond Scene Priors: Fine-Grained Traffic Scene Reasoning with Benchmarking and Query-Guided Small-Object Focus](/202607/07/2607.04149v1-beyond-scene-priors-fine-grained-traffic-scene-reasoning-with-benchmarking-and-query-guided-small-object-focus)  
    标签：评分：9.0/10、query:vr
-   evidence：解决视觉推理中大语言模型的视觉遗忘问题
-4. [MMBench-Live: A Continuously Evolving Benchmark for Multimodal Models](/202607/06/2607.01813v1-mmbench-live-a-continuously-evolving-benchmark-for-multimodal-models)  
-   标签：评分：9.0/10、query:vr
-   evidence：一个持续演化的多模态基准
-5. [Latent Noise Mask for Reducing Visual Redundancy in Multimodal Large Language Models](/202607/06/2606.30168v1-latent-noise-mask-for-reducing-visual-redundancy-in-multimodal-large-language-models)  
+   evidence：引入细粒度交通推理基准FGTR-Bench
+5. [Spatial Reasoning via Modality Switching Between Language and Symbolic Representation](/202607/07/2606.31285v2-spatial-reasoning-via-modality-switching-between-language-and-symbolic-representation)  
    标签：评分：8.0/10、query:vr
-   evidence：细粒度视觉推理改进
-6. [Decodable Is Not Grounded: A Vision-Ablation Arbiter for VLM Spatial Reasoning](/202607/06/2606.31257v1-decodable-is-not-grounded-a-vision-ablation-arbiter-for-vlm-spatial-reasoning)  
+   evidence：通过模态切换进行空间推理
+6. [OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping](/202607/07/2607.00881v1-omniview-space-reinforcing-spatial-reasoning-via-multi-perspective-spatial-mapping)  
    标签：评分：8.0/10、query:vr
-   evidence：提出空白图像仲裁器评估VLM空间推理的视觉接地
+   evidence：通过多视角空间映射强化空间推理
 
 ### 速读区论文标签
-1. [Consistency as Inductive Bias: Learning Cross-View Invariance for Robust Multimodal Reasoning](/202607/06/2606.29812v1-consistency-as-inductive-bias-learning-cross-view-invariance-for-robust-multimodal-reasoning)  
+1. [Before Thinking, Learn to Decide: Proactive Routing for Efficient Visual Reasoning](/202607/07/2606.30217v1-before-thinking-learn-to-decide-proactive-routing-for-efficient-visual-reasoning)  
    标签：评分：8.0/10、query:vr
-   evidence：提出跨视图一致性约束增强多模态推理的鲁棒性
-2. [Spatial Reasoning via Modality Switching Between Language and Symbolic Representation](/202607/06/2606.31285v1-spatial-reasoning-via-modality-switching-between-language-and-symbolic-representation)  
+   evidence：通过主动路由实现高效视觉推理
+2. [Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap](/202607/07/2607.00606v1-retrieved-images-as-visual-thought-training-free-multimodal-in-context-learning-for-the-open-vs-closed-gap)  
    标签：评分：8.0/10、query:vr
-   evidence：引入模态切换至符号表示以提升空间推理
-3. [Spatial Reasoning via Modality Switching Between Language and Symbolic Representation](/202607/06/2606.31285v2-spatial-reasoning-via-modality-switching-between-language-and-symbolic-representation)  
+   evidence：免训练的检索式视觉推理框架
+3. [SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video](/202607/07/2607.01784v1-spaceera-a-unified-framework-towards-3d-spatial-reasoning-in-video)  
    标签：评分：8.0/10、query:vr
-   evidence：通过语言与符号表示间的模态切换进行空间推理
-4. [Information-Regularized Attention for Visual-Centric Reasoning](/202607/06/2607.00434v1-information-regularized-attention-for-visual-centric-reasoning)  
+   evidence：视频中的3D空间推理框架
+4. [Show Me Examples: Inferring Visual Concepts from Image Sets](/202607/07/2607.02402v1-show-me-examples-inferring-visual-concepts-from-image-sets)  
    标签：评分：8.0/10、query:vr
-   evidence：通过注意力正则化实现视觉中心推理
-5. [MIRROR: Aligning Semantic Relations from Language to Image via Gromov--Wasserstein](/202607/06/2606.29462v1-mirror-aligning-semantic-relations-from-language-to-image-via-gromov--wasserstein)  
+   evidence：新基准VICIS用于从图像集推断视觉概念
+5. [Consistency as Inductive Bias: Learning Cross-View Invariance for Robust Multimodal Reasoning](/202607/07/2606.29812v1-consistency-as-inductive-bias-learning-cross-view-invariance-for-robust-multimodal-reasoning)  
    标签：评分：7.0/10、query:vr
-   evidence：从语言到视觉的对齐语义关系，增强多模态推理
-6. [Be Faithful When Response: Returning Fluent and Grounded Answers for Vision-Language Models Reinforcement Learning](/202607/06/2606.29984v1-be-faithful-when-response-returning-fluent-and-grounded-answers-for-vision-language-models-reinforcement-learning)  
+   evidence：跨视图一致性作为鲁棒多模态推理的归纳偏置
+6. [Spatial Reasoning via Modality Switching Between Language and Symbolic Representation](/202607/07/2606.31285v1-spatial-reasoning-via-modality-switching-between-language-and-symbolic-representation)  
    标签：评分：7.0/10、query:vr
-   evidence：视觉语言模型强化学习中的视觉忠实推理
-7. [Before Thinking, Learn to Decide: Proactive Routing for Efficient Visual Reasoning](/202607/06/2606.30217v1-before-thinking-learn-to-decide-proactive-routing-for-efficient-visual-reasoning)  
+   evidence：通过模态切换进行空间推理
+7. [StochasT: Learning with Stochastic Turn Depth for Visual Instruction Tuning](/202607/07/2607.00465v1-stochast-learning-with-stochastic-turn-depth-for-visual-instruction-tuning)  
    标签：评分：7.0/10、query:vr
-   evidence：用于高效视觉推理的主动路由
-8. [PruneGround: Plug-and-play Spatial Pruning for 3D Visual Grounding](/202607/06/2606.31148v1-pruneground-plug-and-play-spatial-pruning-for-3d-visual-grounding)  
+   evidence：针对多模态推理的视觉指令调优
+8. [GEAR-Seg: A Grounded Explainable Agent for Reasoning Segmentation and Data Engine](/202607/07/2607.00544v1-gear-seg-a-grounded-explainable-agent-for-reasoning-segmentation-and-data-engine)  
    标签：评分：7.0/10、query:vr
-   evidence：3D视觉定位中的空间剪枝
-9. [VisReflect: Latent Visual Reflection for Fine-Grained Perception in Long Visual Context](/202607/06/2606.30288v1-visreflect-latent-visual-reflection-for-fine-grained-perception-in-long-visual-context)  
+   evidence：解耦推理分割，显式逻辑链
+9. [GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision](/202607/07/2607.01050v1-geosearcher-anchor-guided-progressive-reasoning-for-remote-sensing-visual-grounding-with-process-supervision)  
    标签：评分：6.0/10、query:vr
-   evidence：在长视觉上下文中通过潜在视觉反射进行细粒度感知
-10. [SADL: What to Ignore? A Benchmark for Subject-Aware Distractor Localization](/202607/06/2606.30393v1-sadl-what-to-ignore-a-benchmark-for-subject-aware-distractor-localization)  
+   evidence：遥感视觉定位的渐进式推理
+10. [GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision](/202607/07/2607.01050v2-geosearcher-anchor-guided-progressive-reasoning-for-remote-sensing-visual-grounding-with-process-supervision)  
    标签：评分：6.0/10、query:vr
-   evidence：干扰物定位基准
-11. [Reasoning-aware Speculative Decoding for Efficient Vision-Language-Action Models in Autonomous Driving](/202607/06/2606.31160v1-reasoning-aware-speculative-decoding-for-efficient-vision-language-action-models-in-autonomous-driving)  
+   evidence：遥感视觉接地的渐进推理
+11. [Pathways of Visual Information Flow in Vision-Language Models](/202607/07/2607.03358v1-pathways-of-visual-information-flow-in-vision-language-models)  
    标签：评分：6.0/10、query:vr
-   evidence：在自动驾驶场景中通过推测解码加速视觉推理
+   evidence：对VLM中视觉信息路径的研究，用于视觉推理
 
 
 <div class="dpr-home-promo-card">

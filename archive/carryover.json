@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-06T21:13:30.942341+00:00",
-  "updated_date": "20260706",
+  "generated_at": "2026-07-07T21:39:15.245159+00:00",
+  "updated_date": "20260707",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
@@ -14,39 +14,38 @@
       "items": []
     },
     "vr": {
-      "updated_date": "20260706",
+      "updated_date": "20260707",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2607.00867v1",
+          "id": "2607.04779v1",
           "source": "arxiv",
-          "title": "EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection",
-          "abstract": "Long-video reasoning is fundamentally constrained by how models acquire and utilize visual evidence. Existing tool-augmented video frameworks often interleave temporal grounding and answer reasoning within a single trajectory, causing early semantic hypotheses to bias evidence localization. We term this failure mode premature semantic commitment, where biased grounding retrieves incomplete evidence and incomplete evidence further reinforces incorrect reasoning. To address this issue, we propose EFlow, an evidence-first video reasoning framework built upon Qwen3-VL. EFlow explicitly separates temporal grounding and logical reasoning through CoT for Temporal Grounding and CoT for Reasoning, enabling the model to retrieve relevant evidence before answer inference. In addition, EFlow introduces a confidence-aware reflection mechanism that re-evaluates the full video when retrieved evidence is potentially insufficient. We further construct dedicated trajectory datasets and train EFlow through supervised fine-tuning, reinforcement learning, and reinforcement fine-tuning. Extensive experiments across five video understanding benchmarks demonstrate that EFlow consistently improves long-video reasoning performance.",
+          "title": "DGSeg: Dynamic Gating of Semantic-Spatial Guided Predictions for Reasoning Segmentation",
+          "abstract": "Reasoning segmentation aims to predict pixel-wise masks for targets given complex language queries. Existing approaches leverage Multimodal Large Language Models (MLLMs) for vision-language reasoning and generate intermediate target cues (e.g., points or boxes) to guide a segmentation model. However, compressing rich reasoning into sparse cues often introduces ambiguity and noise, preventing these cues from accurately preserving the reasoning intent. While multiple complementary cues can enrich target information, existing methods typically feed them jointly into a single segmentation process, allowing ambiguous or erroneous cues to affect the entire prediction. Therefore, we propose DGSeg, a reasoning segmentation framework that learns to fuse predictions guided by semantic and spatial cues. Specifically, the MLLM jointly reasons about both target identity and spatial location, producing complementary semantic and spatial cues that are fed into separate segmentation branches. Their predictions are adaptively integrated by a lightweight dynamic gating module trained with relative branch-quality supervision to suppress noisy or conflicting regions. Extensive experiments demonstrate that DGSeg consistently outperforms strong baselines on multiple benchmarks and achieves 69.6% and 67.3% gIoU on the challenging ReasonSeg validation and test splits. Code is available at https://github.com/RZZeng/DGSeg.",
           "authors": [
-            "Wenhao Zhang",
-            "Kuanwei Lin",
-            "Xuyi Yang",
-            "Wei Gao",
-            "Ge Li"
+            "Ruizhe Zeng",
+            "Siyu Cao",
+            "Lu Zhang",
+            "Zhiyong Liu"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-07-01T12:32:29+00:00",
-          "link": "https://arxiv.org/pdf/2607.00867v1",
+          "published": "2026-07-06T08:10:03+00:00",
+          "link": "https://arxiv.org/pdf/2607.04779v1",
           "tags": [
             "keyword:vr",
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "long-video reasoning with separated temporal grounding and logical reasoning",
-          "llm_evidence_cn": "长视频推理中分离时间定位和逻辑推理",
-          "llm_evidence": "长视频推理中分离时间定位和逻辑推理",
-          "canonical_evidence": "长视频推理中分离时间定位和逻辑推理",
-          "llm_tldr_en": "EFlow separates temporal grounding from logical reasoning in long-video reasoning, using CoT for each phase to avoid premature semantic commitment.",
-          "llm_tldr_cn": "长视频推理中，早期语义假设会偏差证据定位，导致错误推理。本文提出EFlow，基于Qwen3-VL构建证据优先框架，将时间定位和逻辑推理分离为两个链式思维阶段，在推理前先获取相关证据。实验表明，EFlow显著提升了长视频推理的准确性和效率，避免陷入过早语义承诺的误区。",
-          "llm_tldr": "长视频推理中，早期语义假设会偏差证据定位，导致错误推理。本文提出EFlow，基于Qwen3-VL构建证据优先框架，将时间定位和逻辑推理分离为两个链式思维阶段，在推理前先获取相关证据。实验表明，EFlow显著提升了长视频推理的准确性和效率，避免陷入过早语义承诺的误区。",
+          "llm_evidence_en": "reasoning segmentation for visual reasoning",
+          "llm_evidence_cn": "推理分割用于视觉推理",
+          "llm_evidence": "推理分割用于视觉推理",
+          "canonical_evidence": "推理分割用于视觉推理",
+          "llm_tldr_en": "DGSeg proposes dynamic gating of semantic-spatial predictions to improve reasoning segmentation from complex language queries, addressing ambiguity in sparse cues.",
+          "llm_tldr_cn": "针对现有推理分割方法将丰富推理压缩为稀疏线索导致歧义的问题，该论文提出DGSeg，一种动态门控语义-空间引导预测框架。通过动态融合多个互补线索并加权，减少噪声影响，提升分割精度。实验表明其在多个推理分割基准上取得优异性能。该工作为视觉推理中的细粒度分割提供了新思路。",
+          "llm_tldr": "针对现有推理分割方法将丰富推理压缩为稀疏线索导致歧义的问题，该论文提出DGSeg，一种动态门控语义-空间引导预测框架。通过动态融合多个互补线索并加权，减少噪声影响，提升分割精度。实验表明其在多个推理分割基准上取得优异性能。该工作为视觉推理中的细粒度分割提供了新思路。",
           "llm_tags": [
             "query:vr"
           ],
@@ -54,44 +53,36 @@
           "matched_query_text": "visual reasoning",
           "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.00867v1",
+          "paper_id": "2607.04779v1",
           "carry_days": 1
         },
         {
-          "id": "2607.00881v1",
+          "id": "2607.03184v1",
           "source": "arxiv",
-          "title": "OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping",
-          "abstract": "Spatial intelligence remains a persistent challenge for Multimodal Large Language Models (MLLMs), as it requires coherent spatial scene representations beyond basic object recognition. Existing methods typically build such representations through textual reasoning or 3D reconstruction. However, they often falter during multi-step reasoning, particularly when required to dynamically re-anchor evidence to the specific camera-, object-, or direction-centric reference frames demanded by complex queries. To address this, we propose OmniView-Space, a framework designed to maintain spatial consistency through multimodal egocentric evidence. Our approach consists of three core components: (1) Multi-Perspective Spatial Mapping (MPSM), which re-anchors reconstructed geometry into a query-aligned visual cognitive map and a textual spatial graph; (2) Tool-Guided Egocentric Reasoning, an interleaved policy trained to actively select the ego anchor required by the query and request the corresponding MPSM evidence; and (3) Cognitive-Map Distillation, which uses MPSM-generated trajectories and ego-frame rewards to train the model to reason with self-generated cognitive maps. Experiments on single- and multi-image spatial reasoning benchmarks show that OmniView-Space achieves state-of-the-art performance. Furthermore, the distilled model maintains this performance while reducing reliance on external geometry pipelines.",
+          "title": "BVS: Bayesian Visual Search with Multimodal Large Language Model for Fine-grained Perception",
+          "abstract": "While Multimodal Large Language Models (MLLMs) demonstrate impressive general capabilities, they struggle with fine-grained perception in ultra-high-resolution (UHR) images, particularly for tiny objects in cluttered scenes. Existing methods face a dilemma: they either rely on inefficient prior-free scanning, or depend on static prior-driven heuristics that lack posterior correction to rectify initial model biases. To address this, we propose BVS (Bayesian Visual Search), a framework that formulates perception as a global optimization problem over a continuous spatial-scale manifold. Specifically, BVS bridges prior guidance with posterior correction: it utilizes an early-stop attention rollout of MLLM to construct reasoning-aware priors, while employing a scale-aware non-stationary kernel and GP-UCB to dynamically rectify noise and recover missing information in the prior through iterative local observations. We provide theoretical guarantees via sub-linear regret bounds, and extensive experiments demonstrate that BVS significantly outperforms state-of-the-art baselines with a superior trade-off between accuracy and efficiency.",
           "authors": [
-            "Xudong Li",
-            "Mengdan Zhang",
-            "Peixian Chen",
-            "Jiaxi Tan",
-            "Zihao Huang",
-            "Jingyuan Zheng",
-            "Yan Zhang",
-            "Xiawu Zheng",
-            "Xing Sun",
-            "Rongrong Ji"
+            "Geng Li",
+            "Yuxin Peng"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-07-01T12:45:12+00:00",
-          "link": "https://arxiv.org/pdf/2607.00881v1",
+          "published": "2026-07-03T10:42:34+00:00",
+          "link": "https://arxiv.org/pdf/2607.03184v1",
           "tags": [
             "keyword:vr",
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "reinforcing spatial reasoning via multi-perspective spatial mapping",
-          "llm_evidence_cn": "通过多视角空间映射强化空间推理",
-          "llm_evidence": "通过多视角空间映射强化空间推理",
-          "canonical_evidence": "通过多视角空间映射强化空间推理",
-          "llm_tldr_en": "OmniView-Space maintains spatial consistency in MLLMs through multi-perspective spatial mapping that re-anchors evidence across reference frames.",
-          "llm_tldr_cn": "多模态大模型在空间推理中难以维持一致的空间表示，尤其在多步推理中需要动态重锚定证据。本文提出OmniView-Space，通过多视角空间映射（MPSM）将证据重新锚定到查询所需的参考坐标系，结合多模态自我中心证据保持空间一致性。实验显示，该方法显著提升了MLLM在复杂空间推理任务上的性能。",
-          "llm_tldr": "多模态大模型在空间推理中难以维持一致的空间表示，尤其在多步推理中需要动态重锚定证据。本文提出OmniView-Space，通过多视角空间映射（MPSM）将证据重新锚定到查询所需的参考坐标系，结合多模态自我中心证据保持空间一致性。实验显示，该方法显著提升了MLLM在复杂空间推理任务上的性能。",
+          "llm_evidence_en": "fine-grained perception in ultra-high-resolution images for visual reasoning",
+          "llm_evidence_cn": "超高清图像中的细粒度感知，支持视觉推理",
+          "llm_evidence": "超高清图像中的细粒度感知，支持视觉推理",
+          "canonical_evidence": "超高清图像中的细粒度感知，支持视觉推理",
+          "llm_tldr_en": "BVS formulates fine-grained perception as a global optimization over spatial-scale manifold, combining prior guidance with posterior correction for improved MLLM reasoning.",
+          "llm_tldr_cn": "多模态大模型在处理超高清图像中的小物体时存在困难，现有方法在无先验扫描和静态先验间进退维谷。该论文提出贝叶斯视觉搜索（BVS），将感知建模为连续空间-尺度流形上的全局优化，通过早期停止注意力展开构建推理感知先验，并利用贝叶斯纠偏实现后验校正。在多个细粒度基准上取得最优结果。",
+          "llm_tldr": "多模态大模型在处理超高清图像中的小物体时存在困难，现有方法在无先验扫描和静态先验间进退维谷。该论文提出贝叶斯视觉搜索（BVS），将感知建模为连续空间-尺度流形上的全局优化，通过早期停止注意力展开构建推理感知先验，并利用贝叶斯纠偏实现后验校正。在多个细粒度基准上取得最优结果。",
           "llm_tags": [
             "query:vr"
           ],
@@ -99,48 +90,7 @@
           "matched_query_text": "visual reasoning",
           "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.00881v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2607.01784v1",
-          "source": "arxiv",
-          "title": "SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video",
-          "abstract": "Visual-spatial understanding, defined as the ability to infer object relationships and scene layouts from visual inputs, is fundamental to downstream tasks such as robotic navigation and embodied interaction. However, pre-trained vision-language models (VLMs) remain constrained by spatial uncertainty stemming from inherently 2D observations and by the scarcity of data for 3D spatial understanding. To address these limitations, we proposed a novel framework, SpaceEra, in the NeurIPS 2025 Spotlight paper. Although it achieved significant performance gains, we further observed that its effectiveness is hindered by insufficient input from scanning videos and weak reasoning constraints. To tackle these newly emerged challenges, we extend the original framework into a comprehensive system, termed SpaceEra++, which spans data construction, model design, training optimization, and prompting inference. Specifically, to alleviate input insufficiency, we introduce ScenePick, a frame sampling strategy that balances spatial coverage with object semantics to produce compact yet comprehensive scene representations. In addition, to enhance spatial reasoning, we develop SpaceAlign, which enforces pairwise object constraints by jointly exploiting absolute coordinates and relative spatial relations, thereby aligning optimization with spatial accuracy. Extensive experiments across multiple benchmarks demonstrate consistent improvements over strong baselines, while ablation studies validate both the individual and joint contributions of each component, and further analyses provide guidance for future research.",
-          "authors": [
-            "Weili Guan",
-            "Haoyu Zhang",
-            "Meng Liu",
-            "Qianlong Xiang",
-            "Yaowei Wang",
-            "Liqiang Nie"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-07-02T06:56:29+00:00",
-          "link": "https://arxiv.org/pdf/2607.01784v1",
-          "tags": [
-            "keyword:vr",
-            "query:vr"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "3D spatial reasoning in video for visual-spatial understanding",
-          "llm_evidence_cn": "视频中的3D空间推理，用于视觉空间理解",
-          "llm_evidence": "视频中的3D空间推理，用于视觉空间理解",
-          "canonical_evidence": "视频中的3D空间推理，用于视觉空间理解",
-          "llm_tldr_en": "SpaceEra++ proposes a unified framework for 3D spatial reasoning in video, addressing spatial uncertainty and data scarcity by extending the original SpaceEra framework with additional reasoning constraints and scanning video input.",
-          "llm_tldr_cn": "视觉语言模型在3D空间理解上受限于2D观测和稀疏数据。本文扩展了SpaceEra框架，提出SpaceEra++，通过增强推理约束和扫描视频输入来提升3D空间推理能力。实验证明，该方法在空间推理基准上取得显著提升，为具身智能和机器人导航提供了关键支持。",
-          "llm_tldr": "视觉语言模型在3D空间理解上受限于2D观测和稀疏数据。本文扩展了SpaceEra框架，提出SpaceEra++，通过增强推理约束和扫描视频输入来提升3D空间推理能力。实验证明，该方法在空间推理基准上取得显著提升，为具身智能和机器人导航提供了关键支持。",
-          "llm_tags": [
-            "query:vr"
-          ],
-          "matched_query_tag": "query:vr",
-          "matched_query_text": "visual reasoning",
-          "matched_requirement_id": "req-1",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.01784v1",
+          "paper_id": "2607.03184v1",
           "carry_days": 1
         }
       ]

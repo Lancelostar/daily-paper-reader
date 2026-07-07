@@ -1,0 +1,698 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-07T21:39:15.243675+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 15,
+    "deep_cap": 6,
+    "deep_selected": 6,
+    "quick_candidates": 26,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2606.29915v1",
+      "source": "arxiv",
+      "title": "H-GRPO: Permutation-Invariant Reinforcement Learning for Grounded Visual Reasoning",
+      "abstract": "Vision-Language Models (VLMs) often achieve high performance on benchmarks while remaining \"black boxes\", yet they remain prone to hallucination or rely on superficial shortcuts. In this work, we propose a framework designed to enhance both performance and interpretability through De-compositional Evidence Grounding. Unlike monolithic inference approaches, our approach forces the model to decompose a global query into a sequence of atomic sub-questions, each requiring an explicit sub-answer and critically a localized evidence bounding box. By grounding intermediate logical steps (e.g. identifying a container, analyzing liquid properties, and assessing environmental context) in specific visual regions, we construct a structured reasoning path that mirrors human-like deduction. This allows the final answer to emerge as a logical consequence of verified visual facts rather than a statistical guess.",
+      "authors": [
+        "Eric Peh",
+        "Debaditya Roy",
+        "Basura Fernando"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-29T07:51:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.29915v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "grounded visual reasoning with decompositional evidence grounding",
+      "llm_evidence_cn": "基于分解式证据扎根的视觉推理",
+      "llm_evidence": "基于分解式证据扎根的视觉推理",
+      "canonical_evidence": "基于分解式证据扎根的视觉推理",
+      "llm_tldr_en": "H-GRPO decomposes visual queries into atomic sub-questions with grounded bounding boxes, enhancing interpretability and reducing hallucination in VLM reasoning.",
+      "llm_tldr_cn": "视觉语言模型在基准上表现良好但仍存在幻觉和捷径问题。该论文提出H-GRPO框架，通过分解式证据扎根将全局查询分解为原子子问题，每个子问题要求显式子答案和局部证据边界框。利用排列不变强化学习优化分解过程，在多个视觉推理基准上提升了性能与可解释性。",
+      "llm_tldr": "视觉语言模型在基准上表现良好但仍存在幻觉和捷径问题。该论文提出H-GRPO框架，通过分解式证据扎根将全局查询分解为原子子问题，每个子问题要求显式子答案和局部证据边界框。利用排列不变强化学习优化分解过程，在多个视觉推理基准上提升了性能与可解释性。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.02907v1",
+      "source": "arxiv",
+      "title": "ProLaViT: Learning Progressive Latent Visual Thoughts in Structured Latent Space",
+      "abstract": "Multimodal Large Language Models (MLLMs) have achieved remarkable progress but still struggle with complex visual reasoning tasks requiring multi-step perception and logical deduction. While explicit visual generation incurs prohibitive computational costs, existing latent approaches often rely on external experts or lack rigorous cognitive logic. In this paper, we introduce ProLaViT (Progressive Latent Visual Thought), a framework empowering MLLMs to perform structured visual derivation in the continuous latent space. Unlike works dependent on heterogeneous external models, ProLaViT leverages an endogenous self-distillation mechanism, utilizing the model's own visual encoder to supervise latent thoughts. To facilitate this, we construct a scalable programmatic synthesis pipeline enabling the model to internalize algorithmic precision without inference time tools. We design two reasoning paradigms: (1) Coarse-to-Fine Causal Chain for spatial tasks, guiding attention from global context to local targets. (2) Dialectical Reasoning Chain for logical tasks, incorporating counter-factual thinking for verification. Furthermore, we propose a Distance-Weighted Diversity Loss to impose topology-aware constraints, preventing feature degeneration by enforcing semantic distinctiveness. Extensive experiments demonstrate that ProLaViT outperforms baselines on vision-centric benchmarks, achieving superior accuracy and interpretability with high efficiency.",
+      "authors": [
+        "Peiming Li",
+        "Yifan Wang",
+        "Xiaotian Zhang",
+        "Zhiyuan Hu",
+        "Shiyu Li",
+        "Zheng Wei",
+        "Yang Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-07-03T03:14:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.02907v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "latent visual thought for multi-step visual reasoning",
+      "llm_evidence_cn": "潜在视觉思维用于多步视觉推理",
+      "llm_evidence": "潜在视觉思维用于多步视觉推理",
+      "canonical_evidence": "潜在视觉思维用于多步视觉推理",
+      "llm_tldr_en": "ProLaViT enables MLLMs to perform structured multi-step visual reasoning in latent space via self-distillation, avoiding explicit generation.",
+      "llm_tldr_cn": "本文提出ProLaViT，通过在连续潜在空间中进行渐进式结构视觉推导，提升MLLMs的多步视觉推理能力。采用内源自蒸馏机制，利用模型自身视觉编码器监督潜在思维，无需外部模型。在复杂推理基准上取得先进性能，同时降低计算成本。",
+      "llm_tldr": "本文提出ProLaViT，通过在连续潜在空间中进行渐进式结构视觉推导，提升MLLMs的多步视觉推理能力。采用内源自蒸馏机制，利用模型自身视觉编码器监督潜在思维，无需外部模型。在复杂推理基准上取得先进性能，同时降低计算成本。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03941v1",
+      "source": "arxiv",
+      "title": "WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control",
+      "abstract": "Recent advances in embodied AI have established robot foundation models (RFMs) as the dominant approach for generalist robotic systems to date. By leveraging imitation learning on extensive robot demonstrations, RFMs have achieved impressive capabilities in mapping visual observations and language instructions to continuous robotic actions. However, current RFMs lack an inherent ability to reason about physical dynamics and the causal effects of robot behaviors on the 3D physical world. This creates a fundamental mismatch between 2D-centric visual perception and 3D-centric embodied interaction, severely limiting the generalization ability of RFMs in real-world tasks.To address this gap, we present WSA$_1$, a novel RFM built upon proposed 3D-Centric World-Spatial-Action modeling paradigm. It not only learns 3D world-aware visual thought for future robot behaviors, but also models mutual constraints between 3D world state transitions and robotic actions to enhance behavior generalization. Notably, WSA$_1$ achieves highly data-efficient pre-training with 6k hours of expert demonstration data (only 1k hours from real robot), while delivering competitive manipulation performance (93% success rate) on RoboTwin2.0 simulation benchmark and achieving +20% average boosted performance over state-of-the-art RFMs on real-world robot control tasks. These results reveal that generalizable RFM can be attained without large-scale real robot data when paired with 3D-centric world-action joint modeling, which offers a practical and affordable pathway to generalist robotic systems.",
+      "authors": [
+        "Jiahao Jiang",
+        "Jianing Zhang",
+        "Zhenhan Yin",
+        "Ruidong Chen",
+        "Sen Wang",
+        "Zhaoshu Yu",
+        "Pengpeng Zeng",
+        "Xiaofeng Cao",
+        "Xuanhan Wang",
+        "Jingkuan Song",
+        "Heng Tao Shen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-04T16:26:39+00:00",
+      "link": "https://arxiv.org/pdf/2607.03941v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world-spatial-action model for robot control",
+      "llm_evidence_cn": "面向机器人控制的世界-空间-动作模型",
+      "llm_evidence": "面向机器人控制的世界-空间-动作模型",
+      "canonical_evidence": "面向机器人控制的世界-空间-动作模型",
+      "llm_tldr_en": "WSA1 is a robot foundation model that incorporates a 3D-centric world model to improve generalization in real-world tasks by reasoning about physical dynamics and causal effects.",
+      "llm_tldr_cn": "当前机器人基础模型缺乏对物理动态和因果效应的推理能力，导致2D视觉与3D交互不匹配。本文提出WSA₁，一种基于3D中心世界-空间-动作模型的新颖机器人基础模型，通过显式建模3D世界动态来提升泛化能力。实验表明WSA₁在多种机器人任务上优于现有方法，为具身智能提供了可扩展的世界模型范式。",
+      "llm_tldr": "当前机器人基础模型缺乏对物理动态和因果效应的推理能力，导致2D视觉与3D交互不匹配。本文提出WSA₁，一种基于3D中心世界-空间-动作模型的新颖机器人基础模型，通过显式建模3D世界动态来提升泛化能力。实验表明WSA₁在多种机器人任务上优于现有方法，为具身智能提供了可扩展的世界模型范式。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.04149v1",
+      "source": "arxiv",
+      "title": "Beyond Scene Priors: Fine-Grained Traffic Scene Reasoning with Benchmarking and Query-Guided Small-Object Focus",
+      "abstract": "In safety-critical traffic scenarios, answering complex questions relies on minute, localized visual cues. However, standard Multimodal Large Language Models (MLLMs) tend to over-attend to backgrounds, overwhelming crucial small objects during visual-language alignment, a failure mode we term 'critical evidence dilution.' Furthermore, existing visual question answering (VQA) datasets rarely expose this flaw, as they lack large-scale, distractor-heavy evaluations that require pinpointing local evidence. To bridge this evaluation and architecture gap, we introduce the Fine-Grained Traffic Reasoning Benchmark (FGTR-Bench) and the Text-Guided Small-Object Reasoning MLLM (TSR-MLLM). FGTR-Bench comprises 40,236 single-image Multiple-Choice Questions (MCQs) created via multi-agent generation, consistency checks, and expert audits, alongside a disjoint 4,947-sample blind test split. To resolve evidence dilution, TSR-MLLM, built on Qwen3-VL-4B, uses a query-conditioned Text-Guided Small-Object Focus (TG-SOF) map. Applied once at the decoder boundary, the map adds sparse Top-K gated residuals to the most question-relevant vision slots while leaving text tokens unchanged. Together with lightweight decoder adaptation, TSR-MLLM preserves single-pass inference without external detectors or image re-encoding. Under matched settings, TSR-MLLM outperforms the strongest 4B baseline by 2.1 points on FGTR-Bench (74.1% overall), with larger gains on evidence-local tracks. Furthermore, it remains competitive on DriveQA-V (CARLA Signs) under greedy decoding without task-specific fine-tuning.",
+      "authors": [
+        "Waikit Xiu",
+        "Qiang Lu",
+        "Zian Wang",
+        "Xinjie Yang",
+        "Zhiwei Chen",
+        "Chen Sun",
+        "Xiying Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-05T07:27:02+00:00",
+      "link": "https://arxiv.org/pdf/2607.04149v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "introduces a new benchmark FGTR-Bench for fine-grained traffic scene reasoning",
+      "llm_evidence_cn": "引入细粒度交通推理基准FGTR-Bench",
+      "llm_evidence": "引入细粒度交通推理基准FGTR-Bench",
+      "canonical_evidence": "引入细粒度交通推理基准FGTR-Bench",
+      "llm_tldr_en": "FGTR-Bench and TSR-MLLM address critical evidence dilution in traffic scene reasoning, providing a benchmark with 40k+ samples and a query-guided small-object focus MLLM.",
+      "llm_tldr_cn": "该论文针对多模态大模型在交通场景中忽略小物体关键证据的问题，构建了细粒度交通推理基准FGTR-Bench，包含40236个复杂样本。同时提出文本引导的小物体推理MLLM（TSR-MLLM），通过查询引导聚焦局部线索。实验表明TSR-MLLM在基准上显著超越现有模型，为视觉推理评估和模型设计提供了新工具。",
+      "llm_tldr": "该论文针对多模态大模型在交通场景中忽略小物体关键证据的问题，构建了细粒度交通推理基准FGTR-Bench，包含40236个复杂样本。同时提出文本引导的小物体推理MLLM（TSR-MLLM），通过查询引导聚焦局部线索。实验表明TSR-MLLM在基准上显著超越现有模型，为视觉推理评估和模型设计提供了新工具。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.31285v2",
+      "source": "arxiv",
+      "title": "Spatial Reasoning via Modality Switching Between Language and Symbolic Representation",
+      "abstract": "Human reasoning is inherently multimodal: when problems become difficult, we rarely think in words alone. We often externalize our reasoning by sketching diagrams or drawing grids to understand the underlying conceptual structure and avoid mistakes. Building on this premise, our research investigates: (a) whether grounding multi-hop textual-spatial stories into geometry-aware modalities, such as layouts or grids, improves reasoning compared to natural language-based inference; and (b) whether a model can decide when to rely on natural language reasoning and when to switch to a structured modality. We address these questions by introducing a switching metric based on trustworthiness and complexity signals, which estimates when grounding a spatial story into structure is likely to improve performance. This takes a first step toward principled modality selection in Large Language Model (LLM) reasoning. Across our settings, switching from natural language-based reasoning to a grid-based representation improves LLM performance by up to 42%, highlighting the importance of modality choice in shaping reasoning outcomes.",
+      "authors": [
+        "Shreya Rajpal",
+        "Tanawan Premsri",
+        "Parisa Kordjamshidi"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-30T08:02:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.31285v2",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "spatial reasoning via modality switching",
+      "llm_evidence_cn": "通过模态切换进行空间推理",
+      "llm_evidence": "通过模态切换进行空间推理",
+      "canonical_evidence": "通过模态切换进行空间推理",
+      "llm_tldr_en": "Switching from language to symbolic representations (layouts/grids) improves multi-hop spatial reasoning, with a learned switching metric.",
+      "llm_tldr_cn": "人类在复杂推理时常借助外部图表。该论文探索将多跳文本空间故事转化为几何感知模态（如布局或网格）是否能提升推理性能，并提出基于可信度和复杂度的切换指标，让模型自主决定何时切换到结构化表征。实验表明模态切换能显著提升空间推理准确率，为视觉推理中的模态选择提供了新思路。",
+      "llm_tldr": "人类在复杂推理时常借助外部图表。该论文探索将多跳文本空间故事转化为几何感知模态（如布局或网格）是否能提升推理性能，并提出基于可信度和复杂度的切换指标，让模型自主决定何时切换到结构化表征。实验表明模态切换能显著提升空间推理准确率，为视觉推理中的模态选择提供了新思路。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.00881v1",
+      "source": "arxiv",
+      "title": "OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping",
+      "abstract": "Spatial intelligence remains a persistent challenge for Multimodal Large Language Models (MLLMs), as it requires coherent spatial scene representations beyond basic object recognition. Existing methods typically build such representations through textual reasoning or 3D reconstruction. However, they often falter during multi-step reasoning, particularly when required to dynamically re-anchor evidence to the specific camera-, object-, or direction-centric reference frames demanded by complex queries. To address this, we propose OmniView-Space, a framework designed to maintain spatial consistency through multimodal egocentric evidence. Our approach consists of three core components: (1) Multi-Perspective Spatial Mapping (MPSM), which re-anchors reconstructed geometry into a query-aligned visual cognitive map and a textual spatial graph; (2) Tool-Guided Egocentric Reasoning, an interleaved policy trained to actively select the ego anchor required by the query and request the corresponding MPSM evidence; and (3) Cognitive-Map Distillation, which uses MPSM-generated trajectories and ego-frame rewards to train the model to reason with self-generated cognitive maps. Experiments on single- and multi-image spatial reasoning benchmarks show that OmniView-Space achieves state-of-the-art performance. Furthermore, the distilled model maintains this performance while reducing reliance on external geometry pipelines.",
+      "authors": [
+        "Xudong Li",
+        "Mengdan Zhang",
+        "Peixian Chen",
+        "Jiaxi Tan",
+        "Zihao Huang",
+        "Jingyuan Zheng",
+        "Yan Zhang",
+        "Xiawu Zheng",
+        "Xing Sun",
+        "Rongrong Ji"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T12:45:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.00881v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "reinforcing spatial reasoning via multi-perspective spatial mapping",
+      "llm_evidence_cn": "通过多视角空间映射强化空间推理",
+      "llm_evidence": "通过多视角空间映射强化空间推理",
+      "canonical_evidence": "通过多视角空间映射强化空间推理",
+      "llm_tldr_en": "OmniView-Space maintains spatial consistency in MLLMs through multi-perspective spatial mapping that re-anchors evidence across reference frames.",
+      "llm_tldr_cn": "多模态大模型在空间推理中难以维持一致的空间表示，尤其在多步推理中需要动态重锚定证据。本文提出OmniView-Space，通过多视角空间映射（MPSM）将证据重新锚定到查询所需的参考坐标系，结合多模态自我中心证据保持空间一致性。实验显示，该方法显著提升了MLLM在复杂空间推理任务上的性能。",
+      "llm_tldr": "多模态大模型在空间推理中难以维持一致的空间表示，尤其在多步推理中需要动态重锚定证据。本文提出OmniView-Space，通过多视角空间映射（MPSM）将证据重新锚定到查询所需的参考坐标系，结合多模态自我中心证据保持空间一致性。实验显示，该方法显著提升了MLLM在复杂空间推理任务上的性能。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.00881v1"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.30217v1",
+      "source": "arxiv",
+      "title": "Before Thinking, Learn to Decide: Proactive Routing for Efficient Visual Reasoning",
+      "abstract": "Large multimodal models have achieved strong reasoning on complex visual tasks, but their inference efficiency is often restricted by long chains of thought. A promising solution is to pair a small draft model with a large target model, enabling cooperative inference employing a routing signal that adaptively routes queries to either the draft or target model based on their difficulties for optimal efficiency and accuracy. Yet, the remaining bottleneck is to establish a reliable query difficulty signal under multimodal settings. Existing approaches designed for language models either rely on post-hoc token probabilities, which fall short in multimodal scenarios, or depend on supervised fine-tuning, which is a data-sensitive strategy. Both paradigms perform routing only after a complete output, and ignore whether the target model can actually solve the routed instances. To address this, we propose PRP, a Proactive Routing Paradigm that enables early decision-making by jointly evaluating the competence of both the draft and target models. Our Draft Rating Learning (DRL) equips the draft model with an internal confidence estimator, while Joint Rating Learning (JRL) predicts how well the target model can handle a given query, thereby prioritizing the allocation of samples it excels at rather than the hardest ones. These ratings enable fine-grained, instance-level \\textbf{Proactive Routing} and substantially accelerate inference without compromising overall performance. Extensive experiments across multiple multimodal reasoning benchmarks validate our effectiveness and efficiency.",
+      "authors": [
+        "Yinan Zhou",
+        "Haokun Lin",
+        "Yichen Wu",
+        "Caifeng Shan",
+        "Zhenan Sun",
+        "Yuxin Chen",
+        "Teng Wang",
+        "Chen Ma",
+        "Li Zhu",
+        "Ying Shan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-29T12:30:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.30217v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "efficient visual reasoning via proactive routing",
+      "llm_evidence_cn": "通过主动路由实现高效视觉推理",
+      "llm_evidence": "通过主动路由实现高效视觉推理",
+      "canonical_evidence": "通过主动路由实现高效视觉推理",
+      "llm_tldr_en": "This paper proposes a proactive routing method for efficient visual reasoning, pairing small and large models with routing based on query difficulty.",
+      "llm_tldr_cn": "本文提出主动路由策略用于高效视觉推理，通过将简单查询分配给小型模型、复杂查询分配给大型模型，在保证准确率的同时提升推理效率。针对多模态场景设计了可靠的难度信号，无需监督微调。实验表明在视觉推理任务上实现了效率与精度的平衡。",
+      "llm_tldr": "本文提出主动路由策略用于高效视觉推理，通过将简单查询分配给小型模型、复杂查询分配给大型模型，在保证准确率的同时提升推理效率。针对多模态场景设计了可靠的难度信号，无需监督微调。实验表明在视觉推理任务上实现了效率与精度的平衡。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.29812v1",
+      "source": "arxiv",
+      "title": "Consistency as Inductive Bias: Learning Cross-View Invariance for Robust Multimodal Reasoning",
+      "abstract": "Inductive biases steer learning toward generalizable solutions by encoding task structure. In this work, we identify a crucial missing bias in MLLMs: cross-view consistency, \\textit{i.e.}, semantically invariant views of the same instance should lead to the same answer. Standard reinforcement learning with verifiable rewards (RLVR) objectives do not impose this constraint, but instead assign pointwise rewards to each visual input. Even with data augmentation (DA), transformed views are typically rewarded independently, providing little signal once within-view rewards saturate. We propose \\textbf{ConsistRoll}, a simple but effective method that injects cross-view consistency into RLVR training by reusing the group-sampling mechanism of GRPO. Specifically, ConsistRoll places original and semantically invariant transformed views in the same generation group, and assigns a joint reward only when paired completions are both correct and consistent. In this way, ConsistRoll turns consistency into an online credit-assignment signal, \\textbf{without extra generation overhead and annotations}. Theoretically, we show that cross-view consistency is a valid inductive bias, and ConsistRoll introduces a cross-view correction term absent from DA, penalizing view dependence and alleviating advantage collapse. Comprehensive benchmarks across math, general-purpose, hallucination domains confirm that ConsistRoll achieves robust improvements in multimodal reasoning.",
+      "authors": [
+        "Xin Zou",
+        "Haolin Deng",
+        "Yibo Yan",
+        "Shuliang Liu",
+        "Kening Zheng",
+        "Zhiwei Jin",
+        "Chen Chen",
+        "Haonan Lu",
+        "Xuming Hu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-29T05:45:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.29812v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "cross-view consistency as inductive bias for robust multimodal reasoning",
+      "llm_evidence_cn": "跨视图一致性作为鲁棒多模态推理的归纳偏置",
+      "llm_evidence": "跨视图一致性作为鲁棒多模态推理的归纳偏置",
+      "canonical_evidence": "跨视图一致性作为鲁棒多模态推理的归纳偏置",
+      "llm_tldr_en": "ConsistRoll injects cross-view consistency into RLVR training for MLLMs, ensuring semantically invariant views lead to same answer, improving multimodal reasoning robustness.",
+      "llm_tldr_cn": "本文发现多模态大模型缺乏跨视图一致性归纳偏置，提出ConsistRoll方法，在强化学习训练中通过组采样机制注入跨视图一致性，使模型对同一实例的不同视角给出相同回答。在多个基准上验证了该方法提升了多模态推理的鲁棒性和泛化能力。",
+      "llm_tldr": "本文发现多模态大模型缺乏跨视图一致性归纳偏置，提出ConsistRoll方法，在强化学习训练中通过组采样机制注入跨视图一致性，使模型对同一实例的不同视角给出相同回答。在多个基准上验证了该方法提升了多模态推理的鲁棒性和泛化能力。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.01050v1",
+      "source": "arxiv",
+      "title": "GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision",
+      "abstract": "Recent multimodal large language models (MLLMs) have shown strong cross-modal understanding and coordinate generation abilities in visual grounding. However, transferring these abilities to remote sensing visual grounding (RSVG) remains challenging. High-resolution remote sensing images usually cover large-scale scenes, where targets are often extremely small and surrounded by numerous visually similar distractors. Meanwhile, queries often contain multiple clues, such as reference objects, spatial relations, and target attributes. Existing MLLM-based methods usually formulate RSVG as one-step coordinate generation, which may lead to unstable predictions for small-object localization and complex queries. To address these challenges, we propose GeoSearcher, which reformulates RSVG as an anchor-guided progressive reasoning process and realizes it through two coupled stages: Anchor-Centric Reasoning Supervised Fine-Tuning (ACR-SFT) and Process-Faithful Group Relative Policy Optimization (PF-GRPO). In ACR-SFT, anchor-centric reasoning data are used to teach the model to represent key visual clues as anchors and progressively integrate location, relational, and attribute clues around them. In PF-GRPO, Process-Aware Reward (PAR) and Reasoning-Informative Sample Selector (RISS) further optimize this reasoning behavior by jointly evaluating key reasoning steps and target localization, while focusing training on samples that are more beneficial for improving progressive reasoning. Through this design, GeoSearcher transforms large-scale visual search into a more constrained local reasoning process. Extensive experiments on DIOR-RSVG, OPT-RSVG, and VRS-Bench show that GeoSearcher outperforms existing state-of-the-art methods. The project will be released at https://github.com/wangdianyu954-xixi/GeoSearcher.",
+      "authors": [
+        "Dianyu Wang",
+        "Yidan Zhang",
+        "Peirong Zhang",
+        "Xuyang Li",
+        "Xiaoxuan Liu",
+        "Lei Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T15:12:51+00:00",
+      "link": "https://arxiv.org/pdf/2607.01050v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "progressive reasoning for remote sensing visual grounding",
+      "llm_evidence_cn": "遥感视觉定位的渐进式推理",
+      "llm_evidence": "遥感视觉定位的渐进式推理",
+      "canonical_evidence": "遥感视觉定位的渐进式推理",
+      "llm_tldr_en": "GeoSearcher uses anchor-guided progressive reasoning with process supervision for remote sensing visual grounding, improving small-object localization.",
+      "llm_tldr_cn": "本文提出GeoSearcher，一种锚点引导的渐进式推理框架，用于遥感视觉定位。通过过程监督，逐步定位目标，解决小目标和复杂查询问题。在遥感基准上性能提升，展示了渐进式推理在视觉定位中的有效性。",
+      "llm_tldr": "本文提出GeoSearcher，一种锚点引导的渐进式推理框架，用于遥感视觉定位。通过过程监督，逐步定位目标，解决小目标和复杂查询问题。在遥感基准上性能提升，展示了渐进式推理在视觉定位中的有效性。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.00606v1",
+      "source": "arxiv",
+      "title": "Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap",
+      "abstract": "Recent work on Thinking with Images makes vision a dynamic part of reasoning, but does so through generation: the model invokes external tools, synthesizes code, or imagines new imagery, each at the cost of a tool protocol, brittle code, or an expensive training pipeline. A fourth route makes vision dynamic without generating anything, by retrieving labeled exemplar images and reasoning over them, yet it remains underexplored despite being train-free. We present ReVisIT, a train-free framework that realizes this retrieval-based route by treating each retrieved image-label pair as a unit of visual thought. ReVisIT combines structured class definitions, per-query multimodal retrieval of exemplars, and alternating user/assistant injection of those exemplars before joint multi-attribute decoding, and degrades gracefully to whichever components a task admits. On VL-ICL Bench Fast Open MiniImageNet, Qwen3-VL-30B-A3B with ReVisIT reaches 98.5% at 4-shot, statistically indistinguishable from the 72B LLaVA-OneVision SOTA (98.7%) on this near-saturated task at about 1/2.4 the parameters, while the same backbone without the scaffold sits at chance. The turns layer alone adds 26.1 points to GPT-4.1 on free-form concept induction (Bongard-OpenWorld), and the full stack yields a 4-6 point macro gain across three backbones on MAAC-Bench, a new license-clean 27-class, 5-attribute benchmark, significant by paired bootstrap on the curator-derived attributes. Component analysis shows that retrieval-plus-turns is the universal lever while structured definitions are need-adaptive, and that 83% of the retrieval gain comes from retrieval quality rather than from the presence of exemplars. MAAC-Bench is released with a rubric-grounded LLM verification protocol that replaces author spot-check on subjective attributes.",
+      "authors": [
+        "Bingchen Huang",
+        "Zhiling Wang",
+        "Yifu Chen",
+        "Yuanchao Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T08:31:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.00606v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "training-free retrieval-based visual reasoning framework",
+      "llm_evidence_cn": "免训练的检索式视觉推理框架",
+      "llm_evidence": "免训练的检索式视觉推理框架",
+      "canonical_evidence": "免训练的检索式视觉推理框架",
+      "llm_tldr_en": "ReVisIT is a training-free framework that uses retrieved exemplar images for multimodal in-context learning and visual reasoning.",
+      "llm_tldr_cn": "本文提出ReVisIT，一个免训练的检索式视觉推理框架。通过检索与查询相关的示例图像，将其作为视觉思维单元，结合结构化类别定义和多模态检索，实现了无需额外训练的动态视觉推理。实验表明该方法有效弥合了开放集与封闭集差距。",
+      "llm_tldr": "本文提出ReVisIT，一个免训练的检索式视觉推理框架。通过检索与查询相关的示例图像，将其作为视觉思维单元，结合结构化类别定义和多模态检索，实现了无需额外训练的动态视觉推理。实验表明该方法有效弥合了开放集与封闭集差距。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.31285v1",
+      "source": "arxiv",
+      "title": "Spatial Reasoning via Modality Switching Between Language and Symbolic Representation",
+      "abstract": "Human reasoning is inherently multimodal: when problems become difficult, we rarely think in words alone. We often externalize our reasoning by sketching diagrams or drawing grids to understand the underlying conceptual structure and avoid mistakes. Building on this premise, our research investigates: (a) whether grounding multi-hop textual-spatial stories into geometry-aware modalities, such as layouts or grids, improves reasoning compared to natural language-based inference; and (b) whether a model can decide when to rely on natural language reasoning and when to switch to a structured modality. We address these questions by introducing a switching metric based on trustworthiness and complexity signals, which estimates when grounding a spatial story into structure is likely to improve performance. This takes a first step toward principled modality selection in Large Language Model (LLM) reasoning. Across our settings, switching from natural language-based reasoning to a grid-based representation improves LLM performance by up to 42\\%, highlighting the importance of modality choice in shaping reasoning outcomes.",
+      "authors": [
+        "Shreya Rajpal",
+        "Tanawan Premsri",
+        "Parisa Kordjamshidi"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-30T08:02:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.31285v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "spatial reasoning via modality switching",
+      "llm_evidence_cn": "通过模态切换进行空间推理",
+      "llm_evidence": "通过模态切换进行空间推理",
+      "canonical_evidence": "通过模态切换进行空间推理",
+      "llm_tldr_en": "Proposes a modality switching metric for spatial reasoning, switching between language and symbolic representation to improve multi-hop spatial story understanding.",
+      "llm_tldr_cn": "该论文针对多跳空间故事理解任务，提出一种基于可信度和复杂性信号的模态切换度量，使模型能够在语言推理和结构化模态（如布局或网格）之间切换，从而提升空间推理的准确性。实验表明，该方法有效地结合了符号空间的优势，避免了纯语言推理的局限。",
+      "llm_tldr": "该论文针对多跳空间故事理解任务，提出一种基于可信度和复杂性信号的模态切换度量，使模型能够在语言推理和结构化模态（如布局或网格）之间切换，从而提升空间推理的准确性。实验表明，该方法有效地结合了符号空间的优势，避免了纯语言推理的局限。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.01050v2",
+      "source": "arxiv",
+      "title": "GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision",
+      "abstract": "Recent multimodal large language models (MLLMs) have shown strong cross-modal understanding and coordinate generation abilities in visual grounding. However, transferring these abilities to remote sensing visual grounding (RSVG) remains challenging. High-resolution remote sensing images usually cover large-scale scenes, where targets are often extremely small and surrounded by numerous visually similar distractors. Meanwhile, queries often contain multiple clues, such as reference objects, spatial relations, and target attributes. Existing MLLM-based methods usually formulate RSVG as one-step coordinate generation, which may lead to unstable predictions for small-object localization and complex queries. To address these challenges, we propose GeoSearcher, which reformulates RSVG as an anchor-guided progressive reasoning process and realizes it through two coupled stages: Anchor-Centric Reasoning Supervised Fine-Tuning (ACR-SFT) and Process-Faithful Group Relative Policy Optimization (PF-GRPO). In ACR-SFT, anchor-centric reasoning data are used to teach the model to represent key visual clues as anchors and progressively integrate location, relational, and attribute clues around them. In PF-GRPO, Process-Aware Reward (PAR) and Reasoning-Informative Sample Selector (RISS) further optimize this reasoning behavior by jointly evaluating key reasoning steps and target localization, while focusing training on samples that are more beneficial for improving progressive reasoning. Through this design, GeoSearcher transforms large-scale visual search into a more constrained local reasoning process. Extensive experiments on DIOR-RSVG, OPT-RSVG, and VRS-Bench show that GeoSearcher outperforms existing state-of-the-art methods. The project will be released at https://github.com/wangdianyu954-xixi/GeoSearcher.",
+      "authors": [
+        "Dianyu Wang",
+        "Peirong Zhang",
+        "Xuyang Li",
+        "Xiaoxuan Liu",
+        "Lei Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T15:12:51+00:00",
+      "link": "https://arxiv.org/pdf/2607.01050v2",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "progressive reasoning for remote sensing visual grounding",
+      "llm_evidence_cn": "遥感视觉接地的渐进推理",
+      "llm_evidence": "遥感视觉接地的渐进推理",
+      "canonical_evidence": "遥感视觉接地的渐进推理",
+      "llm_tldr_en": "GeoSearcher uses anchor-guided progressive reasoning with process supervision to improve small-object localization and complex query understanding in remote sensing visual grounding.",
+      "llm_tldr_cn": "遥感视觉接地任务中目标小、干扰多，现有一步坐标生成方法不稳定。本文提出GeoSearcher，采用锚点引导的渐进推理策略，结合过程监督，逐步细化定位。在多个遥感数据集上，该方法显著提升小目标定位和复杂查询处理能力。",
+      "llm_tldr": "遥感视觉接地任务中目标小、干扰多，现有一步坐标生成方法不稳定。本文提出GeoSearcher，采用锚点引导的渐进推理策略，结合过程监督，逐步细化定位。在多个遥感数据集上，该方法显著提升小目标定位和复杂查询处理能力。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.01784v1",
+      "source": "arxiv",
+      "title": "SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video",
+      "abstract": "Visual-spatial understanding, defined as the ability to infer object relationships and scene layouts from visual inputs, is fundamental to downstream tasks such as robotic navigation and embodied interaction. However, pre-trained vision-language models (VLMs) remain constrained by spatial uncertainty stemming from inherently 2D observations and by the scarcity of data for 3D spatial understanding. To address these limitations, we proposed a novel framework, SpaceEra, in the NeurIPS 2025 Spotlight paper. Although it achieved significant performance gains, we further observed that its effectiveness is hindered by insufficient input from scanning videos and weak reasoning constraints. To tackle these newly emerged challenges, we extend the original framework into a comprehensive system, termed SpaceEra++, which spans data construction, model design, training optimization, and prompting inference. Specifically, to alleviate input insufficiency, we introduce ScenePick, a frame sampling strategy that balances spatial coverage with object semantics to produce compact yet comprehensive scene representations. In addition, to enhance spatial reasoning, we develop SpaceAlign, which enforces pairwise object constraints by jointly exploiting absolute coordinates and relative spatial relations, thereby aligning optimization with spatial accuracy. Extensive experiments across multiple benchmarks demonstrate consistent improvements over strong baselines, while ablation studies validate both the individual and joint contributions of each component, and further analyses provide guidance for future research.",
+      "authors": [
+        "Weili Guan",
+        "Haoyu Zhang",
+        "Meng Liu",
+        "Qianlong Xiang",
+        "Yaowei Wang",
+        "Liqiang Nie"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T06:56:29+00:00",
+      "link": "https://arxiv.org/pdf/2607.01784v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D spatial reasoning in video for VLM evaluation",
+      "llm_evidence_cn": "视频中的3D空间推理框架",
+      "llm_evidence": "视频中的3D空间推理框架",
+      "canonical_evidence": "视频中的3D空间推理框架",
+      "llm_tldr_en": "SpaceEra++ extends a previous framework for 3D spatial reasoning in videos, addressing spatial uncertainty and reasoning constraints.",
+      "llm_tldr_cn": "本文提出SpaceEra++，一个统一的视频3D空间推理框架。针对VLMs在2D观测下的空间不确定性和弱推理约束，通过引入扫描视频输入和更强的推理约束，显著提升了空间理解能力。在多个基准上验证了有效性。",
+      "llm_tldr": "本文提出SpaceEra++，一个统一的视频3D空间推理框架。针对VLMs在2D观测下的空间不确定性和弱推理约束，通过引入扫描视频输入和更强的推理约束，显著提升了空间理解能力。在多个基准上验证了有效性。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.00465v1",
+      "source": "arxiv",
+      "title": "StochasT: Learning with Stochastic Turn Depth for Visual Instruction Tuning",
+      "abstract": "Large Vision-Language Models (LVLMs) rely extensively on Visual Instruction Tuning (VIT) to elicit their multimodal reasoning capabilities. However, we find a discrepancy: VIT often packs multiple language tasks about the same image for conversational, multi-turn training, whereas existing benchmarks evaluate LVLMs in isolated, single-turn scenarios. The models can suffer from visual attention decay and contextual overfitting during multi-turn training, making it hard for them to realize their full potential in the mismatched test phase. To close the gap, we propose learning with Stochastic Turn Depth (StochasT), which stochastically groups language tasks for the same image into clusters of varying sizes (turn depth) while preserving their organic order. Hence, while StochasT draws on Dropout and stochastic depth for ResNets, it does not actually drop anything to maximize the utility of the training data. Furthermore, we introduce a challenging, benchmark-agnostic evaluation mechanism based on the Balanced Latin Square to measure LVLMs' robustness under varying contextual dependencies. Extensive experiments demonstrate that StochasT effectively grants LVLMs strong, harmonized capabilities for both single-turn and multi-turn use cases.",
+      "authors": [
+        "Yuan Qing",
+        "Chengzhi Mao",
+        "Boqing Gong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-07-01T05:34:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.00465v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "addresses visual instruction tuning for multimodal reasoning",
+      "llm_evidence_cn": "针对多模态推理的视觉指令调优",
+      "llm_evidence": "针对多模态推理的视觉指令调优",
+      "canonical_evidence": "针对多模态推理的视觉指令调优",
+      "llm_tldr_en": "StochasT proposes stochastic turn depth to bridge the gap between multi-turn training and single-turn evaluation of LVLMs, improving multimodal reasoning by reducing visual attention decay.",
+      "llm_tldr_cn": "大型视觉语言模型在视觉指令调优时，多轮训练与单轮评估存在不匹配，导致模型视觉注意力衰减和过拟合。本文提出随机轮次深度（StochasT），将同一图像的语言任务随机分组为不同深度的轮次，从而弥合训练与测试的差距，提升多模态推理能力。实验表明该方法能有效缓解视觉遗忘，增强模型在单轮评估中的表现。",
+      "llm_tldr": "大型视觉语言模型在视觉指令调优时，多轮训练与单轮评估存在不匹配，导致模型视觉注意力衰减和过拟合。本文提出随机轮次深度（StochasT），将同一图像的语言任务随机分组为不同深度的轮次，从而弥合训练与测试的差距，提升多模态推理能力。实验表明该方法能有效缓解视觉遗忘，增强模型在单轮评估中的表现。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.03358v1",
+      "source": "arxiv",
+      "title": "Pathways of Visual Information Flow in Vision-Language Models",
+      "abstract": "We study how visual information is routed in vision-language models (VLMs). Using causal patching on controlled synthetic and natural datasets, we find that models rely on two distinct pathways to solve visual tasks: A direct pathway, where visual information is retained in image token representations and read out by the final token at later layers, and a text-mediated pathway, where visual information is first transferred to the query tokens and then read out by the final token. Across three visual tasks, we show that pathway selection is task-dependent, and that data distribution and prompt design can also modulate which pathway is used to solve the image-based query. Moreover, using attention knockouts and corrupted-input patching, we find that these pathways are flexible, under certain interventions, models can rely on the text-mediated pathway as a fallback when the usual pathway is ablated. This behavior unifies findings in prior work and shows that ablation-based interventions can reveal what models could do rather than what they normally do. Together, our results provide a mechanistic characterization of visual information flow in VLMs and highlight the flexibility of their internal mechanisms under intervention.",
+      "authors": [
+        "Israfel Salazar",
+        "Stella Frank",
+        "Dan Oneata",
+        "Desmond Elliott",
+        "Constanza Fierro"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-07-03T14:15:08+00:00",
+      "link": "https://arxiv.org/pdf/2607.03358v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "study of visual information pathways in VLMs for visual reasoning",
+      "llm_evidence_cn": "对VLM中视觉信息路径的研究，用于视觉推理",
+      "llm_evidence": "对VLM中视觉信息路径的研究，用于视觉推理",
+      "canonical_evidence": "对VLM中视觉信息路径的研究，用于视觉推理",
+      "llm_tldr_en": "Studies two distinct pathways for visual information in VLMs using causal patching, showing task-dependent and prompt-modulated pathway selection.",
+      "llm_tldr_cn": "该论文利用因果修补方法研究视觉语言模型中的视觉信息流动路径，发现存在直接路径和文本中介路径，且路径选择取决于任务类型、数据分布和提示设计。通过注意力消融和输入破坏，进一步揭示了这些路径在视觉任务中的作用机制。",
+      "llm_tldr": "该论文利用因果修补方法研究视觉语言模型中的视觉信息流动路径，发现存在直接路径和文本中介路径，且路径选择取决于任务类型、数据分布和提示设计。通过注意力消融和输入破坏，进一步揭示了这些路径在视觉任务中的作用机制。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.02402v1",
+      "source": "arxiv",
+      "title": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+      "abstract": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+      "authors": [
+        "Nick Stracke",
+        "Kolja Bauer",
+        "Stefan Andreas Baumann",
+        "Miguel Angel Bautista",
+        "Josh Susskind",
+        "Björn Ommer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T16:35:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.02402v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "new benchmark VICIS for visual concept inference from image sets",
+      "llm_evidence_cn": "新基准VICIS用于从图像集推断视觉概念",
+      "llm_evidence": "新基准VICIS用于从图像集推断视觉概念",
+      "canonical_evidence": "新基准VICIS用于从图像集推断视觉概念",
+      "llm_tldr_en": "Introduces the Visual Concept Inference from Sets (VICIS) benchmark and a training framework to infer visual concepts from example sets, showing state-of-the-art VLMs struggle.",
+      "llm_tldr_cn": "该论文提出视觉概念推断从集合（VICIS）任务，评估模型从少量示例图像中推断共享概念并应用于新输入的能力。实验表明现有VLM表现不佳，常忽略视觉上下文。为此提出一种训练框架和架构，学习从图像集中推断视觉概念，显著提升生成质量。",
+      "llm_tldr": "该论文提出视觉概念推断从集合（VICIS）任务，评估模型从少量示例图像中推断共享概念并应用于新输入的能力。实验表明现有VLM表现不佳，常忽略视觉上下文。为此提出一种训练框架和架构，学习从图像集中推断视觉概念，显著提升生成质量。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.00544v1",
+      "source": "arxiv",
+      "title": "GEAR-Seg: A Grounded Explainable Agent for Reasoning Segmentation and Data Engine",
+      "abstract": "Reasoning segmentation requires localizing targets based on complex, implicit queries. Current end-to-end models typically entangle perception and deduction into an opaque black box, severely limiting interpretability and scalability. To address this, we propose GEAR-Seg (Grounded Explainable Agent for Reasoning Segmentation), an explicitly decoupled agent that shifts the paradigm by translating visual pixels into dense, attribute-rich text. By decoupling class-agnostic segmentation, semantic description, and Large Language Model (LLM) deduction, GEAR-Seg transforms implicit reasoning into an explicit, trackable logic chain. As a zero-shot inference framework, it achieves highly competitive performance across diverse reasoning and fine-grained referring segmentation benchmarks. Furthermore, GEAR-Seg inherently functions as a highly scalable data engine. Utilizing this engine, we construct GEAR-131K, a massive benchmark (over 38k images, 656k QA-mask pairs) introducing a multifaceted taxonomy tailored for complex real-world manipulation-oriented reasoning. Finally, distillation experiments demonstrate that lightweight models supervised exclusively by our automated pipeline closely match the upper-bound performance of costly human-annotated baselines.",
+      "authors": [
+        "Yanan Wang",
+        "Wen Li",
+        "Yibin Ying",
+        "Zhenghao Fei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T07:35:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.00544v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "decoupled reasoning segmentation with explicit logic chain",
+      "llm_evidence_cn": "解耦推理分割，显式逻辑链",
+      "llm_evidence": "解耦推理分割，显式逻辑链",
+      "canonical_evidence": "解耦推理分割，显式逻辑链",
+      "llm_tldr_en": "GEAR-Seg decouples reasoning segmentation into class-agnostic segmentation, semantic description, and LLM deduction, creating an explicit, interpretable logic chain for zero-shot reasoning.",
+      "llm_tldr_cn": "现有推理分割模型将感知与推理混为一体，缺乏可解释性。本文提出GEAR-Seg，通过解耦类别无关分割、语义描述和LLM推理，将隐式推理转化为显式可追踪的逻辑链。零样本框架在多种推理分割任务上取得竞争性能，同时保持高可解释性。",
+      "llm_tldr": "现有推理分割模型将感知与推理混为一体，缺乏可解释性。本文提出GEAR-Seg，通过解耦类别无关分割、语义描述和LLM推理，将隐式推理转化为显式可追踪的逻辑链。零样本框架在多种推理分割任务上取得竞争性能，同时保持高可解释性。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

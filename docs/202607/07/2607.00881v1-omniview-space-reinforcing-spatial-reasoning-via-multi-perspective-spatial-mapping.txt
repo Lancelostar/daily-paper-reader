@@ -1,0 +1,452 @@
+Title: OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping
+
+URL Source: https://arxiv.org/pdf/2607.00881v1
+
+Published Time: Thu, 02 Jul 2026 01:19:03 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# OmniView-Space: Reinforcing Spatial Reasoning via Multi-Perspective Spatial Mapping 
+
+Xudong Li 1∗ Mengdan Zhang 2∗ Peixian Chen 2 Jiaxi Tan 1 Zihao Huang 3
+
+Jingyuan Zheng 1 Yan Zhang 1 Xiawu Zheng 1 Xing Sun 2 Rongrong Ji 11 Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen University, 361005, P.R. China  
+
+> 2
+
+Tencent Youtu Lab 3 Beijing Institute of Technology {lxd761050753, zhangmengdanrz}@gmail.com, {zhengxiawu, rrji}@xmu.edu.cn 
+
+## Abstract 
+
+Spatial intelligence remains a persistent challenge for Multimodal Large Language Models (MLLMs), as it requires coherent spatial scene representations beyond basic object recognition. Existing methods typically build such representations through textual reasoning or 3D reconstruction. However, they often falter during multi-step reasoning, particularly when required to dynamically re-anchor evidence to the specific camera-, object-, or direction-centric reference frames demanded by complex queries. To address this, we propose OmniView-Space , a framework designed to maintain spatial consistency through multimodal egocentric evidence. Our approach consists of three core components: (1) Multi-Perspective Spatial Mapping (MPSM), which re-anchors reconstructed geometry into a query-aligned visual cognitive map and a textual spatial graph; (2) Tool-Guided Egocentric Reasoning, an interleaved policy trained to actively select the ego anchor required by the query and request the corresponding MPSM evidence; and (3) Cognitive-Map Distillation, which uses MPSM-generated trajectories and ego-frame rewards to train the model to reason with self-generated cognitive maps. Experiments on single- and multi-image spatial reasoning benchmarks show that OmniView-Space achieves state-of-the-art performance. Furthermore, the distilled model maintains this performance while reducing reliance on external geometry pipelines. 
+
+## 1 Introduction 
+
+Spatial intelligence refers to the ability to reason about the geometric and physical structure of the world from visual observations. Although Multi-modal Large Language Models (MLLMs) have made substantial progress in general visual understanding [ 1– 5], they still struggle with spatial questions involving relative localization, viewpoint taking, cross-view association, or camera-motion reasoning [ 6– 8]. Unlike conventional visual question answering, which mainly focuses on semantic recognition in static images, spatial intelligence requires maintaining a consistent spatial state throughout the reasoning process. The challenge is therefore not only to recognize scene content, but also to preserve spatial consistency as intermediate reasoning steps unfold. For example, when asked what lies to the right of a chair from the point of view of the chair, knowing the room layout is insufficient. The model also needs to establish a chair-centered spatial state and reason within that reference frame; otherwise, judgments regarding left and right can easily become confused. While textual chain-of-thought excels in symbolic and mathematical domains [ 9, 10 ], it is less reliable for spatial intelligence [ 11 , 12 ]. Purely textual traces often distort object correspondence, relative orientation, and topology, causing spatial errors to compound. To provide MLLMs with stronger spatial grounding, recent work explores two main forms of intermediate evidence (Fig. 1(a,b)). 
+
+> ∗Equal Contribution. Preprint.
+> arXiv:2607.00881v1 [cs.CV] 1 Jul 2026 Ego Anchor Selection
+
+(c) Multimodal Egocentric Evidence (Ours) (a) 3D Visual Evidence (b) Textual Spatial Graph       
+
+> 3D Visual
+> Evidence
+> Invoke
+> 3D tools
+> Analyze 2D
+> Images
+> Hard for MLLMs to Interpret
+> Textual
+> Reasoning
+> Construct
+> Spatial Graph
+> Analyze 2D
+> Images
+> Lose Fine-grained Geometry
+> Chair:
+> [3, 5]
+> . . .
+> Interpretable 2D Layout Geometry & Topology
+> Analyze 2D
+> Images
+> camera object direction
+> Visual Map or
+> Textual Graph
+
+Camera-centric Ego Frame Object -centric Ego Frame Direction-centric Ego Frame          
+
+> . . .
+> From the perspective of Image 2 ... When a person is sitting on a chair ... If the trash can is no rth of the chair ...
+> Ego anchor: Camere 2
+> Forward direction: camera optical axis
+> Ego anchor: Chair
+> Forward direction: chair facing direction
+> Ego anchor: Chair Trash Can
+> Forward direction: from chair to trash can
+
+Ego-frame Alignment Ego-frame Mismatch Ego-frame Mismatch Figure 1: (a) 3D visual evidence preserves the metric structure, but raw reconstruction outputs are difficult for MLLMs to interpret directly. (b) Textual spatial graphs are language-accessible, but coordinate-style reasoning can lead to the loss of fine-grained geometry. (c) OmniView-Space builds multimodal egocentric evidence: a visual BEV cognitive map and a textual spatial graph aligned to the query-specified ego frame. Bottom: existing evidence can be frame-mismatched, while OmniView-Space aligns it to the camera-, object-, or direction-centric frame required by the question. One form injects 3D visual evidence through 3D-aware inputs or external reconstruction [ 13 , 14 ]. It preserves metric structure, but raw 3D outputs are often challenging for MLLMs to interpret. The other form constructs textual spatial graphs or grid maps [ 6, 15 , 16 ]. It makes relations more language-accessible, but coordinate-style reasoning can lose fine-grained geometry and topology. More importantly, both forms usually express evidence in a system-chosen reference frame (e.g., the first camera view or a world system), creating a mismatch with many spatial questions that require a query-specified ego frame . As shown in Fig. 1, individual questions anchor this frame to distinct 
+
+ego anchors , such as cameras, objects, or directions. However, existing methods rely on textual coordinate representations to translate system-frame evidence into the query-specified frame, where performing such a geometric transformation purely through text is highly unreliable and easily breaks spatial consistency during multi-step reasoning. Humans handle such ego-frame shifts naturally: we can keep a coherent mental scene, imagine it from the query-specified ego frame, and then make a spatial judgment. In contrast, current MLLMs often struggle when the query-specified ego frame differs from the observed camera or system-defined frame [ 17 , 18 ]. To address this challenge, we propose OmniView-Space , a framework for multimodal egocentric evidence construction and reasoning, as shown in Fig. 1(c). This design reframes diverse camera-, object-, and direction-centric queries as reasoning in the query-specified ego frame, following the intuition that if a model can perceive the scene in this frame, spatial reasoning becomes easier to ground. The framework uses two complementary forms of MPSM evidence: a visual BEV cognitive map for inspectable 2D layout and a textual spatial graph for explicit relational structure. It follows a progressive design that moves from external spatial evidence to tool-using reasoning and finally to self-generated cognitive-map reasoning. 1 First, we develop 
+
+Multi-Perspective Spatial Mapping (MPSM), which constructs multimodal egocentric evidence from multi-view images, task-relevant objects, and the ego anchor. MPSM returns both forms of evidence in the same query-specified ego frame, making object layout, relative direction, and topology directly usable for reasoning. 2 Second, we train an interleaved tool-using policy with reinforcement learning (RL). The model learns to analyze the question, identify the ego anchor, request either the visual map or textual graph, and ground its answer in the returned multimodal egocentric evidence. 3 Finally, we distill this tool-guided behavior into the model itself. MPSM-generated trajectories teach the model to predict an egocentric cognitive map before answering, and during GRPO [ 9 ], MPSM further serves as a reward reference for refining the predicted objects, camera layout, and final answer. Experiments on multi-image and single-image spatial reasoning benchmarks show that OmniView-Space significantly improves spatial reasoning over strong MLLM baselines. Notably, the distilled 2model closes much of the gap to the tool-augmented pipeline while removing the need to invoke the full geometry pipeline at inference time. Our contributions are summarized as follows:  
+
+> 1
+
+Query-aligned egocentric evidence. We identify reference-frame mismatch as a bottleneck in multi-step spatial reasoning: evidence is often expressed in a system-defined frame, while spatial questions require judgment from a camera-, object-, or direction-centric ego frame. This motivates query-aligned egocentric evidence as the interface for spatial reasoning.  
+
+> 2
+
+Multi-perspective spatial mapping. We introduce the MPSM toolkit, which converts scene observations into multimodal egocentric evidence: a query-aligned visual BEV cognitive map and a textual spatial graph that combine 2D interpretability with explicit geometry.  
+
+> 3
+
+Tool-guided reasoning and distillation. We train an interleaved tool-using policy with RL to select the ego anchor required by the query and actively call MPSM for visual cognitive map or textual spatial graph construction. We then distill this tool-guided reasoning into self-generated cognitive maps using MPSM-generated trajectories and ego-frame rewards. 
+
+## 2 Related Work 
+
+Spatial reasoning in MLLMs. Spatial reasoning remains a foundational challenge for Multi-modal Large Language Models (MLLMs) [ 19 , 20 , 12 ]. Recent progress has been driven by stronger MLLMs [ 5, 3, 2 ], broader benchmarks [ 8, 7, 6 , 17 ], and training or prompting strategies that use 3D reconstruction, depth cues [ 21 ], large-scale 3D spatial VQA data [ 22 , 23 ], spatial prompts [ 24 –27 ], mental simulation [ 28 , 29 ], visual chain-of-thought or RL-based reasoning [ 30 – 32 , 24 ], and explicit visual grounding [ 33 ]. In multi-view settings, multiple observations can help recover 3D structure and reduce single-view ambiguity, and multiview-augmented MLLMs [ 34 , 35 , 24 , 36 – 39 ]improve geometric understanding and perspective taking. However, these advances still leave a gap in maintaining spatial evidence in the query-specified ego frame, especially when the answer must be judged from a camera-, object-, or direction-centric perspective rather than a system-defined frame. 
+
+Geometry-augmented tool use. Tool calling strengthens MLLMs by invoking external specialists through prompting, code generation, or learned policies [ 40 , 14 , 13 , 33 , 41 ]. In spatial domains, these tools provide depth, segmentation, 3D reconstruction, camera poses, or viewpoint exploration as intermediate evidence [ 42 –44 , 14 ]. Other approaches inject 3D-aware features or camera-guided representations directly into the network [ 28 , 45 ]. While demonstrating the value of explicit geometry, raw 3D outputs are often hard for MLLMs to interpret, widening the gap between geometry and language-level reasoning. Furthermore, their evidence remains fixed to a system-defined frame, motivating our approach to treat geometry as callable evidence aligned with the query’s ego anchor. 
+
+Cognitive maps and frame grounding. Spatial cognition includes mental rotation, spatial visualiza-tion, and object assembly [ 46 – 48 ], and is often linked to Spatial Mental Models (SMMs) [ 49 , 50 ]. Recent MLLM studies probe these abilities via coordinate-aware prompting, CoT reasoning, rep-resentation alignment, and RL [ 51 – 56 ]. A related cognitive-map paradigm uses coordinate or grid representations for spatial reasoning [ 6 , 57 , 58 , 10 , 15 ]. However, many maps are discrete, fixed to a world or first-camera frame, or limited to single-frame inputs [ 35 , 53 ], restricting their utility when answers depend on a query-specified ego frame. Recent allocentric-reasoning work similarly notes that MLLMs struggle when a query requires instantiating a target frame rather than using the observed view [ 59 ]. OmniView-Space addresses this by constructing multimodal egocentric evidence—including a visual BEV cognitive map and a textual spatial graph—and internalizing tool-guided reasoning through MPSM trajectories and ego-frame rewards. 
+
+## 3 Methodology 
+
+Given a question q and images I, the proposed OmniView-Space grounds spatial reasoning in evidence expressed in the ego frame required by the query. We first define MPSM as an external evidence constructor (Sec. 3.1). As shown in Fig. 2, the model then analyzes the question and images, selects the ego anchor required by the query, calls MPSM for a query-aligned visual BEV cognitive map or textual spatial graph, and continues reasoning over the returned evidence (Sec. 3.2). Finally, we distill this tool-guided process into the model itself, so that it can reason with self-generated query-aligned cognitive maps without calling the full geometry pipeline at inference (Sec. 3.3). 3From the sleeping 
+
+> area, in which
+> direction is the
+> parking lot?
+
+Original 
+
+Question 
+
+Original 
+
+Image s
+
+Input Multi-tur n Reasoning Loop 
+
+Question          
+
+> MPSM /
+> Predict
+> Policy
+> Model
+> Reasoning & Tool i
+> <think>. . .</think>
+> Rendered Cogmap
+> MPSM /
+> Predict
+> Policy
+> Model
+> Reasoning & Tool i+1
+> <think>. . .</think>
+> Textual Graph
+> Egocentr ic Reasoning Turn i (Sec. 3.2)
+> Egocentr ic Reasoning Tur n i+1 (Sec. 3.2)
+> <tool_call> {"name":
+> "cogmap_visualization" ,
+> "objects" :"bed,window
+> ... lamp", "ego" : "bed"}
+> </tool_call>
+> <tool_call> {"name":
+> "cogmap_graph" ,
+> "objects" :"bed,wind ow
+> ... lamp ", "ego" : "bed"}
+> </tool_call>
+> <think>. . . </think>
+> Final Answer
+
+Map Alignment Rewar d 
+
+Output 
+
+1 2 
+
+> <answer>
+> B. To right
+> </answer>
+
+3   
+
+> Answer
+> and Format
+> Reward
+> Align Object Align Camera
+> pose & direct ion layout matching
+> Vanilla Rewar d
+
+&
+
+> Available in Distillation (Sec. 3.3)
+> (Sec. 3.1/3)
+> (Sec. 3.1/3)
+
+1
+
+2 
+
+> Cogmap Image
+
+Figure 2: Overview of the OmniView-Space. Given a question and an image, the policy analyzes the ego anchor to either invoke MPSM (Sec. 3.1) or directly predict (Sec. 3.3) a query-aligned visual BEV cognitive map or textual spatial graph across multiple reasoning turns, where this trajectory is optimized via reinforcement learning (RL) solely using an answer reward. During the distillation phase, MPSM generates trajectories for cold-start training and provides a reward for map alignment during RL, which instructs the model to reason using internally generated cognitive maps (Sec. 3.3). 
+
+3.1 Multi-Perspective Spatial Mapping Role and interface. As shown in Fig. 3, MPSM is an evidence constructor that takes the multi-view images I, task-relevant object hints H, and an ego anchor r selected by the MLLM as input. The hints 
+
+H can be object names and 2D boxes, while r can be an input camera, an object with an estimated facing direction, or a direction defined by a source-to-target object relation. The MPSM operator Ω
+
+returns two forms of the same query-aligned scene evidence: cogmap_visualization renders a visual BEV cognitive map Πr , while cogmap_graph exports a textual spatial graph Tr with object attributes, containment/support edges, distances, and ego-relative directions. Formally, 
+
+Gr = Ω( I, H, r ) := r, Πr , Tr }, (1) where Gr is the spatial state re-anchored to ego reference r, Πr and Tr are the rendered BEV cogmap and the relation graph expressed in the same ego frame. Here, the index r denotes outputs transformed into the ego frame (Eq. 3). To construct this spatial state, MPSM performs two main steps: camera object direction   
+
+> Step2: Ego-frame Instantiation
+> Depth-
+> Anything-3
+> Segment-
+> Anything-3
+> Step1: Scene Reconstruction
+> Gr aph
+
+MLLM     
+
+> CogMap MSPM Toolkit
+> Question
+> Images
+> Object
+> Chairs
+> Object
+> Hint
+> Filter ing & cluster ing
+> Back
+> Projection Viewpoint
+> Selection
+> Tool calling Input Input
+> Textual Gr aph
+> Rendar ed Map
+> ; Reference
+
+Figure 3: MPSM toolkit. Given multi-view im-ages, object hints, and an ego reference, MPSM reconstructs a metric scene, re-anchors it to the query-specified frame, and returns both a ren-dered BEV cogmap and a textual spatial graph. 
+
+Step 1: Scene Reconstruction in the default ref-erence frame. To obtain metric evidence, MPSM reconstructs a 3D scene from the input views. For each image It of resolution H × W and pixel 
+
+(u, v ), a dense geometry model [ 42 ] predicts a point map Xt, a validity mask Ut, a confidence map Ct, and the camera pose. A promptable seg-menter [ 43 ] grounds the object hints H into fore-ground masks, using text prompts, boxes, or both depending on the available hint type. We keep only pixels and frames that pass a confidence gate, 
+
+Vt = 1[Ut=1] · 1[Ct>τ pix ] · 1[ ¯Ct>τ frm ],
+
+¯Ct = 1
+
+HW 
+
+X
+
+u,v 
+
+Ct(u, v ). (2) where Vt is the retained-pixel mask, ¯Ct is the aver-age frame confidence, and τpix and τfrm are pixel-and frame-level thresholds. The retained fore-ground points are fused across views, voxelized, assigned semantic labels by majority vote, and clustered into object instances. Each instance is represented by a 3D box and BEV footprint, with its intrinsic facing direction estimated using [ 60 ]when required for object-centric queries. 4Step 2: Ego-frame Instantiation. Since the reconstructed scene is initially expressed in the default reference frame, we should re-express it in the query-specified ego frame. After gravity alignment, the ego anchor r defines an origin or and a forward direction fr on the ground plane. The pair 
+
+(or , f r ) is instantiated differently for each anchor type: (1) a camera anchor uses the camera center and optical axis, (2) an object anchor uses the object centroid and estimated facing direction, and (3) a direction anchor uses a source-object centroid with the source-to-target vector as forward. Let 
+
+˜p ∈ R3 be a point in the gravity-aligned scene coordinate system, and let Rr be the yaw rotation that maps fr to the positive BEV Y axis. The coordinate of ˜p in the query-specified ego frame is: 
+
+p(r) = Rr (˜ p − or ). (3) The same transformation is applied to object boxes, BEV footprints, and camera poses. MPSM renders Πr with the ego at the origin and exports Tr with the same ego-relative geometry, so the visual BEV cognitive map and textual spatial graph remain consistent views of one spatial state. 
+
+3.2 Tool-Guided Egocentric Reasoning 
+
+To leverage MPSM’s egocentric evidence, we train the MLLM as an interleaved tool-use policy. The model learns to analyze the query, select the required ego anchor and object hints, invoke the visual BEV cognitive map or textual spatial graph, and ground its answer in the returned spatial state. 
+
+Interleaved rollout. At the decoding step t, the policy conditions on both generated text and multimodal observations returned by tools. We denote the rollout state and action distribution as 
+
+st = {X≤t; M≤t}, at ∼ πθ (a | st), (4) where X≤t is the model-generated text history, M≤t contains the original images and any MPSM observations, at is the next text or tool action, and πθ is the MLLM policy with parameters θ. Tokens from tool observations are masked from the policy gradient, so optimization is applied only to the model’s analysis, tool parameters, reasoning, and answer. 
+
+Figure 4: Comparison of evidence formats. 
+
+On MindCube, using a visual BEV cognitive map outperforms text-coordinate reasoning overall, suggesting that visualized egocentric evidence is a more usable intermediate repre-sentation for current MLLMs. 
+
+Complementary visual and textual evidence. Prior spatial reasoning methods often keep intermediate maps in textual or coordinate-based form, requiring the model to infer spatial relations from serialized lay-outs or JSON-style representations [ 6 , 16 ]. We train and evaluate two variants on the MindCube bench-mark, one using text-coordinate maps and the other using visual BEV cognitive maps. As shown in Fig. 4, the visual-map condition achieves better overall per-formance, suggesting that visual layouts are more suitable for qualitative viewpoint reasoning such as left–right, front–back, and between-object judgments. The textual spatial graph remains complementary: it provides more explicit numerical and structural ev-idence for distance comparisons, height or support relations, and object attributes, which is consistent with the tool-call analysis in Fig. 8, where graph calls become more frequent on 3D relation tasks. The original views remain reliable for visual identity. We therefore allow the policy to choose among the original images, the visual BEV cognitive map Πr , and the textual spatial graph Tr according to the spatial demand of each query, rather than imposing a fixed modality schedule. 
+
+Policy optimization. During a rollout, the model interactively invokes the MPSM tool—specifying the target hints, ego reference, and desired modality (visual map Πr or relation graph T )—to gather spatial observations. For a complete trajectory τ terminating with a final answer ˆa, we optimize the MLLM policy via GRPO [9] with the reward objective: 
+
+Rtool (τ ) = Rans (ˆ a) + λfmt Rfmt (τ ), (5) where Rans scores answer correctness, Rfmt enforces the tool-call and answer format [ 61 ], and 
+
+λfmt =0.2 controls the strength of the format reward. This trajectory-level objective trains ego-frame selection, tool invocation, map/graph reading, and final answering jointly. 53.3 Distilling Cognitive-Map Reasoning 
+
+The tool-using policy provides reliable egocentric evidence, but it still depends on external geometry tools. Next, we will explore how to distill the tool-guided reasoning ability into the model: given 
+
+(q, I), the model learns to predict a JSON-format ego-frame cognitive map, which is rendered into a visual BEV cognitive map for subsequent reasoning, as shown in Fig. 2. 
+
+MPSM-guided SFT Data. To enable the model to actively generate such cognitive maps without relying on external tools, we first collect expert trajectories that combine geometric tool outputs with reasoning traces. Specifically, we construct Supervised Fine-Tuning (SFT) trajectories, leveraging MPSM for intermediate cognitive mapping and Qwen3-VL-235B [ 5] for generating reasoning traces. For each sample, the MLLM first extracts relevant object hints and predicts the required ego anchor. Next, MPSM constructs a query-aligned visual BEV cognitive map (Sec. 3.1), denoted as Js. The MLLM then generates two rationales: R1, which explains the construction of Js, and R2, which infers the predicted answer ˆas from the inputs and Js. The resulting SFT trajectory is assembled as: <think> R1 </think> → <cogmap> Js </cogmap> → [Rendered Image ] → <think> R2
+
+</think> → <answer> ˆas </answer> . Before training, we filter noisy trajectories via answer checking, critic-based repair, and missing-object refinement. Refer to the appendix for more details. 
+
+Map Alignment Reward. SFT initializes the model to generate cogmaps and map-grounded rationales, but 1D token-level imitation does not explicitly reward 2D map geometric alignment. We therefore further train with GRPO using both answer rewards and map-quality rewards. Let ˆJ be the predicted JSON-format cogmap and ˆa be the final answer. The total reward is defined as: 
+
+R( ˆJ, ˆa) = Rans (ˆ a) + λfmt Rfmt ( ˆJ, ˆa) + g(ˆ a)
+
+
+
+α · Robject ( ˆJ) + β · Rcam ( ˆJ)
+
+
+
+, (6) where Rans and Rfmt evaluate answer correctness and format compliance, α, β are hyper-parameters balancing different reward components, and g(ˆ a) = 1[ˆ a = a∗] applies map alignment only to correct predictions. The alignment term has two parts. (1) Object alignment Robject = P 
+
+> c∈C
+> nc
+> No
+
+Rc,which first performs category-wise Hungarian matching in the query-specified ego BEV frame, then computes Rc from matched object pairs using BEV bbox center accuracy and size consistency. (2) Camera alignment Rcam = 1
+
+> Nc
+
+P
+
+> i
+
+(ri 
+
+> pos
+
++ ri
+
+> ori
+
+) measures camera position, pairwise direction consistency, and facing-angle agreement, with ri 
+
+> ori
+
+= (1 + cos ∆ θi)/2.
+
+## 4 Experiments 
+
+4.1 Experimental Settings and Evaluation Benchmarks Implementation Details. OmniView-Space is built on Qwen3-VL-4B [ 5]. For the supervised fine-tuning (SFT) stage, we utilize 26K training data (Refer to the Appendix B for details). For the reinforcement learning (RL) phase in both tool-guided reasoning and cognitive-map distillation, the training data is drawn from an 11K subset filtered from SpatialLadder-26K [ 62 ] and an additional 10K samples from MindCube [ 16 ]. The tool-guided reasoning stage is trained directly with GRPO, without SFT warm-up. Cognitive-map distillation uses both SFT and RL: we first perform SFT for 3 epochs with a learning rate of 1 × 10 −5, and then apply GRPO for 2 epochs with a smaller learning rate of 1 × 10 −6 for stable policy updates. We sample K = 8 trajectories to compute group-relative advantages. All training is conducted on 8 GPUs, each equipped with 90GB of memory. 
+
+Evaluation Settings. We evaluate OmniView-Space on six spatial reasoning benchmarks covering multi-view aggregation, viewpoint-dependent reasoning, perspective transformation, and embodied spatial cognition. For multi-image reasoning, we report main results on MindCube-Tiny [ 16 ], MMSI-Bench [ 7], SPAR-Bench [ 8], and SPBench [ 62 ]. For single-image spatial reasoning, we evaluate on the Allocentric subset of 3DSRBench [ 17 ] and the Perspective subset of OmniSpatial [ 19 ]. The results are reported as accuracy following [ 6 ], and proprietary models are shown in gray for reference. 
+
+4.2 Main Results Obs 1. Egocentric cognitive maps improve spatial reasoning across input settings. Table 1 shows that OmniView-Space outperforms all open-source baselines on three multi-image benchmarks, scoring 71.5 on MindCube-Tiny, 35.5 on MMSI-Bench, and 44.8 on SPAR-Bench. The significant gains on MindCube-Tiny, which requires re-anchoring multi-view observations to query-specific viewpoints, suggest that egocentric cognitive maps provide a more effective reasoning interface 6Table 1: Main results on multi-view spatial reasoning benchmarks. We report accuracy on MindCube-Tiny, MMSI-Bench, and SPAR-Bench. The bold and underlined indicate the best and second-best open-source results; proprietary models are shown in gray italic for reference.                                                                                                                                                                                                                                                               
+
+> Model MindCube-Tiny MMSI-Bench SPAR-Bench Overall
+> Aro. Rot. Amo. All Pos. Att. Mot. MSR All Low Mid. High All
+> Proprietary Models
+> GPT-4.1 [63] 59.6 49.5 47.2 50.6 29.3 33.8 38.7 31.3 31.7 38.2 37.0 43.1 39.9 40.7
+> GPT-5.2 [64] 69.2 95.5 41.5 58.4 42.9 47.6 36.0 40.4 42.0 43.7 41.5 66.4 52.6 51.0
+> Gemini-3-Pro [65] 51.6 54.5 46.0 49.0 42.9 50.0 38.0 40.9 42.7 40.6 21.7 58.0 43.1 44.9
+> Open-source General Models
+> InternVL3-8B [66] 53.6 36.5 38.1 41.5 30.8 23.8 24.6 14.6 25.7 28.1 39.3 45.0 37.3 34.8 Qwen2.5-VL-7B-Instruct [3] 21.4 38.8 29.5 29.3 28.4 21.5 29.3 25.8 27.1 27.6 27.6 41.8 33.8 30.1 Qwen3-VL-4B-Instruct [5] 41.6 34.1 20.0 35.9 34.2 32.3 26.0 23.7 27.7 30.8 33.1 40.5 35.6 33.1 Qwen3-VL-8B-Instruct [5] 53.6 36.0 32.8 38.4 31.0 26.9 31.3 28.8 30.1 35.6 32.9 39.6 36.5 35.0
+> Spatial Intelligence Models
+> MindCube-3B [16] 67.6 34.0 51.0 51.7 23.9 24.6 18.7 25.3 23.9 16.8 22.6 23.9 20.8 32.1 SpatialLadder-3B [62] 50.8 35.0 43.2 43.4 30.3 23.3 16.0 21.2 25.4 24.9 29.4 42.4 32.9 33.9 Spatial-MLLM-4B [36] 36.0 39.0 30.5 33.4 28.5 25.4 18.0 26.3 26.1 22.3 32.4 35.2 30.4 30.0 SpaceR-7B [10] 49.2 35.0 34.2 37.9 29.1 29.4 21.9 22.5 26.9 27.0 23.9 44.6 34.2 33.0 ViLaSR-7B [33] 44.4 35.5 31.0 35.0 35.9 26.0 21.0 23.2 29.8 35.3 29.0 42.5 37.4 34.1 Cambrian-S-7B [67] 50.8 37.0 35.9 39.7 ----27.1 29.7 31.3 49.6 37.9 34.9
+> Tool-Integrated
+> OmniView-Space-Zero 53.6 32.5 52.8 49.1 36.6 22.3 27.3 28.4 31.7 33.5 35.8 46.3 39.6 40.1 OmniView-Space-R1 †68.0 53.0 79.2 71.5 41.2 35.4 28.7 25.8 35.5 44.1 38.1 47.8 44.8 50.6
+> Tool-Distillation
+> OmniView-Space-SFT 55.8 47.0 49.8 50.9 32.6 31.5 22.7 25.8 29.6 26.6 32.5 38.9 33.1 37.9 OmniView-Space-R1 ‡71.2 48.5 69.2 65.7 36.2 31.5 24.7 24.7 31.6 43.2 34.3 44.2 42.3 46.5
+
+Table 2: Results on the Allocentric subset of 3DSRBench. Bold and underlined numbers in-dicate the best and second-best performance. 
+
+Model Front. Left. Twd. Avg 
+
+RoboBrain2.0-32B [68] 60.17 38.54 27.92 42.21 Spatial-SSRL-7B [69] 57.41 33.95 21.72 37.69 Cosmos-Reason1-7B [70] 60.61 40.40 21.65 40.89 SenseNova-SI-1.1-7B [11] 56.10 34.81 22.96 37.96 SpatialThinker-7B [58] 58.14 34.81 21.65 38.20 REVPT-7B [71] 61.05 35.24 21.94 39.41 OmniView-Space-R1 67.15 48.71 30.03 48.63 
+
+Table 3: Results on the Perspective subset of Om-niSpatial. Bold and underlined numbers indicate the best and second-best performance. 
+
+Model Ego. Allo. Hypo. Avg 
+
+SpaceMantis-13B [54] 49.22 38.25 39.28 42.25 SpaceR-7B [10] - - - 41.35 SpaceThinker-7B [58] 58.04 35.11 31.08 41.41 SpatialBot-3B [51] 47.06 36.17 37.35 40.19 V2LO-7B [15] - - - 46.70 RoboPoint-13B [72] 49.02 37.66 33.49 40.06 OmniView-Space-R1 63.73 42.02 57.83 54.53 
+
+than raw images or text alone. MMSI-Bench shows improved robustness across position, attribute, motion, and multi-step questions, while SPAR-Bench confirms the utility of explicit spatial evidence across difficulty levels. The tool-distilled model reaches 46.5 overall, compared with 50.6 for the tool-integrated pipeline, suggesting that distillation retains part of the tool-guided gain. Beyond multi-image reasoning, Tables 2 and 3 evaluate single-image spatial reasoning, where models infer viewpoint-sensitive relations from one observation. OmniView-Space achieves the highest open-source average on the 3DSRBench allocentric tasks and leads on the Allo., Hypo., and Avg. metrics of OmniSpatial, while ranking second on Ego. These results indicate that egocentric map supervision improves internal spatial abstraction rather than only serving as a multi-view fusion mechanism. 
+
+Obs 2. Egocentric maps excel in re-anchoring and spatial relations. The fine-grained performance breakdown highlights the strengths of OmniView-Space. On MindCube-Tiny, the model excels in the Around, Rotation, and Among subtasks, which directly benefit from egocentric maps due to their reliance on complex relative positioning. On MMSI-Bench, it leads in Position and Attribute categories and remains competitive in Motion and Multi-step reasoning, indicating that explicit spatial grounding supports object-centric decisions. The SPAR-Bench results show similar utility across difficulty levels. Single-image results follow this trend: the model performs best on 3DSRBench (Front, Left, Towards) and OmniSpatial (Allo., Hypo.), which all demand scene transformation into 7Figure 5: (a) Accuracy on MMSI-Bench by the number of input images. Tool-integrated RL remains more stable as views increase. (b) Training dynamics of answer accuracy and BEV quality. Image-cogmap supervision improves both metrics more consistently than text-cogmap supervision. 
+
+Figure 6: Ablation across six benchmarks. OmniView-Space broadly improves over the baseline. query-specified frames. These consistent gains confirm that egocentric maps are highly effective when tasks require dynamic re-anchoring, spatial comparison, or structuring. 
+
+4.3 Ablation Studies Egocentric Cognitive Map vs. Text-Only Reasoning Baseline. Fig. 6 compares reasoning using multimodal egocentric cognitive maps against text-only approaches. OmniView-Space averages 53.9%, outperforming the text-only baseline of 46.3%. This 7.6-point improvement demonstrates that mapping observations into egocentric cognitive maps yields more reliable evidence than relying solely on the textual chain-of-thought. MindCube and SPAR-Bench show the largest gains (19.2 and 15.9 points, respectively), confirming the method’s value in tasks requiring viewpoint re-anchoring and structured relational reasoning. The consistent improvements on MMSI-Bench, 3DSRBench, and OmniSpatial suggest this mapping strategy generalizes well to various multi-view settings. The only exception is single-image SPBench, where the text baseline slightly outperforms OmniView-Space (63.0% versus 60.0%). This implies that existing language priors can adequately handle single-image tasks with limited viewpoint dependency, reducing the need for explicit spatial mapping. Table 4: Ablation study. We isolate the effects of MPSM evidence, tool-guided reasoning, evi-dence modality, and map-alignment reward.                 
+
+> Model MindCube MMSI AVG.
+> Qwen3-VL-4B 35.9 27.7 31.8 + MPSM-Map only 48.4 30.3 39.4 + Multimoda MPSM 49.1 31.7 40.4 OmniView-Space-R1 65.7 31.6 48.7
+> - Map Alignment 63.6 29.1 46.4
+
+Effectiveness of Multimodal Maps and Map Alignment Reward. As shown in Table 4, first, adding MPSM evidence as prompts improves over Qwen3-VL-4B, showing that query-aligned spatial evidence is useful even without RL training. Sec-ond, map-alignment reward improves the distilled model from 46.4 to 48.7 on average, with gains on both MindCube and MMSI-Bench. This supports the role of ego-frame map supervision in producing more useful self-generated cognitive maps. 
+
+Robustness to Number of Input Views. Fig. 5(a) reports the MMSI-Bench accuracy grouped by the number of input images. The two baselines, Text-RL and Qwen3-VL-4B, are competitive only for two-view inputs. Their accuracy fluctuates sharply and drops below 10% when given more than four images, revealing an inability to aggregate evidence across multiple viewpoints. Our tool-integrated RL method is substantially more stable across different image counts. It achieves 35.7% with two views, maintains 20% to 30% for three to six views, and increases to 40.0% and 46.7% for seven and eight views. Explicit cognitive-map tool calls appear to convert additional viewpoints into cumulative spatial evidence rather than distracting context, which explains the widening performance gap over the baselines as the input scale grows. 8Reasoning: The question asks for the     
+
+> direction of ... To answer this, I need:
+> Step 1: Identify key objects: " bed", ...
+> Step 2: Determine the ego reference ...
+> Step 3: Use the tools to analyze spatial ...
+
+(a) Analyze the input image  
+
+> Question: When you are lying in the sleeping area,
+> in which direction is the parking lot located?
+> A: Behind, B: To the right, C: In front, D: To left
+
+(c) Second round of tool calling          
+
+> Reasoning: The parking lot is visible through
+> the windows. In the BEV map, the parking lot
+> is to the right of the bed . I should now verify...
+> Tool_Call: {"name": "map_graph", "objects"
+> :"bed, window, curtain, lamp", "ego": "bed"}
+> Query
+> 12Tool_Call: {"name": "map_visualization",
+> "objects": "bed, ... , lamp", "ego": "bed"}
+
+(b) First round of tool calling         
+
+> Answer: Based on the image, the parking lot is directly visible outside window_0 and window_1, which the graph indicates are located to the "right" (2.18m away) and
+> "back-right" (0.61m away) from the bed's perspective, respectively. In the BEV map, these windows are positioned to the right of the sleeping area along the positive X-
+> direction, it logically follows that the parking lot situated outside of them is also located to the right, confirming Option B as the correct answer. <answer>B</answer>
+
+Figure 7: Case study. The model first identifies the query anchor and requests a bed-centered BEV map, which makes the window and parking-lot layout directly inspectable. It then calls the graph tool to verify ego-relative relations and grounds the final answer in the query-specified frame. 
+
+Cogmap Accuracy and Training Dynamics. Fig. 5(b) compares performance and Cogmap Acc. across training steps. Ours shows the greatest and most consistent improvement, with task perfor-mance increasing from 53.3% to 65.6% and Cogmap Acc. from 39.4% to 52.9%. Ours w/o map reward also improves in performance, from 48.2% to 63.6%, but its Cogmap Acc. grows more slowly and is clearly surpassed by Ours in later training. Text-RL remains weaker on both axes: its performance rises only from 40.9% to 53.3%, while Cogmap Acc. stays around 31–35%. These trends indicate that the benefit does not come merely from introducing an intermediate representation. Rendering the egocentric cognitive map as an image gives the model a more faithful spatial state, and the map-alignment reward further links higher-quality self-generated maps with stronger reasoning. 1.8 calls 
+
+> 1.9 calls
+> 1.7 calls
+
+Figure 8: Tool-call distribution across bench-marks. The Visual Map is preferred for quali-tative relative-position questions, whereas the textual graph excels in quantitative queries re-quiring precise numerical evidence. 
+
+Tool-Call Distribution Analysis. Fig. 8 analyzes how our model uses the cognitive map and graph tools on correctly answered samples. MindCube and MMSI-Bench show a balanced use of the two modalities, with image/graph ratios of 50/50 and 46/54, respectively. This matches their emphasis on qualitative viewpoint reasoning, where a visual map provides an intuitive layout for relative-position judgments. By contrast, 3DSRBench places more weight on graph evidence, with graph calls account-ing for 60% of tool usage. This reflects the need for more explicit numerical or structural evidence in detailed 3D relation reasoning. Ultimately, this distribution suggests that different evidence forms are used for different demands. 
+
+Qualitative Analysis. Fig. 7 illustrates the OmniView-Space reasoning workflow. Based on the input views and spatial question, the model identifies relevant objects and the required reference frame to construct an egocentric cognitive map. This map explicitly represents the target frame, object layout, and relative directions within a visual BEV state. By using this representation as intermediate evidence, the model can accurately evaluate spatial relations from the correct viewpoint. This transparent process enhances interpretability, clarifying the rationale behind specific spatial judgments while mitigating the risk of relying on inconsistent reference frames. 
+
+## 5 Conclusion 
+
+We present OmniView-Space, a framework for multimodal egocentric reasoning that shifts spatial analysis from a default system perspective to a query-specified ego frame. To achieve this, we first propose the MPSM module constructs query-aligned visual BEV cognitive maps and textual spatial graphs. We further introduce a tool-guided policy that selects the required ego anchor and grounds answers based on MPSM. Finally, we distill this pipeline using MPSM trajectories and map rewards, enabling the model to reason through internally generated maps. Results confirm that query-aligned egocentric evidence effectively bridges metric geometry and language-based spatial reasoning. 9References 
+
+[1] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. arXiv preprint arXiv:2304.08485 , 2023. [2] Bo Li, Yuanhan Zhang, Dong Zhang, et al. Llava-onevision: Easy visual task transfer. arXiv preprint arXiv:2408.03326 , 2024. [3] Peng Wang, Shuai Bai, Sinan Tan, et al. Qwen2-vl: Enhancing vision-language model’s perception of the world at any resolution. arXiv preprint arXiv:2409.12191 , 2024. [4] Zhe Chen, Wenhai Wang, Yue Cao, et al. Internvl2: Scaling up vision foundation models and aligning for generic visual-linguistic tasks. arXiv preprint arXiv:2412.05271 , 2024. [5] Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, et al. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 , 2025. [6] Jihan Yang, Shusheng Yang, Anjali W Gupta, Rilyn Han, Li Fei-Fei, and Saining Xie. Thinking in space: How multimodal large language models see, remember, and recall spaces. In 
+
+Proceedings of the Computer Vision and Pattern Recognition Conference , pages 10632–10643, 2025. [7] Sihan Yang, Runsen Xu, Yiman Xie, Sizhe Yang, Mo Li, Jingli Lin, Chenming Zhu, Xiaochen Chen, Haodong Duan, Xiangyu Yue, et al. Mmsi-bench: A benchmark for multi-image spatial intelligence. arXiv preprint arXiv:2505.23764 , 2025. [8] Jiahui Zhang, Yurui Chen, Yanpeng Zhou, Yueming Xu, Ze Huang, Jilin Mei, Junhui Chen, Yu-Jie Yuan, Xinyue Cai, Guowei Huang, et al. From flatland to space: Teaching vision-language models to perceive and reason in 3d. arXiv preprint arXiv:2503.22976 , 2025. [9] Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300 , 2024. [10] Kun Ouyang, Yuanxin Liu, Haoning Wu, Yi Liu, Hao Zhou, Jie Zhou, Fandong Meng, and Xu Sun. Spacer: Reinforcing mllms in video spatial reasoning. arXiv preprint arXiv:2504.01805 ,2025. [11] Zhongang Cai, Ruisi Wang, Chenyang Gu, Fanyi Pu, Junxiang Xu, Yubo Wang, Wanqi Yin, Zhitao Yang, Chen Wei, Qingping Sun, et al. Scaling spatial intelligence with multimodal foundation models. arXiv preprint arXiv:2511.13719 , 2025. [12] Rui Yang, Ziyu Zhu, Yanwei Li, Jingjia Huang, Shen Yan, Siyuan Zhou, Zhe Liu, Xiangtai Li, Shuangye Li, Wenqian Wang, et al. Visual spatial tuning. arXiv preprint arXiv:2511.05491 ,2025. [13] Zhanpeng Luo, Ce Zhang, Silong Yong, Cunxi Dai, Qianwei Wang, Haoxi Ran, Guanya Shi, Katia Sycara, and Yaqi Xie. pyspatial: Generating 3d visual programs for zero-shot spatial reasoning. arXiv preprint arXiv:2603.00905 , 2026. [14] Zaibin Zhang, Yuhan Wu, Lianjie Jia, Yifan Wang, Zhongbo Zhang, Yijiang Li, Binghao Ran, Fuxi Zhang, Zhuohan Sun, Zhenfei Yin, Lijun Wang, and Huchuan Lu. Think3d: Thinking with space for spatial reasoning. arXiv preprint arXiv:2601.13029 , 2026. [15] Yibin Huang, Wang Xu, Wanyue Zhang, Helu Zhi, Jingjing Huang, Yangbin Xu, Yangang Sun, Conghui Zhu, and Tiejun Zhao. Video2layout: Recall and reconstruct metric-grounded cognitive map for spatial reasoning. arXiv preprint arXiv:2511.16160 , 2025. [16] Baiqiao Yin, Qineng Wang, Pingyue Zhang, Jianshu Zhang, Kangrui Wang, Zihan Wang, Jieyu Zhang, Keshigeyan Chandrasegaran, Han Liu, Ranjay Krishna, et al. Spatial mental modeling from limited views. In Structural Priors for Vision Workshop at ICCV’25 , 2025. 10 [17] Wufei Ma, Haoyu Chen, Guofeng Zhang, Yu-Cheng Chou, Jieneng Chen, Celso de Melo, and Alan Yuille. 3dsrbench: A comprehensive 3d spatial reasoning benchmark. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 6924–6934, 2025. [18] Zheyuan Zhang, Fengyuan Hu, Jayjun Lee, Freda Shi, Parisa Kordjamshidi, Joyce Chai, and Ziqiao Ma. Do vision-language models represent space and how? evaluating spatial frame of reference under ambiguities. arXiv preprint arXiv:2410.17385 , 2024. [19] Mengdi Jia, Zekun Qi, Shaochen Zhang, Wenyao Zhang, Xinqiang Yu, Jiawei He, He Wang, and Li Yi. Omnispatial: Towards comprehensive spatial reasoning benchmark for vision language models. arXiv preprint arXiv:2506.03135 , 2025. [20] Wei Chow, Jiageng Mao, Boyi Li, Daniel Seita, Vitor Guizilini, and Yue Wang. Physbench: Benchmarking and enhancing vision-language models for physical world understanding. arXiv preprint arXiv:2501.16411 , 2025. [21] Rajarshi Roy, Devleena Das, Ankesh Banerjee, Arjya Bhattacharjee, Kousik Dasgupta, and Subarna Tripathi. Bydeway: Boost your multimodal llm with depth prompting in a training-free way. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 6058–6064, 2025. [22] Vahid Balazadeh, Mohammadmehdi Ataei, Hyunmin Cheong, Amir Hosein Khasahmadi, and Rahul G Krishnan. Synthetic vision: Training vision-language models to understand physics. 
+
+arXiv e-prints , pages arXiv–2412, 2024. [23] Haoyu Zhang, Meng Liu, Zaijing Li, Haokun Wen, Weili Guan, Yaowei Wang, and Liqiang Nie. Spatial understanding from videos: Structured prompts meet simulation data. arXiv preprint arXiv:2506.03642 , 2025. [24] Phillip Y Lee, Jihyeon Je, Chanho Park, Mikaela Angelina Uy, Leonidas Guibas, and Minhyuk Sung. Perspective-aware reasoning in vision-language models via mental imagery simulation. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 9241–9251, 2025. [25] Benlin Liu, Yuhao Dong, Yiqin Wang, Zixian Ma, Yansong Tang, Luming Tang, Yongming Rao, Wei-Chiu Ma, and Ranjay Krishna. Coarse correspondences boost spatial-temporal reasoning in multimodal language model. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 3783–3792, 2025. [26] Damiano Marsili, Rohun Agrawal, Yisong Yue, and Georgia Gkioxari. Visual agentic ai for spatial reasoning with a dynamic api. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 19446–19455, 2025. [27] Shun Taguchi, Hideki Deguchi, Takumi Hamazaki, and Hiroyuki Sakai. Spatialprompting: Keyframe-driven zero-shot spatial reasoning with off-the-shelf multimodal large language models. arXiv preprint arXiv:2505.04911 , 2025. [28] Zhangquan Chen, Manyuan Zhang, Xinlei Yu, Xufang Luo, Mingze Sun, Zihao Pan, Xiang An, Yan Feng, Peng Pei, Xunliang Cai, et al. Think with 3d: Geometric imagination grounded spatial reasoning from limited views. arXiv preprint arXiv:2510.18632 , 2025. [29] Vincent Leroy, Yohann Cabon, and Jérôme Revaud. Grounding image matching in 3d with mast3r. In European conference on computer vision , pages 71–91. Springer, 2024. [30] Yue Fan, Xuehai He, Diji Yang, Kaizhi Zheng, Ching-Chen Kuo, Yuting Zheng, Sravana Jyothi Narayanaraju, Xinze Guan, and Xin Eric Wang. Grit: Teaching mllms to think with images. 
+
+arXiv preprint arXiv:2505.15879 , 2025. [31] Hao Shao, Shengju Qian, Han Xiao, Guanglu Song, Zhuofan Zong, Letian Wang, Yu Liu, and Hongsheng Li. Visual cot: Advancing multi-modal language models with a comprehen-sive dataset and benchmark for chain-of-thought reasoning. Advances in Neural Information Processing Systems , 37:8612–8642, 2024. 11 [32] Yikun Wang, Siyin Wang, Qinyuan Cheng, Zhaoye Fei, Liang Ding, Qipeng Guo, Dacheng Tao, and Xipeng Qiu. Visuothink: Empowering lvlm reasoning with multimodal tree search. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 21707–21719, 2025. [33] Junfei Wu, Jian Guan, Kaituo Feng, Qiang Liu, Shu Wu, Liang Wang, Wei Wu, and Tieniu Tan. Reinforcing spatial reasoning in vision-language models with interwoven thinking and visual drawing. arXiv preprint arXiv:2506.09965 , 2025. [34] Erik Daxberger, Nina Wenzel, David Griffiths, Haiming Gang, Justin Lazarow, Gefen Kohavi, Kai Kang, Marcin Eichner, Yinfei Yang, Afshin Dehghan, et al. Mm-spatial: Exploring 3d spatial understanding in multimodal llms. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 7395–7408, 2025. [35] Fuhao Chang, Shuxin Li, Yabei Li, and Lei He. Vlm-3d: end-to-end vision-language models for open-world 3d perception. arXiv preprint arXiv:2508.09061 , 2025. [36] Diankun Wu, Fangfu Liu, Yi-Hsin Hung, and Yueqi Duan. Spatial-mllm: Boosting mllm capabilities in visual-based spatial intelligence. arXiv preprint arXiv:2505.23747 , 2025. [37] Runsen Xu, Weiyao Wang, Hao Tang, Xingyu Chen, Xiaodong Wang, Fu-Jen Chu, Dahua Lin, Matt Feiszli, and Kevin J Liang. Multi-spatialmllm: Multi-frame spatial understanding with multi-modal large language models. arXiv preprint arXiv:2505.17015 , 2025. [38] Baining Zhao, Ziyou Wang, Jianjie Fang, Chen Gao, Fanhang Man, Jinqiang Cui, Xin Wang, Xinlei Chen, Yong Li, and Wenwu Zhu. Embodied-r: Collaborative framework for activating embodied spatial reasoning in foundation models via reinforcement learning. In Proceedings of the 33rd ACM International Conference on Multimedia , pages 11071–11080, 2025. [39] Duo Zheng, Shijia Huang, Yanyang Li, and Liwei Wang. Learning from videos for 3d world: Enhancing mllms with 3d vision geometry priors. arXiv preprint arXiv:2505.24625 , 2025. [40] Zeren Chen, Xiaoya Lu, Zhijie Zheng, Pengrui Li, Lehan He, Yijin Zhou, Jing Shao, Bohan Zhuang, and Lu Sheng. Geometrically-constrained agent for spatial reasoning. arXiv preprint arXiv:2511.22659 , 2025. [41] Yi Han, Enshen Zhou, Shanyu Rong, Jingkun An, Pengwei Wang, Zhongyuan Wang, Cheng Chi, Lu Sheng, and Shanghang Zhang. Tiger: Tool-integrated geometric reasoning in vision-language models for robotics. arXiv preprint arXiv:2510.07181 , 2025. [42] Haotong Lin, Sili Chen, Junhao Liew, Donny Y Chen, Zhenyu Li, Guang Shi, Jiashi Feng, and Bingyi Kang. Depth anything 3: Recovering the visual space from any views. arXiv preprint arXiv:2511.10647 , 2025. [43] Nicolas Carion, Laura Gustafson, Yuan-Ting Hu, Shoubhik Debnath, Ronghang Hu, Didac Suris, Chaitanya Ryali, Kalyan Vasudev Alwala, Haitham Khedr, Andrew Huang, et al. Sam 3: Segment anything with concepts. arXiv preprint arXiv:2511.16719 , 2025. [44] Jianyuan Wang, Minghao Chen, Nikita Karaev, Andrea Vedaldi, Christian Rupprecht, and David Novotny. Vggt: Visual geometry grounded transformer. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 5294–5306, 2025. [45] Ruosen Zhao, Zhikang Zhang, Jialei Xu, Jiahao Chang, Dong Chen, Lingyun Li, Weijian Sun, and Zizhuang Wei. Spacemind: Camera-guided modality fusion for spatial reasoning in vision-language models. arXiv preprint arXiv:2511.23075 , 2025. [46] Wenqi Wang, Reuben Tan, Pengyue Zhu, Jianwei Yang, Zhengyuan Yang, Lijuan Wang, Andrey Kolobov, Jianfeng Gao, and Boqing Gong. Site: towards spatial intelligence thorough evaluation. In Proceedings of the IEEE/CVF International Conference on Computer Vision ,pages 9058–9069, 2025. [47] Wenrui Xu, Dalin Lyu, Weihang Wang, Jie Feng, Chen Gao, and Yong Li. Defining and evaluating visual language models’ basic spatial abilities: A perspective from psychometrics. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 11571–11590, 2025. 12 [48] Jirong Zha, Yuxuan Fan, Xiao Yang, Chen Gao, and Xinlei Chen. How to enable llm with 3d capacity? a survey of spatial reasoning in llm. arXiv preprint arXiv:2504.05786 , 2025. [49] Philip N Johnson-Laird. Mental models in cognitive science. Cognitive science , 4(1):71–115, 1980. [50] Philip Nicholas Johnson-Laird. Mental models: Towards a cognitive science of language, inference, and consciousness . Number 6. Harvard University Press, 1983. [51] Wenxiao Cai, Iaroslav Ponomarenko, Jianhao Yuan, Xiaoqi Li, Wankou Yang, Hao Dong, and Bo Zhao. Spatialbot: Precise spatial understanding with vision language models. In 2025 IEEE International Conference on Robotics and Automation (ICRA) , pages 9490–9498. IEEE, 2025. [52] Yuecheng Liu, Dafeng Chi, Shiguang Wu, Zhanguang Zhang, Yaochen Hu, Lingfeng Zhang, Yingxue Zhang, Shuang Wu, Tongtong Cao, Guowei Huang, et al. Spatialcot: Advancing spatial reasoning through coordinate alignment and chain-of-thought for embodied task planning. arXiv preprint arXiv:2501.10074 , 2025. [53] Wufei Ma, Yu-Cheng Chou, Qihao Liu, Xingrui Wang, Celso de Melo, Jianwen Xie, and Alan Yuille. Spatialreasoner: Towards explicit and generalizable 3d spatial reasoning. arXiv preprint arXiv:2504.20024 , 2025. [54] Boyuan Chen, Zhuo Xu, Sean Kirmani, Brain Ichter, Dorsa Sadigh, Leonidas Guibas, and Fei Xia. Spatialvlm: Endowing vision-language models with spatial reasoning capabilities. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 14455–14465, 2024. [55] An-Chieh Cheng, Hongxu Yin, Yang Fu, Qiushan Guo, Ruihan Yang, Jan Kautz, Xiaolong Wang, and Sifei Liu. Spatialrgpt: Grounded spatial reasoning in vision-language models. 
+
+Advances in Neural Information Processing Systems , 37:135062–135093, 2024. [56] Zhenyu Pan and Han Liu. Metaspatial: Reinforcing 3d spatial reasoning in vlms for the metaverse. arXiv preprint arXiv:2503.18470 , 2025. [57] Zhenghao Chen, Huiqun Wang, and Di Huang. Egomind: Activating spatial cognition through linguistic reasoning in mllms. arXiv preprint arXiv:2604.03318 , 2026. [58] Hunar Batra, Haoqin Tu, Hardy Chen, Yuanze Lin, Cihang Xie, and Ronald Clark. Spatial-thinker: Reinforcing 3d reasoning in multimodal llms via spatial rewards. arXiv preprint arXiv:2511.07403 , 2025. [59] Hengyi Wang, Ruiqiang Zhang, Chang Liu, Guanjie Wang, Zehua Ma, Han Fang, and Weiming Zhang. Allocentric perceiver: Disentangling allocentric reasoning from egocentric visual priors via frame instantiation. arXiv preprint arXiv:2602.05789 , 2026. [60] Zehan Wang, Ziang Zhang, Jiayang Xu, Jialei Wang, Tianyu Pang, Chao Du, Hengshuang Zhao, and Zhou Zhao. Orient anything v2: Unifying orientation and rotation understanding. arXiv preprint arXiv:2601.05573 , 2026. [61] Ziwei Zheng, Michael Yang, Jack Hong, Chenxiao Zhao, Guohai Xu, Le Yang, Chao Shen, and Xing Yu. Deepeyes: Incentivizing" thinking with images" via reinforcement learning. arXiv preprint arXiv:2505.14362 , 2025. [62] Hongxing Li, Dingming Li, Zixuan Wang, Yuchen Yan, Hang Wu, Wenqi Zhang, Yongliang Shen, Weiming Lu, Jun Xiao, and Yueting Zhuang. Spatialladder: Progressive training for spatial reasoning in vision-language models. arXiv preprint arXiv:2510.08531 , 2025. [63] Aaron Hurst, Adam Lerer, Adam P Goucher, Adam Perelman, Aditya Ramesh, Aidan Clark, AJ Ostrow, Akila Welihinda, Alan Hayes, Alec Radford, et al. Gpt-4o system card. arXiv preprint arXiv:2410.21276 , 2024. [64] Aaditya Singh, Adam Fry, Adam Perelman, Adam Tart, Adi Ganesh, Ahmed El-Kishky, Aidan McLaughlin, Aiden Low, AJ Ostrow, Akhila Ananthram, et al. Openai gpt-5 system card. arXiv preprint arXiv:2601.03267 , 2025. 13 [65] Sundar Pichai, Demis Hassabis, and Koray Kavukcuoglu. A new era of intelligence with gemini 3. Google. URL: https://blog.google/products-and-platforms/products/gemini/gemini-3/ (accessed: 2026-01-16) , 2025. [66] Jinguo Zhu, Weiyun Wang, Zhe Chen, Zhaoyang Liu, Shenglong Ye, Lixin Gu, Hao Tian, Yuchen Duan, Weijie Su, Jie Shao, et al. Internvl3: Exploring advanced training and test-time recipes for open-source multimodal models. arXiv preprint arXiv:2504.10479 , 2025. [67] Shusheng Yang, Jihan Yang, Pinzhi Huang, Ellis L Brown II, Zihao Yang, Yue Yu, Shengbang Tong, Zihan Zheng, Yifan Xu, Muhan Wang, et al. Cambrian-s: Towards spatial supersensing in video. In The Fourteenth International Conference on Learning Representations , 2025. [68] BAAI RoboBrain Team, Mingyu Cao, Huajie Tan, Yuheng Ji, Xiansheng Chen, Minglan Lin, Zhiyu Li, Zhou Cao, Pengwei Wang, Enshen Zhou, et al. Robobrain 2.0 technical report. arXiv preprint arXiv:2507.02029 , 2025. [69] Yuhong Liu, Beichen Zhang, Yuhang Zang, Yuhang Cao, Long Xing, Xiaoyi Dong, Haodong Duan, Dahua Lin, and Jiaqi Wang. Spatial-ssrl: Enhancing spatial understanding via self-supervised reinforcement learning. arXiv preprint arXiv:2510.27606 , 2025. [70] Alisson Azzolini, Junjie Bai, Hannah Brandon, Jiaxin Cao, Prithvijit Chattopadhyay, Huayu Chen, Jinju Chu, Yin Cui, Jenna Diamond, Yifan Ding, et al. Cosmos-reason1: From physical common sense to embodied reasoning. arXiv preprint arXiv:2503.15558 , 2025. [71] Zetong Zhou, Dongping Chen, Zixian Ma, Zhihan Hu, Mingyang Fu, Sinan Wang, Yao Wan, Zhou Zhao, and Ranjay Krishna. Reinforced visual perception with tools. arXiv preprint arXiv:2509.01656 , 2025. [72] Wentao Yuan, Jiafei Duan, Valts Blukis, Wilbert Pumacay, Ranjay Krishna, Adithyavairavan Murali, Arsalan Mousavian, and Dieter Fox. Robopoint: A vision-language model for spatial affordance prediction for robotics. arXiv preprint arXiv:2406.10721 , 2024. 14 A Appendix Overview 
+
+This appendix provides supplementary implementation details to support the main paper. Section B elicits the detailed construction, filtering, and repair pipeline for the MPSM-guided SFT data. Section C discusses the limitations of our approach and highlights future research directions. 
+
+## B MPSM-guided SFT Data Construction 
+
+The goal of the SFT data construction pipeline is to teach the model not only to answer spatial questions, but also to externalize an intermediate ego-frame cognitive map before answering. Each full cogmap trajectory is organized as: 
+
+<think> R1 </think> → <cogmap> J </cogmap> 
+
+→ <think> R2 </think> → <answer> ˆa </answer> . (7) where J is a JSON-format ego-frame cogmap, R1 explains how the cogmap is constructed from the images and the query, and R2 performs forward reasoning from the cogmap to the final answer. We use Qwen3-VL-235B [ 5] to produce the language rationales and MPSM to produce the intermediate visual/spatial evidence. 
+
+B.1 Initial Cogmap Trajectory Generation 
+
+For each raw sample with question q, image set I, and ground-truth answer a∗, the pipeline first extracts task-relevant object hints and determines the query-specified ego reference. The ego reference can be camera-centric, object-centric, or direction-centric, following the same representation used by MPSM. The object hints and ego reference are then passed to the unified MPSM pipeline, which combines dense geometry, segmentation, and orientation estimation to generate a rendered BEV map and an AST-style spatial tree. The spatial tree is serialized into a JSON cogmap J containing the ego reference, object entries with image-space boxes and BEV footprints, and camera entries with BEV positions and facing angles. After obtaining J, we generate two rationales. The first rationale R1 explains the map construction process: which objects are relevant, why the selected ego frame is appropriate, and how the generated cogmap represents the scene. The second rationale R2 is generated in a forward-reasoning mode: the model is given the question, images, and generated cogmap, and it derives a predicted answer 
+
+ˆa without being shown the ground-truth answer. The final supervised example is assembled in the format of Eq. 7. This construction is used for MindCube and SpatialLadder-derived samples, with dataset-specific preprocessing for extracting object hints from grounding annotations, spatial questions, or existing answers. 
+
+B.2 Three-round Filtering and Repair 
+
+The automatically generated trajectories can contain noise from segmentation failures, missing objects, imperfect ego-reference selection, or rationales that reach the right answer through shortcuts. We therefore use a three-round filtering and repair procedure for the full cogmap trajectories. 
+
+Round 1: forward-correct filtering. We first keep samples whose predicted answer ˆa is already correct under the task metric. For multiple-choice questions, this requires exact option-letter agree-ment. For numerical questions, we use a thresholded relative-error score. These samples are retained directly because their rationales are generated in a forward manner from cogmap evidence to answer. 
+
+Round 2: answer-guided repair with critic filtering. For samples that fail Round 1, we ask whether the generated cogmap contains sufficient information to derive the ground-truth answer. If the cogmap is insufficient, the sample is deferred to Round 3. If the cogmap is sufficient, we generate a repaired R2 conditioned on the ground-truth answer, but explicitly require the rationale to remain forward-style rather than saying that the answer is correct by assumption. A separate critic then checks for answer leakage, backward reasoning, circular reasoning, shortcut logic, and factual errors. Only critic-approved repaired trajectories are retained. 
+
+Round 3: missing-object refinement. For samples whose cogmap is insufficient, the most common failure mode is missing task-relevant objects. We identify objects mentioned by the answer options or 15 question but absent from the cogmap, and use Qwen3-VL-235B to self-ground these missing objects with normalized 2D boxes. These supplemental detections are added to the original object hints, MPSM is rerun to produce an updated BEV map and spatial tree, and R1, R2, and ˆa are regenerated. A sample is retained only if the regenerated answer is correct. This step recovers examples where the original MPSM reference was incomplete due to segmentation or object-filtering noise. 
+
+B.3 Quality Checks 
+
+After construction, we apply lightweight structural and accuracy checks before training. The format checker verifies the presence and nesting of the required tags, including <think> , <cogmap> , and 
+
+<answer> . It also verifies that the cogmap JSON can be parsed and contains valid object and camera fields. For image-form trajectories, we check that input-image placeholders and rendered-BEV observations are consistent with the conversation structure. We also remove trajectories whose final answer fails the task metric, and flag abnormal samples with missing images, malformed boxes, repeated text, empty cogmaps, or excessive response length. These checks are used to reduce formatting noise before SFT. Table 5: SFT data mixture. We combine direct-answer samples with MPSM-guided cogmap trajectories from SpatialLadder, MindCube, and ViewFusion.                
+
+> Source Size Format / Filtering
+> SpatialLadder grounding 5K Learn to predict the BEV Map directly from the input image through <think> R1</think> →
+> <cogmap> J</cogmap> trajectories. SpatialLadder spatial 7K Multi-turn reasoning trajectories filtered from SpatialLadder [62] after three-round filtering. MindCube $ VST 14K Multi-turn reasoning trajectories filtered from mindcube [ 16 ] and VST-500K [ 12 ] after three-round filtering.
+
+B.4 Final SFT Mixture 
+
+The final SFT mixture combines direct-answer data, grounding-style cogmap data, and full cogmap-reasoning trajectories. Table 5 summarizes the sources. Overall, the mixture contains approximately 26K samples. The direct-answer subset maintains answer-level spatial reasoning ability, while the cogmap subsets teach the model to write structured ego-frame maps and to reason from those maps. The three-round filtering procedure is applied to the full cogmap-reasoning trajectories, while the grounding-only SpatialLadder cogmap data is used directly because it supervises map construction rather than final answer derivation. 
+
+## C Limitations 
+
+One potential limitation is that the tool-augmented pipeline still depends on the quality of depth estimation, segmentation, and object-orientation estimation. Visual truncation, occlusion, or missing task-relevant objects can lead to incomplete egocentric evidence and incorrect spatial judgments. Although the internalized model reduces reliance on external geometry tools at inference time, its self-generated cognitive maps can still drift geometrically, especially for out-of-domain layouts, sparse views, or ambiguous object orientations. These limitations suggest several directions for future work, including more robust open-vocabulary spatial mapping, stronger map-level supervision, and reasoning policies that can detect when their self-generated maps are unreliable. More broadly, we view ego-frame grounding as a step toward MLLMs that not only describe visual scenes, but also re-instantiate them from the viewpoint required by a task. 16
