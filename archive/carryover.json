@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T21:39:15.245159+00:00",
-  "updated_date": "20260707",
+  "generated_at": "2026-07-08T20:36:24.746260+00:00",
+  "updated_date": "20260708",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
@@ -14,75 +14,76 @@
       "items": []
     },
     "vr": {
-      "updated_date": "20260707",
+      "updated_date": "20260708",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2607.04779v1",
+          "id": "2607.06420v1",
           "source": "arxiv",
-          "title": "DGSeg: Dynamic Gating of Semantic-Spatial Guided Predictions for Reasoning Segmentation",
-          "abstract": "Reasoning segmentation aims to predict pixel-wise masks for targets given complex language queries. Existing approaches leverage Multimodal Large Language Models (MLLMs) for vision-language reasoning and generate intermediate target cues (e.g., points or boxes) to guide a segmentation model. However, compressing rich reasoning into sparse cues often introduces ambiguity and noise, preventing these cues from accurately preserving the reasoning intent. While multiple complementary cues can enrich target information, existing methods typically feed them jointly into a single segmentation process, allowing ambiguous or erroneous cues to affect the entire prediction. Therefore, we propose DGSeg, a reasoning segmentation framework that learns to fuse predictions guided by semantic and spatial cues. Specifically, the MLLM jointly reasons about both target identity and spatial location, producing complementary semantic and spatial cues that are fed into separate segmentation branches. Their predictions are adaptively integrated by a lightweight dynamic gating module trained with relative branch-quality supervision to suppress noisy or conflicting regions. Extensive experiments demonstrate that DGSeg consistently outperforms strong baselines on multiple benchmarks and achieves 69.6% and 67.3% gIoU on the challenging ReasonSeg validation and test splits. Code is available at https://github.com/RZZeng/DGSeg.",
+          "title": "HoloCount: A Holistic Visual Counting Benchmark for MLLMs",
+          "abstract": "Visual counting is a fundamental pillar of multimodal intelligence, requiring a seamless integration of fine-grained grounding and spatial reasoning. While Multimodal Large Language Models (MLLMs) have achieved remarkable success in qualitative scene understanding, their quantitative precision remains a significant bottleneck, often characterized by persistent numerical hallucinations. Existing counting benchmarks primarily focus on basic perception in simplified contexts, failing to capture the complex failure modes that emerge under logical constraints or adversarial conditions. To address these limitations, we introduce HoloCount, a holistic and diagnostically rich benchmark structured around a three-level hierarchical taxonomy. HoloCount evaluates MLLMs across: (1) Semantic Counting, focusing on atomic and property-based enumeration; (2) Analytical Counting, assessing logical composition through spatial and set-based reasoning; and (3) Robustness Testing, probing model integrity against adverse scenarios and grounded counter-priors, such as high-density scenes and linguistic biases. Through an exhaustive evaluation of over 20 state-of-the-art MLLMs, we reveal a critical performance gap: even top-tier models degrade significantly as tasks transition from perception to complex analytical reasoning and adverse scenarios. Our findings provide a systematic landscape of current MLLM counting capabilities and offer a roadmap for developing more grounded and reliable multimodal systems. The dataset is available at https://mm-mvr.github.io/HoloCount/.",
           "authors": [
-            "Ruizhe Zeng",
-            "Siyu Cao",
-            "Lu Zhang",
-            "Zhiyong Liu"
+            "Jinhong Deng",
+            "Limeng Qiao",
+            "Guanglu Wan"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV"
           ],
-          "published": "2026-07-06T08:10:03+00:00",
-          "link": "https://arxiv.org/pdf/2607.04779v1",
+          "published": "2026-07-07T15:48:57+00:00",
+          "link": "https://arxiv.org/pdf/2607.06420v1",
           "tags": [
             "keyword:vr",
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "reasoning segmentation for visual reasoning",
-          "llm_evidence_cn": "推理分割用于视觉推理",
-          "llm_evidence": "推理分割用于视觉推理",
-          "canonical_evidence": "推理分割用于视觉推理",
-          "llm_tldr_en": "DGSeg proposes dynamic gating of semantic-spatial predictions to improve reasoning segmentation from complex language queries, addressing ambiguity in sparse cues.",
-          "llm_tldr_cn": "针对现有推理分割方法将丰富推理压缩为稀疏线索导致歧义的问题，该论文提出DGSeg，一种动态门控语义-空间引导预测框架。通过动态融合多个互补线索并加权，减少噪声影响，提升分割精度。实验表明其在多个推理分割基准上取得优异性能。该工作为视觉推理中的细粒度分割提供了新思路。",
-          "llm_tldr": "针对现有推理分割方法将丰富推理压缩为稀疏线索导致歧义的问题，该论文提出DGSeg，一种动态门控语义-空间引导预测框架。通过动态融合多个互补线索并加权，减少噪声影响，提升分割精度。实验表明其在多个推理分割基准上取得优异性能。该工作为视觉推理中的细粒度分割提供了新思路。",
+          "llm_evidence_en": "holistic visual counting benchmark for MLLMs",
+          "llm_evidence_cn": "面向多模态大模型的全面视觉计数基准",
+          "llm_evidence": "面向多模态大模型的全面视觉计数基准",
+          "canonical_evidence": "面向多模态大模型的全面视觉计数基准",
+          "llm_tldr_en": "Presents HoloCount, a hierarchical benchmark for visual counting that evaluates MLLMs under logical constraints and adversarial conditions, exposing persistent numerical hallucinations.",
+          "llm_tldr_cn": "针对现有计数基准过于简化的问题，提出HoloCount基准，采用三级分层分类体系评估逻辑约束和对抗条件下的计数能力。实验揭示多模态大模型存在严重数值幻觉，即使在简化场景下也难以精确计数，为视觉推理中的定量精度研究提供了诊断性工具。",
+          "llm_tldr": "针对现有计数基准过于简化的问题，提出HoloCount基准，采用三级分层分类体系评估逻辑约束和对抗条件下的计数能力。实验揭示多模态大模型存在严重数值幻觉，即使在简化场景下也难以精确计数，为视觉推理中的定量精度研究提供了诊断性工具。",
           "llm_tags": [
             "query:vr"
           ],
           "matched_query_tag": "query:vr",
-          "matched_query_text": "visual reasoning",
-          "matched_requirement_id": "req-1",
+          "matched_query_text": "evaluation benchmarks for visual reasoning",
+          "matched_requirement_id": "req-3",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.04779v1",
+          "paper_id": "2607.06420v1",
           "carry_days": 1
         },
         {
-          "id": "2607.03184v1",
+          "id": "2607.05122v1",
           "source": "arxiv",
-          "title": "BVS: Bayesian Visual Search with Multimodal Large Language Model for Fine-grained Perception",
-          "abstract": "While Multimodal Large Language Models (MLLMs) demonstrate impressive general capabilities, they struggle with fine-grained perception in ultra-high-resolution (UHR) images, particularly for tiny objects in cluttered scenes. Existing methods face a dilemma: they either rely on inefficient prior-free scanning, or depend on static prior-driven heuristics that lack posterior correction to rectify initial model biases. To address this, we propose BVS (Bayesian Visual Search), a framework that formulates perception as a global optimization problem over a continuous spatial-scale manifold. Specifically, BVS bridges prior guidance with posterior correction: it utilizes an early-stop attention rollout of MLLM to construct reasoning-aware priors, while employing a scale-aware non-stationary kernel and GP-UCB to dynamically rectify noise and recover missing information in the prior through iterative local observations. We provide theoretical guarantees via sub-linear regret bounds, and extensive experiments demonstrate that BVS significantly outperforms state-of-the-art baselines with a superior trade-off between accuracy and efficiency.",
+          "title": "Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies",
+          "abstract": "Vision-language-action (VLA) models enable robot navigation from natural language and visual goals, but remain susceptible to perceptual distractions and ambiguous scene interpretations. This paper presents the first empirical evaluation of visual grounding for VLA navigation policies. We propose a real-time segmentation-based grounding method that highlights traversable areas in green and non-traversable areas in red using SegFormer. Two variants are evaluated: observation-only segmentation and joint observation-goal augmentation. Using OmniVLA on the Grand Tour dataset, we show that visual grounding reduces the mean waypoint error by 27-44% at the farthest waypoint, depending on the instruction length. The benefits are greater for long instructions than for short instructions, and grounding provides little improvement for image goals. Normalized error analysis indicates that grounding primarily acts as a trajectory length regularizer, reducing the predicted path length by 30% without improving per-unit-distance reasoning. Our results indicate that visual grounding offers a simple, computationally inexpensive method to improve VLA navigation without model retraining, although it cannot compensate for missing training signals in out-of-distribution instructions.",
           "authors": [
-            "Geng Li",
-            "Yuxin Peng"
+            "Adrian Szvoren",
+            "Dimitrios Kanoulas",
+            "Nilufer Tuptuk"
           ],
           "primary_category": "cs.CV",
           "categories": [
-            "cs.CV"
+            "cs.CV",
+            "cs.RO"
           ],
-          "published": "2026-07-03T10:42:34+00:00",
-          "link": "https://arxiv.org/pdf/2607.03184v1",
+          "published": "2026-07-06T14:11:27+00:00",
+          "link": "https://arxiv.org/pdf/2607.05122v1",
           "tags": [
             "keyword:vr",
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "fine-grained perception in ultra-high-resolution images for visual reasoning",
-          "llm_evidence_cn": "超高清图像中的细粒度感知，支持视觉推理",
-          "llm_evidence": "超高清图像中的细粒度感知，支持视觉推理",
-          "canonical_evidence": "超高清图像中的细粒度感知，支持视觉推理",
-          "llm_tldr_en": "BVS formulates fine-grained perception as a global optimization over spatial-scale manifold, combining prior guidance with posterior correction for improved MLLM reasoning.",
-          "llm_tldr_cn": "多模态大模型在处理超高清图像中的小物体时存在困难，现有方法在无先验扫描和静态先验间进退维谷。该论文提出贝叶斯视觉搜索（BVS），将感知建模为连续空间-尺度流形上的全局优化，通过早期停止注意力展开构建推理感知先验，并利用贝叶斯纠偏实现后验校正。在多个细粒度基准上取得最优结果。",
-          "llm_tldr": "多模态大模型在处理超高清图像中的小物体时存在困难，现有方法在无先验扫描和静态先验间进退维谷。该论文提出贝叶斯视觉搜索（BVS），将感知建模为连续空间-尺度流形上的全局优化，通过早期停止注意力展开构建推理感知先验，并利用贝叶斯纠偏实现后验校正。在多个细粒度基准上取得最优结果。",
+          "llm_evidence_en": "visual grounding for robot navigation",
+          "llm_evidence_cn": "机器人导航中的视觉基础",
+          "llm_evidence": "机器人导航中的视觉基础",
+          "canonical_evidence": "机器人导航中的视觉基础",
+          "llm_tldr_en": "Proposes real-time semantic segmentation to ground traversable regions for VLA navigation, reducing waypoint error by 27-44%.",
+          "llm_tldr_cn": "本文提出基于语义分割的视觉基础方法，通过将可通行区域标注为绿色、不可通行为红色，有效提升了VLA导航策略的抗干扰能力。在Grand Tour数据集的实验中，最远路径点误差降低了27%至44%。",
+          "llm_tldr": "本文提出基于语义分割的视觉基础方法，通过将可通行区域标注为绿色、不可通行为红色，有效提升了VLA导航策略的抗干扰能力。在Grand Tour数据集的实验中，最远路径点误差降低了27%至44%。",
           "llm_tags": [
             "query:vr"
           ],
@@ -90,7 +91,7 @@
           "matched_query_text": "visual reasoning",
           "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.03184v1",
+          "paper_id": "2607.05122v1",
           "carry_days": 1
         }
       ]

@@ -1,0 +1,780 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-08T20:36:24.744846+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 18,
+    "deep_cap": 6,
+    "deep_selected": 8,
+    "quick_candidates": 27,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.02402v2",
+      "source": "arxiv",
+      "title": "Show Me Examples: Inferring Visual Concepts from Image Sets",
+      "abstract": "Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task, often ignoring the visual context or defaulting to biased generations. To address this gap, we propose a training framework and architecture that learn to infer visual concepts from image sets and extract concept-specific embeddings from queries. Experiments on synthetic data and large-scale ImageNet/WordNet data show that our model generates more accurate and diverse outputs and generalizes to unseen concepts and modalities such as sketches.",
+      "authors": [
+        "Nick Stracke",
+        "Kolja Bauer",
+        "Stefan Andreas Baumann",
+        "Miguel Angel Bautista",
+        "Josh Susskind",
+        "Björn Ommer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-02T16:35:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.02402v2",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "introduces VICIS benchmark for visual concept inference from image sets",
+      "llm_evidence_cn": "提出了从图像集推断视觉概念的VICIS基准",
+      "llm_evidence": "提出了从图像集推断视觉概念的VICIS基准",
+      "canonical_evidence": "提出了从图像集推断视觉概念的VICIS基准",
+      "llm_tldr_en": "Introduces Visual Concept Inference from Sets (VICIS), a benchmark evaluating VLMs' ability to infer shared concepts from example images and apply them to new queries, revealing poor performance in current models and proposing a training framework to address this.",
+      "llm_tldr_cn": "当前视觉语言模型难以从纯视觉上下文中推理共享概念。本文提出了从图像集推断视觉概念（VICIS）任务，给定少量示例图像和一个查询图像，模型需生成保持概念一致性的新图像。实验表明现有模型表现不佳，常忽略视觉上下文。为此，本文提出了一种训练框架和架构，学习从图像集中推断视觉概念，显著提升性能。该工作为视觉推理提供了新的评估基准和方法。",
+      "llm_tldr": "当前视觉语言模型难以从纯视觉上下文中推理共享概念。本文提出了从图像集推断视觉概念（VICIS）任务，给定少量示例图像和一个查询图像，模型需生成保持概念一致性的新图像。实验表明现有模型表现不佳，常忽略视觉上下文。为此，本文提出了一种训练框架和架构，学习从图像集中推断视觉概念，显著提升性能。该工作为视觉推理提供了新的评估基准和方法。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.00544v1",
+      "source": "arxiv",
+      "title": "GEAR-Seg: A Grounded Explainable Agent for Reasoning Segmentation and Data Engine",
+      "abstract": "Reasoning segmentation requires localizing targets based on complex, implicit queries. Current end-to-end models typically entangle perception and deduction into an opaque black box, severely limiting interpretability and scalability. To address this, we propose GEAR-Seg (Grounded Explainable Agent for Reasoning Segmentation), an explicitly decoupled agent that shifts the paradigm by translating visual pixels into dense, attribute-rich text. By decoupling class-agnostic segmentation, semantic description, and Large Language Model (LLM) deduction, GEAR-Seg transforms implicit reasoning into an explicit, trackable logic chain. As a zero-shot inference framework, it achieves highly competitive performance across diverse reasoning and fine-grained referring segmentation benchmarks. Furthermore, GEAR-Seg inherently functions as a highly scalable data engine. Utilizing this engine, we construct GEAR-131K, a massive benchmark (over 38k images, 656k QA-mask pairs) introducing a multifaceted taxonomy tailored for complex real-world manipulation-oriented reasoning. Finally, distillation experiments demonstrate that lightweight models supervised exclusively by our automated pipeline closely match the upper-bound performance of costly human-annotated baselines.",
+      "authors": [
+        "Yanan Wang",
+        "Wen Li",
+        "Yibin Ying",
+        "Zhenghao Fei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T07:35:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.00544v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes GEAR-Seg for reasoning segmentation, a visual reasoning task",
+      "llm_evidence_cn": "提出了用于推理分割的GEAR-Seg，属于视觉推理任务",
+      "llm_evidence": "提出了用于推理分割的GEAR-Seg，属于视觉推理任务",
+      "canonical_evidence": "提出了用于推理分割的GEAR-Seg，属于视觉推理任务",
+      "llm_tldr_en": "Proposes GEAR-Seg, a decoupled agent that translates visual pixels into attribute-rich text for reasoning segmentation, achieving competitive zero-shot performance while providing interpretable reasoning.",
+      "llm_tldr_cn": "当前推理分割方法将感知与推理混杂在黑盒中，缺乏可解释性。本文提出GEAR-Seg，将视觉像素转化为密集属性文本，通过解耦分割、描述和LLM推理，将隐性推理变为显式逻辑链。在多种推理分割任务上，GEAR-Seg以零样本方式取得极具竞争力的性能，同时提供可追踪的推理过程。该工作为视觉推理的可解释性和可扩展性树立了新范式。",
+      "llm_tldr": "当前推理分割方法将感知与推理混杂在黑盒中，缺乏可解释性。本文提出GEAR-Seg，将视觉像素转化为密集属性文本，通过解耦分割、描述和LLM推理，将隐性推理变为显式逻辑链。在多种推理分割任务上，GEAR-Seg以零样本方式取得极具竞争力的性能，同时提供可追踪的推理过程。该工作为视觉推理的可解释性和可扩展性树立了新范式。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.00606v1",
+      "source": "arxiv",
+      "title": "Retrieved Images as Visual Thought: Training-Free Multimodal In-Context Learning for the Open-vs-Closed Gap",
+      "abstract": "Recent work on Thinking with Images makes vision a dynamic part of reasoning, but does so through generation: the model invokes external tools, synthesizes code, or imagines new imagery, each at the cost of a tool protocol, brittle code, or an expensive training pipeline. A fourth route makes vision dynamic without generating anything, by retrieving labeled exemplar images and reasoning over them, yet it remains underexplored despite being train-free. We present ReVisIT, a train-free framework that realizes this retrieval-based route by treating each retrieved image-label pair as a unit of visual thought. ReVisIT combines structured class definitions, per-query multimodal retrieval of exemplars, and alternating user/assistant injection of those exemplars before joint multi-attribute decoding, and degrades gracefully to whichever components a task admits. On VL-ICL Bench Fast Open MiniImageNet, Qwen3-VL-30B-A3B with ReVisIT reaches 98.5% at 4-shot, statistically indistinguishable from the 72B LLaVA-OneVision SOTA (98.7%) on this near-saturated task at about 1/2.4 the parameters, while the same backbone without the scaffold sits at chance. The turns layer alone adds 26.1 points to GPT-4.1 on free-form concept induction (Bongard-OpenWorld), and the full stack yields a 4-6 point macro gain across three backbones on MAAC-Bench, a new license-clean 27-class, 5-attribute benchmark, significant by paired bootstrap on the curator-derived attributes. Component analysis shows that retrieval-plus-turns is the universal lever while structured definitions are need-adaptive, and that 83% of the retrieval gain comes from retrieval quality rather than from the presence of exemplars. MAAC-Bench is released with a rubric-grounded LLM verification protocol that replaces author spot-check on subjective attributes.",
+      "authors": [
+        "Bingchen Huang",
+        "Zhiling Wang",
+        "Yifu Chen",
+        "Yuanchao Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T08:31:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.00606v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "training-free visual reasoning via retrieval",
+      "llm_evidence_cn": "通过检索实现无训练视觉推理",
+      "llm_evidence": "通过检索实现无训练视觉推理",
+      "canonical_evidence": "通过检索实现无训练视觉推理",
+      "llm_tldr_en": "ReVisIT uses retrieved image-label pairs as units of visual thought for training-free multimodal in-context learning, bridging the open-vs-closed gap without generation.",
+      "llm_tldr_cn": "本文提出ReVisIT框架，无需任何训练，通过检索标注图像作为视觉思维单元，实现了开放词汇分类中的视觉推理。该方法避免了生成或工具调用的成本，在多个基准上超越了依赖生成的方法，展示了检索式视觉推理的潜力。",
+      "llm_tldr": "本文提出ReVisIT框架，无需任何训练，通过检索标注图像作为视觉思维单元，实现了开放词汇分类中的视觉推理。该方法避免了生成或工具调用的成本，在多个基准上超越了依赖生成的方法，展示了检索式视觉推理的潜力。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.02907v1",
+      "source": "arxiv",
+      "title": "ProLaViT: Learning Progressive Latent Visual Thoughts in Structured Latent Space",
+      "abstract": "Multimodal Large Language Models (MLLMs) have achieved remarkable progress but still struggle with complex visual reasoning tasks requiring multi-step perception and logical deduction. While explicit visual generation incurs prohibitive computational costs, existing latent approaches often rely on external experts or lack rigorous cognitive logic. In this paper, we introduce ProLaViT (Progressive Latent Visual Thought), a framework empowering MLLMs to perform structured visual derivation in the continuous latent space. Unlike works dependent on heterogeneous external models, ProLaViT leverages an endogenous self-distillation mechanism, utilizing the model's own visual encoder to supervise latent thoughts. To facilitate this, we construct a scalable programmatic synthesis pipeline enabling the model to internalize algorithmic precision without inference time tools. We design two reasoning paradigms: (1) Coarse-to-Fine Causal Chain for spatial tasks, guiding attention from global context to local targets. (2) Dialectical Reasoning Chain for logical tasks, incorporating counter-factual thinking for verification. Furthermore, we propose a Distance-Weighted Diversity Loss to impose topology-aware constraints, preventing feature degeneration by enforcing semantic distinctiveness. Extensive experiments demonstrate that ProLaViT outperforms baselines on vision-centric benchmarks, achieving superior accuracy and interpretability with high efficiency.",
+      "authors": [
+        "Peiming Li",
+        "Yifan Wang",
+        "Xiaotian Zhang",
+        "Zhiyuan Hu",
+        "Shiyu Li",
+        "Zheng Wei",
+        "Yang Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-07-03T03:14:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.02907v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "progressive latent visual thoughts for complex visual reasoning",
+      "llm_evidence_cn": "渐进潜视觉思维用于复杂视觉推理",
+      "llm_evidence": "渐进潜视觉思维用于复杂视觉推理",
+      "canonical_evidence": "渐进潜视觉思维用于复杂视觉推理",
+      "llm_tldr_en": "Proposes ProLaViT, a self-distillation framework enabling MLLMs to perform structured latent visual reasoning without external models, significantly improving multi-step visual deduction.",
+      "llm_tldr_cn": "针对多模态大模型在多步视觉推理中逻辑不足的问题，提出ProLaViT框架，利用内源自蒸馏机制在连续潜空间中执行结构化视觉推导，无需外部专家模型。实验证明该方法显著提升了复杂视觉推理任务的准确性与逻辑连贯性，为潜空间视觉推理提供了新范式。",
+      "llm_tldr": "针对多模态大模型在多步视觉推理中逻辑不足的问题，提出ProLaViT框架，利用内源自蒸馏机制在连续潜空间中执行结构化视觉推导，无需外部专家模型。实验证明该方法显著提升了复杂视觉推理任务的准确性与逻辑连贯性，为潜空间视觉推理提供了新范式。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03530v1",
+      "source": "arxiv",
+      "title": "MentalThink: Shaping Thoughts in Mental SVG World",
+      "abstract": "We introduce MentalThink, a visual-symbolic reasoning paradigm that equips Multimodal LLMs (MLLMs) with an executable mechanism for \"mental\" visualization. The core of MentalThink is a think-with-SVG pipeline, where the model learns to generate, render, and interpret scalable vector graphics (SVG) code as an intermediate visual representation for multi-turn reasoning. By creating structured vector sketches, the model can externalize spatial hypotheses, inspect them through deterministic rendering, and reason within a constrained geometric space, effectively mimicking the human process of mental imagery. We instantiate this paradigm through a two-stage training framework, combining Supervised Fine-Tuning (SFT) for SVG syntactic alignment with multi-turn Reinforcement Learning (RL) to encourage iterative inspection, revision, and refinement of intermediate visual hypotheses. Extensive evaluations demonstrate that MentalThink achieves superior performance on spatial understanding and reasoning benchmarks (e.g., 55.1% on VSIBench, 76.0% on MindCube), showing that executable vector graphics provide a verifiable visual workspace for dynamic perspective taking, visual reflection, and compositional scene construction.",
+      "authors": [
+        "Kangheng Lin",
+        "Jisheng Yin",
+        "Dingming Li",
+        "En Yu",
+        "Yana Wei",
+        "Han Zhou",
+        "Liang Zhao",
+        "Hongyu Zhou",
+        "Hongbo Peng",
+        "Jianjian Sun",
+        "Zheng Ge",
+        "Xiangyu Zhang",
+        "Daxin Jiang",
+        "Jingyu Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-07-03T17:59:58+00:00",
+      "link": "https://arxiv.org/pdf/2607.03530v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "visual-symbolic reasoning using SVG for mental imagery",
+      "llm_evidence_cn": "利用SVG进行视觉符号推理，模拟心理意象",
+      "llm_evidence": "利用SVG进行视觉符号推理，模拟心理意象",
+      "canonical_evidence": "利用SVG进行视觉符号推理，模拟心理意象",
+      "llm_tldr_en": "Introduces MentalThink, a visual-symbolic reasoning paradigm that uses SVG as an intermediate representation for multi-turn reasoning, achieving strong performance on spatial reasoning tasks.",
+      "llm_tldr_cn": "MentalThink提出了一种视觉-符号推理范式，通过让多模态大语言模型生成、渲染和解读SVG代码作为中间视觉表示，模拟人类的心理意象过程。采用两阶段训练框架，结合监督微调和多轮强化学习。实验显示，该方法在多个空间推理基准上取得了领先结果，有效缓解了纯语言推理的局限性。",
+      "llm_tldr": "MentalThink提出了一种视觉-符号推理范式，通过让多模态大语言模型生成、渲染和解读SVG代码作为中间视觉表示，模拟人类的心理意象过程。采用两阶段训练框架，结合监督微调和多轮强化学习。实验显示，该方法在多个空间推理基准上取得了领先结果，有效缓解了纯语言推理的局限性。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03614v1",
+      "source": "arxiv",
+      "title": "IDEAL-Bench: Indoor Dataset and Evaluation suite for Analyzing 3D Layout reasoning",
+      "abstract": "Spatial question answering is the dominant paradigm for evaluating spatial intelligence in Vision-Language Models (VLMs), but it leaves a complementary axis of spatial competence under-evaluated: holistic 3D layout inference, which predicts every visible object's pose and extent from a single image in a structured form. To this end, we introduce IDEAL-Bench, an evaluation suite that requires VLMs to predict structured 3D layouts on photorealistic indoor scenes across 10 room types, scored along five numerical dimensions and a perceptual render-and-compare protocol. By operating on semantically realistic scenes with full asset substitution under controlled lighting and viewpoint, IDEAL-Bench moves beyond CLEVR-style simple geometric primitives so that any image-space discrepancy reflects spatial reasoning alone. The benchmark is built on IDEAL-Scenes, a procedurally generated dataset of 1,000 re-renderable Blender environments with ground-truth layouts. Evaluating 15 prominent VLMs reveals three findings: the task remains substantially unsolved, with the strongest model reaching only 62.1/100 overall; all models exhibit a sharp asymmetry between object recognition and geometric regression, indicating that current VLMs are trained to describe scenes rather than to measure them; model rankings partially diverge from those on QA-based and primitive-reconstruction benchmarks: top-tier consensus holds, but mid-tier rankings shift substantially. Collectively, these findings establish IDEAL-Bench as a diagnostic suite, targeting the geometric and structural competencies that QA-based evaluation cannot surface, and paving the way towards more rigorous evaluation of spatial intelligence in next-generation VLMs. Together, these findings position IDEAL-Bench as a principled diagnostic for whether future VLMs achieve genuine spatial understanding rather than linguistic approximations of it.",
+      "authors": [
+        "Yuening Cai",
+        "Junwei Zhou",
+        "Youran Qu",
+        "Yu-Wing Tai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-03T22:04:42+00:00",
+      "link": "https://arxiv.org/pdf/2607.03614v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "evaluation benchmark for 3D layout reasoning from single images",
+      "llm_evidence_cn": "面向单张图像3D布局推理的评估基准",
+      "llm_evidence": "面向单张图像3D布局推理的评估基准",
+      "canonical_evidence": "面向单张图像3D布局推理的评估基准",
+      "llm_tldr_en": "Introduces IDEAL-Bench, a benchmark for evaluating holistic 3D layout inference from single images, with realistic indoor scenes and a perceptual render-and-compare score.",
+      "llm_tldr_cn": "IDEAL-Bench是一个面向单张图像3D布局推理的评估套件，包含10种室内场景类型、五数值维度和感知渲染对比协议。通过逼真的场景和全资产替换，该基准超越了传统CLEVR风格简单几何基元。为评估视觉语言模型的空间智能提供了更全面的评价标准，填补了当前测评体系的空白。",
+      "llm_tldr": "IDEAL-Bench是一个面向单张图像3D布局推理的评估套件，包含10种室内场景类型、五数值维度和感知渲染对比协议。通过逼真的场景和全资产替换，该基准超越了传统CLEVR风格简单几何基元。为评估视觉语言模型的空间智能提供了更全面的评价标准，填补了当前测评体系的空白。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.03647v1",
+      "source": "arxiv",
+      "title": "Do Medical Vision Language Models Actually See? A Counterfactual Grounding Framework and Hard-Negative Contrastive Training for Visually-Reliant Medical VLMs",
+      "abstract": "Large vision language models (VLMs) report strong accuracy on medical question-answering, yet it remains unclear whether they reason from visual evidence or exploit textual shortcuts. We introduce a counterfactual evaluation framework that decouples visual and textual contributions by substituting input images with controlled surrogates blank, pixel-shuffled, image-absent, and CLIP-retrieved hard negatives and derive a suite of grounding metrics including the Visual Reliance Score (VRS) and Visual Hallucination Rate (VHR). We further introduce CORAL (COntrastive Retrieval-Augmented Learning), a 7B-parameter LoRA fine-tune of Qwen2.5-VL-7B trained with a Contrastive Grounding Objective (CGO) that penalises answer invariance under hard-negative image swaps. On a paired controlled evaluation across four closed-form medical VQA benchmarks (PathVQA, PMC-VQA, SLAKE, VQA-RAD; n=400 total), CORAL improves macro accuracy by +6.7 pp (P(Delta>0)=0.988) and reduces VHR by 8.0 pp (P<0.001) over the matched Qwen2.5-VL-7B base; neither MedVLThinker RL variant achieves a significant gain on either metric. Cross-domain diagnostics further reveal that image substitution costs only <=6.5 pp on medical benchmarks versus 48-61 pp on general-domain tasks, situating the grounding gap that CGO targets. We discuss evaluation limitations openly including train/eval benchmark overlap and underpowered secondary metrics and release our framework, training code, and model weights to support reproducible grounding audits of medical VLMs.",
+      "authors": [
+        "Anas Zafar",
+        "Leema Krishna Murali",
+        "Siddhant Bharadwaj",
+        "Ashish Vashist",
+        "Jia Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-04T00:06:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.03647v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "counterfactual evaluation framework for visual reasoning in medical VLMs",
+      "llm_evidence_cn": "医学视觉语言模型视觉推理的反事实评估框架",
+      "llm_evidence": "医学视觉语言模型视觉推理的反事实评估框架",
+      "canonical_evidence": "医学视觉语言模型视觉推理的反事实评估框架",
+      "llm_tldr_en": "Introduces counterfactual evaluation framework and grounding metrics to assess whether medical VLMs truly reason from visual evidence, plus CORAL training to improve visual reliance.",
+      "llm_tldr_cn": "针对医学视觉语言模型可能依赖文本捷径而非视觉证据的问题，本文提出反事实评估框架，通过替换图像为空白、像素打乱等控制图像，计算视觉依赖分数和视觉幻觉率等指标。同时提出CORAL对比学习微调方法，提升模型对视觉证据的依赖。实验表明该方法能有效检测和缓解视觉幻觉。该工作为视觉推理评估提供了新工具。",
+      "llm_tldr": "针对医学视觉语言模型可能依赖文本捷径而非视觉证据的问题，本文提出反事实评估框架，通过替换图像为空白、像素打乱等控制图像，计算视觉依赖分数和视觉幻觉率等指标。同时提出CORAL对比学习微调方法，提升模型对视觉证据的依赖。实验表明该方法能有效检测和缓解视觉幻觉。该工作为视觉推理评估提供了新工具。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.05798v1",
+      "source": "arxiv",
+      "title": "Segmentation before Answering: Pixel Grounding for MLLM Visual Reasoning",
+      "abstract": "Recent advancements in Multimodal Large Language Models (MLLMs) have evolved from static perception to interleaved visual-language reasoning, often referred to as ``thinking with images''. A basic operation in this reasoning process is to zoom in on regions of interest (often represented with bounding boxes) to acquire finer visual details. In this paper, we propose \\textbf{Seg}mentation before \\textbf{Answer}ing (SegAnswer), which shifts the unit of zoom-in from the popular bounding box to pixel-level segmentation mask. By employing fine-grained masks to isolate the target area from cluttered environments, segmented visual input yields a more precise region of interest, effectively filtering out redundant background and interfering objects. Furthermore, the discrete patches of segmented visual input align more seamlessly with how MLLMs structure visual tokens via positional embeddings. In experiments, we evaluate SegAnswer across diverse benchmarks, including high-resolution perception, general perception, and hallucination. It achieves consistent improvements and also exhibits considerable performance on segmentation tasks, validating its capability for reliable pixel grounding.",
+      "authors": [
+        "Yake Wei",
+        "Yuan Wang",
+        "Fengyun Rao",
+        "Jing Lyu",
+        "Di Hu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-07T03:50:43+00:00",
+      "link": "https://arxiv.org/pdf/2607.05798v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "pixel grounding for MLLM visual reasoning",
+      "llm_evidence_cn": "基于像素的MLLM视觉推理",
+      "llm_evidence": "基于像素的MLLM视觉推理",
+      "canonical_evidence": "基于像素的MLLM视觉推理",
+      "llm_tldr_en": "Proposes SegAnswer, which uses pixel-level segmentation masks instead of bounding boxes to zoom in on regions, enhancing visual reasoning in MLLMs.",
+      "llm_tldr_cn": "针对多模态大语言模型视觉推理中边界框定位不够精细的问题，本文提出SegAnswer，将缩放单元从边界框提升为像素级分割掩码。通过细粒度掩码隔离目标区域，过滤干扰背景，使模型获得更精确的感兴趣区域，从而提升视觉推理准确性。实验表明该方法在视觉推理任务上优于基于边界框的方法。该工作推进了视觉推理中的细粒度感知。",
+      "llm_tldr": "针对多模态大语言模型视觉推理中边界框定位不够精细的问题，本文提出SegAnswer，将缩放单元从边界框提升为像素级分割掩码。通过细粒度掩码隔离目标区域，过滤干扰背景，使模型获得更精确的感兴趣区域，从而提升视觉推理准确性。实验表明该方法在视觉推理任务上优于基于边界框的方法。该工作推进了视觉推理中的细粒度感知。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.00672v1",
+      "source": "arxiv",
+      "title": "DART: Difficulty-Adaptive Routing for Zero-Shot Video Temporal Grounding",
+      "abstract": "Zero-shot video temporal grounding (VTG) localizes events in untrimmed videos from natural language queries without task-specific training. Existing methods rely on frame-query feature matching, which suffices for simple events but struggles with complex multi-stage queries that require understanding temporal ordering and causal structure -- a disparity we call the reasoning gap. We propose DART (Difficulty-Adaptive Routing for Temporal Grounding), which bridges this gap by coupling difficulty-aware routing with structured reasoning in large vision-language models. A query-conditioned Determinantal Point Process (DPP) serves a dual role: selecting diverse, query-relevant keyframes as temporal evidence, and providing spectral entropy as a difficulty indicator. Simple queries are routed to a Fast path for direct prediction, while complex queries follow a Slow path with Temporal Markup Prompting, which decomposes localization into global event analysis, per-frame temporal role annotation, and boundary extraction. On Charades-STA and ActivityNet Captions, DART achieves state-of-the-art zero-shot performance across both identically distributed and multiple out-of-distribution settings, improving mIoU by up to 3.5 points over the strongest baseline while using over 7 times fewer frames. The project homepage is available at https://dart-vtg.github.io/.",
+      "authors": [
+        "Zhengbo Zhang",
+        "Mark He Huang",
+        "Zhigang Tu",
+        "Ming-Hsuan Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T09:18:59+00:00",
+      "link": "https://arxiv.org/pdf/2607.00672v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "zero-shot video temporal grounding with reasoning",
+      "llm_evidence_cn": "零样本视频时间定位中的推理",
+      "llm_evidence": "零样本视频时间定位中的推理",
+      "canonical_evidence": "零样本视频时间定位中的推理",
+      "llm_tldr_en": "DART bridges the reasoning gap in zero-shot video temporal grounding by adaptively routing difficult queries to structured reasoning in VLMs.",
+      "llm_tldr_cn": "本文提出DART框架，针对零样本视频时间定位中复杂多阶段查询的推理不足问题，通过难度感知路由机制，将困难查询导向大视觉语言模型的结构化推理。实验证明该方法在多个基准上有效提升了定位准确率。",
+      "llm_tldr": "本文提出DART框架，针对零样本视频时间定位中复杂多阶段查询的推理不足问题，通过难度感知路由机制，将困难查询导向大视觉语言模型的结构化推理。实验证明该方法在多个基准上有效提升了定位准确率。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.31285v1",
+      "source": "arxiv",
+      "title": "Spatial Reasoning via Modality Switching Between Language and Symbolic Representation",
+      "abstract": "Human reasoning is inherently multimodal: when problems become difficult, we rarely think in words alone. We often externalize our reasoning by sketching diagrams or drawing grids to understand the underlying conceptual structure and avoid mistakes. Building on this premise, our research investigates: (a) whether grounding multi-hop textual-spatial stories into geometry-aware modalities, such as layouts or grids, improves reasoning compared to natural language-based inference; and (b) whether a model can decide when to rely on natural language reasoning and when to switch to a structured modality. We address these questions by introducing a switching metric based on trustworthiness and complexity signals, which estimates when grounding a spatial story into structure is likely to improve performance. This takes a first step toward principled modality selection in Large Language Model (LLM) reasoning. Across our settings, switching from natural language-based reasoning to a grid-based representation improves LLM performance by up to 42\\%, highlighting the importance of modality choice in shaping reasoning outcomes.",
+      "authors": [
+        "Shreya Rajpal",
+        "Tanawan Premsri",
+        "Parisa Kordjamshidi"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-30T08:02:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.31285v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "spatial reasoning via modality switching between language and symbolic representation",
+      "llm_evidence_cn": "通过语言与符号表示之间的模态转换进行空间推理",
+      "llm_evidence": "通过语言与符号表示之间的模态转换进行空间推理",
+      "canonical_evidence": "通过语言与符号表示之间的模态转换进行空间推理",
+      "llm_tldr_en": "Investigates modality switching between language and symbolic representations for spatial reasoning, introducing a switching metric based on trustworthiness and complexity.",
+      "llm_tldr_cn": "针对人类在复杂推理中常借助外部图示这一现象，研究是否将多跳文本空间故事转化为几何感知模态（如布局或网格）能提升推理性能。提出基于可信度和复杂度的切换指标，让模型自主决定何时使用自然语言推理、何时转为结构化模态。实验表明模态切换策略在空间推理任务上优于纯文本推理，为多模态推理提供了新思路。",
+      "llm_tldr": "针对人类在复杂推理中常借助外部图示这一现象，研究是否将多跳文本空间故事转化为几何感知模态（如布局或网格）能提升推理性能。提出基于可信度和复杂度的切换指标，让模型自主决定何时使用自然语言推理、何时转为结构化模态。实验表明模态切换策略在空间推理任务上优于纯文本推理，为多模态推理提供了新思路。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.02934v1",
+      "source": "arxiv",
+      "title": "MatPhaseBench: A Semantics-Guided Benchmark for Materials Phase Diagrams Understanding",
+      "abstract": "Materials phase diagrams are a core knowledge representation in materials science, encoding temperature,composition, phase stability, and phase transformation pathways, with their full understanding requiring thermodynamic mechanism analysis and scientific reasoning. Although VLMs have shown promise in scientific image understanding, their systematic evaluation on such logically complex images demanding deep mechanistic interpretation remains limited, and phase diagrams provide a challenging testbed for this purpose. We introduce MatPhaseBench, a high-quality, high-reliability benchmark for complex scientific image understanding, focused on materials phase diagrams. MatPhaseBench is constructed from 3681 papers in classical materials science journals, from which 200 high-quality diagram-text pairs were selected, covering 189 material systems and 70 elements. The benchmark has three key features: (1)targeting complex scientific image understanding-it moves beyond simple objective tests to open-ended tasks requiring deep comprehension; (2)comprehensive image-text alignment-semantic information associated with images is fully preserved during literature mining and matching; (3) high-quality human-supervised text acquisition-all descriptions undergo strict manual validation. Experimental results show that current VLMs remain substantially behind expert-level understanding: they are largely limited to surface visual perception, lack deep reasoning grounded in thermodynamic mechanisms, have limited domain awareness and expert analytical experience, and perform poorly in distinguishing fine-grained differences in composite or multi-diagram settings. Overall, MatPhaseBench constitutes a challenging research-grade benchmark, providing a foundational platform for complex scientific image understanding, phase diagram analysis, and trustworthy multi-modal AI in science.",
+      "authors": [
+        "Hanwen Wang",
+        "Sihan Liang",
+        "Zhiwei Liu",
+        "Yangang Wang",
+        "Wei Yan",
+        "Yuqin Liu",
+        "Zongguo Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cond-mat.mtrl-sci",
+        "cs.AI"
+      ],
+      "published": "2026-07-03T04:00:53+00:00",
+      "link": "https://arxiv.org/pdf/2607.02934v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark for scientific image understanding requiring reasoning",
+      "llm_evidence_cn": "面向需要推理的科学图像理解的基准",
+      "llm_evidence": "面向需要推理的科学图像理解的基准",
+      "canonical_evidence": "面向需要推理的科学图像理解的基准",
+      "llm_tldr_en": "Introduces MatPhaseBench, a high-quality benchmark for evaluating VLMs on materials phase diagrams, which require deep mechanistic reasoning.",
+      "llm_tldr_cn": "针对视觉语言模型在需要深层机制推理的科学图像上的系统评估不足的问题，本文提出MatPhaseBench，一个高质量、高可靠性的材料相图理解基准。该基准从3681篇论文中构建，包含复杂的相图及其科学推理问题。实验揭示了当前VLM在相图推理上的局限性，为科学视觉推理评估提供了新标准。该工作填补了复杂科学图像推理评估的空白。",
+      "llm_tldr": "针对视觉语言模型在需要深层机制推理的科学图像上的系统评估不足的问题，本文提出MatPhaseBench，一个高质量、高可靠性的材料相图理解基准。该基准从3681篇论文中构建，包含复杂的相图及其科学推理问题。实验揭示了当前VLM在相图推理上的局限性，为科学视觉推理评估提供了新标准。该工作填补了复杂科学图像推理评估的空白。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.02922v1",
+      "source": "arxiv",
+      "title": "STAC: Selective Spatiotemporal Aggregation and Compression for Video Reasoning Segmentation",
+      "abstract": "Video reasoning segmentation demands pixel-accurate object tracking across hundreds of frames under complex natural language queries, producing dense spatiotemporal tokens whose quadratic self-attention cost makes long-video processing prohibitive. Existing methods address this through token compression, yet typically operate on encoder features lacking temporal context, constraining selection before content redundancy can be reliably assessed. Informed compression requires contextual awareness, but acquiring that awareness at full resolution incurs the same quadratic cost compression aims to reduce. State-space models resolve this constraint, as their linear recurrence selectively conditions each token on temporal context at $\\mathcal{O}(T)$ cost, producing representations where content redundancy becomes assessable. Building on this, Selective SpatioTemporal Aggregation and Compression (STAC) enriches features via decoupled bidirectional spatial and causal temporal scanning, leveraging recurrence-derived redundancy for hierarchical compression with adaptive thresholds optimised with segmentation objective. STAC achieves 85% token reduction and 1.8$\\times$ speedup while surpassing compression-free baselines on reasoning segmentation benchmarks in a zero-shot streaming-compatible setting. Code is available \\href{https://github.com/MCG-NKU/nku-video}{here}.",
+      "authors": [
+        "Syed Ariff Syed Hesham",
+        "Yun Liu",
+        "Guolei Sun",
+        "Jing Yang",
+        "Henghui Ding",
+        "Xue Geng",
+        "Xudong Jiang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-03T03:28:25+00:00",
+      "link": "https://arxiv.org/pdf/2607.02922v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "video reasoning segmentation with token compression",
+      "llm_evidence_cn": "视频推理分割中的令牌压缩",
+      "llm_evidence": "视频推理分割中的令牌压缩",
+      "canonical_evidence": "视频推理分割中的令牌压缩",
+      "llm_tldr_en": "STAC uses state-space models for temporally-aware token compression in video reasoning segmentation, enabling efficient long-video processing.",
+      "llm_tldr_cn": "本文提出STAC方法，针对视频推理分割中长视频处理的计算瓶颈，利用状态空间模型的线性递推特性，在令牌压缩前引入时间上下文，实现选择性时空聚合。在多个视频分割基准上，该方法在保持高精度的同时显著降低了计算成本。",
+      "llm_tldr": "本文提出STAC方法，针对视频推理分割中长视频处理的计算瓶颈，利用状态空间模型的线性递推特性，在令牌压缩前引入时间上下文，实现选择性时空聚合。在多个视频分割基准上，该方法在保持高精度的同时显著降低了计算成本。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.31814v1",
+      "source": "arxiv",
+      "title": "Generative Lane Topology Reasoning via Autoregressive Model with Geometry Prior",
+      "abstract": "Lane topology reasoning aims to construct a lane graph from onboard sensor observations. Existing methods follow a detection and association paradigm that treats each lane instance independently, leading to geometric inconsistency at connected endpoints and incomplete graphs due to visual occlusions. To address these issues, we propose TopoGPT, a generative framework that learns the geometry prior from typical lane graph structures through autoregressive sequence modeling. Specifically, we construct a large-scale map dataset comprising 3.3M scenes. For each lane graph, a lane tokenizer serializes it into discrete tokens, while a scene context encoder converts it into a rasterized image and extracts global features as scene tokens. We pre-train an autoregressive lane sequence transformer via scene-conditioned next-token prediction, endowing the model with the geometry prior over lane graph structures. Building upon this prior, a perception adapter aligns BEV features from multi-view images with the pre-trained scene condition, transferring the learned geometry prior to sensor-based lane graph prediction. On the OpenLane-V2 benchmark, TopoGPT outperforms existing methods by an average of +6.4 on lane-level and +11.6 on point-level metrics, and produces geometrically consistent and structurally complete lane graphs.",
+      "authors": [
+        "Jiahui Fu",
+        "Zehao Huang",
+        "Han Li",
+        "Naiyan Wang",
+        "Si Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-30T15:27:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.31814v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "lane topology reasoning as visual reasoning",
+      "llm_evidence_cn": "车道拓扑推理作为视觉推理",
+      "llm_evidence": "车道拓扑推理作为视觉推理",
+      "canonical_evidence": "车道拓扑推理作为视觉推理",
+      "llm_tldr_en": "Proposes TopoGPT, a generative framework that learns geometry prior via autoregressive modeling for lane topology reasoning from visual input.",
+      "llm_tldr_cn": "针对现有车道拓扑推理方法因独立检测导致几何不一致和不完整图的问题，本文提出TopoGPT生成式框架，通过学习典型车道图结构的几何先验，利用自回归序列建模从视觉传感器观测生成一致的车道图。在大规模数据集上预训练后，该方法显著提升了推理的几何一致性和完整性。该工作为结构化视觉推理提供了新范式。",
+      "llm_tldr": "针对现有车道拓扑推理方法因独立检测导致几何不一致和不完整图的问题，本文提出TopoGPT生成式框架，通过学习典型车道图结构的几何先验，利用自回归序列建模从视觉传感器观测生成一致的车道图。在大规模数据集上预训练后，该方法显著提升了推理的几何一致性和完整性。该工作为结构化视觉推理提供了新范式。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.05543v1",
+      "source": "arxiv",
+      "title": "GEM-Occ: From Visual Geometry Evidence to Embodied Semantic Occupancy Memory",
+      "abstract": "Semantic occupancy provides a structured spatial memory for embodied indoor agents by jointly representing occupied regions, observed free space, unknown areas, and object semantics. However, existing indoor occupancy benchmarks and methods mainly focus on single-view prediction or room-level online perception, leaving long-horizon semantic mapping across connected indoor spaces underexplored. We introduce HIOcc, a hierarchical indoor occupancy benchmark that unifies ScanNet, ScanNet++, and Matterport3D under a common sparse semantic occupancy format while preserving their native observation geometries, including perspective RGB-D frames and pano-centric observation groups. HIOcc supports three complementary evaluation regimes: local semantic occupancy prediction, room-level online occupancy mapping, and building-level mapping across connected panoramic environments. We further propose GEM-Occ, a Gaussian Evidence Memory framework for semantic occupancy mapping. Rather than using pointmaps as persistent map states, GEM-Occ treats local visual geometry predictions as transient evidence, converts them into semantic Gaussian occupancy evidence and free-space ray evidence, and fuses them into a persistent hierarchical memory through visibility- and uncertainty-aware causal updates. The memory is organized into local caches, room-level submaps, and a building-level graph, and can be queried at any time through Gaussian-to-occupancy splatting. Experiments on HIOcc show that GEM-Occ improves local occupancy prediction, online map stability, free-space reasoning, revisit consistency, and building-level scalability over prior indoor occupancy and Gaussian-based mapping baselines.",
+      "authors": [
+        "Hu Zhu",
+        "Bohan Li",
+        "Xianda Guo",
+        "Hongsi Liu",
+        "Baorui Peng",
+        "Mingqi Yuan",
+        "Xin Jin",
+        "Wenjun Zeng",
+        "Chang Wen Chen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-06T18:26:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05543v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "embodied semantic occupancy memory as a world model for indoor navigation",
+      "llm_evidence_cn": "作为世界模型的具身语义占用记忆",
+      "llm_evidence": "作为世界模型的具身语义占用记忆",
+      "canonical_evidence": "作为世界模型的具身语义占用记忆",
+      "llm_tldr_en": "Introduces HIOcc benchmark and GEM-Occ method for hierarchical semantic occupancy, supporting long-horizon mapping for embodied agents as a form of world model.",
+      "llm_tldr_cn": "针对室内长时程语义映射缺乏统一基准的问题，提出HIOcc基准（整合ScanNet等数据集）和GEM-Occ方法，从视觉几何证据推断结构化语义占用空间。该方法支持局部、全局和全景评估，为具身智能体构建了类似世界模型的内存表征，推动了结构化空间记忆的发展。",
+      "llm_tldr": "针对室内长时程语义映射缺乏统一基准的问题，提出HIOcc基准（整合ScanNet等数据集）和GEM-Occ方法，从视觉几何证据推断结构化语义占用空间。该方法支持局部、全局和全景评估，为具身智能体构建了类似世界模型的内存表征，推动了结构化空间记忆的发展。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.03184v1",
+      "source": "arxiv",
+      "title": "BVS: Bayesian Visual Search with Multimodal Large Language Model for Fine-grained Perception",
+      "abstract": "While Multimodal Large Language Models (MLLMs) demonstrate impressive general capabilities, they struggle with fine-grained perception in ultra-high-resolution (UHR) images, particularly for tiny objects in cluttered scenes. Existing methods face a dilemma: they either rely on inefficient prior-free scanning, or depend on static prior-driven heuristics that lack posterior correction to rectify initial model biases. To address this, we propose BVS (Bayesian Visual Search), a framework that formulates perception as a global optimization problem over a continuous spatial-scale manifold. Specifically, BVS bridges prior guidance with posterior correction: it utilizes an early-stop attention rollout of MLLM to construct reasoning-aware priors, while employing a scale-aware non-stationary kernel and GP-UCB to dynamically rectify noise and recover missing information in the prior through iterative local observations. We provide theoretical guarantees via sub-linear regret bounds, and extensive experiments demonstrate that BVS significantly outperforms state-of-the-art baselines with a superior trade-off between accuracy and efficiency.",
+      "authors": [
+        "Geng Li",
+        "Yuxin Peng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-03T10:42:34+00:00",
+      "link": "https://arxiv.org/pdf/2607.03184v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "fine-grained visual perception with reasoning",
+      "llm_evidence_cn": "细粒度视觉感知与推理",
+      "llm_evidence": "细粒度视觉感知与推理",
+      "canonical_evidence": "细粒度视觉感知与推理",
+      "llm_tldr_en": "BVS formulates fine-grained perception as global optimization with Bayesian search, using attention rollout for reasoning-aware priors.",
+      "llm_tldr_cn": "本文提出BVS框架，将细粒度感知问题转化为连续空间-尺度流形上的贝叶斯优化，通过早期停止的注意力机制构建推理感知先验并进行后验校正。在超高分辨率图像场景中，该方法显著提升了微小物体的定位与识别能力。",
+      "llm_tldr": "本文提出BVS框架，将细粒度感知问题转化为连续空间-尺度流形上的贝叶斯优化，通过早期停止的注意力机制构建推理感知先验并进行后验校正。在超高分辨率图像场景中，该方法显著提升了微小物体的定位与识别能力。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.00465v1",
+      "source": "arxiv",
+      "title": "StochasT: Learning with Stochastic Turn Depth for Visual Instruction Tuning",
+      "abstract": "Large Vision-Language Models (LVLMs) rely extensively on Visual Instruction Tuning (VIT) to elicit their multimodal reasoning capabilities. However, we find a discrepancy: VIT often packs multiple language tasks about the same image for conversational, multi-turn training, whereas existing benchmarks evaluate LVLMs in isolated, single-turn scenarios. The models can suffer from visual attention decay and contextual overfitting during multi-turn training, making it hard for them to realize their full potential in the mismatched test phase. To close the gap, we propose learning with Stochastic Turn Depth (StochasT), which stochastically groups language tasks for the same image into clusters of varying sizes (turn depth) while preserving their organic order. Hence, while StochasT draws on Dropout and stochastic depth for ResNets, it does not actually drop anything to maximize the utility of the training data. Furthermore, we introduce a challenging, benchmark-agnostic evaluation mechanism based on the Balanced Latin Square to measure LVLMs' robustness under varying contextual dependencies. Extensive experiments demonstrate that StochasT effectively grants LVLMs strong, harmonized capabilities for both single-turn and multi-turn use cases.",
+      "authors": [
+        "Yuan Qing",
+        "Chengzhi Mao",
+        "Boqing Gong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-07-01T05:34:07+00:00",
+      "link": "https://arxiv.org/pdf/2607.00465v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "visual instruction tuning for multimodal reasoning",
+      "llm_evidence_cn": "面向多模态推理的视觉指令调优",
+      "llm_evidence": "面向多模态推理的视觉指令调优",
+      "canonical_evidence": "面向多模态推理的视觉指令调优",
+      "llm_tldr_en": "Proposes StochasT, which stochastically varies turn depth in visual instruction tuning to bridge the gap between multi-turn training and single-turn evaluation.",
+      "llm_tldr_cn": "针对视觉指令调优中多轮训练与单轮评估不匹配导致视觉注意力衰减和过拟合的问题，本文提出StochasT方法，随机将同一图像的语言任务分组为不同大小的簇（轮次深度），保留有机顺序同时模拟单轮测试场景。实验表明该方法提升了LVLM的单轮推理性能，弥合了训练-测试差距。该工作为视觉指令调优提供了更有效的训练策略。",
+      "llm_tldr": "针对视觉指令调优中多轮训练与单轮评估不匹配导致视觉注意力衰减和过拟合的问题，本文提出StochasT方法，随机将同一图像的语言任务分组为不同大小的簇（轮次深度），保留有机顺序同时模拟单轮测试场景。实验表明该方法提升了LVLM的单轮推理性能，弥合了训练-测试差距。该工作为视觉指令调优提供了更有效的训练策略。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.03748v1",
+      "source": "arxiv",
+      "title": "Bridging Interleaved Multi-Modal Reasoning as a Unified Decision Process",
+      "abstract": "Unified multi-modal models (UMMs) have shown promising interleaved text-image reasoning capabilities, yet effectively optimizing such multi-turn generation via reinforcement learning (RL) remains an open challenge. Existing approaches apply RL exclusively to text steps, relegating image generation to supervised surrogates, preventing policy gradients from propagating through the full interleaved trajectory across heterogeneous modalities. This leaves the potential of RL for UMMs largely untapped. In the paper, we introduce \\textbf{BRAID} (\\textbf{B}ridging inte\\textbf{R}le\\textbf{A}ved mult\\textbf{I}-modal reasoning as a unified \\textbf{D}ecision process), a simple framework that casts multi-turn text-image-text reasoning as a unified Markov decision process (MDP), enabling joint optimization of textual and visual generation via a single, principled RL objective. BRAID computes a shared trajectory-level advantage and propagates it coherently into both text tokens and image denoising paths, each optimized through its modality-native policy gradient mechanism. To further address long-horizon credit assignment, BRAID employs a vision-language model (VLM) judge that scores each intermediate image on its reasoning utility, supplying dense turn-level feedback to sharpen learning at critical visual branches. Experiments on spatial reasoning and visual perception benchmarks show that BRAID consistently outperforms various baselines, confirming that a unified MDP formulation with vision-thinking guidance is essential for effective multi-modal reasoning.",
+      "authors": [
+        "Zican Hu",
+        "Xuyang Hu",
+        "Yiming Liu",
+        "Zuwei Long",
+        "Wei Liu",
+        "Yunzhuo Hao",
+        "Jiawei Gu",
+        "Linjie Li",
+        "Yu Cheng",
+        "Zhenhong Sun",
+        "Weibo Gu",
+        "Xing Sun",
+        "Zhi Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-07-04T07:40:43+00:00",
+      "link": "https://arxiv.org/pdf/2607.03748v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "RL optimization for interleaved multi-modal reasoning",
+      "llm_evidence_cn": "针对交错多模态推理的RL优化",
+      "llm_evidence": "针对交错多模态推理的RL优化",
+      "canonical_evidence": "针对交错多模态推理的RL优化",
+      "llm_tldr_en": "Introduces BRAID, a framework that casts interleaved text-image reasoning as a unified MDP, enabling RL across both text and image generation steps.",
+      "llm_tldr_cn": "针对统一多模态模型在交错文本-图像推理中优化不足的问题，本文提出BRAID框架，将多轮文本-图像推理建模为统一马尔可夫决策过程，使强化学习梯度能够通过所有模态传播。相比仅对文本步骤应用RL的现有方法，BRAID显著提升了多模态生成质量。该工作释放了RL在多模态推理中的潜力。",
+      "llm_tldr": "针对统一多模态模型在交错文本-图像推理中优化不足的问题，本文提出BRAID框架，将多轮文本-图像推理建模为统一马尔可夫决策过程，使强化学习梯度能够通过所有模态传播。相比仅对文本步骤应用RL的现有方法，BRAID显著提升了多模态生成质量。该工作释放了RL在多模态推理中的潜力。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.00816v1",
+      "source": "arxiv",
+      "title": "Towards High-Resolution Visual Perception via Hierarchical Entity Exploration",
+      "abstract": "High-resolution (HR) image perception remains a key challenge in multimodal large language models (MLLMs), as fine-grained details are often lost when the image is processed as a whole. Existing methods either require training to teach models where to look or heuristically divide the image into fixed regions, both of which struggle to generalize in complex HR scenes. In this work, we propose Hierarchical Entity Exploration (HEE), a training-free and model-agnostic framework that transforms static image understanding into dynamic, query-guided entity exploration. HEE first evaluates each region using a dual scoring mechanism to determine whether it already contains sufficient evidence to answer the question. If not, it applies object detection within the most promising region to extract fine-grained entities, clusters them into coherent subregions, and organizes them into a multi-level semantic hierarchy for deeper exploration. When deeper regions still fail to yield confident answers, a confidence-guided backtracking mechanism revisits alternative paths to ensure adaptive perception. Extensive results show that HEE outperforms training-free methods like ZoomEye and RAP in both accuracy and efficiency on two complex HR benchmarks (Visual Probe and HR-Bench), across different MLLMs such as Qwen2.5-VL and LLaVA-OneVision. Moreover, HEE demonstrates generalization on the MME-RealWorld benchmark.",
+      "authors": [
+        "Ziyu Ma",
+        "Shidong Yang",
+        "Yuxiang Ji",
+        "Yiming Hu",
+        "Tongwen Huang",
+        "Yong Wang",
+        "Jianfei Cai",
+        "Xiangxiang Chu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-01T11:41:21+00:00",
+      "link": "https://arxiv.org/pdf/2607.00816v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "query-guided hierarchical exploration for HR perception",
+      "llm_evidence_cn": "查询引导的层次化高分辨率感知",
+      "llm_evidence": "查询引导的层次化高分辨率感知",
+      "canonical_evidence": "查询引导的层次化高分辨率感知",
+      "llm_tldr_en": "HEE transforms static HR image understanding into dynamic query-guided entity exploration, using dual scoring and object detection.",
+      "llm_tldr_cn": "本文提出层次化实体探索框架（HEE），无需训练即可将静态高分辨率图像理解转化为动态、查询引导的实体探索。通过双评分机制判断区域信息充分性，并利用物体检测进一步探索，在多个高分辨率感知基准上取得了优于固定切分方法的性能。",
+      "llm_tldr": "本文提出层次化实体探索框架（HEE），无需训练即可将静态高分辨率图像理解转化为动态、查询引导的实体探索。通过双评分机制判断区域信息充分性，并利用物体检测进一步探索，在多个高分辨率感知基准上取得了优于固定切分方法的性能。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.04872v1",
+      "source": "arxiv",
+      "title": "EventCoT: Event-centric Video Chain-of-thought for Reasoning Temporal Localization",
+      "abstract": "Reasoning temporal localization (RTL) requires a model to generate an answer that itself contains the time interval supporting it, so high-level reasoning and precise temporal grounding must be produced jointly in a single response. To tackle this challenging task, we propose the first event-centric video chain-of-thought framework, dubbed EventCoT. EventCoT first performs event-centric tokenization of the input video to convert it into compact event tokens, enabling efficient identification of question-relevant events. It then reasons within the identified events to generate the answer, grounding the time interval via embedding matching that aligns placeholder tokens with visual embeddings. EventCoT achieves state-of-the-art results on ActivityNet-RTL for reasoning temporal localization while using substantially fewer visual tokens than previous work. To verify its general performance, we further evaluate EventCoT on the grounded video question answering benchmark ReXTime, where it attains strong zero-shot results.",
+      "authors": [
+        "Youngkil Song",
+        "Yoonjae Baek",
+        "Dongwon Kim",
+        "Inho Kim",
+        "Dongkeun Kim",
+        "Suha Kwak"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-06T09:47:23+00:00",
+      "link": "https://arxiv.org/pdf/2607.04872v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "event-centric video chain-of-thought for reasoning temporal localization",
+      "llm_evidence_cn": "基于事件链式推理的视频时间定位",
+      "llm_evidence": "基于事件链式推理的视频时间定位",
+      "canonical_evidence": "基于事件链式推理的视频时间定位",
+      "llm_tldr_en": "Introduces EventCoT, the first event-centric video chain-of-thought framework for reasoning temporal localization, achieving state-of-the-art results.",
+      "llm_tldr_cn": "针对推理时间定位任务需要同时输出推理答案和时间区间这一难题，提出EventCoT框架，先将视频转换为紧凑的事件令牌，再在识别出的事件内进行链式推理，通过嵌入匹配实现时间区间定位。在ActivityNet等数据集上取得最优结果，展示了事件级链式推理在视频理解中的有效性。",
+      "llm_tldr": "针对推理时间定位任务需要同时输出推理答案和时间区间这一难题，提出EventCoT框架，先将视频转换为紧凑的事件令牌，再在识别出的事件内进行链式推理，通过嵌入匹配实现时间区间定位。在ActivityNet等数据集上取得最优结果，展示了事件级链式推理在视频理解中的有效性。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}
