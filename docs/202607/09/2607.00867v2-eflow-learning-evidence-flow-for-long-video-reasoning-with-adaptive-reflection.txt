@@ -1,0 +1,297 @@
+Title: EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection
+
+URL Source: https://arxiv.org/pdf/2607.00867v2
+
+Published Time: Thu, 09 Jul 2026 01:18:43 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection 
+
+## Wenhao Zhang 1,* Kuanwei Lin 1,* Xuyi Yang 2 Wei Gao 1 Ge Li 1,† 
+
+> 1
+
+## School of Electronic and Computer Engineering, Peking University 
+
+> 2
+
+## The Hong Kong University of Science and Technology 
+
+> {whzhang25,gwlin25}@stu.pku.edu.cn
+
+## Abstract 
+
+Long-video reasoning is fundamentally con-strained by how models acquire and utilize vi-sual evidence. Existing tool-augmented video frameworks often interleave temporal ground-ing and answer reasoning within a single tra-jectory, causing early semantic hypotheses to bias evidence localization. We term this failure mode premature semantic commitment , where biased grounding retrieves incomplete evidence and incomplete evidence further reinforces in-correct reasoning. To address this issue, we propose EFlow , an evidence-first video reason-ing framework built upon Qwen3-VL. EFlow explicitly separates temporal grounding and logical reasoning through CoT for Temporal Grounding and CoT for Reasoning, enabling the model to retrieve relevant evidence before answer inference. In addition, EFlow intro-duces a confidence-aware reflection mechanism that re-evaluates the full video when retrieved evidence is potentially insufficient. We fur-ther construct dedicated trajectory datasets and train EFlow through supervised fine-tuning, re-inforcement learning, and reinforcement fine-tuning. Extensive experiments across five video understanding benchmarks demonstrate that EFlow consistently improves long-video rea-soning performance. 
+
+## 1 Introduction 
+
+Long-video understanding requires more than rec-ognizing visual content frame by frame. A model must follow a reliable process: deciding where to look, what evidence to preserve, when to rea-son, and when to distrust an initial conclusion. Al-though Large Multimodal Models (LMMs) have made rapid progress by aligning visual encoders with language models (Bai et al., 2025; Li et al., 
+
+> *Equal contribution.
+> †Corresponding author.
+
+Figure 1: Overview of EFlow . LongVT-style coupled reasoning can turn a premature answer hypothesis into a biased crop and a wrong answer. EFlow instead learns a transferable evidence flow: temporal grounding first localizes the evidence clip, grounded reasoning answers from the localized evidence, and adaptive reflection re-pairs low-confidence cases by re-reading the full video. 
+
+2024; Liu et al., 2023; Lin et al., 2023a; Maaz et al., 2023; Jin et al., 2023; Ren et al., 2023), the con-ventional single-turn paradigm—feeding uniformly sampled frames directly into the model—remains fragile as video duration grows. Redundant visual tokens dilute sparse evidence and strain the context window (Jin et al., 2025), leading to hallucinations and loss of fine-grained temporal details (Wang et al., 2024a; Wu et al., 2024). This suggests that long-video reasoning is not only a capacity prob-lem, but also a process problem: the model must ground relevant evidence before committing to an answer. Recent tool-augmented video frameworks ad-dress part of this challenge by using “coarse-to-fine” temporal tools, such as cropping or zoom-ing, to navigate long videos before generating re-sponses (Wang et al., 2024b, 2025c; Ouyang et al., 2026; Yang et al., 2026). However, many such methods still interleave temporal grounding and 1arXiv:2607.00867v2 [cs.CV] 8 Jul 2026 answer reasoning within a single generation tra-jectory, allowing the model to form intermediate answer hypotheses before sufficient evidence has been retrieved. We identify this failure mode as pre-mature semantic commitment : early semantic as-sumptions bias temporal grounding, biased ground-ing retrieves incomplete or irrelevant evidence, and incomplete evidence further reinforces the initial wrong hypothesis. The resulting failure reflects the absence of a disciplined evidence flow that sepa-rates evidence acquisition from answer generation. To address this issue, we propose EFlow , a training-and-inference framework for learning to flow . Rather than introducing a new base model, EFlow teaches a model to acquire, transform, ver-ify, and use video evidence through an explicit reasoning dynamic. During post-training, EFlow learns this transferable dynamic from structured trajectories and reward-guided optimization; dur-ing inference, it executes the learned dynamic as a staged evidence flow instead of producing a single entangled response. At inference time, EFlow organizes this dynamic into a three-stage evidence flow. First, the Tempo-ral Evidence Flow uses CoT for Temporal Ground-ing (T-CoT) to invoke a temporal cropping tool and localize visual evidence without predicting the final answer. Second, the Grounded Reasoning Flow 
+
+uses CoT for Reasoning (R-CoT) to reason over the retrieved high-density evidence clip. These two learned stages align training and inference around the same principle: acquire evidence first and rea-son second, so that the model’s reasoning behavior remains anchored to the visual evidence it has re-trieved. Beyond these learned flows, EFlow introduces a training-free Adaptive Reflection Flow as an engineered extension of inference. We compute a competition-based answer logit margin to estimate whether the retrieved evidence is sufficient. When the margin is low, EFlow treats uncertainty as a signal of potential evidence insufficiency and trig-gers a global “re-reading” step over the full video. This reflection path helps the model recover from insufficient evidence without requiring additional training. We instantiate EFlow on Qwen3-VL (Team, 2025) with a three-stage post-training pipeline: Su-pervised Fine-Tuning (SFT) teaches the T-CoT/R-CoT trajectory format, Reinforcement Learning (RL) improves temporal grounding and answer correctness through outcome-based rewards, and Reinforcement Fine-Tuning (RFT) distills high-reward trajectories back into stable supervised be-havior. Across five video understanding bench-marks, EFlow achieves strong performance, in-cluding 69.1% on VideoMME Overall, 60.1% on VideoMME Long, 52.5% on LVBench, 60.3% on LongVideoBench, and 80.0% on NextGQA, demonstrating the value of explicit evidence flow for robust long-video reasoning. Our contributions are summarized as follows: 1. We diagnose premature semantic commitment 
+
+as a central failure mode in tool-augmented long-video reasoning, and propose EFlow , a 
+
+learning-to-flow framework that separates evi-dence acquisition from answer reasoning. 2. We align training and inference through a staged flow design: T-CoT realizes the Tem-poral Evidence Flow, R-CoT realizes the Grounded Reasoning Flow, and dedicated tra-jectory data with SFT, RL, and RFT teach transferable evidence-flow dynamics. 3. We introduce a training-free confidence-aware reflection mechanism that uses answer logit margins to detect evidence insufficiency and adds a global re-reading path to the infer-ence flow, yielding strong gains across diverse video understanding benchmarks. 
+
+## 2 Related Work 
+
+2.1 Thinking with Videos 
+
+The concept of “thinking” in Large Multimodal Models (LMMs) has evolved from perception-only to multi-step reasoning with explicit inter-mediate thoughts. Building on textual Chain-of-Thought (CoT), recent works explore visual or multimodal CoT to guide step-by-step reasoning over images and videos. For video, models such as Video-R1 (Feng et al., 2025), Video-Thinker (Wang et al., 2025b), and VideoChat-R1 (Li et al., 2025b) adopt R1-style reinforcement learning to encourage longer and more structured reasoning traces. For long videos, however, plain CoT struggles: the model cannot retain all fine-grained details, and language-only reasoning easily drifts away from actual visual evidence. LongVT (Yang et al., 2026) addresses this by introducing an interleaved Multi-modal Chain-of-Tool-Thought (iMCoTT) that alter-nates between global preview and temporal zoom-in via a native crop_video tool, effectively “think-ing with long videos”. Most existing thinking 2paradigms, including these, still couple grounding and reasoning within the same reasoning trajectory, causing early semantic hypotheses to bias temporal grounding and relying on implicit self-correction. In contrast, EFlow organizes video reasoning as a staged evidence flow: T-CoT realizes Temporal Ev-idence Flow, R-CoT realizes Grounded Reasoning Flow, and adaptive reflection allows the model to re-read the video when retrieved evidence is poten-tially insufficient. 
+
+2.2 Video Reasoning Frameworks 
+
+Tool-augmented frameworks extend LMMs with external tools such as web search or code inter-preters (Schick et al., 2024; Shen et al., 2024; Yao et al., 2023; Shinn et al., 2023). In the video do-main, early systems like VideoAgent (Wang et al., 2024b) and VideoTree (Wang et al., 2025c) repeat-edly retrieve relevant clips before reasoning over the selected evidence. More recent frameworks, including Conan (Ouyang et al., 2026), Video-Zoomer (Ding et al., 2025), VITAL (Zhang et al., 2025b), and LongVT (Yang et al., 2026), integrate temporal tools such as crop_video into model out-puts, enabling multi-round global-to-local video inspection for long-video QA. Most existing frameworks, however, still couple grounding and reasoning within the same reason-ing trajectory, causing early semantic hypotheses to bias temporal grounding. In contrast, EFlow explicitly separates CoT for Temporal Grounding and CoT for Reasoning, and further introduces a confidence-aware reflection mechanism to re-evaluate the full video when retrieved evidence is insufficient. 
+
+## 3 Methodology 
+
+We propose EFlow, a video reasoning framework built on Qwen3-VL (Team, 2025) for long-form video question answering. EFlow combines tem-poral evidence localization, grounded answer gen-eration, and confidence-aware verification within a unified inference procedure. Given a video of arbitrary length, it identifies a compact evidence segment with a native cropping tool, reasons over the localized visual evidence, and consults the full video context when the evidence is insufficient. This design is especially effective for long videos with sparse evidence and strained context windows. 
+
+3.1 Architecture Overview 
+
+The core motivation of EFlow is to prevent prema-ture semantic commitment during long-video rea-soning by separating evidence acquisition from an-swer reasoning through specialized CoT sequences, followed by a confidence-driven reflection mech-anism. As illustrated in Figure 2, the inference process is structured as three connected flows: 
+
+Temporal Evidence Flow. Given an input video 
+
+V = {vt}Tt=1 with T frames and a user query Q,the model processes the full video representation alongside the question. In this flow, the model is strictly constrained to focus on grounding and invokes a reasoning sequence we term CoT for Temporal Grounding (T-CoT). The LLM processes the scene and outputs a tool-calling command to extract a single highly relevant segment without attempting to output the final answer. This design explicitly prevents early semantic hypotheses from contaminating temporal grounding: 
+
+(T-CoT , C) = LLM (Vf ull , Q)
+
+where C = Crop_video (s, e ) (1) where s and e denote the start and end timestamps. The external toolbox then extracts the specific high-resolution clip: Vclip = Crop_video (Vf ull , s, e ).
+
+Grounded Reasoning Flow. The extracted clip provides a refined, high-density visual context. This evidence is fed back into the LLM alongside the original query, the full video, and the multi-modal trace from the Temporal Evidence Flow (T-CoT and tool call). By separating evidence ac-quisition from answer reasoning, EFlow can reason over retrieved evidence without being biased by premature semantic assumptions. During this flow, EFlow generates a CoT for Reasoning (R-CoT) and the final answer A. Crucially, we extract the logits at the exact decoding step where the answer label is generated. We calculate the softmax probabilities over all valid multiple-choice tokens (e.g., A, B, C, D) and define our confidence score c as the proba-bility margin between the top-1 prediction and the top-2 prediction: 
+
+c = P (˜ ytop 1) − P (˜ ytop 2) (2) where P (˜ y) = softmax (Logits answer_step ). We de-note c as the margin (probability difference), which serves as the Confidence Score. A low confidence margin often indicates that the retrieved evidence is insufficient or semantically ambiguous for reliable reasoning. 3Figure 2: Detailed architecture of EFlow. The framework organizes inference as an evidence flow: temporal grounding first inspects the full video and issues a crop command to obtain a candidate evidence clip; grounded reasoning then answers from the localized evidence and estimates confidence; and adaptive reflection re-reads the full video with the prior reasoning trace when the localized evidence appears insufficient. The T-CoT and R-CoT blocks in the figure denote intermediate trajectory formats used to supervise these stages, rather than separate model modules. 
+
+Adaptive Reflection Flow. We define an em-pirical confidence threshold τ . To accommodate varying task difficulties, EFlow employs dynamic thresholding across benchmarks. If the confidence score c ≥ τ , the model is considered sufficiently confident and directly returns A. Otherwise, when 
+
+c < τ , the narrow confidence margin suggests that the retrieved evidence may be insufficient due to premature semantic commitment during temporal grounding. Rather than treating low confidence as a reason-ing failure, we interpret it as a signal of potential evidence insufficiency. In this case, the Adaptive Reflection Flow re-injects the full video Vf ull to-gether with the previous reasoning trace into the model for global re-evaluation. Specifically, let R
+
+denote the previous reasoning chain (R-CoT), and 
+
+P denote the guided reflection prompt: 
+
+Af inal = LLM ref (Vf ull , R, P) (3) This uncertainty-aware re-evaluation mechanism allows EFlow to recover from insufficient or biased evidence retrieval, thereby significantly enhancing the robustness of long-video reasoning. While our current confidence formulation is naturally suited for multiple-choice scenarios prevalent in standard video benchmarks, it can be readily adapted for open-ended reasoning tasks. For free-form gen-eration, measuring the generation sequence’s av-erage probability or perplexity (Liu et al., 2026) can seamlessly replace the discrete margin score to serve as the confidence heuristic for triggering the reflection phase. 
+
+3.2 Training Data Construction 
+
+Training EFlow requires data that teaches not only the final answer, but also the intermediate evidence-flow behavior: where to look, how to invoke the crop tool, and how to reason from the localized evidence. We therefore construct three complemen-tary datasets for Supervised Fine-Tuning (SFT), Reinforcement Learning (RL), and Reinforcement Fine-Tuning (RFT), each targeting a different stage of learning transferable evidence-flow dynamics. 
+
+EFlow-SFT-50K Dataset. We build our high-quality SFT dataset upon the foundation of the open-source Video-R1-CoT-165K datasets. How-ever, standard CoT traces lack explicit tool-invocation logic. To inject the “think with videos” multi-turn capability, we design an automated gen-eration pipeline with Gemini-3-Flash serving as a weak initialization model. First, we prompt Gemini-3-Flash to generate temporal crop bound-aries and preliminary reasoning traces for each 4Algorithm 1 Competition Confidence Computa-tion 
+
+Require: Output scores G, sequences S, tokenizer 
+
+T , options L
+
+Ensure: Prediction p, confidence score c, distribu-tion D 
+
+> 1:
+
+t ← LocateAnswer (S, T ) ▷ First 
+
+<answer >X or post-</think > 
+
+> 2:
+
+if t = null then return (null , 0, {} ) 
+
+> 3:
+
+end if  
+
+> 4:
+
+z ← G [t][0] ▷ Logits at answer step  
+
+> 5:
+
+for ℓ ∈ L do  
+
+> 6:
+
+a ← Extract (ℓ) ▷ Answer letter  
+
+> 7:
+
+Va ← T ({a, a, > a }).ids ▷ Multi-variant tokens  
+
+> 8:
+
+sa ← max j∈V a z[j] ▷ Best matching logit  
+
+> 9:
+
+end for  
+
+> 10:
+
+p ← Softmax ([ sa]a∈L ), sort descending: 
+
+p(1) ≥ p(2)  
+
+> 11:
+
+c ← p(1) − p(2) ▷ Margin-based confidence  
+
+> 12:
+
+p ← arg max a pa, D ← { a : pa}
+
+return (p, c, D)
+
+query. We strictly filter this initial pass, retaining only the samples where the predicted final answer matches the ground truth, followed by additional expert verification for temporal grounding consis-tency. Next, for these filtered samples, we apply a rule-based formatting prompt to rewrite the reason-ing process into our T-CoT and R-CoT structural format (including the <think> , <tool_call> , and 
+
+<answer> tags). The generated trajectories further undergo human expert review to remove noisy sam-ples and ensure the quality of evidence-grounded reasoning traces. This rigorous process yields a high-fidelity dataset of approximately 50,000 multi-turn trajectories, effectively teaching the base model how to stage temporal evidence acquisition before logical deduction. 
+
+EFlow-RL-10K Dataset. For the RL phase, we curate a focused dataset of 10,000 queries primar-ily derived from the VideoITG-40K (Wang et al., 2025a) dataset, with the base videos sourced from the LLaVA-Video-178K (Zhang et al., 2024b) col-lection. Unlike the SFT stage, this dataset does not require full ground-truth tool-calling trajecto-ries. Instead, by leveraging the inherent structure of VideoITG, each query provides the ground-truth final answer paired directly with a precise relevant temporal interval [sgt , e gt ]. These intervals act as  
+
+> Figure 3: Overview of the training data construc-tion pipeline. We generate and filter Gemini-3-Flash temporal-boundary annotations to build EFlow-SFT-50K, and curate EFlow-RL-10K from VideoITG with ground-truth intervals for RL rewards.
+
+pure outcome-based supervision signals for the riou 
+
+and rans rewards, allowing the GRPO algorithm to explore optimal, unconstrained grounding strate-gies autonomously. 
+
+EFlow-RFT-10K Dataset. Finally, we construct a dataset for the reinforcement fine-tuning stage. We first filter the rollouts generated during the RL process based on their reward scores, selecting the top-ranked trajectories. These candidates then un-dergo expert review to ensure diversity in question types and video domains. The final collection is organized into 10,000 high-quality trajectory-level samples. 
+
+3.3 Training Strategy 
+
+We design a rigorous three-stage training pipeline comprising Supervised Fine-Tuning (SFT), Rein-forcement Learning (RL), and Reinforcement Fine-Tuning (RFT). 
+
+Stage 1: Cold-Start Supervised Fine-Tuning. 
+
+In the first stage, the model is trained on the EFlow-SFT-50K dataset using the standard auto-regressive cross-entropy loss: 
+
+LSF T = − X
+
+> i
+
+log P (yi|y<i , V, Q) (4) where yi represents the tokens of the tool calls, rea-soning steps, and the final answer. By fine-tuning Qwen3-VL on this diverse mixture, we initialize the model’s ability to master the T-CoT and R-CoT structural generation, format tool calls correctly. 
+
+Stage 2: Agentic Reinforcement Learning. 
+
+While SFT teaches the model how to use the tools, it does not necessarily teach it the optimal 
+
+strategy for complex, unseen videos. To unlock deeper exploration and self-correction without the 5prohibitive memory overhead of standard PPO, we employ Group Relative Policy Optimization (GRPO) (Shao et al., 2024) on the EFlow-RL-10K dataset. GRPO circumvents the need for a separate value model by sampling a group of trajectories for each query and optimizing the policy based on the relative advantages of the trajectories within the group. To comprehensively guide EFlow, our rule-based total reward consists of three carefully designed components: 
+
+Format Reward ( rf ormat ): Continuously regu-lates the “think with videos” structural process. It assigns a base reward of 1.0 if the model perfectly follows the multi-turn template by correctly open-ing and closing the <think> , <tool_call> , and 
+
+<answer> XML tags during both T-CoT and R-CoT phases. If the model generates malformed tags (e.g., missing closing tags or incorrect tool names), it receives a penalty of 0.0.
+
+Temporal Grounding Reward ( riou ): Evaluates the precision of the temporal grounding. Let 
+
+Wpred = [ s, e ] be the model’s predicted crop in-terval and Wgt = [ sgt , e gt ] be the ground-truth essential interval. We compute the temporal Inter-section over Union (t-IoU), multiplied by a scaling factor λiou :
+
+riou = λiou × |W pred ∩ W gt ||W pred ∪ W gt | (5) This continuous reward signal encourages the model to extract the tightest possible high-density clip containing the evidence, aggressively penaliz-ing overly broad or entirely disjoint crops. 
+
+Answer Accuracy Reward ( rans ): Due to the complex, free-form nature of reasoning outputs, simple string matching is often overly strict and fails to capture semantically equivalent answers. Instead, we adopt an LLM-as-a-Judge approach. We employ DeepSeek-V3 (DeepSeek-AI, 2024) as an external critic to evaluate the semantic equiva-lence between EFlow’s predicted answer Apred and the ground-truth answer Agt . The judge assigns a discrete categorical score: 
+
+rans =
+
+
+
+1.0 if Full Complete Match; 
+
+0.5 if Partial Match / Ambiguous; 
+
+0.0 if Incorrect. (6) These fine-grained reward signals are summed as 
+
+R = rf ormat + riou + rans and fed into the GRPO framework, iteratively aligning the model’s tool-use, temporal grounding, and final video reasoning behaviors without the need for dense token-level human annotations. 
+
+Stage 3: Agentic Reinforcement Fine-Tuning (RFT). To further stabilize the agentic behaviors learned during RL and consolidate the model’s rea-soning capabilities, we introduce a third training stage: RFT. Following LongVT (Yang et al., 2026), we use the term RFT to refer to supervised fine-tuning on high-reward trajectories produced by the reinforcement learning stage, rather than another round of online RL optimization. In this stage, we utilize the EFlow-RFT-10K dataset constructed via reward filtering and expert verification. We con-duct supervised fine-tuning on these high-quality trajectories to effectively distill the successful ex-ploration patterns back into the model parameters. This self-distillation process helps the model inter-nalize robust grounding and tool-calling behaviors, pushing its performance beyond the ceiling of stan-dard SFT. 
+
+## 4 Experiments 
+
+To evaluate the effectiveness of EFlow, we con-duct extensive experiments on multiple video un-derstanding benchmarks spanning various video lengths. We aim to answer the following research questions: (1) Does explicit evidence flow through T-CoT and R-CoT improve overall performance? (2) How effective is the margin-based reflection mechanism in handling complex video queries? 
+
+4.1 Experimental Setup Implementation Details. We initialize EFlow from the Qwen3-VL-8B-Instruct checkpoint and perform continued post-training. During the SFT stage, we train the model for 1 epoch with a learn-ing rate of 2e−5 using a cosine learning rate sched-uler. For the RL stage, we employ Group Relative Policy Optimization (GRPO) with a learning rate of 1e − 6 and a group size of G = 64 . According to the dynamic confidence heuristic, the confidence threshold τ for triggering reflection is empirically adjusted depending on the benchmark complexity. In our ablation studies, we experiment with repre-sentative thresholds (e.g., 0.2, 0.3, 0.5) to observe the system’s behavior (meaning reflection is trig-gered if the Confidence Score c < τ ), ensuring it activates when the model’s leading answer choice is not significantly more probable than its runner-up. 6Table 1: Comparison of our method with existing approaches on video question answering benchmarks. EFlow delivers strong performance across diverse video understanding tasks, with particularly pronounced gains on long-video benchmarks. 
+
+Methods VideoMME LVBench LongVideoBench NextGQA 
+
+Long Overall Avg Avg Overall 
+
+Open-source Single-Turn Video MLLMs 
+
+Qwen2.5-VL (Bai et al., 2025) 51.0 62.9 45.3 56.0 59.5 LLaVA-Video (Zhang et al., 2024b) 50.6 62.6 41.5 58.2 -LLaVA-OneVision (Li et al., 2024) 46.7 56.2 - 56.4 -Video-R1 (Feng et al., 2025) - 61.4 - - -Rewatch-R1 (Zhang et al., 2025a) - 65.6 43.3 - -Video-Thinker (Wang et al., 2025b) - - 37.0 - -VideoChat-R1 (Li et al., 2025b) - - - - 70.6 Qwen3-VL* (Team, 2025) 58.6 67.9 50.6 59.1 79.1 
+
+Open-source Agent-based Framework 
+
+VideoAgent (Wang et al., 2024b) - - 29.3 - -VideoTree (Wang et al., 2025c) 54.2 - 28.8 - -
+
+Open-source Native Multi-turn Tool Invocation Video MLLMs 
+
+Conan (Ouyang et al., 2026) - 60.5 39.2 56.6 -LongVT (Yang et al., 2026) - 64.3 41.3 - -Video-Zoomer (Ding et al., 2025) - 65.2 41.5 57.7 -VITAL (Zhang et al., 2025b) 54.0 64.1 - - 78.7 
+
+EFlow 60.1 69.1 52.5 60.3 80.0 
+
+During inference, the coarse video representation 
+
+Vcoarse is sampled at 1 frame per second (FPS), while the cropped high-resolution clips Vclips are sampled at 1 FPS to capture fine-grained details. 
+
+4.2 Main Results 
+
+Table 1 presents the quantitative comparison be-tween EFlow and strong video MLLMs across var-ious benchmarks. 
+
+Long Video Understanding. EFlow achieves competitive performance across all evaluated benchmarks. On VideoMME (Overall, w/o sub-title), which covers videos of varying lengths, our model achieves 69.1%, outperforming strong multi-turn baselines like Video-Zoomer (65.2%) and VITAL (64.1%). The advantage is especially pronounced on long-video benchmarks: EFlow reaches 60.1% on VideoMME (Long), 52.5% on LVBench, and 60.3% on LongVideoBench, sub-stantially surpassing all baselines. On the tempo-ral grounding benchmark NextGQA, EFlow also achieves 80.0%, confirming the generality of the staged flow design. These results demonstrate that combining GRPO reinforcement learning with ex-plicit evidence flow yields a robust video agent that excels across the full spectrum of video lengths. 
+
+Complex Video Reasoning. To demonstrate that explicit evidence flow also enhances reasoning capabilities without requiring extensive data fine-tuning, and offers even greater value as base model capabilities improve, we conduct an exploratory experiment on complex video reasoning tasks. As shown in Table 2, EFlow demonstrates consistent improvements over baseline models across VSI-Bench (Yang et al., 2024) and Video-MMMU (Hu et al., 2025). This validates that routing tempo-ral grounding and reasoning through connected flow stages prevents error cascading, enabling the model to focus its reasoning capacity on the cor-rectly grounded visual evidence. 
+
+4.3 Ablation Studies 
+
+To understand the contribution of each component in EFlow, we conduct a series of ablation studies on representative benchmarks. 
+
+Effect of Multi-Stage Training. We first study the contribution of each training stage. Starting 7Table 2: Comparison with representative methods on video reasoning benchmarks.                          
+
+> Model VSI-Bench Video-MMMU Acc Acc
+> LongVA-7B (Zhang et al., 2024a) 29.2 23.9 VILA-1.5-8B (Lin et al., 2023b) 28.9 20.8 LLaVA-OV-7B 32.4 33.8 AoTD-7B (Shi et al., 2024) 28.8 —Video-R1-7B (Feng et al., 2025) 37.1 52.4 VideoRFT-7B (Wang et al., 2026) 36.8 51.1 Temporal-RLT-7B (Li et al., 2025a) ——Qwen2.5-VL-7B(Bai et al., 2025) 31.8 47.4 VITAL-7B(Zhang et al., 2025b) 41.8 54.2 Qwen3-VL-8B(Team, 2025) 57.9 65.3
+> EFlow 59.1 65.5
+
+from the vanilla Qwen3-VL (8B) backbone, we progressively add Supervised Fine-Tuning (SFT), Reinforcement Learning (RL), and Reinforcement Fine-Tuning (RFT). As shown in Table 3, SFT alone already yields a clear improvement over the base model by teaching the agent how to follow the T-CoT / R-CoT template and correctly invoke tools. While RL alone does not consistently improve over SFT on all metrics, it refines the model’s explo-ration policy for temporal grounding and reflection decisions, laying the groundwork for the next stage. Finally, RFT distills high-reward trajectories from RL back into supervised data, consolidating the learned behaviors and delivering a substantial and stable gain across all datasets. 
+
+Effect of Adaptive Reflection. Finally, we ana-lyze the impact of the competition-based reflection mechanism by varying the confidence threshold 
+
+τ (see Figure 4). Without reflection, EFlow per-forms competitively but suffers from occasional error cascading if initial crops miss critical ev-idence. An optimal tight threshold ( τ = 0.2)achieves the best accuracy. It triggers reflection very selectively (10.7%), successfully instructing the model to strategically “re-read” the global video only when genuinely hesitant. As the tolerance in-creases slightly ( τ = 0 .3), reflection triggers more frequently (18.6%), leading to sub-optimal but rea-sonable performance. Conversely, when the thresh-old becomes too loose ( τ = 0 .5), excessively more samples trigger reflection (68.9%). This forces the model to frequently fall back to the coarse video, discarding fine-grained clip details and resulting in the worst performance. Given these dynamics, our framework adopts a dynamic thresholding ap-proach rather than a rigid value to optimally bal-ance accuracy and efficiency across diverse testing 
+
+Table 3: Effect of multi-stage training on video under-standing. Accuracies (%) are reported.           
+
+> Model VideoMME (Long) LVBench (Avg)
+> Qwen3-VL (8B) 58.6 50.6 EFlow-SFT 59.0 51.2 EFlow-RL 59.6 51.2
+> EFlow (Ours) 60.1 52.5
+
+scenarios. This pattern also clarifies the role of reflection in our framework: it is not intended to replace local evidence with global context, but to act as a sparse repair mechanism when the local reasoning path is unreliable. By keeping reflection selective, EFlow preserves the benefit of focused clips while still retaining a route for recovery from poor temporal grounding. This explains why the moderate threshold improves both robustness and efficiency, whereas excessive reflection weakens the very evidence concentration that temporal crop-ping is designed to provide. 
+
+Figure 4: Effect of margin-based reflection. A moderate confidence threshold improves accuracy while keeping the reflection rate low; an overly loose threshold triggers reflection too frequently and degrades performance. 
+
+## 5 Conclusion 
+
+This paper presents EFlow, a tool-augmented framework that mitigates error cascading in video understanding by learning and executing an ex-plicit evidence flow. A competition-margin guided reflection mechanism enables confidence-based adaptive fallback to global context. Experiments on five benchmarks demonstrate strong perfor-mance across diverse video lengths, with partic-ularly strong gains on long videos. 86 Limitations 
+
+EFlow relies on the backbone model’s ability to localize relevant visual evidence from long videos. If the underlying model cannot identify plausible temporal regions, explicit evidence flow may still propagate imperfect grounding. For this reason, our main evaluation is conducted on Qwen3-VL, a strong video MLLM with capable temporal lo-calization, and generalization to weaker or substan-tially different backbones remains an important direction for future study. In addition, Adaptive Re-flection depends on a useful uncertainty prior from the answer confidence signal. When this signal is poorly calibrated, reflection may require task-specific priors, threshold tuning, or multiple valida-tion passes to decide whether re-reading the global video is truly beneficial. 
+
+## References 
+
+Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wen-bin Ge, Shuang Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, and 1 others. 2025. Qwen2.5-vl technical report. arXiv preprint arXiv:2502.13923 .DeepSeek-AI. 2024. Deepseek-v3 technical report. 
+
+arXiv preprint arXiv:2412.19437 .Yang Ding, Yizhen Zhang, Xin Lai, Ruihang Chu, and Yujiu Yang. 2025. Videozoomer: Reinforcement-learned temporal focusing for long video reasoning. 
+
+arXiv preprint arXiv:2512.22315 .Kaituo Feng, Kaixiong Shao, Zihan Liu, Dongxu Xu, Yue Zhu, Bin Xie, and Feng Li. 2025. Video-r1: Reinforcing video reasoning in mllms. arXiv preprint arXiv:2503.21776 .Kairui Hu, Penghao Wu, Fanyi Pu, Wang Xiao, Yuan-han Zhang, Xiang Yue, Bo Li, and Ziwei Liu. 2025. Video-mmmu: Evaluating knowledge acquisition from multi-discipline professional videos. arXiv preprint arXiv:2501.13826 .Hongbo Jin, Qingyuan Wang, Wenhao Zhang, Yang Liu, and Sijie Cheng. 2025. Videomem: Enhancing ultra-long video understanding via adaptive memory management. arXiv preprint arXiv:2512.04540 .Peng Jin, Jinfa Ryu, Yuan Huang, Bin Lin, and 1 others. 2023. Chat-univi: Unified visual representation em-powers large language models with image and video understanding. arXiv preprint arXiv:2311.08046 .Bo Li, Yuanhan Zhang, Dong Guo, Renrui Zhang, Feng Li, Hao Zhang, Kaichen Zhang, Yanwei Li, Ziwei Liu, and Chunyuan Li. 2024. Llava-onevision: Easy visual task transfer. arXiv preprint arXiv:2408.03326 .Hongyu Li, Songhao Han, Yue Liao, Junfeng Luo, Jialin Gao, Shuicheng Yan, and Si Liu. 2025a. Reinforcement learning tuning for videollms: Re-ward design and data efficiency. arXiv preprint arXiv:2506.01908 .Xinhao Li, Ziang Yan, Desen Meng, Lu Dong, Xiangyu Zeng, Yinan He, Yali Wang, Yu Qiao, Yi Wang, and Limin Wang. 2025b. Videochat-r1: Enhancing spatio-temporal perception via reinforcement fine-tuning. arXiv preprint arXiv:2504.06958 .Bin Lin, Bin Zhu, Yang Ye, Munan Ning, Peng Jin, and Li Yuan. 2023a. Video-llava: Learning united visual representation by alignment before projection. arXiv preprint arXiv:2311.10122 .Ji Lin, Hongxu Yin, Wei Ping, Yao Lu, Pavlo Molchanov, Andrew Tao, Huizi Mao, Jan Kautz, Mohammad Shoeybi, and Song Han. 2023b. Vila: On pre-training for visual language models. arXiv preprint arXiv:2312.07533 .Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. 2023. Visual instruction tuning. Advances in Neural Information Processing Systems .Shuming Liu, Mingchen Zhuge, Changsheng Zhao, Jun Chen, Lemeng Wu, Zechun Liu, Chenchen Zhu, Zhipeng Cai, Chong Zhou, Haozhe Liu, and 1 oth-ers. 2026. Videoauto-r1: Video auto reasoning via thinking once, answering twice. arXiv preprint arXiv:2601.05175 .Muhammad Maaz, Hanoona Rasheed, Salman Khan, and Fahad Shahbaz Khan. 2023. Video-chatgpt: Towards detailed video understanding via large vision and language models. arXiv preprint arXiv:2306.05424 .Kun Ouyang, Yuanxin Liu, Linli Yao, Yishuo Cai, Hao Zhou, Fandong Meng, Jie Zhou, and Xu Sun. 2026. Conan: Progressive learning to reason like a detective over multi-scale visual evidence. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pages 41089–41099. Shuhuai Ren, Bin Lin, and 1 others. 2023. Timechat: A time-sensitive multimodal large language model for long video understanding. arXiv preprint arXiv:2312.02051 .Timo Schick, Jane Dwivedi-Yu, Roberto Dessì, Roberta Raileanu, Maria Lomeli, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom. 2024. Toolformer: Language models can teach themselves to use tools. 
+
+Advances in Neural Information Processing Systems ,36. Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Li, Mingchuan Zhang, Y. K. Li, Y. Wu, and Daya Bi. 2024. Deepseekmath: Pushing the limits of mathematical reasoning in open lan-guage models. arXiv preprint arXiv:2402.03300 .
+
+9Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang. 2024. Hugging-gpt: Solving ai tasks with chatgpt and its friends in hugging face. Advances in Neural Information Processing Systems , 36. Yudi Shi, Shangzhe Di, Qirui Chen, and Weidi Xie. 2024. Enhancing video-llm reasoning via agent-of-thoughts distillation. arXiv preprint arXiv:2412.01694 .Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. 2023. Re-flexion: Language agents with verbal reinforcement learning. In Advances in Neural Information Pro-cessing Systems .Qwen Team. 2025. Qwen3 technical report. arXiv preprint arXiv:2505.09388 .Qi Wang, Yanrui Yu, Ye Yuan, Rui Mao, and Tianfei Zhou. 2026. Videorft: Incentivizing video reason-ing capability in mllms via reinforced fine-tuning. 
+
+Advances in neural information processing systems ,38:4350–4376. Shihao Wang, Guo Chen, De-an Huang, Zhiqi Li, Ming-han Li, Guilin Li, Jose M Alvarez, Lei Zhang, and Zhiding Yu. 2025a. Videoitg: Multimodal video understanding with instructed temporal grounding. 
+
+arXiv preprint arXiv:2507.13353 .Shijian Wang, Jiarui Jin, Xingjian Wang, Linxin Song, Runhao Fu, Hecheng Wang, Zongyuan Ge, Yuan Lu, and Xuelian Cheng. 2025b. Video-thinker: Spark-ing" thinking with videos" via reinforcement learning. 
+
+arXiv preprint arXiv:2510.23473 .Weihan Wang, Zehai He, Wenyi Kong, Yifan Yuan, Ziyue Gao, Duo Liu, Lifeng Li, Naiqi Huang, Jiahao Zheng, and Fan Zhang. 2024a. Lvbench: An extreme long video understanding benchmark. arXiv preprint arXiv:2406.08035 .Xiaohan Wang, Yuhui Zhang, Orr Zohar, and Serena Yeung-Levy. 2024b. Videoagent: Long-form video understanding with large language model as agent. In European Conference on Computer Vision , pages 58–76. Springer. Ziyang Wang, Shoubin Yu, Elias Stengel-Eskin, Jae-hong Yoon, Feng Cheng, Gedas Bertasius, and Mo-hit Bansal. 2025c. Videotree: Adaptive tree-based video representation for llm reasoning on long videos. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 3272–3283. Haoning Wu, Dongxu Cheng, Jianfeng Chen, Nanyi Fei, Jingwei Li, Ming Tao, Jiachen Yu, Yang Chen, Chenyang Si, and Yueting Ge. 2024. Longvideobench: A benchmark for long-context interleaved video-language understanding. arXiv preprint arXiv:2407.15754 .Jihan Yang, Shusheng Yang, Anjali W. Gupta, Rilyn Han, Li Fei-Fei, and Saining Xie. 2024. Thinking in space: How multimodal large language models see, remember, and recall spaces. arXiv preprint arXiv:2412.14171 .Zuhao Yang, Sudong Wang, Kaichen Zhang, Keming Wu, Sicong Leng, Yifan Zhang, Bo Li, Chengwei Qin, Shijian Lu, Xingxuan Li, and 1 others. 2026. Longvt: Incentivizing" thinking with long videos" via native tool calling. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recog-nition , pages 33816–33826. Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao. 2023. React: Synergizing reasoning and acting in language models. In International Conference on Learning Representations .Congzhi Zhang, Zhibin Wang, Yinchao Ma, Jiawei Peng, Yihan Wang, Qiang Zhou, Jun Song, and Bo Zheng. 2025a. Rewatch-r1: Boosting com-plex video reasoning in large vision-language mod-els through agentic data synthesis. arXiv preprint arXiv:2509.23652 .Haoji Zhang, Xin Gu, Jiawen Li, Chixiang Ma, Sule Bai, Chubin Zhang, Bowen Zhang, Zhichao Zhou, Dongliang He, and Yansong Tang. 2025b. Think-ing with videos: Multimodal tool-augmented rein-forcement learning for long video reasoning. arXiv e-prints , pages arXiv–2508. Peiyuan Zhang, Kaichen Zhang, Bo Li, Guangtao Zeng, Jingkang Yang, Yuanhan Zhang, Ziyue Wang, Hao-ran Tan, Chunyuan Li, and Ziwei Liu. 2024a. Long context transfer from language to vision. arXiv preprint arXiv:2406.16852 .Yuanhan Zhang, Bo Li, Haotian Liu, Yong Jae Lee, Liangke Gui, Di Fu, Jiashi Feng, Ziwei Liu, and Chunyuan Li. 2024b. Video instruction tuning with synthetic data. arXiv preprint arXiv:2410.02713 .
+
+10

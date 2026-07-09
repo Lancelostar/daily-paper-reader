@@ -1,0 +1,937 @@
+Title: GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision
+
+URL Source: https://arxiv.org/pdf/2607.01050v2
+
+Published Time: Tue, 07 Jul 2026 01:41:55 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+> 1
+
+# GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision 
+
+Dianyu Wang, Peirong Zhang, Xuyang Li, Xiaoxuan Liu, Member, IEEE , and Lei Wang, Member, IEEE 
+
+Abstract —Recent multimodal large language models (MLLMs) have shown strong cross-modal understanding and coordinate generation abilities in visual grounding. However, transferring these abilities to remote sensing visual grounding (RSVG) re-mains challenging. High-resolution remote sensing images usually cover large-scale scenes, where targets are often extremely small and surrounded by numerous visually similar distractors. Meanwhile, queries often contain multiple clues, such as ref-erence objects, spatial relations, and target attributes. Existing MLLM-based methods usually formulate RSVG as one-step coordinate generation, which may lead to unstable predictions for small-object localization and complex queries. To address these challenges, we propose GeoSearcher, which reformulates RSVG as an anchor-guided progressive reasoning process and realizes it through two coupled stages: Anchor-Centric Rea-soning Supervised Fine-Tuning (ACR-SFT) and Process-Faithful Group Relative Policy Optimization (PF-GRPO). In ACR-SFT, anchor-centric reasoning data are used to teach the model to represent key visual clues as anchors and progressively integrate location, relational, and attribute clues around them. In PF-GRPO, Process-Aware Reward (PAR) and Reasoning-Informative Sample Selector (RISS) further optimize this rea-soning behavior by jointly evaluating key reasoning steps and target localization, while focusing training on samples that are more beneficial for improving progressive reasoning. Through this design, GeoSearcher transforms large-scale visual search into a more constrained local reasoning process. Extensive experi-ments on DIOR-RSVG, OPT-RSVG, and VRS-Bench show that GeoSearcher outperforms existing state-of-the-art methods. The project will be released at https://github.com/wangdianyu954-xixi/GeoSearcher. 
+
+Index Terms —Remote sensing visual grounding, reasoning model, multimodal large language models, reinforcement learn-ing. 
+
+I. I NTRODUCTION 
+
+# REMOTE sensing visual grounding (RSVG) aims to local-ize a specific object in satellite or aerial images according to a natural language description. By allowing users to specify 
+
+This work was supported in part by Key Program of Chinese Academy of Sciences under Grant KGFZD-145-25-38 and RCJJ-145-24-13; Science and Disruptive Technology Program under Grant AIRCAS2024-AIRCAS-SDTP-03. (Corresponding authors: Lei Wang.) Dianyu Wang, Peirong Zhang, Xuyang Li and Lei Wang are with the Aerospace Information Research Institute, the Key Laboratory of Network Information System Technology (NIST), and the Key Labora-tory of Target Cognition and Application Technology (TCAT), Chinese Academy of Sciences, Beijing 100190, China, and also with the School of Electronic, Electrical and Communication Engineering, University of Chinese Academy of Sciences, Beijing 100190, China (e-mail: wangdi-anyu25@mails.ucas.ac.cn; zhangpeirong22@mails.ucas.ac.cn; lixuyang23@ mails.ucas.ac.cn; wanglei002931@aircas.ac.cn). Xiaoxuan Liu are with the Aerospace Information Research Institute, the Key Laboratory of Network Information System Technology (NIST), and the Key Laboratory of Target Cognition and Application Technology (TCAT), Chinese Academy of Sciences, Beijing 100190, China (e-mail: liuxiaoxuan@aircas.ac.cn). coarse region  reference anchor  local search region  final target   
+
+> Query: “The white vehicle at the top of the image is on the left of the airplane above.” Image + Query
+
+MLLM 
+
+(a) One-shot grounding. Image + Query 
+
+> 1
+
+MLLM   
+
+> top region airplane anchor
+> left of final target
+> 2
+> 34
+
+(b) Progressive reasoning. Fig. 1. Comparison between one-shot grounding and anchor-guided pro-gressive reasoning in RSVG. (a) one-shot grounding predicts the target from the full image in one step, (b) whereas anchor-guided progressive reasoning progressively exploits multi-clues. 
+
+targets with flexible language expressions, RSVG provides an intuitive interface for object localization and retrieval in com-plex remote sensing scenes. This task is important for a wide range of applications, such as disaster response, agricultural monitoring, and urban management. Recent multimodal large language models (MLLMs) [1], [2], [3] have shown strong capability in visual grounding by unifying visual perception and language understanding within a generative framework. Recently, many studies have further adapted MLLMs to RSVG [4], [5], [6]. As illustrated in Fig. 1a, most existing MLLM-based RSVG methods formulate localization as one-shot coordinate generation , where the model jointly encodes the query and the full image, and directly predicts the target object bounding box in a single step. This formulation is effective when the target object is relatively large and can be identified from a few direct clues, but it becomes increasingly fragile in remote sensing scenes. As shown in Fig. 2, remote sensing images usually cover large geographic areas, while the referred object often occupies only a very small region. Moreover, such scenes commonly contain many objects of the same category with complex spatial layouts [7]. Therefore, to uniquely identify a small object, a query often needs to use a relatively salient object as a reference, such as “The white vehicle at the top of image is on the left of the airplane above”. This is similar to how people describe their own location by first referring to a nearby landmark. Meanwhile, the query may also involve absolute location, relative position, scale comparison, and attribute description clues. Under such conditions, the model must not only localize a tiny target object within a large visual search space, but also parse and integrate multiple clues. These                              
+
+> arXiv:2607.01050v2 [cs.CV] 4 Jul 2026 2The white vehicle at
+> the top of the image is
+> on the left of the
+> airplane above
+> The blue car is on the
+> left of the red and blue
+> car in the middle
+> There is a red and green
+> ground track field , and the
+> basketball court in the
+> middle that needs to be found
+> is located in the upper right
+> corner of it.
+> There is aairplane on the
+> left side of the image ,and
+> the airplane in the bottom
+> that needs to be found is
+> located in the lower right
+> corner of it.
+> Absolute location clue Relational c lue Reference object Attribute clue Final target
+> Fig. 2. Examples of complex RSVG. In high-resolution overhead scenes, a small target object often needs to be identified by combining a reference object with absolute, relational, and attribute clues.
+
+observations motivate a reformulation of RSVG from one-shot coordinate generation to multi-step reasoning. 
+
+Through multi-step reasoning, the model can first identify the reference object and exploit relevant clues step by step before final localization. This alleviates the burden of directly predicting the target bounding boxes in a single step from high-resolution imagery and complex query semantics. Recent studies on reasoning-oriented large language models (LLMs) [8], [9] have shown that reinforcement learning (RL) based post-training can effectively elicit and strengthen multi-step reasoning abilities. Inspired by this paradigm, several vision-language studies in both natural and remote sensing scenarios have introduced RL based post-training for down-stream tasks [10], [11], [12]. These methods usually optimize sampled responses with task-specific rewards, encouraging the model to generate more structured reasoning processes rather than relying only on direct answer prediction. Among them, Group Relative Policy Optimization (GRPO) [13] based methods have become a representative choice because they can achieve effective optimization with compact rule-based rewards [14], [15]. These studies further support the value of multi-step reasoning for complex vision-language tasks. However, existing reasoning methods in the remote sensing domain still face limitations when handling complex RSVG tasks. 1) They usually lack explicit constraints that reliably associate the key reference object mentioned during reasoning with the correct image regions. Once this key object is not genuinely or correctly grounded, the error may propagate to subsequent reasoning and degrade final localization ac-curacy. The analysis in Section IV-G further supports this viewpoint. 2) Current GRPO-based optimization for visual grounding usually focuses on improving the final localization accuracy, with rewards mostly designed around the target object coordinates [16], [17]. As a result, the reasoning process itself is only weakly supervised. Such sparse supervision may encourage shortcut learning, causing the model to bypass critical reasoning sections that should have been performed. To address the fragility of one-shot coordinate generation in complex remote sensing scenes and the limitations of directly transferring multi-step reasoning paradigms to RSVG, we exploit the natural bridging role of reference object clues in uniquely identifying small objects. For complex queries, we wrap the verified reference object coordinates with spe-cial tokens <ref_bbox> and treat the marked coordinate fragment as an anchor in the reasoning chain. This design establishes an explicit coordinate-level association between the reference object mention and its corresponding image region. Based on this formulation, we reformulate RSVG from one-shot coordinate generation into an anchor-guided progressive reasoning problem . We propose GeoSearcher ,an Anchor-Guided Progressive Reasoning Post-Training framework for reasoning-oriented RSVG. As shown in Fig. 1b, GeoSearcher follows an anchor-guided progressive reasoning strategy: it exploits coarse location clues, grounds the reference object, narrows the relevant local search region, and then localizes the final target object. For simple queries, GeoSearcher jointly uses the available clues for localization without enforcing unnecessary intermediate reasoning. The GeoSearcher consists of two stages. Specifically, Stage 1, Anchor-Centric Reasoning Supervised Fine-Tuning (ACR-SFT) , uses both progressive reasoning data with an-chors and reasoning data without anchors, enabling the model to adaptively select an appropriate reasoning mode according to the query structure. Stage 2, Process-Faithful Group Relative Policy Optimization (PF-GRPO) , further aligns the reasoning process, where the Process-Aware Reward (PAR) 
+
+jointly evaluates the key intermediate reasoning process and final object localization. To make PF-GRPO more effective in improving progressive reasoning, we further consider the learning value of different samples at each training step. RSVG samples vary substantially in query complexity and image scene difficulty, so not all samples contribute equally to improving the model. For example, for some samples, the required reasoning ability has already been largely acquired by the model at the current stage, so further optimizing the model with these samples provides limited incremental value for improving progressive reasoning. Moreover, as the model gradually improves during training, the learning value of each sample for progressive reasoning is not fixed. PAR can evaluate how well the current model performs progressive reasoning on a given sample, but this signal is only available after rollout generation. To address this issue, we introduce the 
+
+Reasoning-Informative Sample Selector (RISS) , which is updated online along with the model to estimate the expected PAR response of candidate samples during data sampling. RISS prioritizes samples that are expected to provide more informative supervision at the current training stage. Extensive experiments on DIOR-RSVG [18], OPT-RSVG [7], and VRS-Bench [19] show that GeoSearcher consistently outperforms existing state-of-the-art methods, es-pecially in small object scenarios where localization is driven by multi-clue reasoning. The main contributions of this work are summarized as follows:  
+
+> •
+
+We reformulate RSVG as anchor-guided progressive rea-soning. Under this formulation, the model progressively narrows the search region around anchors through multi-clue integration before localizing small target objects.  
+
+> •
+
+We propose GeoSearcher, a two-stage post-training framework composed of ACR-SFT and PF-GRPO. GeoSearcher guides the MLLM to perform query-adaptive grounding. For complex queries, it localizes 3
+
+targets through progressive reasoning; for simple queries, it avoids unnecessary reasoning.  
+
+> •
+
+We develop a pipeline to synthesize Anchor-Centric Rea-soning data for ACR-SFT, where reference object men-tions are explicitly associated with correct image regions. We design PAR and RISS to improve the faithfulness and efficiency of reasoning process optimization during PF-GRPO.  
+
+> •
+
+Extensive experiments on DIOR-RSVG, OPT-RSVG, and VRS-Bench demonstrate that GeoSearcher achieves state-of-the-art performance and improves the faithfulness of the reasoning process. II. R ELATED WORK 
+
+A. Remote Sensing Visual Grounding 
+
+Early studies mainly relied on task-specific discriminative frameworks [7], [18], [20], [21], where cross-modal represen-tation learning, attention interaction, and coordinate regression were jointly designed for the grounding task. These methods established an important foundation for RSVG, but their modeling capacity was still largely constrained by specialized architectures and implicit cross-modal matching. With the rapid development of MLLMs [1]–[3], visual grounding has shifted from discriminative prediction to a more unified generative paradigm. In the general domain, representative works such as Shikra [22], Ferret [23], and Kosmos-2 [24] showed that grounding can be integrated into autoregressive generation through numerical coordinates, special markers, or grounding-aware token designs. These advances provided methodological inspiration for RSVG. Building on this trend, a growing number of studies have adapted MLLMs to the remote sensing domain. GeoChat [4], LHRS-Bot [25], H2RSVLM [26], and SkySenseGPT [6] improved remote sensing instruction following through large-scale data construction and unified multi-task learning, enabling captioning, visual question answering (VQA), and grounding within a single framework. EarthGPT [27] fur-ther extended this paradigm to multi-sensor remote sensing imagery. In parallel, some works focused more directly on grounding-oriented spatial output modeling. For example, GeoGround [5] unified multiple grounding output formats, and GeoPixel [28] further extended grounding to pixel-level localization. Despite these advances, most existing MLLM-based methods still formulate localization as direct coordinate generation. Such one-shot prediction remains challenging in remote sensing imagery. This motivates us to move beyond direct generation toward the multi-step grounding process. 
+
+B. Reasoning-based RSVG 
+
+Recent studies have introduced reasoning-guided paradigms into remote sensing vision-language tasks, providing useful foundations for reasoning-based RSVG. Instead of relying only on direct answer prediction, these methods encourage models to generate intermediate reasoning traces, making the decision process more interpretable and better suited to com-plex spatial layouts, small objects, and multi-clue descriptions in remote sensing scenes. Some works explore how to enhance general remote sensing reasoning capability [29], [30]. TinyRS-R1 [16] adopts amulti-stage pipeline with reasoning supervision and GRPO alignment, showing that reasoning-oriented training can im-prove scene understanding and grounding for MLLM. RS-Thinker [31] formulates remote sensing analysis as a per-ceptually grounded multi-step reasoning process and improves factual correctness through staged reasoning alignment. Beyond general remote sensing reasoning, another line of work focuses on reasoning-oriented training for region-level referring tasks. RemoteReasoner [12] and Geo-R1 [32] inves-tigate how explicit reasoning can benefit geospatial referring tasks that require both language understanding and region-level visual localization. More directly related to RSVG, RSGround-R1 [14] introduces synthetic reasoning data to-gether with spatially guided optimization to improve position-aware grounding. These methods indicate that explicit rea-soning can benefit complex remote sensing queries. However, existing reasoning-based RSVG methods still represent inter-mediate reasoning mainly as textual trajectories. Critical visual clues in the reasoning, especially reference objects, are not reliably grounded to image regions. Even if a related region is produced, its accuracy is often not explicitly constrained. Our approach links reference mentions to image regions and explicitly constrains the correctness of these associations. 
+
+C. Reinforcement Learning for MLLMs 
+
+RL has recently become an important post-training strategy for improving the reasoning capability of MLLMs. Represen-tative post-training paradigms, including DPO [33], PPO [34], and GRPO [13], have been widely used to align model outputs with preference signals, task objectives, or rule-based rewards. In particular, GRPO has been widely adopted because it enables effective optimization with relatively simple rule-based rewards. Beyond general multimodal reasoning [35], [36], recent studies have also extended RL-based post-training to grounding-related tasks [11], [15], showing its potential for improving referring and localization behavior. In the remote sensing domain, RL-based post-training has also been introduced into grounding-related models [12], [14], [17]. Existing studies have shown that RL can improve remote sensing grounding performance. However, their reward designs are still mainly centered on the final grounding accuracy. This is broadly consistent with many RL settings in the general domain, where optimization is primarily driven by outcome-level supervision. However, for complex RSVG, final object correctness alone is often insufficient. A more critical issue is whether the intermediate reasoning process has been correctly executed. Our work focuses on aligning the intermediate process, rather than optimizing only the target bounding box. III. THE PROPOSED METHOD This section presents the proposed GeoSearcher framework. As shown in Fig. 3, the GeoSearcher consists of two stages. Stage 1, ACR-SFT, trains the model on both complex query samples with explicit anchors and simple query samples with-out anchors. This design encourages the model to adaptively 4Reference 
+
+Model 
+
+Policy Model 
+
+Query:     
+
+> “The blue car in
+> the left is on the
+> left of the red
+> and blue car in
+> the middle. ”
+> Rollout 1 Rollout 2 Rollout 3
+> Target -only Reward
+> Process -aware Reward
+> Rollout 1 Rollout 2 Rollout 3
+> ...
+
+𝐿 𝑃𝐹 −𝐺𝑅𝑃𝑂 
+
+> ...
+
+Value 
+
+Model      
+
+> Candidate Pool
+> (𝑘 ×𝑚 )
+> Select m
+> samples by
+> minimizing 𝑣 𝑖 −𝜏 𝑅𝐼𝑆𝑆
+
+𝐷 𝐾𝐿 
+
+> Updated by
+> PAR values
+> Rollouts
+
+PF -GRPO Training 
+
+ACR -SFT Training 
+
+Base Model 
+
+𝐿 𝐴𝐶𝑅 −𝑆 𝐹𝑇   
+
+> Base Model outputs Reasoning path Answer
+> reward
+> Number
+
+𝑣  
+
+> Predicted target Predicted reference
+
+Simple query samples 
+
+Complex query samples       
+
+> The blue car in the left is
+> on the left of the red and
+> blue car in the middle
+> The red and blue car in
+> the middle
+> <thinking> I begin by looking the image for a form that matches
+> this query “red and blue car” and focus particularly on the middle of
+> the image . …I could see a relatively clear target in the middle area
+> that matches this query .</thinking> <answer> {"bbox_2d": [689,
+> 349, 869, 410]} </answer>
+> <thinking> First, “in the left” indicates that I should focus on the left
+> region …Then, I locate the red and blue car in the middle as the
+> reference anchor .<ref_bbox>[689, 349, 869, 410]</ref_bbox> …
+> Next I search to the left of this anchored car…Therefore, I identify
+> the final target .</thinking> <answer >{"bbox_2d": [289, 337, 437,
+> 406]} </answer>
+
+Process -Aware  Reward Reasoning -Informative Sample Selector 
+
+Anchor -Centric Reasoning Data 
+
+> Anchor
+
+𝒯 𝑟𝑒𝑎 
+
+𝒯 𝑟𝑒𝑎 
+
+𝒯 𝑎𝑛𝑐 
+
+𝒯 𝑡 g𝑡 
+
+𝑜 1 𝑜 2 𝑜 3 𝑜 𝐺 
+
+Fig. 3. Overall framework of GeoSearcher. In Stage 1, the base model is optimized by ACR-SFT on Anchor-Centric Reasoning data. In Stage 2, PF-GRPO further optimizes the reasoning process through two key designs: RISS and PAR. 
+
+choose the appropriate grounding mode according to the query structure: performing anchor-guided progressive reasoning for complex queries, while avoiding unnecessary reasoning de-tours for simple queries. Stage 2, PF-GRPO, further optimizes the reasoning process through RL. Its optimization is guided by PAR, which supervises key intermediate reasoning steps and target localization rather than only the target localization, and by RISS, which selects samples that are more informative for reasoning process optimization. The remainder of this sec-tion is organized as follows. Section III-A gives an overview of the two-stage training framework. Section III-B describes the construction and verification of anchor-centric reasoning data for ACR-SFT. Section III-C and III-D introduce the PAR and RISS used in PF-GRPO. 
+
+A. Anchor-Guided Progressive Reasoning Post-Training Framework 1) ACR-SFT: In the first stage, we fine-tune the base model Qwen3VL-4B on Anchor-Centric Reasoning Data. The training set contains two types of samples: complex query samples with anchors Dref , and simple query samples without inserted anchors Dsimp .We denote the training set as 
+
+Dacr = Dref ∪ D simp , (1) For each image-query pair x = ( I, Q ), let zQ ∈ { 0, 1}
+
+indicate whether the query requires an explicit reference object. The supervised output is defined as 
+
+y∗(x) = 
+
+(
+
+[racr pre ; Aref ; racr post ; Btgt ], zQ = 1 ,
+
+[racr simp ; Btgt ], zQ = 0 , (2) where [· ; ·] denotes sequence concatenation. Aref =
+
+<ref_bbox> Bref </ref_bbox> is the anchor wrapped by special tokens, Bref is the reference object coordinates, and 
+
+Btgt is the target object coordinates. racr pre and racr post denote the reasoning fragments before and after the anchor, respectively, and racr simp denotes the reasoning trajectory for simple queries. The ACR-SFT objective is formulated as 
+
+LACR -SFT = −E(x,y ∗)∼D acr 
+
+" X
+
+> t∈T rea
+
+log pη (y∗ 
+
+> t
+
+| x, y ∗
+
+> <t
+
+)+ X
+
+> t∈T anc
+
+log pη (y∗ 
+
+> t
+
+| x, y ∗
+
+> <t
+
+)+ X
+
+> t∈T tgt
+
+log pη (y∗ 
+
+> t
+
+| x, y ∗
+
+> <t
+
+)
+
+#
+
+.
+
+(3) where Trea , Tanc , and Ttgt denote the token positions of reasoning text, anchor, and target coordinates, respectively. For simple queries, Tanc = ∅.This objective enables the model to perform query-adaptive grounding. For complex queries, the model learns to use ex-plicit reference anchors for progressive reasoning. For simple queries, it learns to avoid unnecessary anchor generation. 
+
+2) PF-GRPO: After ACR-SFT, we further optimize the model with PF-GRPO. In this stage, both the policy model πθ
+
+and the reference model πref are initialized from the Stage-1 ACR-SFT checkpoint. Unlike the supervised objective in Stage 1, PF-GRPO updates the policy according to the relative quality of a group of sampled reasoning trajectories. This opti-mization incorporates RISS for reasoning-informative sample selection and PAR for process-aware trajectory evaluation. 5Input 
+
+Query 1 
+
+Qwen3VL -Plus 
+
+Cross -Modal Semantic Consistency  
+
+> Crop patch
+> for 𝐵 re𝑓
+> 𝑐𝑎𝑛𝑑
+> Reference
+> noun phrase
+> red car
+
+RemoteCLIP   
+
+> 𝜏 sem >𝑇ℎ𝑟𝑒𝑠ℎ𝑜𝑙𝑑
+
+Spatial and Scale Consistency 
+
+> Absolute location
+> verification:
+> in the middle
+> Relational scale verification
+
+𝐵 𝑡𝑔𝑡  𝐵 re𝑓 
+
+> 𝑐𝑎𝑛𝑑
+> Box area ratio
+
+AND 
+
+> 𝐵 𝑟𝑒𝑓 𝑐𝑒𝑛𝑡𝑒𝑟
+> 𝐵 𝑡𝑔𝑡 𝑐𝑒𝑛𝑡𝑒𝑟
+> Relational relation Verification
+> lower left
+
+Qwen3 -Max       
+
+> First, “in the left” indicates that I should
+> focus on the left region of the
+> image. …Then, I locate the red car in the
+> middle as the intermediate reference
+> anchor. Next, I search lower left of this
+> anchored red car. …Within that region, I
+> identify the black car on the left as the
+> final target <ref_bbox >[508, 600, 676, 670]
+> </ ref_bbox >.
+> First, “in the left” indicates that I should
+> focus on the left region of the
+> image. …Then, I locate the red car in the
+> middle as the intermediate reference
+> anchor. <ref_bbox>[508, 600, 676, 670]
+> </ref_bbox> Next, I search lower left of
+> this anchored red car. …Within that
+> region, I identify the black car on the left
+> as the final target.
+> Progressively use clue
+> Absolute clue
+> Reference object
+> Relational clue
+> Attribute clue
+
+1
+
+2
+
+3
+
+4
+
+> Final target
+> Reference
+> Anchor
+> 𝐵 re𝑓
+> 𝑐𝑎𝑛𝑑 :[508,600,676,670]
+
+Complex Query Simple Query 
+
+> Jointly use
+> limited clues
+> Absolute clue
+> Attribute clue
+> Final target
+> only
+> Query 1:
+> “The black car in
+> the left is lower
+> left of the red car
+> in the middle”
+> Ground Truth:
+> [117,646,283,710]
+> Query 2:
+> “The red car in
+> the middle”
+> Ground Truth:
+> [508,600,676,670 ]
+> Guided Prompt:
+> “You are a
+> professional
+> expert in the field
+> of remote
+> sensing…”
+> Query 1 Query 2
+
+Step 1:Structured Reasoning 
+
+Trajectory Synthesis  Step 2:Anchor -Centric Verification  Step 3:Context Aligned 
+
+Anchor Insertion 
+
+Fig. 4. Pipeline of Anchor-Centric Reasoning Data construction for ACR-SFT. 1) synthesize trajectories, 2) verify anchors, 3) insert <ref_bbox> in context. 
+
+In the training step n, we first construct a candidate pool 
+
+Cn by oversampling k × m samples from the training set: 
+
+Cn ∼ Sample km (Dacr ). (4) RISS then estimates the expected PAR of each candidate and selects the samples whose predicted values are closest to the target threshold τRISS :
+
+Bn = arg min 
+
+S⊂C n,|S| =m
+
+X
+
+x∈S 
+
+|Vϕ(x) − τRISS | , (5) where Vϕ is the RISS value model, m is the selected batch size. This sampling strategy allocates more budget to samples that are more informative for improving reasoning quality. For each selected sample x = ( I, Q ) ∈ B n, we sample a group of G candidate trajectories {oi}Gi=1 from the old policy 
+
+πθold . Each trajectory is evaluated by the total reward: 
+
+Ri = RPAR (oi) + wfmt Ifmt (oi), (6) where RPAR is the proposed PAR, and Ifmt ∈ {0, 1}
+
+indicates whether the generated output follows the structural format, which organizes the reasoning and answer with <thinking >... </thinking > and 
+
+<answer >... </answer > tags, and wfmt denotes the format reward. Based on the total rewards within each sampled group, the group-relative advantage is computed as 
+
+ˆAi = Ri − ¯Rσ(R) , R = {R1, . . . , R G}, (7) where ¯R and σ(R) denote the mean and standard deviation of the group rewards. The PF-GRPO objective is defined as 
+
+LPF -GRPO = −Ex∼B n
+
+"
+
+1
+
+G
+
+GX
+
+i=1 
+
+ℓi(θ; ˆAi)
+
+#
+
++ λD KL (πθ ∥πref ),
+
+(8) where 
+
+ℓi(θ; ˆAi) = 1
+
+|oi|
+
+|oi|
+
+X
+
+t=1 
+
+min 
+
+
+
+ri,t (θ) ˆAi,
+
+clip( ri,t (θ), 1 − ϵ, 1 + ϵ) ˆAi
+
+
+
+.
+
+(9) and 
+
+ri,t (θ) = πθ (oi,t |x, o i,<t )
+
+πθold (oi,t |x, o i,<t ) . (10) Here, ϵ is the clipping threshold, the clipping term stabilizes policy updates, and the KL regularization prevents the opti-mized policy πθ from drifting excessively from the reference policy πref . λ controls the strength of KL regularization. With RISS and PAR-based trajectory evaluation, PF-GRPO goes beyond optimizing only the final grounding result and further encourages a more faithful reasoning process. 
+
+B. Anchor-Centric Reasoning Data Preparation and Verifica-tion 
+
+To support ACR-SFT, we construct a structured reasoning data pipeline tailored for RSVG, as illustrated in Fig. 4. This pipeline not only produces progressive reasoning trajectories with intermediate reference objects, but also verifies whether the reference anchor is semantically and spatially valid, and inserts its coordinates into the reasoning chain in an context aligned manner. Explicit reference anchors are mainly intro-duced for complex queries. For simple queries, we do not enforce an explicit reference anchor. 
+
+1) Structured Reasoning Trajectory Synthesis: To obtain Anchor-Centric reasoning data, we exploit the strong deductive capability of Qwen3VL-Plus to synthesize structured reason-ing trajectories conditioned on a remote sensing image I, a language query Q, and the ground truth Btgt . Unlike existing works [14], [31], we do not let the model freely explore its own solution path for complex queries. Instead, we require the model to decompose complex descriptions into explicit 6
+
+clues and organize them into a progressive search-region narrowing process. It first uses coarse spatial clues to reduce the candidate search region, and then localizes a reference object. To introduce an explicit visual anchor, we require the model to identify the reference object mentioned in the query and predict its bounding box Bcand ref . The model then interprets the relative directional or scale relations described in the query with respect to this anchor, thereby further constraining a more localized search region. Within this localized region, the model identifies several candidate objects and progressively eliminates distractors by incorporating finer-grained clues, such as color, appearance, and geometry, until the target object that is most consistent with all clues is determined. For simple queries, we allow the model to freely explore its own solution path, where it jointly integrates the available clues for localization without introducing unnecessary reasoning. 
+
+2) Anchor-Centric Verification: Although advanced MLLMs have strong generative capability, directly relying on them to synthesize reasoning trajectories for remote sensing imagery still entails substantial risks of spatial hallucination and semantic mismatch. This issue is particularly severe for complex queries involving reference objects and relational constraints, whose generated reasoning chains are usually more fragile and more prone to errors in reference identification, spatial relation understanding, or scale judgment. To ensure that the reference objects are truly and accurately grounded, we focus on verifying the correctness of such reasoning chains. Specifically, we first employ Qwen3-Max to parse the text query and extract three types of reference-related information: its absolute location, its relative position or scale, and the corresponding reference noun phrase. 
+
+a) Cross-Modal Semantic Consistency: To ensure that the generated anchor is semantically accurate, we crop the image patch corresponding to Bcand ref and employ the pretrained RemoteCLIP [37] model to compute the normalized cosine similarity between this visual patch and the extracted reference noun phrase. A reasoning trajectory is retained only when the similarity score exceeds an empirical threshold τsem .
+
+b) Spatial and Scale Consistency: Beyond semantic matching, we further verify whether the generated anchor satisfies the extracted geometric clues. For absolute-position clues, we partition the image into a 3 × 3 grid and check whether the center of the candidate anchor Bcand ref falls within the designated region, such as “top-left.” For relative spatial or scale clues, such as “lower-left of” or “larger than,” we construct a set of deterministic geometric rules. By comput-ing the relative center offsets and bounding box area ratios between Bcand ref and the ground truth Btgt , we perform strict ge-ometric consistency verification. To maximize data yield while maintaining strict quality control, we further introduce a retry mechanism. If a candidate trajectory fails either consistency check and is filtered out, the model is prompted to generate a new candidate trajectory. Up to three attempts are allowed for each query. Samples that fail all three attempts are permanently discarded, which helps preserve a clean supervision signal for ACR-SFT. 
+
+3) Context-Aligned Anchor Insertion: During the initial reasoning trajectory generation stage, reference coordinates tend to appear near the end of the reasoning chain. This phenomenon is closely related to the generation patterns of current large models [35], [38]. In pretraining and downstream spatial-output tasks such as object detection and referring expression comprehension, coordinates are typically modeled as part of the final answer and are therefore generated near the end of the output sequence. However, for autoregressive models, reference coordinates appended only at the end of the reasoning text cannot serve as an effective visual prior for subsequent reasoning steps; instead, they become a post-hoc supplement to an already completed reasoning process. To address this issue, we introduce a Context-Aligned Insertion mechanism driven by Qwen3-Max. The verified reference coordinate B∗ 
+
+> ref
+
+is wrapped with the special token 
+
+<ref_bbox> . The model then parses the filtered reasoning chain and inserts this coordinate sequence immediately after the position where the reference object is first semantically identified in the reasoning text. This context-aligned insertion strategy ensures that the model explicitly predicts and “sees” the anchor before generating the later reasoning steps that depend on it. As a result, the anchor can genuinely function as a prior for subsequent local search and relational reasoning. After anchor verification and context-aligned insertion, we further randomly sample 10% of the retained trajectories for manual inspection and correct residual issues. After this final check and potential data leakage removal, we obtain the final Anchor-Centric Reasoning Data for ACR-SFT. 
+
+C. Process-Aware Reward 
+
+Existing uses of GRPO in visual grounding typically rely on sparse rewards that only evaluate the final grounding outcome. However, such rewards provide insufficient constraints on the intermediate grounding process, because the model may occasionally localize the correct target without following a correct reasoning path. This issue manifests differently across query types. For simple queries, the model may introduce un-necessary intermediate steps. For complex relational queries, it may bypass the intended reference-driven deduction path. To better align PF-GRPO with the desired grounding procedure, we introduce PAR, which adaptively evaluates whether agenerated trajectory follows an appropriate grounding process under different query types. To provide a unified formulation across different query types, we decompose PAR into three components: a target term Rtgt , which rewards final target object localization; a coupling term Rcpl , which encourages coherent reasoning between reference grounding and target localization; and a penalty term Rpen , which penalizes reference predictions that are inconsistent with the query structure. Accordingly, PAR is defined as 
+
+RPAR = Rtgt + Rcpl − Rpen , (11) where the three components are instantiated differently depending on whether the input query requires a reference. 7The ship in the middle  The blue car in the left is on the left                                          
+
+> of the red and blue car in the middle
+> The vehicle is much smaller than the vehicle
+> on the top
+> Easy Sample Reasoning -Informative Sample Hard Sample
+> G rollouts G rollouts G rollouts
+> 1.0
+> 0.5
+> 0.0
+> 𝑟 1𝑟 2𝑟 3𝑟 4𝑟 5𝑟 6
+> Reward
+> Process -aware reward (per rollout)
+> Mean reward = 0.9 5
+> 1.0
+> 0.5
+> 0.0
+> 𝑟 1𝑟 2𝑟 3𝑟 4𝑟 5𝑟 6
+> Reward
+> Mean reward = 0.4 9
+> Process -aware reward (per rollout)
+> 1.0
+> 0.5
+> 0.0
+> 𝑟 1𝑟 2𝑟 3𝑟 4𝑟 5𝑟 6
+> Reward
+> Mean reward = 0.0 0
+> Process -aware reward (per rollout)
+> 0.97 0.94 0.95 0.95 0.94 0.95
+> 0.18
+> 0.39 0.41 0.61 0.63 0.74
+> 0.00 0.00 0.00 0.00 0.00 0.00
+> Target ground truth Reference ground truth Predicted target Predicted reference
+
+Fig. 5. Illustration of RISS using observed PAR responses at PF-GRPO step 1. Samples with non-saturated mean PAR are prioritized for more informative process optimization. 
+
+a) Direct Grounding for Simple Queries: For simple queries that can be resolved by distinctive visual clues alone, the desired grounding process should remain concise and should not introduce unnecessary intermediate references. Ac-cordingly, for simple queries, the target term is defined as the IoU reward for final target object localization, the coupling term is set to zero, and the penalty term penalizes unnecessary reference predictions: 
+
+Rtgt = IoU tgt , Rcpl = 0 , Rpen = λhal · Nref , (12) and the resulting PAR for simple queries becomes 
+
+Rsimple PAR = IoU tgt − λhal · Nref . (13) Here, λhal controls the penalty strength, and Nref denotes the number of unnecessary reference predictions. 
+
+b) Relational Grounding for Complex Queries: For com-plex relational queries, a reliable grounding process requires the model to first ground the reference object, then interpret the position or scale relation, and finally localize the target accord-ing to this relation. Considering that the reference coordinate serves as a visual anchor that connects relational reasoning with final target localization, it directly reflects whether the reference object is correctly grounded. Moreover, when both the reference object and the final target are correctly localized, the consistency between them also provides direct evidence for correct relational reasoning. Therefore, we design the reward as follows: 
+
+Rtgt = αtgt · IoU tgt , (14) 
+
+Rcpl =
+
+(αref · IoU ref + β · Ibonus , Nref = 1 ,
+
+0, otherwise , (15) 
+
+Rpen = λmulti · | Nref − 1|, (16) The resulting PAR for relational queries is 
+
+Rrel PAR = Rtgt + Rcpl − Rpen . (17) Here, αtgt and αref balance the contributions of final tar-get localization and intermediate reference grounding. When the model produces the desired trajectory with exactly one 
+
+Algorithm 1 RISS in PF-GRPO 
+
+Require: Dataset D, selected query number m, generations per query G, target threshold τRISS , oversampling factor k
+
+1: Initialize: policy model πθ0 , value model Vϕ0
+
+2: for n = 0 to N − 1 do 
+
+3: Sample an overscaled candidate pool: 
+
+Dkm = {(Ii, Q i)}k×mi=1 ∼ D 
+
+4: Predict expected PAR for each candidate: vi = Vϕn (Ii, Q i)
+
+5: Select m samples Dm ⊂ D km that minimize |vi − τRISS |
+
+6: Generate G trajectories for each selected query: 
+
+{T i,j }Gj=1 ∼ πθn (· | Ii, Q i)
+
+7: Compute Ri,j  
+
+> PAR
+
+for all generated trajectories 
+
+8: Update policy πθn → πθn+1 using the PF-GRPO objective 
+
+9: Update value model Vϕn → Vϕn+1 by minimizing 
+
+Lvalue = 1
+
+> m
+
+Pmi=1 
+
+
+
+Vϕn (Ii, Q i) − 1
+
+> G
+
+PGj=1 Ri,j 
+
+> PAR
+
+2
+
+10: end for 
+
+reference prediction, the coupling term rewards the quality of reference grounding and activates an additional bonus only when both the reference and target predictions exceed predefined thresholds 0.5. If the model omits the required reference object or generates multiple redundant references, the penalty term is activated according to the deviation of Nref 
+
+from the expected reference count. In this way, PAR does not merely encourage correct target coordinates. It also encourages the model to follow a ground-ing process consistent with the relational structure of the query. 
+
+D. Reasoning-Informative Sample Selector 
+
+PAR measures the quality of the reasoning behavior per-formed by the current model on a given sample, and is later used as the reward signal for policy updates. As shown in Fig. 5, we observe that, at a given training step, samples with different difficulty levels induce markedly different PAR responses over sampled reasoning trajectories. Since the raw PAR is not necessarily bounded within [0 , 1] , we normalize it before RISS selection. Unless otherwise specified, PAR values in this subsection refer to the normalized PAR. For samples whose required reasoning has been largely mastered by the current model, most rollouts tend to receive consistently high PAR, so further optimization on these sam-ples provides limited further benefit. For samples that are still too difficult at the current training step, most rollouts tend to receive consistently low PAR, making it difficult to provide effective positive feedback for PF-GRPO. In contrast, samples with moderate mean PAR are more informative for the current model. Such samples are neither stably solved nor consistently failed, suggesting that the model has not yet fully mastered the required reference grounding, relation understanding, or target localization capability, but can already receive useful positive feedback from them. Therefore, the mean PAR provides a practical proxy for selecting samples that are more suitable for reasoning optimization at the current training step. To this end, we introduce RISS to estimate the expected PAR response of candidate samples during data sampling and prioritize samples with moderate predicted PAR values, thereby improving the effectiveness of PF-GRPO for progres-sive reasoning optimization. Specifically, RISS is driven by 8                      
+
+> TABLE I STATISTICS OF THE ORIGINAL RSVG DATASETS AND THE
+> ANCHOR -C ENTRIC REASONING DATA USED FOR ACR-SFT. T HE REDUCTION IN TRAINING SET SIZE COMES FROM STRICT TRAJECTORY VERIFICATION AND LEAKAGE REMOVAL DURING DATA CONSTRUCTION .
+> Dataset Original Dataset Anchor-Centric Reasoning Data
+> Train (Pairs) Test (Pairs) Train (Pairs) Test (Pairs) DIOR-RSVG 26,991 7,500 25,012 7,500
+> OPT-RSVG 19,580 24,477 18,875 24,477
+> VRS-Bench 36,313 16,159 36,106 16,159
+
+an online value model built on a Qwen3VL-2B backbone with an additional lightweight regression head. During each RL iteration, as outlined in Algorithm 1, we first oversample a candidate pool of size k × m from the training set. The value model then estimates the expected PAR response of all candidates, and we select the m samples whose predicted values are closest to a target threshold τRISS . We set τRISS 
+
+to 0.4, and the sensitivity analysis in Section IV-F further supports this choice. Subsequently, the model generates G
+
+rollout trajectories only for the selected samples, and PF-GRPO updates are performed based on PAR. Meanwhile, the value model is updated online by minimizing the mean squared error between its prediction and the observed mean PAR over the sampled trajectories. It is worth noting that RISS does not permanently discard hard samples. As the model becomes stronger, samples that were previously too difficult may move from the low-PAR saturated region to the non-saturated region, and can therefore be prioritized in later training stages. IV. E XPERIMENTS 
+
+In this section, we first describe the datasets, evaluation metrics, and implementation details in Sections IV-A, IV-B, and IV-C. We then report the main comparison results in Sec-tion IV-D. Finally, we present ablation studies, hyperparameter sensitivity analysis, and an analysis of reference anchor quality in Sections IV-E, IV-F, and IV-G, respectively. 
+
+A. Datasets 
+
+We evaluate GeoSearcher on three widely used benchmarks: DIOR-RSVG, OPT-RSVG, and VRS-Bench. These datasets covers base grounding, complex scene understanding, and fine-grained reasoning. 
+
+DIOR-RSVG [18] is a foundational benchmark built on the DIOR dataset. With a fixed resolution of 800 × 800 , it offers a relatively standardized setting for assessing basic ground-ing performance. Its queries involve both object attributes and spatial expressions. Following the standard split, we use 26,991 samples for training, 3,829 for validation, and 7,500 for testing. 
+
+OPT-RSVG [7] is a more challenging benchmark for eval-uating robustness under diverse observation conditions and image scales. Compared with DIOR-RSVG, it contains more complex target scales, more similar objects within a scene, more varied viewpoints and color appearance, and noisier backgrounds. These factors make target recognition and spatial disambiguation more difficult. We follow the official protocol and use 19,580 training samples, 4,895 validation samples, and 24,477 test samples. 
+
+VRS-Bench [19] is designed for fine-grained reasoning. It uses standardized 512 × 512 image patches and high-quality human-verified annotations, which provide reliable evaluation signals. Its queries place stronger emphasis on precise alignment among object attributes, spatial relations, and scene context. We adopt the standard split with 36,313 samples for training and 16,159 for testing. Table I reports the statistics of the original RSVG datasets and the final Anchor-Centric Reasoning Data used for ACR-SFT. For ACR-SFT, we construct Anchor-Centric Reasoning Data from the official training partitions of each benchmark rather than directly using the original training splits. Before su-pervised fine-tuning, all synthesized trajectories are processed by verification, manual inspection, and leakage removal. In particular, some RSVG benchmarks contain cases where the same remote sensing image appears in both the training and test partitions with different language queries. Since ACR-SFT introduces explicit reference coordinates into the reasoning trajectories, such image-level overlap may expose the model to object locations from test images. To avoid this potential leakage, we remove all training samples whose image paths overlap with the test set. 
+
+B. Evaluation Metrics 
+
+Following prior works, we adopt Pr@0.5, Pr@0.7, and mIoU as the target-level grounding metrics. Specifically, Pr@0.5 and Pr@0.7 denote the percentages of samples whose IoU between the predicted target bounding boxes and the ground truth target bounding boxes exceeds 0.5 and 0.7, respectively. The mIoU is defined as mIoU = 1
+
+M
+
+> M
+
+X
+
+> t=1
+
+It
+
+Ut
+
+, (18) where M is the number of samples, and It and Ut denote the intersection and union areas between the predicted and ground truth target bounding boxes of the t-th sample, respectively. To evaluate process correctness on relational queries, we further introduce two process-level metrics: Faithful@0.5 and Shortcut@0.5. These metrics are computed only on the relational-query subset R and are applicable only to models that explicitly generate reference object bounding boxes. Let 
+
+zref  
+
+> i
+
+= 1
+
+h
+
+IoU( Bpred ref , B gt ref ) > 0.5
+
+i
+
+,ztgt  
+
+> i
+
+= 1
+
+h
+
+IoU( Bpred tgt , B gt tgt ) > 0.5
+
+i
+
+.
+
+(19) Then Faithful@0.5 is defined as Faithful@0.5 = 1
+
+|R| 
+
+X
+
+> i∈R
+
+zref  
+
+> i
+
+ztgt  
+
+> i
+
+. (20) Shortcut@0.5 is defined as Shortcut@0.5 = 1
+
+|R| 
+
+X
+
+> i∈R
+
+(1 − zref  
+
+> i
+
+) ztgt  
+
+> i
+
+. (21) 9Qwen3VL -4B  GeoGround  GeoSearcher 
+
+(b) 
+
+(c) 
+
+> A vehicle on the top  A ship is on the right
+> of the ship on the left  A ship is similar in size to the
+> ship on the top
+
+(a) 
+
+Fig. 6. Qualitative comparison with representative baselines on different query types. From left to right are Qwen3VL-4B, GeoGround, and our GeoSearcher. Green boxes denote ground truth, while colored boxes denote predictions from different methods. 
+
+To compute process-level metrics that require reference object localization, we additionally construct reference anchor annotations for the test sets using the same pipeline as the training data construction. All bounding boxes are manually corrected and verified to ensure accurate reference grounding. The resulting human-verified reference bounding boxes are used for evaluation, including Faithful@0.5, Shortcut@0.5, and the reference anchor quality analysis. 
+
+C. Implementation Details 
+
+GeoSearcher uses Qwen3VL-4B as the base model. The overall training pipeline is implemented with LLaMA-Factory [39] for supervised fine-tuning and Verl [40] for reinforcement learning. In Stage 1, we perform ACR-SFT on the Anchor-Centric Reasoning data for 3 epochs with a learning rate of 
+
+1 × 10 −5 and a global batch size of 64. In the semantic consistency check, the RemoteCLIP similarity threshold τsem 
+
+is set to 0.85. We adopt DeepSpeed ZeRO-3 [41] for memory-efficient training. The cutoff length is set to 2048, the learning rate scheduler follows a cosine schedule, and the warmup ratio is set to 0.1. In Stage 2, we conduct PF-GRPO for 200 steps with a learning rate of 1×10 −6 and a global batch size of 128. During policy optimization, we sample G = 6 trajectories for each query. For PAR, we set λhal = 0 .2 and λmulti = 0 .2.The target and reference rewards in the coupling design are weighted by αtgt = 0.7 and αref = 0.3, respectively, as determined by hyperparameter tuning. The bonus coefficient is set to β = 0 .2. In addition, the format reward weight is set to wfmt = 0 .2. For the RISS, we freeze the Qwen3VL-2B backbone parameters and train only lightweight LoRA adapters together with the regression head. In our experiments, the pool expansion factor is set to k = 2 . All experiments are conducted on 2 NVIDIA A100 GPUs. GLM -4.1V -9B -Thinking :<think> Got it, let's look at the image. The is in the middle. We need to find a vehicle to the left            
+
+> of it. Let's check the positions. There's a vehicle near the road, maybe one of the cars. Wait, the question says "left of
+> the frustum of a cone small chimney". So the frustum is the big cone -like structure. The vehicle to the left of it —let's
+> identify the positions. Looking at the image, there's a car near the road, maybe the one closer to the left side of the
+> frustum. Wait, let's check the coordinates. The frustum is the large cone in the center. Let me check again. The road
+> has cars, and the one to the left of the frustum —probably the car near the intersection? Wait, the image shows a few
+> cars. The one that's left of the frustum —let's find the bounding box. So the vehicle is on the left side of the large cone
+> structure. Let's confirm the position. </ think><answer >[[ 376,278,400,307 ]] <|end_of_box|> </answer>
+> “The vehicle is on the left of the frustum of a cone small chimney in the middle”
+> GeoSearcher :<thinking>
+> (Anchor grounding) First, I should locate the frustum of a cone small chimney.
+> The image shows a large, conical structure near the center, which appears to
+> be a chimney with a frustum shape. This is likely the “frustum of a cone small
+> chimney in the middle” referenced in the question. I will refer to this as the
+> reference object. <ref_bbox> [516, 405, 670, 620] </ref_bbox>
+> (Relational clue) Next, according to the relative spatial relationship ”left of”,
+> (Local search) I will scan the area to the left of the chimney. Looking to the left
+> of the chimney, there is a road running diagonally from bottom -left to upper -
+> right. Along this road, several small bright spots are visible.
+> (Attribute clue) Then, I identify the specific vehicle. Among these, one vehicle
+> is positioned directly to the left of the chimney’s base. Its location matches the
+> description well.
+> (Target grounding) Finally, based on its position relative to the chimney and
+> surrounding features, I can now define the bounding box for this
+> vehicle .</thinking >< answer> {\"bbox_2d \": [389, 471, 410, 498] }</answer>
+> GLM -4.1V -9B -Thinking GeoSearcher Predicted reference ground truth
+
+Fig. 7. Case study of reasoning behavior. Compared with a strong reasoning baseline. 
+
+D. Comparison with State-of-the-Art Methods 
+
+Table II presents a quantitative comparison between GeoSearcher and a broad range of state-of-the-art baselines, including general MLLMs, RS-specific MLLMs, and recent RS reasoning models. For general MLLMs, we re-evaluate the models under a unified protocol using 1024 × 1024 inputs. For RS-specific MLLMs and RS reasoning models, we use the results reported in their original papers whenever available; otherwise, we re-test them under the same 1024 × 1024 
+
+protocol. On DIOR-RSVG, GeoSearcher reaches 83.2% at Pr@0.5, surpassing the strongest previous baseline, GeoGround, by 5.5%. The gain becomes much larger on OPT-RSVG, where scenes are larger and the descriptions are more complex, with GeoSearcher improving Pr@0.5 by 27.9%. These results indicate that GeoSearcher is particularly effective when local-ization must be performed under a larger visual search space, where multiple clues need to be integrated to progressively reduce ambiguity. GeoSearcher also delivers the best overall performance on VRS-Bench, where the native image resolu-tion is relatively modest but the language descriptions are more complex, exceeding GeoGround by a clear margin of 14.3%. This suggests that the advantage of GeoSearcher is not limited to search-space reduction in high-resolution imagery, but also stems from its stronger ability to integrate complex semantic clues during grounding. These results are reinforced by the qualitative analysis presented in Fig. 6. GeoSearcher produces predictions that are consistently closer to the ground truth across three repre-sentative query types, while different baselines exhibit distinct failure patterns. In row a, because the target is extremely small, Qwen3VL-4B fails to place its prediction on an actual vehicle. In comparison, both GeoGround and GeoSearcher correctly localize the object. A more challenging case is observed in row b, where the query depends on a relative relation to a small and easily overlooked reference object. Qwen3VL-4B and GeoGround both predict incorrect bounding boxes. Their errors may stem from two possible reasons: they may fail to identify the ”the ship on the left”, or they may identify it but fail to correctly resolve the spatial relation. In particular, their predicted regions are closer to the lower-right of the reference 10           
+
+> TABLE II QUANTITATIVE COMPARISON OF THE GEO SEARCHER AGAINST STATE -OF -THE -A RT MODELS ON THREE BENCHMARKS : DIOR-RSVG, OPT-RSVG,
+> AND VRS-B ENCH . T HE BEST OVERALL RESULTS ARE HIGHLIGHTED IN BOLD ,AND THE SECOND RESULTS ARE UNDERLINED .
+
+Method DIOR-RSVG OPT-RSVG VRS-Bench 
+
+Pr@0.5 Pr@0.7 mIoU Pr@0.5 Pr@0.7 mIoU Pr@0.5 Pr@0.7 mIoU 
+
+General MLLMs 
+
+ChatGPT-5 [42] 27.2 4.2 29.6 20.6 10.1 21.2 14.9 3.4 23.6 MiniGPT-v2-7B [2] 30.3 11.5 30.1 21.4 11.2 23.2 35.8 16.8 34.7 Qwen2.5VL-3B [43] 33.7 20.4 33.5 24.6 15.2 25.3 37.1 20.3 34.9 GLM-4.1V-9B-Thinking [35] 47.7 33.6 45.3 43.6 29.1 43.3 46.6 24.9 42.7 Qwen3VL-4B [38] 50.7 37.4 47.4 43.2 29.3 41.6 56.1 36.4 49.6 Qwen3.5-4B 53.1 39.4 49.0 43.9 30.1 43.1 47.4 23.6 43.6 InternVL3.5-8B [44] 64.9 50.5 56.9 46.3 32.6 44.2 54.9 29.3 48.8 
+
+RS-Specific MLLMs 
+
+Geochat [4] 19.7 - - 13.4 2.9 20.8 57.4 22.6 -SkysenseGPT [6] 22.9 5.5 27.8 5.5 1.1 13.9 11.0 2.2 21.3 EarthDial [45] 46.1 30.2 39.5 29.6 15.8 30.1 14.4 7.8 13.0 VHM [46] 56.2 36.0 50.3 31.8 12.8 33.2 23.5 4.4 28.9 EarthGPT [27] 76.7 66.5 69.3 - - - - - -GeoGround [5] 77.7 - - 53.3 39.6 48.2 66.0 - -
+
+RS Reasoning MLLMs 
+
+Geo-R1 [32] 40.6 - - 34.2 20.6 35.3 59.5 37.1 -RSGround-R1 [14] 71.8 58.7 63.4 - - - 63.7 38.3 54.7 TinyRS-R1 [16] 74.9 - - 38.3 25.3 36.1 15.1 6.0 18.6 GeoZero [17] 75.7 - - - - - - - -
+
+GeoSearcher 83.2 72.4 73.5 81.2 65.5 69.4 80.3 64.4 69.2 
+
+object rather than strictly to its right, suggesting that the relative spatial constraint is not reliably resolved. In contrast, GeoSearcher correctly grounds the ”the ship on the left” as an anchor, and then searches the corresponding right-side region to localize the target accurately. The last row involves a subtle scale comparison, requiring the model to find “a ship similar in size to the ship on the top.” Neither Qwen3VL-4B nor GeoGround accurately localizes ”the small ship at the top” as the scale reference, and their predicted targets are therefore slightly larger than the top ship. GeoSearcher, however, still succeeds by making more accurate use of the reference object and the relational clue. To further illustrate the reasoning process of GeoSearcher, Fig. 7 provides a representative example. Although GLM-4.1V-9B-Thinking generates a plausible reasoning trace, its process is relatively unstructured and weakly grounded. It mentions the reference object clue, but does not ground it as a critical clue. The subsequent localization process is not tightly centered on this reference object, leading to a final prediction that does not strictly satisfy the “on its left” condition. In contrast, GeoSearcher follows a structured anchor-guided pro-gressive reasoning process. It first grounds the frustum-shaped chimney as the reference anchor, then restricts the search to the local region on its left, and finally identifies the target vehicle by jointly using the relational clue “left of” and the attribute clues. This comparison suggests that the improvement of GeoSearcher comes not merely from producing longer reasoning text, but from explicitly grounding an intermediate                                
+
+> TABLE III ABLATION STUDY ON THE TWO -STAGE STRATEGY OF GEO SEARCHER ON
+> DIOR-RSVG. SFT-ONLY VARIANTS ARE TRAINED FOR 4EPOCHS . T HE TWO -STAGE VARIANTS USE 3EPOCHS OF SUPERVISED INITIALIZATION FOLLOWED BY 200 RL STEPS .
+> Model Variant Data Format Pr@0.5 Pr@0.7 mIoU
+> SFT Only Standard 80.02 68.72 70.44 ACR-SFT Only Anchor-Centric Reasoning 79.64 67.80 69.62 Basic GRPO Only Reasoning 74.21 65.15 66.20 SFT + Basic GRPO Standard 80.23 69.12 70.52
+> ACR-SFT + PF-GRPO Anchor-Centric Reasoning 81.52 70.12 71.53
+
+reference object and using it to guide local target search. 
+
+E. Ablation Studies 
+
+In order to thoroughly evaluate the contribution of our proposed GeoSearcher, we conducted a comprehensive series of ablation experiments. Specifically, we investigate the effec-tiveness of the two-stage post-training strategy, the Context-Aligned Anchor Insertion strategies during ACR-SFT, the in-dividual components of the PAR, and the gains from the RISS. To ensure computational efficiency, all ablation experiments in this section are conducted at a resolution of 448 × 448 .
+
+1) Effectiveness of the Two-Stage Post-Training Strategy: 
+
+Table III evaluates the effectiveness of the two-stage post-training strategy under a comparable computational budget. Directly applying GRPO to the base model performs poorly, yielding only 74.21% on Pr@0.5. This suggests that reinforce-ment learning alone is insufficient for stable grounding ability 11                                                 
+
+> TABLE IV EVALUATION OF EXPLICIT REFERENCE COORDINATE INSERTION STRATEGIES ON DIOR-RSVG. “S IMPLE -Q UERIES ”DENOTES SAMPLES THAT DO NOT REQUIRE A REFERENCE OBJECT ,WHILE “C OMPLEX -Q UERIES ”DENOTES SAMPLES THAT REQUIRE REFERENCE -BASED REASONING .
+> Strategy Simple-Queries Complex-Queries Process-level Metrics Pr@0.5 Pr@0.7 mIoU Pr@0.5 Pr@0.7 mIoU Faithful@0.5 ↑Shortcut@0.5 ↓
+> No explicit reference coordinate 84.04 71.12 73.34 62.80 52.08 55.68 ––Suffix-Appended (end of reasoning) 84.05 72.07 73.41 64.39 53.05 56.87 43.96 20.43 Context-Aligned (after semantic mention) 84.30 72.13 73.88 64.82 54.01 57.14 46.38 18.44
+> TABLE V ABLATION STUDY ON THE PAR DESIGN OF GEO SEARCHER ON DIOR-RSVG. A LL RL VARIANTS ARE INITIALIZED FROM ACR-SFT.
+
+Stage / Setting Reward Components Outcome Metrics Process Metrics Target Coupling Penalty Pr@0.5 (%) Pr@0.7 (%) mIoU Faithful@0.5 ↑ Shortcut@0.5 ↓
+
+ACR-SFT – – – 79.37 67.57 69.63 46.38 18.44 Basic GRPO ✓ ✗ ✗ 80.52 ( ↑1.15) 69.41 ( ↑1.84) 70.75 ( ↑1.12) 51.03 15.42 +Coupling ✓ ✓ ✗ 81.02 ( ↑1.65) 69.61 ( ↑2.04) 71.22 ( ↑1.59) 54.01 13.03 +Penalty ✓ ✗ ✓ 80.71 ( ↑1.34) 69.44 ( ↑1.87) 70.89 ( ↑1.26) 52.35 14.53 +PAR ✓ ✓ ✓ 81.16 (↑1.79) 69.65 (↑2.08) 71.31 (↑1.68) 54.47 12.58 
+
+when the model has not yet acquired a structured reasoning prior. In contrast, under pure supervised fine-tuning, standard SFT performs slightly better than ACR-SFT. This indicates that anchor-centric reasoning trajectories do not necessarily translate into immediate gains in final localization under supervised learning alone, since the model may learn to imitate intermediate reasoning patterns without yet fully converting them into more accurate target grounding. Once GRPO is introduced on top of SFT initialization, performance improves consistently. The two-stage variant based on standard SFT reaches 80.23%, 69.12%, and 70.52% on Pr@0.5, Pr@0.7, and mIoU, while the full ACR-SFT + PF-GRPO variant further improves the results to 81.52%, 70.12%, and 71.53%, respectively. This shows that ACR-SFT provides a more suitable starting point for subsequent policy optimization, even though its standalone supervised performance is slightly lower than standard SFT. Overall, these results validate the effectiveness of the two-stage design in GeoSearcher. ACR-SFT and PF-GRPO play complementary roles: ACR-SFT injects the progressive reasoning prior, while PF-GRPO further optimizes the model to exploit this prior for more accurate and faithful grounding. 
+
+2) Effect of Context-Aligned Anchor Insertion: Table IV compares three strategies for explicit reference coordinate insertion: no explicit reference coordinates, suffix-appended insertion, and the proposed context-aligned insertion. The differences among the three strategies are small on Simple-Queries , indicating that explicit reference coordinates are not crucial for queries that do not rely on reference-based reasoning. By contrast, the gains become much more evident on Complex-Queries , where context-aligned insertion achieves the best performance. This shows that explicit reference co-ordinates are most useful when an intermediate anchor is genuinely required, and that their temporal placement within the reasoning chain further affects how effectively they can be used. The process-level metrics further clarify this ef-fect. Context-aligned insertion yields higher Faithful@0.5 and lower Shortcut@0.5, indicating that its benefit does not merely come from more correct final target bounding boxes, but from more reliably grounding the reference object. This observation is consistent with our design motivation. If reference coordi-nates are appended only at the end of the reasoning chain, they are more likely to act as a post-hoc supplement rather than a visual prior for subsequent reasoning. In contrast, context-aligned insertion places the coordinates immediately after the semantic mention of the reference object, making the order of reference semantics, explicit grounding, and subsequent relational deduction more causally consistent. As a result, it improves both final performance and process faithfulness. 
+
+3) Ablation of the PAR: Table V reports the ablation results of the proposed PAR design. Starting from the target-only GRPO reward, adding the coupling term improves Pr@0.5 to 81.02%, while also increasing Faithful@0.5 by 2.98% and reducing Shortcut@0.5 by 2.39%. Further introducing the penalty term raises Pr@0.5 to 81.16%, with Faithful@0.5 and Shortcut@0.5 further improved by 0.46% and 0.45%, respectively. This shows that the proposed reward not only improves final grounding performance, but also enhances the faithfulness of the intermediate reasoning process and suppresses shortcut behavior. 
+
+4) Effect of the RISS: Table VI evaluates the effect of RISS. Introducing RISS brings consistent improvements under both the basic GRPO setting and the full PAR setting, with partic-ularly clear gains in the process-level metrics. This indicates that RISS can stably select samples that are more meaningful for reasoning process optimization. The improvement becomes more evident when RISS is combined with PAR. The reason is that a target-only reward can only indicate whether the final localization has been solved. Since RISS prioritizes samples with moderate reward responses, using only the target reward may overlook samples that still have substantial process-level learning value. For instance, samples with near-one target 12 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0  
+
+> Target balance ratio (Main target proportion)
+> 1.5
+> 1.0
+> 0.5
+> 0.0
+> 0.5
+> Relative change (%)
+> -1.0
+> -0.74
+> -0.95
+> -0.65
+> -0.54
+> -0.30 0.0
+> -0.36
+> -0.77
+> Ratio = 7:3 DIOR-RSVG Performance
+
+Fig. 8. Sensitivity analysis of the target-reference reward weight ratio in PAR. The best performance is achieved around [αtgt , α ref ] = [0 .7, 0.3] .0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0       
+
+> RISS threshold RISS
+> 0.7
+> 0.5
+> 0.0
+> 0.4
+> Relative change (%)
+> -0.21 -0.18 -0.15 0.0 -0.09
+> -0.19
+> -0.25
+> -0.41
+> -0.57
+> RISS = 0.4
+> DIOR-RSVG Performance
+
+Fig. 9. Sensitivity analysis of the RISS threshold on DIOR-RSVG. TABLE VI ABLATION STUDY ON RISS ON DIOR-RSVG. “B ASIC GRPO” DENOTES THE SETTING THAT USES ONLY THE TARGET -ONLY REWARD , WHILE PAR 
+
+> DENOTES THE PROPOSED PROCESS
+
+-AWARE REWARD .                                 
+
+> Setting RISS Outcome Metrics Process Metrics Pr@0.5 (%) Pr@0.7 (%) mIoU Faithful@0.5 ↑Shortcut@0.5 ↓
+> Basic GRPO ✗80.52 69.41 70.75 51.03 15.42 Basic GRPO ✓80.65 ( ↑0.13) 69.59 70.84 52.07 15.01 PAR ✗81.16 69.65 71.31 54.47 12.58
+> PAR ✓81.52 ( ↑0.36) 70.12 71.53 56.38 11.31
+
+rewards may still suffer from inaccurate reference grounding or weak relation understanding, while samples with near-zero target rewards may still provide useful intermediate reasoning feedback. In contrast, PAR jointly evaluates reference ground-ing and final target localization, making process-informative samples more likely to remain in the moderate reward range prioritized by RISS. These results suggest that RISS and PAR are complementary: PAR provides process-aware reward sig-nals, while RISS focuses optimization on samples where these signals are more useful for learning progressive reasoning. 
+
+F. Sensitivity Analysis of Hyperparameters 
+
+Figure 8 shows the sensitivity of the weight ratio between the target reward ( αtgt ) and the reference reward ( αref ) in the PAR. The overall trend exhibits an inverted-U shape, with the best performance achieved around [0 .7, 0.3] , indicating that effective reasoning-oriented optimization requires a proper balance between final target localization and intermediate 
+
+TABLE VII SENSITIVITY ANALYSIS OF AUXILIARY COEFFICIENTS IN PAR AND FORMAT REWARD ON DIOR-RSVG. H ERE , λpen DENOTES THE SHARED SETTING OF λhal AND λmulti .
+
+Penalty Coefficient Bonus Coefficient Format Reward 
+
+λpen Pr@0.5 (%) β Pr@0.5 (%) wfmt Pr@0.5 (%) 
+
+0.1 81.47 0.1 81.50 0.1 81.48 
+
+0.2 81.52 0.2 81.52 0.2 81.52 0.3 81.53 0.3 81.49 0.3 81.50 
+
+reference grounding. When αref is too low, optimization becomes overly dominated by the final target objective, weak-ening supervision on the intermediate reasoning process and making shortcut behavior more likely. In contrast, when αref 
+
+is too high, the model tends to over-emphasize the intermediate anchor at the expense of final target localization. Figure 9 analyzes the sensitivity of the RISS threshold. We report the relative performance change on DIOR-RSVG using τRISS = 0 .4 as the reference. The model achieves the best performance when τRISS is set to 0.4, while either a lower or a higher threshold leads to performance degradation. This result is consistent with the design of RISS, since either an overly high or overly low threshold may select samples with saturated PAR responses, providing limited incremental supervision or weak discrimination among rollout trajectories. Table VII reports the sensitivity of auxiliary coefficients in PAR and the format reward. The performance varies only slightly when λpen , β, and wfmt are changed from 0.1 to 0.3. This indicates that GeoSearcher is not sensitive to these auxiliary coefficients. We therefore use 0.2 as the default setting for all three coefficients. 
+
+G. Effect of Reference Anchor Quality 
+
+To further analyze the role of reference anchor quality, we group the test samples according to the IoU between the reference anchors predicted by ACR-SFT and the ground truth reference coordinates. We then compare the final target localization performance of ACR-SFT with an SFT variant that does not insert explicit reference coordinates. Fig. 10 reports Pr@0.5 under different anchor quality intervals. The results show a clear positive correlation between anchor quality and final grounding accuracy. As the anchor IoU increases, ACR-SFT achieves higher Pr@0.5, and its advantage over SFT becomes more evident. This indicates that a correctly grounded reference object can serve as an effective intermediate state. It helps the model narrow the search region before predicting the final target object. However, the benefit of explicit anchors is not unconditional. When the reference anchor IoU is low, the improvement over SFT becomes marginal, and ACR-SFT may even perform slightly worse in the lowest-quality interval. This suggests that inaccurate reference grounding can mislead the subsequent reasoning process. In this case, the model may search for the target around an incorrect intermediate state. Fig. 11 shows a failure case where the model still follows the intended progressive reasoning pattern. It first predicts a reference anchor and then searches for the target according to 13 0.0-0.2 0.2-0.4 0.4-0.6 0.6-0.8 0.8-1.0  
+
+> Reference Anchor IoU
+> 40
+> 45
+> 50
+> 55
+> 60
+> 65
+> 70
+> 75
+> Target Accuracy: Pr@0.5 (%)
+> 49.1
+> 53.3
+> 57.5 58.8
+> 68.9
+> 49.0
+> 54.4
+> 59.5
+> 62.2
+> 72.7
+> SFT (No-Anchor)
+> ACR-SFT (Anchor)
+
+Fig. 10. Effect of reference anchor quality on final grounding accuracy. Test samples are grouped by the IoU between the predicted and ground truth reference boxes. “The tennis court is on the lower right of the tennis court on the top”              
+
+> GeoSearcher :<thinking>…
+> (Anchor grounding) I first need to identify the "tennis court on the top" as the
+> reference object. <ref_bbox >[302, 220, 448, 441] </ ref_bbox >
+> (Relational clue )Once I locate that, I then look for the tennis court that is
+> positioned “on the lower right” relative to it,
+> (Local search) Looking at the area to the lower right of the tennis court. …
+> (Attribute clue )Then, I identify the specific court. …
+> (Target grounding) I now extract the bounding box coordinates for this specific
+> court based on its visible boundaries in the image. </thinking>
+> <answer> {\"bbox_2d \": [480, 759, 701, 905] }</answer>
+> Pre dicted reference GeoSearcher Reference ground truth ground truth
+
+Fig. 11. A bad case caused by inaccurate reference anchor grounding. The predicted reference anchor (red dashed box) deviates from the corrected reference anchor (yellow dashed box), which shifts the subsequent relational search region and leads to an incorrect final prediction. 
+
+the relational clue. Although the predicted reference anchor is not aligned with the corrected reference box, the subsequent prediction is still constrained to the local region indicated by the reference object, rather than drifting to arbitrary distractors in the full image. This suggests that anchor-guided reasoning can reduce the search burden compared with direct one-shot localization, which is more susceptible to visually similar distractors in large remote sensing scenes. The remaining error mainly comes from the inaccurate grounding of the reference object, which shifts the local search region and leads to a biased final prediction. This case further shows that accurate reference grounding is important for reliable progressive reasoning. V. C ONCLUSION 
+
+In this paper, we reformulate RSVG from one-shot coor-dinate generation into anchor-guided progressive reasoning, and propose GeoSearcher, an Anchor-Guided Progressive Rea-soning Post-Training framework composed of ACR-SFT and PF-GRPO. In this framework, ACR-SFT injects a structured reasoning prior through explicit reference anchors, while PF-GRPO further aligns the intermediate reasoning process and final target localization with the PAR and RISS. Experiments on DIOR-RSVG, OPT-RSVG, and VRS-Bench show that GeoSearcher achieves consistent improvements across multi-ple benchmarks. Future work: At the same time, our analysis reveals an important limitation of the current framework. The reference anchor quality study shows that the benefit of explicit anchor insertion strongly depends on whether the intermediate refer-ence object is correctly grounded. When the reference anchor is accurate, ACR-SFT brings clear gains in final localization. Therefore, improving the robustness of reference grounding under more complex scenes, dense distractors, and weak visual clues therefore remains an important direction for future work. In addition, the current GeoSearcher mainly models one primary reference anchor when reference-based reasoning is required. In real remote sensing queries, however, the target may be specified by multiple reference objects or by collabo-rative constraints among several landmarks. Future work will explore multi-reference collaborative reasoning, enabling the model to use multiple intermediate states more reliably under complex compositional relations and spatial layouts. REFERENCES [1] J. Bai, S. Bai, S. Yang, S. Wang, S. Tan, P. Wang, J. Lin, C. Zhou, and J. Zhou, “Qwen-vl: A versatile vision-language model for understanding, localization, text reading, and beyond,” 2023. [Online]. Available: https://arxiv.org/abs/2308.12966 [2] J. Chen, D. Zhu, X. Shen, X. Li, Z. Liu, P. Zhang, R. Krishnamoorthi, V. Chandra, Y. Xiong, and M. Elhoseiny, “Minigpt-v2: large language model as a unified interface for vision-language multi-task learning,” 2023. [Online]. Available: https://arxiv.org/abs/2310.09478 [3] H. Liu, C. Li, Q. Wu, and Y. J. Lee, “Visual instruction tuning,” 
+
+Advances in neural information processing systems , vol. 36, pp. 34 892– 34 916, 2023. [4] K. Kuckreja, M. S. Danish, M. Naseer, A. Das, S. Khan, and F. S. Khan, “Geochat: Grounded large vision-language model for remote sensing,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2024, pp. 27 831–27 840. [5] Y. Zhou, M. Lan, X. Li, L. Feng, Y. Ke, X. Jiang, Q. Li, X. Yang, and W. Zhang, “Geoground: A unified large vision-language model for remote sensing visual grounding,” arXiv preprint arXiv:2411.11904 ,2024. [6] J. Luo, Z. Pang, Y. Zhang, T. Wang, L. Wang, B. Dang, J. Lao, J. Wang, J. Chen, Y. Tan et al. , “Skysensegpt: A fine-grained instruction tuning dataset and model for remote sensing vision-language understanding,” 
+
+arXiv preprint arXiv:2406.10100 , 2024. [7] K. Li, D. Wang, H. Xu, H. Zhong, and C. Wang, “Language-guided progressive attention for visual grounding in remote sensing images,” 
+
+IEEE Trans. Geosci. Remote Sens. , vol. 62, pp. 1–13, 2024. [8] A. Jaech, A. Kalai, A. Lerer, A. Richardson, A. El-Kishky, A. Low, A. Helyar, A. Madry, A. Beutel, A. Carney et al. , “Openai o1 system card,” arXiv preprint arXiv:2412.16720 , 2024. [9] D. Guo, D. Yang, H. Zhang, J. Song, P. Wang, Q. Zhu, R. Xu, R. Zhang, S. Ma, X. Bi et al. , “Deepseek-r1: Incentivizing reasoning capability in llms via reinforcement learning,” arXiv preprint arXiv:2501.12948 ,2025. [10] M. Fiaz, H. Debary, P. Fraccaro, D. Paudel, L. Van Gool, F. Khan, and S. Khan, “Geovlm-r1: Reinforcement fine-tuning for improved remote sensing reasoning,” arXiv preprint arXiv:2509.25026 , 2025. [11] H. Shen, P. Liu, J. Li, C. Fang, Y. Ma, J. Liao, Q. Shen, Z. Zhang, K. Zhao, Q. Zhang et al. , “Vlm-r1: A stable and generalizable r1-style large vision-language model,” arXiv preprint arXiv:2504.07615 , 2025. [12] L. Yao, F. Liu, H. Lu, C. Zhang, R. Min, S. Xu, S. Di, and P. Peng, “Remotereasoner: Towards unifying geospatial reasoning workflow,” in 
+
+Proceedings of the AAAI Conference on Artificial Intelligence , vol. 40, no. 14, 2026, pp. 11 883–11 891. [13] Z. Shao, P. Wang, Q. Zhu, R. Xu, J. Song, X. Bi, H. Zhang, M. Zhang, Y. Li, Y. Wu et al. , “Deepseekmath: Pushing the limits of mathematical reasoning in open language models,” arXiv preprint arXiv:2402.03300 ,2024. [14] S. Huang, S. He, and B. Wen, “Rsground-r1: Rethinking remote sensing visual grounding through spatial reasoning,” arXiv preprint arXiv:2601.21634 , 2026. 14 
+
+[15] S. Bai, M. Li, Y. Liu, J. Tang, H. Zhang, L. Sun, X. Chu, and Y. Tang, “Univg-r1: Reasoning guided universal visual grounding with reinforcement learning,” arXiv preprint arXiv:2505.14231 , 2025. [16] A. K¨ oksal and A. A. Alatan, “Tinyrs-r1: Compact vision language model for remote sensing,” IEEE Geosci. Remote Sens. Lett. , vol. 22, pp. 1–5, 2025. [17] D. Wang, S. Liu, W. Jiang, F. Wang, Y. Liu, X. Qin, Z. Luo, C. Zhou, H. Guo, J. Zhang et al. , “Geozero: Incentivizing reasoning from scratch on geospatial scenes,” arXiv preprint arXiv:2511.22645 , 2025. [18] Y. Zhan, Z. Xiong, and Y. Yuan, “Rsvg: Exploring data and models for visual grounding on remote sensing data,” IEEE Trans. Geosci. Remote Sens. , vol. 61, pp. 1–13, 2023. [19] X. Li, J. Ding, and M. Elhoseiny, “Vrsbench: A versatile vision-language benchmark dataset for remote sensing image understanding,” Advances in Neural Information Processing Systems , vol. 37, pp. 3229–3242, 2024. [20] Y. Sun, S. Feng, X. Li, Y. Ye, J. Kang, and X. Huang, “Visual grounding in remote sensing images,” in Proceedings of the 30th ACM International conference on Multimedia , 2022, pp. 404–412. [21] M. Lan, F. Rong, H. Jiao, Z. Gao, and L. Zhang, “Language query-based transformer with multiscale cross-modal alignment for visual grounding on remote sensing images,” IEEE Trans. Geosci. Remote Sens. , vol. 62, pp. 1–13, 2024. [22] K. Chen, Z. Zhang, W. Zeng, R. Zhang, F. Zhu, and R. Zhao, “Shikra: Unleashing multimodal llm’s referential dialogue magic,” arXiv preprint arXiv:2306.15195 , 2023. [23] H. You, H. Zhang, Z. Gan, X. Du, B. Zhang, Z. Wang, L. Cao, S.-F. Chang, and Y. Yang, “Ferret: Refer and ground anything anywhere at any granularity,” arXiv preprint arXiv:2310.07704 , 2023. [24] Z. Peng, W. Wang, L. Dong, Y. Hao, S. Huang, S. Ma, and F. Wei, “Kosmos-2: Grounding multimodal large language models to the world,” 
+
+arXiv preprint arXiv:2306.14824 , 2023. [25] D. Muhtar, Z. Li, F. Gu, X. Zhang, and P. Xiao, “Lhrs-bot: Empowering remote sensing with vgi-enhanced large multimodal language model,” in European Conference on Computer Vision . Springer, 2024, pp. 440– 457. [26] C. Pang, J. Wu, J. Li, Y. Liu, J. Sun, W. Li, X. Weng, S. Wang, L. Feng, G.-S. Xia et al. , “H2rsvlm: Towards helpful and honest remote sensing large vision language model,” arXiv preprint arXiv:2403.20213 , 2024. [27] W. Zhang, M. Cai, T. Zhang, Y. Zhuang, and X. Mao, “Earthgpt: A universal multimodal large language model for multisensor image comprehension in remote sensing domain,” IEEE Trans. Geosci. Remote Sens. , vol. 62, pp. 1–20, 2024. [28] A. Shabbir, M. Zumri, M. Bennamoun, F. S. Khan, and S. Khan, “Geopixel: Pixel grounding large multimodal model in remote sensing,” 
+
+arXiv preprint arXiv:2501.13925 , 2025. [29] R. Shao, Z. Li, Z. Zhang, L. Xu, X. He, H. Yuan, B. He, Y. Dai, Y. Yan, Y. Chen et al. , “Asking like socrates: Socrates helps vlms understand remote sensing images,” arXiv preprint arXiv:2511.22396 , 2025. [30] H. Hu, P. Wang, Y. Feng, K. Wei, W. Yin, W. Diao, M. Wang, H. Bi, K. Kang, T. Ling et al. , “Ringmo-agent: A unified remote sensing foundation model for multi-platform and multi-modal reasoning,” arXiv preprint arXiv:2507.20776 , 2025. [31] J. Liu, L. Sun, R. Fu, and B. Yang, “Towards faithful reasoning in remote sensing: A perceptually-grounded geospatial chain-of-thought for vision-language models,” arXiv preprint arXiv:2509.22221 , 2025. [32] Z. Zhang, Z. Guan, T. Zhao, H. Shen, T. Li, Y. Cai, Z. Su, Z. Liu, J. Yin, and X. Li, “Geo-r1: Improving few-shot geospatial referring expression understanding with reinforcement fine-tuning,” arXiv preprint arXiv:2509.21976 , 2025. [33] R. Rafailov, A. Sharma, E. Mitchell, C. D. Manning, S. Ermon, and C. Finn, “Direct preference optimization: Your language model is secretly a reward model,” Advances in neural information processing systems , vol. 36, pp. 53 728–53 741, 2023. [34] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, “Prox-imal policy optimization algorithms,” arXiv preprint arXiv:1707.06347 ,2017. [35] W. Hong, W. Yu, X. Gu, G. Wang, G. Gan, H. Tang, J. Cheng, J. Qi, J. Ji, L. Pan et al. , “Glm-4.5 v and glm-4.1 v-thinking: Towards versatile multimodal reasoning with scalable reinforcement learning,” 
+
+arXiv preprint arXiv:2507.01006 , 2025. [36] K. Team, Y. Bai, Y. Bao, Y. Charles, C. Chen, G. Chen, H. Chen, H. Chen, J. Chen, N. Chen et al. , “Kimi k2: Open agentic intelligence,” 
+
+arXiv preprint arXiv:2507.20534 , 2025. [37] F. Liu, D. Chen, Z. Guan, X. Zhou, J. Zhu, Q. Ye, L. Fu, and J. Zhou, “Remoteclip: A vision language foundation model for remote sensing,” 
+
+IEEE Trans. Geosci. Remote Sens. , vol. 62, pp. 1–16, 2024. [38] S. Bai, Y. Cai, R. Chen, K. Chen, X. Chen, Z. Cheng, L. Deng, W. Ding, C. Gao, C. Ge et al. , “Qwen3-vl technical report,” arXiv preprint arXiv:2511.21631 , 2025. [39] Y. Zheng, R. Zhang, J. Zhang, Y. Ye, and Z. Luo, “Llamafactory: Unified efficient fine-tuning of 100+ language models,” in Proceedings of the 62nd annual meeting of the association for computational linguistics (volume 3: system demonstrations) , 2024, pp. 400–410. [40] G. Sheng, C. Zhang, Z. Ye, X. Wu, W. Zhang, R. Zhang, Y. Peng, H. Lin, and C. Wu, “Hybridflow: A flexible and efficient rlhf framework,” in Proceedings of the Twentieth European Conference on Computer Systems , 2025, pp. 1279–1297. [41] J. Rasley, S. Rajbhandari, O. Ruwase, and Y. He, “Deepspeed: System optimizations enable training deep learning models with over 100 billion parameters,” in Proceedings of the 26th ACM SIGKDD international conference on knowledge discovery & data mining , 2020, pp. 3505– 3506. [42] A. Singh, A. Fry, A. Perelman, A. Tart, A. Ganesh, A. El-Kishky, A. McLaughlin, A. Low, A. Ostrow, A. Ananthram et al. , “Openai gpt-5 system card,” arXiv preprint arXiv:2601.03267 , 2026. [43] S. Bai, K. Chen, X. Liu, J. Wang, W. Ge, S. Song, K. Dang, P. Wang, S. Wang, J. Tang, H. Zhong, Y. Zhu, M. Yang, Z. Li, J. Wan, P. Wang, W. Ding, Z. Fu, Y. Xu, J. Ye, X. Zhang, T. Xie, Z. Cheng, H. Zhang, Z. Yang, H. Xu, and J. Lin, “Qwen2.5-vl technical report,” 2025. [Online]. Available: https://arxiv.org/abs/2502.13923 [44] W. Wang, Z. Gao, L. Gu, H. Pu, L. Cui, X. Wei, Z. Liu, L. Jing, S. Ye, J. Shao et al. , “Internvl3. 5: Advancing open-source multi-modal models in versatility, reasoning, and efficiency,” arXiv preprint arXiv:2508.18265 , 2025. [45] S. Soni, A. Dudhane, H. Debary, M. Fiaz, M. A. Munir, M. S. Danish, P. Fraccaro, C. D. Watson, L. J. Klein, F. S. Khan et al. , “Earthdial: Turning multi-sensory earth observations to interactive dialogues,” in 
+
+Proceedings of the Computer Vision and Pattern Recognition Confer-ence , 2025, pp. 14 303–14 313. [46] C. Pang, X. Weng, J. Wu, J. Li, Y. Liu, J. Sun, W. Li, S. Wang, L. Feng, G.-S. Xia et al. , “Vhm: Versatile and honest vision language model for remote sensing image analysis,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 39, no. 6, 2025, pp. 6381–6388.

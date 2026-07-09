@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-08T20:36:24.746260+00:00",
-  "updated_date": "20260708",
+  "generated_at": "2026-07-09T20:51:37.733648+00:00",
+  "updated_date": "20260709",
   "carryover_days": 9,
   "tag_states": {
     "world-model": {
@@ -14,76 +14,41 @@
       "items": []
     },
     "vr": {
-      "updated_date": "20260708",
+      "updated_date": "20260709",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2607.06420v1",
+          "id": "2607.06620v1",
           "source": "arxiv",
-          "title": "HoloCount: A Holistic Visual Counting Benchmark for MLLMs",
-          "abstract": "Visual counting is a fundamental pillar of multimodal intelligence, requiring a seamless integration of fine-grained grounding and spatial reasoning. While Multimodal Large Language Models (MLLMs) have achieved remarkable success in qualitative scene understanding, their quantitative precision remains a significant bottleneck, often characterized by persistent numerical hallucinations. Existing counting benchmarks primarily focus on basic perception in simplified contexts, failing to capture the complex failure modes that emerge under logical constraints or adversarial conditions. To address these limitations, we introduce HoloCount, a holistic and diagnostically rich benchmark structured around a three-level hierarchical taxonomy. HoloCount evaluates MLLMs across: (1) Semantic Counting, focusing on atomic and property-based enumeration; (2) Analytical Counting, assessing logical composition through spatial and set-based reasoning; and (3) Robustness Testing, probing model integrity against adverse scenarios and grounded counter-priors, such as high-density scenes and linguistic biases. Through an exhaustive evaluation of over 20 state-of-the-art MLLMs, we reveal a critical performance gap: even top-tier models degrade significantly as tasks transition from perception to complex analytical reasoning and adverse scenarios. Our findings provide a systematic landscape of current MLLM counting capabilities and offer a roadmap for developing more grounded and reliable multimodal systems. The dataset is available at https://mm-mvr.github.io/HoloCount/.",
+          "title": "SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts",
+          "abstract": "Recent Multimodal Large Language Models (MLLMs) struggle to bridge the representational gap between 2D semantic understanding and 3D spatial geometry. Existing 3D-aware models either rely on costly 3D-specific data or utilize RGB-only inputs with heuristic sampling and monolithic, shallow fusion, which respectively disrupt essential spatiotemporal connectivity and induce modality contention across diverse spatial tasks. To overcome these bottlenecks, we introduce SpaR3D-MoE, an end-to-end framework that enables adaptive spatial reasoning by equipping MLLMs with geometry-aware capabilities from only sparse RGB inputs. First, we propose an adaptive spatiotemporal manifold sampling mechanism that constructs a geometry-aware spatiotemporal graph to extract informative keyframes, effectively mitigating sequence redundancy while preserving the scene's topological connectivity. Second, we introduce the heterogeneous geometry-inductive Mixture-of-Experts driven by an instruction-pose aware router, which adaptively routes multimodal tokens to specialized experts, resolving the cross-modal contention inherent in monolithic fusion. Extensive experiments on VSI-Bench, ScanQA, and SQA3D demonstrate that our method achieves state-of-the-art performance. Notably, SpaR3D-MoE achieves the highest average score of 63.5 on VSI-Bench, outperforming the strongest baseline by 7.8 absolute points, alongside relative improvements of 35.4% and 51.4% in Route Plan and Relative Direction tasks, respectively.",
           "authors": [
-            "Jinhong Deng",
-            "Limeng Qiao",
-            "Guanglu Wan"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-07-07T15:48:57+00:00",
-          "link": "https://arxiv.org/pdf/2607.06420v1",
-          "tags": [
-            "keyword:vr",
-            "query:vr"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "holistic visual counting benchmark for MLLMs",
-          "llm_evidence_cn": "面向多模态大模型的全面视觉计数基准",
-          "llm_evidence": "面向多模态大模型的全面视觉计数基准",
-          "canonical_evidence": "面向多模态大模型的全面视觉计数基准",
-          "llm_tldr_en": "Presents HoloCount, a hierarchical benchmark for visual counting that evaluates MLLMs under logical constraints and adversarial conditions, exposing persistent numerical hallucinations.",
-          "llm_tldr_cn": "针对现有计数基准过于简化的问题，提出HoloCount基准，采用三级分层分类体系评估逻辑约束和对抗条件下的计数能力。实验揭示多模态大模型存在严重数值幻觉，即使在简化场景下也难以精确计数，为视觉推理中的定量精度研究提供了诊断性工具。",
-          "llm_tldr": "针对现有计数基准过于简化的问题，提出HoloCount基准，采用三级分层分类体系评估逻辑约束和对抗条件下的计数能力。实验揭示多模态大模型存在严重数值幻觉，即使在简化场景下也难以精确计数，为视觉推理中的定量精度研究提供了诊断性工具。",
-          "llm_tags": [
-            "query:vr"
-          ],
-          "matched_query_tag": "query:vr",
-          "matched_query_text": "evaluation benchmarks for visual reasoning",
-          "matched_requirement_id": "req-3",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.06420v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2607.05122v1",
-          "source": "arxiv",
-          "title": "Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies",
-          "abstract": "Vision-language-action (VLA) models enable robot navigation from natural language and visual goals, but remain susceptible to perceptual distractions and ambiguous scene interpretations. This paper presents the first empirical evaluation of visual grounding for VLA navigation policies. We propose a real-time segmentation-based grounding method that highlights traversable areas in green and non-traversable areas in red using SegFormer. Two variants are evaluated: observation-only segmentation and joint observation-goal augmentation. Using OmniVLA on the Grand Tour dataset, we show that visual grounding reduces the mean waypoint error by 27-44% at the farthest waypoint, depending on the instruction length. The benefits are greater for long instructions than for short instructions, and grounding provides little improvement for image goals. Normalized error analysis indicates that grounding primarily acts as a trajectory length regularizer, reducing the predicted path length by 30% without improving per-unit-distance reasoning. Our results indicate that visual grounding offers a simple, computationally inexpensive method to improve VLA navigation without model retraining, although it cannot compensate for missing training signals in out-of-distribution instructions.",
-          "authors": [
-            "Adrian Szvoren",
-            "Dimitrios Kanoulas",
-            "Nilufer Tuptuk"
+            "Haida Feng",
+            "Hao Wei",
+            "Haolin Wang",
+            "Shiwei Li",
+            "Chade Li",
+            "Yihong Wu"
           ],
           "primary_category": "cs.CV",
           "categories": [
             "cs.CV",
-            "cs.RO"
+            "cs.AI"
           ],
-          "published": "2026-07-06T14:11:27+00:00",
-          "link": "https://arxiv.org/pdf/2607.05122v1",
+          "published": "2026-07-07T09:27:38+00:00",
+          "link": "https://arxiv.org/pdf/2607.06620v1",
           "tags": [
             "keyword:vr",
             "query:vr"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "visual grounding for robot navigation",
-          "llm_evidence_cn": "机器人导航中的视觉基础",
-          "llm_evidence": "机器人导航中的视觉基础",
-          "canonical_evidence": "机器人导航中的视觉基础",
-          "llm_tldr_en": "Proposes real-time semantic segmentation to ground traversable regions for VLA navigation, reducing waypoint error by 27-44%.",
-          "llm_tldr_cn": "本文提出基于语义分割的视觉基础方法，通过将可通行区域标注为绿色、不可通行为红色，有效提升了VLA导航策略的抗干扰能力。在Grand Tour数据集的实验中，最远路径点误差降低了27%至44%。",
-          "llm_tldr": "本文提出基于语义分割的视觉基础方法，通过将可通行区域标注为绿色、不可通行为红色，有效提升了VLA导航策略的抗干扰能力。在Grand Tour数据集的实验中，最远路径点误差降低了27%至44%。",
+          "llm_evidence_en": "adaptive 3D spatial reasoning from sparse RGB inputs",
+          "llm_evidence_cn": "自适应3D空间推理，使用稀疏RGB输入进行几何归纳",
+          "llm_evidence": "自适应3D空间推理，使用稀疏RGB输入进行几何归纳",
+          "canonical_evidence": "自适应3D空间推理，使用稀疏RGB输入进行几何归纳",
+          "llm_tldr_en": "Proposes SpaR3D-MoE, an end-to-end framework for adaptive 3D spatial reasoning from sparse RGB inputs, using geometry-inductive mixture-of-experts to bridge 2D and 3D representations.",
+          "llm_tldr_cn": "多模态大语言模型在2D语义和3D几何之间表示有差距。本文提出SpaR3D-MoE框架，通过自适应时空流形采样和几何归纳混合专家，仅从稀疏RGB输入实现自适应3D空间推理。在多个3D空间任务上取得了优异性能。",
+          "llm_tldr": "多模态大语言模型在2D语义和3D几何之间表示有差距。本文提出SpaR3D-MoE框架，通过自适应时空流形采样和几何归纳混合专家，仅从稀疏RGB输入实现自适应3D空间推理。在多个3D空间任务上取得了优异性能。",
           "llm_tags": [
             "query:vr"
           ],
@@ -91,7 +56,7 @@
           "matched_query_text": "visual reasoning",
           "matched_requirement_id": "req-1",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.05122v1",
+          "paper_id": "2607.06620v1",
           "carry_days": 1
         }
       ]
