@@ -6,73 +6,73 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-09
-- 运行时间：2026-07-09 20:59:59 UTC
+- 最新运行日期：2026-07-10
+- 运行时间：2026-07-10 20:37:13 UTC
 - 运行状态：成功
 - 本次总论文数：17
 - 精读区：6
 - 速读区：11
 
 ### 今日简报（AI）
-今日推荐17篇论文，精读6篇，重点聚焦长视频推理与推理分割两大前沿方向。  
-最值得看的是《EFlow》通过自适应反思学习证据流实现长视频推理（9.0分），以及《DGSeg》利用动态门控语义空间引导推理分割（9.0分）。  
-建议优先阅读这两篇精读论文，并留意速读中场景图演化与视觉语言模型自反思的进展。
-- 详情：[/202607/09/README](/202607/09/README)
+今日17篇论文聚焦思维可视化与机器人控制，精读《MentalThink》与《WSA1》均获9.0高分。  
+最值得看的方向：MentalThink的思维SVG世界建模，以及WSA1的3D空间动作模型实现泛化机器人控制。  
+普通读者可先速读《SpaceEra++》提升视频3D推理，再用《BUS》增强多模态自我反思能力。
+- 详情：[/202607/10/README](/202607/10/README)
 
 ### 精读区论文标签
-1. [EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection](/202607/09/2607.00867v2-eflow-learning-evidence-flow-for-long-video-reasoning-with-adaptive-reflection)  
+1. [MentalThink: Shaping Thoughts in Mental SVG World](/202607/10/2607.03530v1-mentalthink-shaping-thoughts-in-mental-svg-world)  
    标签：评分：9.0/10、query:vr
-   evidence：证据优先的视频推理框架与自适应反思
-2. [DGSeg: Dynamic Gating of Semantic-Spatial Guided Predictions for Reasoning Segmentation](/202607/09/2607.04779v1-dgseg-dynamic-gating-of-semantic-spatial-guided-predictions-for-reasoning-segmentation)  
+   evidence：通过心智SVG生成的视觉推理
+2. [WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control](/202607/10/2607.03941v1-wsa1-a-3d-centric-world-spatial-action-model-for-generalizable-robot-control)  
+   标签：评分：9.0/10、query:world-model
+   evidence：以3D为中心的世界-空间-动作模型用于机器人控制
+3. [Scene Graph Thinking: Reinforcing Structured Visual Reasoning for Multimodal Large Language Models](/202607/10/2607.05716v2-scene-graph-thinking-reinforcing-structured-visual-reasoning-for-multimodal-large-language-models)  
    标签：评分：9.0/10、query:vr
-   evidence：动态门控语义空间引导的推理分割
-3. [Scene Graph Thinking: Reinforcing Structured Visual Reasoning for Multimodal Large Language Models](/202607/09/2607.05716v1-scene-graph-thinking-reinforcing-structured-visual-reasoning-for-multimodal-large-language-models)  
+   evidence：通过显式场景图表示的结构化视觉推理
+4. [AUTOPILOT VQA: Benchmarking Vision-Language Models for Incident-Centric Dashcam Understanding](/202607/10/2607.08745v1-autopilot-vqa-benchmarking-vision-language-models-for-incident-centric-dashcam-understanding)  
    标签：评分：9.0/10、query:vr
-   evidence：利用场景图增强结构化视觉推理
-4. [EFlow: Learning Evidence Flow for Long-Video Reasoning with Adaptive Reflection](/202607/09/2607.00867v1-eflow-learning-evidence-flow-for-long-video-reasoning-with-adaptive-reflection)  
+   evidence：面向事件中心的行车记录仪理解的视觉语言模型基准测试
+5. [OpenCoF: Learning to Reason Through Video Generation](/202607/10/2607.08763v1-opencof-learning-to-reason-through-video-generation)  
+   标签：评分：9.0/10、query:vr
+   evidence：通过视频生成进行推理（帧链推理）
+6. [Bridging Physical Reasoning and Task Generalization via Visual Action Outcome Reasoning Alignment](/202607/10/2607.06522v1-bridging-physical-reasoning-and-task-generalization-via-visual-action-outcome-reasoning-alignment)  
    标签：评分：8.0/10、query:vr
-   evidence：证据优先的视频推理，分离定位与推理
-5. [GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision](/202607/09/2607.01050v1-geosearcher-anchor-guided-progressive-reasoning-for-remote-sensing-visual-grounding-with-process-supervision)  
-   标签：评分：8.0/10、query:vr
-   evidence：遥感视觉定位的渐进推理
-6. [GeoSearcher: Anchor-Guided Progressive Reasoning for Remote Sensing Visual Grounding with Process Supervision](/202607/09/2607.01050v2-geosearcher-anchor-guided-progressive-reasoning-for-remote-sensing-visual-grounding-with-process-supervision)  
-   标签：评分：8.0/10、query:vr
-   evidence：遥感视觉定位的渐进推理
+   evidence：视觉推理在物理推理和任务泛化中的应用
 
 ### 速读区论文标签
-1. [SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video](/202607/09/2607.01784v1-spaceera-a-unified-framework-towards-3d-spatial-reasoning-in-video)  
+1. [SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video](/202607/10/2607.01784v1-spaceera-a-unified-framework-towards-3d-spatial-reasoning-in-video)  
    标签：评分：8.0/10、query:vr
-   evidence：面向视频的3D空间推理统一框架
-2. [Learning to Evolve Scenes: Reasoning about Human Activities with Scene Graphs](/202607/09/2607.02425v1-learning-to-evolve-scenes-reasoning-about-human-activities-with-scene-graphs)  
+   evidence：视频中的3D空间推理属于视觉推理
+2. [BUS: Brain-Inspired Unsupervised Self-Reflection for Advanced Multimodal Reasoning](/202607/10/2607.07361v1-bus-brain-inspired-unsupervised-self-reflection-for-advanced-multimodal-reasoning)  
    标签：评分：8.0/10、query:vr
-   evidence：提出用于人类活动场景图推理的SG-Ego数据集
-3. [Visually Grounded Self-Reflection for Vision-Language Models via Reinforcement Learning](/202607/09/2607.02490v1-visually-grounded-self-reflection-for-vision-language-models-via-reinforcement-learning)  
-   标签：评分：8.0/10、query:vr
-   evidence：通过强化学习实现视觉语言模型的视觉接地自反思
-4. [Latent Visual Cache for Video Reasoning](/202607/09/2607.02607v1-latent-visual-cache-for-video-reasoning)  
-   标签：评分：8.0/10、query:vr
-   evidence：用于视频推理的潜在视觉缓存
-5. [MentalThink: Shaping Thoughts in Mental SVG World](/202607/09/2607.03530v1-mentalthink-shaping-thoughts-in-mental-svg-world)  
-   标签：评分：8.0/10、query:vr
-   evidence：使用SVG作为中间表示的视觉符号推理
-6. [EAGOR: Embodied Reasoning in Omni-direction](/202607/09/2607.06165v1-eagor-embodied-reasoning-in-omni-direction)  
-   标签：评分：8.0/10、query:vr
-   evidence：面向全向导航的具身推理
-7. [VideoSearcher: Empowering Video Deep Research with Multi-Tool Agentic Reasoning via Reinforcement Learning](/202607/09/2607.02927v1-videosearcher-empowering-video-deep-research-with-multi-tool-agentic-reasoning-via-reinforcement-learning)  
+   evidence：脑启发的无监督自我反思用于多模态推理
+3. [LASER: A Corrective Lens for LVLMs via Visual Attention Preservation and Sink Suppression](/202607/10/2607.01707v1-laser-a-corrective-lens-for-lvlms-via-visual-attention-preservation-and-sink-suppression)  
    标签：评分：7.0/10、query:vr
-   evidence：用于视频深度研究的多工具代理推理
-8. [Q-TriM: Question-Guided Tri-Modal Attention for Audio-Visual Question Answering](/202607/09/2607.03825v1-q-trim-question-guided-tri-modal-attention-for-audio-visual-question-answering)  
+   evidence：通过视觉注意力保持改善VLM推理
+4. [Incentivizing Vision Language Models to Search for Long Video Question Answering](/202607/10/2607.02959v1-incentivizing-vision-language-models-to-search-for-long-video-question-answering)  
    标签：评分：7.0/10、query:vr
-   evidence：问题引导的三模态注意力用于音视频问答
-9. [IRIS: An Intelligent Vision-Language System for Ocular Surface Diseases via Topic Tree and Scene-Driven VQA Generation](/202607/09/2607.04344v1-iris-an-intelligent-vision-language-system-for-ocular-surface-diseases-via-topic-tree-and-scene-driven-vqa-generation)  
+   evidence：利用强化学习进行长视频视觉推理
+5. [Pathways of Visual Information Flow in Vision-Language Models](/202607/10/2607.03358v1-pathways-of-visual-information-flow-in-vision-language-models)  
    标签：评分：7.0/10、query:vr
-   evidence：面向眼表疾病的智能视觉语言系统，包含VQA数据集
-10. [HoloCount: A Holistic Visual Counting Benchmark for MLLMs](/202607/09/2607.06420v1-holocount-a-holistic-visual-counting-benchmark-for-mllms)  
+   evidence：VLM中视觉信息路由研究，与视觉推理机制相关
+6. [Does It Fail to See or Fail to Know? Attributing Errors in Vision-Language Models](/202607/10/2607.04683v1-does-it-fail-to-see-or-fail-to-know-attributing-errors-in-vision-language-models)  
    标签：评分：7.0/10、query:vr
-   evidence：针对多模态大语言模型的整体视觉计数基准
-11. [Tree-of-Thoughts Reasoning for Text-to-Image In-Context Learning](/202607/09/2607.07117v1-tree-of-thoughts-reasoning-for-text-to-image-in-context-learning)  
+   evidence：诊断VLM视觉推理中的失败模式
+7. [Beyond Isolated Objects: Relationship-aware Open Vocabulary Scene Understanding via 3D Scene Graph Analysis](/202607/10/2607.05348v1-beyond-isolated-objects-relationship-aware-open-vocabulary-scene-understanding-via-3d-scene-graph-analysis)  
+   标签：评分：7.0/10、query:vr
+   evidence：通过视觉语言推理进行关系感知的3D场景理解
+8. [LEEVLA: Seeing What Matters in Latent Environment Evolution for Vision-Language-Action](/202607/10/2607.08182v1-leevla-seeing-what-matters-in-latent-environment-evolution-for-vision-language-action)  
+   标签：评分：7.0/10、query:world-model
+   evidence：用于视觉-语言-动作的隐式世界表示
+9. [Learning to Evolve Scenes: Reasoning about Human Activities with Scene Graphs](/202607/10/2607.02425v1-learning-to-evolve-scenes-reasoning-about-human-activities-with-scene-graphs)  
    标签：评分：6.0/10、query:vr
-   evidence：文本到图像上下文学习中的思维树推理框架
+   evidence：使用时序场景图推理人类活动，属于结构化视觉推理
+10. [ACE: Agentic Control for Embodied Manipulation via Zero-shot Workflow Reasoning](/202607/10/2607.04162v1-ace-agentic-control-for-embodied-manipulation-via-zero-shot-workflow-reasoning)  
+   标签：评分：6.0/10、query:vr
+   evidence：具身操作中的零样本工作流推理使用视觉grounding
+11. [SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts](/202607/10/2607.06620v1-spar3d-moe-adaptive-3d-spatial-reasoning-from-sparse-views-meets-geometry-inductive-mixture-of-experts)  
+   标签：评分：6.0/10、query:vr
+   evidence：提出自适应3D空间推理框架，利用稀疏RGB输入和几何归纳混合专家
 
 
 <div class="dpr-home-promo-card">

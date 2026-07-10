@@ -1,0 +1,1067 @@
+Title: SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video
+
+URL Source: https://arxiv.org/pdf/2607.01784v1
+
+Published Time: Fri, 03 Jul 2026 00:47:51 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+> JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 1
+
+# SpaceEra++: A Unified Framework Towards 3D Spatial Reasoning in Video 
+
+Weili Guan, Member, IEEE , Haoyu Zhang, Meng Liu, Member, IEEE , Qianlong Xiang, Yaowei Wang, Member, IEEE , Liqiang Nie, Senior Member, IEEE 
+
+Abstract —Visual-spatial understanding, defined as the ability to infer object relationships and scene layouts from visual inputs, is fundamental to downstream tasks such as robotic navigation and embodied interaction. However, pre-trained vision-language models (VLMs) remain constrained by spatial uncertainty stemming from inherently 2D observations and by the scarcity of data for 3D spatial understanding. To address these limitations, we proposed a novel framework, SpaceEra, in the NeurIPS 2025 Spotlight paper. Although it achieved significant performance gains, we further observed that its effectiveness is hindered by insufficient input from scanning videos and weak reasoning constraints. To tackle these newly emerged challenges, we extend the original framework into a comprehensive sys-tem, termed SpaceEra++, which spans data construction, model design, training optimization, and prompting inference. Specif-ically, to alleviate input insufficiency, we introduce ScenePick, a frame sampling strategy that balances spatial coverage with object semantics to produce compact yet comprehensive scene representations. In addition, to enhance spatial reasoning, we develop SpaceAlign, which enforces pairwise object constraints by jointly exploiting absolute coordinates and relative spatial relations, thereby aligning optimization with spatial accuracy. Extensive experiments across multiple benchmarks demonstrate consistent improvements over strong baselines, while ablation studies validate both the individual and joint contributions of each component, and further analyses provide guidance for future research. Code and data are available at https://github. com/iLearn-Lab/NeurIPS25-SpaceEra. 
+
+Index Terms —Spatial Reasoning, Vision-Language Model, Frame Sampling, Reinforcement Learning. 
+
+I. I NTRODUCTION 
+
+# VISUAL-spatial understanding, the ability to infer spatial relationships and the layout of objects from visual input, is a core component of human perception [1], [2]. From 
+
+Weili Guan is with the School of Information Science and Technology, Harbin Institute of Technology (Shenzhen), Shenzhen 518055, China and the Shenzhen Loop Area Institute, Shenzhen 518045, China (e-mail: hon-eyguan@gmail.com). Haoyu Zhang and Yaowei Wang are with the School of Computer Sci-ence and Technology, Harbin Institute of Technology (Shenzhen), Shenzhen 518055, China and Pengcheng Laboratory, Shenzhen 518000, China (e-mail: zhang.hy.2019@gmail.com; wangyw@pcl.ac.cn). Meng Liu is with the School of Computer Science and Technology, Shan-dong Jianzhu University, Jinan 250101, China and Zhongguancun Academy, Beijing 100190, China (e-mail: mengliu.sdu@gmail.com). Qianlong Xiang is with the School of Computer Science and Technol-ogy, Harbin Institute of Technology (Shenzhen), Shenzhen 518055, China, the City University of Hong Kong, Hong Kong SAR, China, and the Shenzhen Loop Area Institute, Shenzhen 518045, China (e-mail: xiangqian-longcs@gmail.com). Liqiang Nie is with the School of Computer Science and Technology, Harbin Institute of Technology (Shenzhen), Shenzhen 518055, China (e-mail: nieliqiang@gmail.com). Corresponding author: Meng Liu and Liqiang Nie. Turn Left , Turn Left  
+
+> navigate to the lamp on the fill in], choose either 'turn
+> ewardrobe. 3. [please fill
+> .
+
+You are a robot beginning at the chair and facing to lamp. You want to navigate to the lamp on the cabinet. You will perform the following actions .
+
+Turn  left 
+
+Go forward until the wardrobe 
+
+Turn left 
+
+Go foward until the lamp 
+
+Measuring from the closest point of each object, which of these objects (chair, radiator, table, trash bin) is the closest to the door? 
+
+Table 
+
+Fig. 1. Two examples of spatial reasoning tasks: path planning (left) and relative distance (right). 
+
+a single image, human observers can intuitively estimate distances, relative sizes, and even infer occluded structures. As intelligent systems become increasingly embedded in real-world applications such as autonomous driving [3], [4], robotic navigation [5], and augmented reality [6], [7], it becomes crucial to endow models with similar spatial reasoning ca-pabilities for robust perception and interaction. Unfortunately, a single image is inherently limited in cap-turing the complexity of real-world 3D scenes, constraining its utility in practical scenarios [8]–[10]. To address this, point clouds have become a mainstream representation for 3D scene understanding due to their ability to encode rich geometric information [11], [12]. Yet, generating high-quality point clouds typically requires expensive sensors and incurs significant computational overhead, limiting scalability and accessibility. These limitations motivate the pursuit of vision-only solu-tions that operate on scanning videos or multi-view images of scenes, as shown in Fig. 1. Such approaches offer a more human-like and scalable pathway to spatial understanding [13]. However, performing 3D spatial reasoning from scanning videos presents two significant challenges: ❶ Spatial Uncer-tainty . In the absence of explicit depth information, models   
+
+> arXiv:2607.01784v1 [cs.CV] 2 Jul 2026 JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 2ScanForgeQA Dataset
+> Q: Which of these objects (tall cabinet, sofa, teacup) is closest to dining table?
+> ScenePick Sampling
+> VLMs
+> SpaceAlign GRPO
+> Training
+> Evaluation Sample
+> SpatialMind Prompting
+> Answer
+> A:tall cabinet
+> Fig. 2. Overview of the SpaceEra++ framework. The blue text denotes newly added content in this journal version. Solid black arrows indicate the training flow, while dashed black arrows represent the inference flow.
+
+must infer 3D structure from inherently limited 2D obser-vations. This process is further complicated by occlusions, perspective distortions, and texture ambiguities, all of which introduce significant spatial uncertainty. ❷ Data Scarcity .Existing datasets for this task are limited in both scale and diversity, restricting the ability of vision-language models (VLMs) to acquire robust spatial knowledge and perceptual capabilities. To address the two challenges above, we present an initial framework, SpaceEra, in our conference paper, which integrates the corresponding solutions. Specifically, we introduce SpatialMind , a structured Chain-of-Thought (CoT) prompting strategy that guides VLMs through step-by-step reasoning over spatial relationships to mitigate spatial uncer-tainty; and ScanForgeQA , a large-scale synthetic question-answering (QA) dataset constructed from diverse 3D simula-tion scenes via an automated generation pipeline to alleviate data scarcity. Although the above methods have achieved significant progress, several important challenges in model design and op-timization remain insufficiently explored. To address this gap, in this work we further identify and systematically investigate the following issues: ❸ Input Insufficiency . Scanning videos of scenes often contain thousands of frames, yet existing VLMs can typically process only short sequences of 8 to 32 frames. The commonly used uniform sampling strategy in-evitably discards important spatial cues and fine-grained scene details that are critical for spatial understanding. Therefore, it is essential to explore more effective frame sampling strategies that can better preserve and represent the semantic structure of the scene. ❹ Biased Reasoning . Recent studies have explored reinforcement learning (RL) approaches to improve reasoning capabilities. However, most of these methods focus mainly on achieving accurate alignment between predicted and ground-truth coordinates. This paradigm tends to overlook the relative spatial relationships among objects, which are often more important for understanding overall scene layouts. These observations underscore the need to jointly consider both absolute accuracy and relative relations. To address these newly identified challenges, we extend the original SpaceEra framework beyond its initial focus on data construction and inference guidance, and propose an enhanced architecture, SpaceEra++ , for visual-spatial reasoning, as il-lustrated in Fig. 2. Specifically, we introduce ScenePick , a novel frame sampling strategy that improves the input stage by selecting informative and semantically representative frames from long scanning videos, thereby alleviating input insuffi-ciency. Furthermore, we propose SpaceAlign , a reinforcement learning strategy that incorporates both absolute coordinate supervision and pairwise spatial constraints, enabling the model to capture relative object relationships and mitigate biased reasoning. Together with the original SpaceEra design, these components form a unified framework that systemat-ically addresses data, input, optimization, and inference in a coordinated manner. We validate the proposed framework through extensive experiments across multiple benchmarks. The results not only demonstrate the effectiveness of each component, but also confirm that they provide complementary improvements when integrated into the overall framework, leading to substantial gains. A preliminary conference version of this work was pre-sented as a Spotlight paper at NeurIPS 2025 [14]. The contri-butions of this journal version are summarized as follows:  
+
+> •
+
+We analyze the limitations of original schema and in-tegrate the two newly proposed methods to form aunified technical framework for visual-spatial reasoning, spanning data, input, optimization, and inference.  
+
+> •
+
+To mitigate insufficient visual input, we propose ScenePick, a frame sampling strategy that harmonizes spatial coverage and object semantics to ensure com-prehensive scene understanding while preserving critical object details.  
+
+> •
+
+To overcome biased reasoning optimization, we design SpaceAlign, a spatially constrained reinforcement learn-ing algorithm that incorporates both absolute coordinates and relative relationships to enable more comprehensive spatial reasoning.  
+
+> •
+
+Extensive experiments validate our overall framework, demonstrating both the standalone and complementary benefits of the proposed extensions, and providing de-tailed analysis of the results. II. R ELATED WORK 
+
+A. 2D Image Spatial Understanding 
+
+This task focuses on modeling spatial relationships among objects within the 2D image. Most existing models are trained on 2D images paired with textual descriptions, which offer limited cues about 3D structure. Consequently, their capacity for spatial reasoning remains constrained. To mitigate this, several approaches, such as SpatialVLM [8], SpatialRGPT [9], and SpatialBot [10], have been proposed. These methods enhance the spatial understanding by fine-tuning models on JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 3Separate 
+
+> Furniture Model
+> Single-room Scene
+> Synthesize
+> Full Scene
+> Scene Construction
+
+1
+
+> Navigation
+> Orbit
+> Scan Creation
+
+2
+
+> Scanning Video
+> QA Generation
+
+3 
+
+> Question Template Scene Annotation
+> Are <A> and <B> touching each other?
+> What is the size of the <A> in square meters?
+> ……
+> A
+> B
+> Ground Truth
+> Distance
+> Fig. 3. The pipeline of ScanForgeQA data construction, which consists of scene construction, scan creation, and QA generation.
+
+datasets specifically designed for spatially grounded QA tasks. To enable more comprehensive evaluation, recent studies [15], [16] have introduced hierarchical benchmarks that assess models across varying levels of spatial reasoning complexity. Parallel efforts have explored more explicit forms of spatial interaction [17], [18]. For example, point-based methods [19], [20] interpret spatial instructions by predicting specific target points. Building on this trend, SpatialCoT [21] proposes a two-stage strategy that aligns multimodal inputs with spatial coordinates and incorporates CoT reasoning to better address complex embodied tasks. Despite these advancements, model performance often degrades in complex real-world 3D envi-ronments, highlighting the limitations of 2D-based approaches in representing complex 3D scenes. 
+
+B. 3D Indoor Spatial Understanding 
+
+This task focuses on enabling intelligent agents to identify object positions and infer their spatial relationships within enclosed environments, thereby supporting both object ma-nipulation and interactive scene comprehension. Early 3D models are trained on standard indoor datasets [22]–[28] using point clouds to facilitate downstream tasks like 3D object detection and instance segmentation [29]–[32] and primarily focus on object-level geometry and appearance features [33]– [36]. More recent work extends this focus to complex in-door scenes, emphasizing inter-object spatial relationships and holistic scene-level understanding. To address challenges such as geometric complexity and annotation sparsity, many of these models employ cross-modal strategies that combine point cloud data with auxiliary multi-view 2D images [11], [12], [37]. Inspired by the way humans perceive spatial layouts through vision alone, emerging research [1], [13], [38]–[40] has begun to explore purely vision-based approaches to 3D spatial understanding. These methods rely solely on visual inputs, such as scanning videos, without requiring explicit 3D priors like point clouds. This line of work offers a more practical and scalable alternative for real-world deployment. In this context, we further investigate whether purely vision-based inputs can provide a more effective solution for indoor scene understanding. 
+
+C. Reinforcement Learning with Verifiable Reward 
+
+Recent advances such as o1 [41], DeepSeek-R1 [42], and Kimi K1.5 [43] have demonstrated that RL can substantially enhance the reasoning capabilities of large language models (LLMs). Among these efforts, the Group Relative Policy Optimization (GRPO) algorithm [44] used in DeepSeek-R1 is particularly notable, as it highlights the strong potential of Reinforcement Learning with Verifiable Reward (RLVR) in equipping VLMs with advanced reasoning abilities. Building upon this foundation, subsequent studies have extended RLVR to boost multimodal reasoning performance. For example, LMM-R1 [45] employs a two-stage rule-based RL pipeline to enable strong mathematical reasoning in 3B-scale models. To improve visual-spatial reasoning, several works have explored GRPO-based reinforcement learning. For example, [38] adopts simple answer-based rewards to show that GRPO alone can activate spatial reasoning. Spatial-MLLM [46] designs task-specific reward functions tailored to different categories of spatial reasoning, while SpaceR [40] introduces an absolute-coordinate estimation reward, enabling models to directly infer object positions and substantially enhancing spatial reasoning performance. However, these methods primarily focus on task correctness while overlooking the more essential aspect of object spatial layout in visual-spatial reasoning. In this work, we incorporate object coordinate accuracy and relative spatial relations as additional reward signals to enhance the model’s spatial imagination and layout understanding. III. O VERALL FRAMEWORK 
+
+As illustrated in Fig. 2, we integrate the proposed exten-sions with the original framework to form a unified technical pipeline spanning data construction, model design, training optimization, and prompting inference. Specifically, using the JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 4                                  
+
+> TABLE I COMPARATIVE ANALYSIS BETWEEN SCAN FORGE QA AND OTHER EXISTING 3D QA DATASETS .
+> Dataset Data Source Scene Number Scene Format Question Type QA Number Scalability
+> SPARTUN3D [47] 3RScan 478 Point Cloud 4133K Difficult MSQA [48] ScanNet/3RScan/ARKitScenes 1.7K Point Cloud 9251K Difficult 3D-LLM [12] ScanNet/HM3D 1.2K Point Cloud 9300K Difficult ScanForgeQA Simulation/Synthesis 34K Scan Video 9925K Easy
+
+constructed ScanForgeQA as training data, we take scene scan-ning videos together with QA pairs as input. The ScenePick frame sampling strategy is first applied to select key frames that jointly ensure broad spatial coverage and rich object se-mantics. These sampled frames, along with the corresponding QA pairs, are then fed into VLMs, where model parameters are optimized via the proposed SpaceAlign GRPO training strat-egy to enhance spatial reasoning capability. During inference, the trained model is guided by the SpatialMind prompting strategy to generate accurate predictions. We next provide a detailed description of each component in sequence. IV. S CAN FORGE QA D ATASET CONSTRUCTION 
+
+The construction of the ScanForgeQA dataset involves a three-stage pipeline, illustrated in Fig. 3. These stages are: 1) Scene Construction , where single-room 3D environments are created; 2) Scan Creation , in which egocentric videos are simulated by scanning through the constructed scenes; and 3) QA Generation , where textual question-answering pairs are automatically generated based on object annotations and the spatial layout of each scene. 
+
+A. Scene Construction 
+
+To ensure diversity and richness in single-room scene col-lection, we adopt two parallel strategies: 
+
+1) Separation : We modify existing scene datasets to lever-age available resources effectively. Specifically, we utilize the 3D-FRONT dataset [49], which contains 6,813 multi-room scenes furnished with diverse 3D objects and annotated with detailed layout semantics and high-quality textures. Since our focus is on single-room environments, we disassemble each multi-room scene into individual rooms. For each scene, we isolate and load one room at a time, along with its correspond-ing ceiling and walls, and save it as an independent instance. This disassembly process yields 44,427 single-room scenes. We further filter out uncommon room types (e.g., garage, auditorium) and those lacking sufficient object content (e.g., aisle, stairwell). The final dataset consists of 34,116 single-room scenes across six common categories: bedroom, kitchen, bathroom, living room, dining room, and storage room. 
+
+2) Synthesis : To introduce additional diversity and origi-nality, we synthesize novel room layouts using a LLM-guided generation approach. Specifically, we adopt HoloDeck [50], a 3D generation framework that leverages LLMs to parse natural language prompts, retrieve matching assets from large-scale 3D object repositories such as Objaverse [51], and optimize their spatial arrangement to form semantically meaningful scenes. To drive the generation process, we first use GPT-4o to create diverse textual descriptions for various room types. For example, a bedroom may be described as: “A bedroom with a bed, window, armchair, and wardrobe” . We define eight room categories, including two additional types—office and store—and generate 20 distinct descriptions for each. These prompts are fed into HoloDeck to produce corresponding room layouts, with human verification to ensure spatial plausibility and realism. This synthesis process yields 160 additional single-room scenes. 
+
+B. Scan Creation 
+
+To simulate egocentric scanning videos from the constructed single-room scenes, we implement a scanning procedure using the Unity engine. Each scene is scanned using two comple-mentary strategies designed to emulate natural human visual exploration: 
+
+1) Orbit Scan : We define a circular trajectory centered in the room at a height of approximately 1.5 meters, corre-sponding to typical adult eye level. The circle’s diameter is set to two-thirds of the shorter side of the room. The camera is randomly initialized at a point on this path and moves along the circle either clockwise or counterclockwise. An image is captured every 5 degrees of rotation, resulting in 72 frames per orbit scan. This strategy provides a comprehensive 360-degree panoramic view of the scene. 
+
+2) Navigation Scan : To simulate movement through the environment, we label navigable ground regions based on object categories and generate a navigation mesh using the 
+
+NavMesh Baking API. We randomly select two objects as the navigation start and end points and compute the shortest path between them on the mesh. Among the candidate paths, the two longest are chosen for scanning to achieve a more complete coverage of the scene. For each path, the camera first performs a 360-degree rotation at the starting point, capturing an image every 12 degrees (30 images total). It then traverses the path toward the destination, during which 12 frames are uniformly sampled. Upon arrival, another 360-degree rotation is performed, again capturing 30 images. In total, 72 frames are recorded per path. Due to the limited size of indoor environments, rotational movement yields more visual variation than translation; hence, fewer frames are captured during motion. 
+
+C. QA Generation 
+
+To generate diverse supervised fine-tuning (SFT) data and enhance the 3D spatial reasoning capabilities of existing VLMs, we define three categories of question types: attribute estimation, spatial reasoning, and hypothesis analysis. These JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 5What will be the first-time appearance order of the following categories in the video: ceiling light, refrigerator, monitor, door?   
+
+> Object Words Question
+> monitor
+> door
+> refrigerator
+> Detector
+> Sampled Frames
+> VGGT
+> Cameras
+> Depth Maps
+> Bounding Boxes
+> Parsing
+> Scene Points
+> Object Points
+> Greedy Algorithm
+> Key Frames
+> Voxels
+> monitor
+> refrigerator door
+> Fig. 4. Illustration of our proposed ScenePick frame sampling strategy.
+
+categories encompass both quantitative and qualitative di-mensions, and cover both open-set and closed-set scenarios. Below, we describe each category in detail, along with the methodology for deriving corresponding ground-truth answers. 
+
+1) Attribute Estimation : This type focuses on static prop-erties of objects and scenes, such as object count (“How many chairs are in the room?”), object size (“What is the length of the longest side of the refrigerator in meters?”), room size 
+
+(“What is the size of this room in square meters?”), and room type (“Based on the object layout, what is the most likely type of room (e.g., kitchen)?”). Ground-truth answers for these questions are directly derived from 3D scene annotations and object metadata provided in the dataset. 
+
+2) Spatial Reasoning : This category targets inter-object spatial relationships, requiring models to infer positional and geometric properties such as distance, orientation, and con-tact. Representative question types include: relative distance 
+
+(“Which of these objects (refrigerator, couch, ceiling light) is closest to the TV?”), absolute distance (“What is the distance between the couch and the table in meters?”), relative direction 
+
+(“If I am standing by sofa and facing the table, which side is the trash can on?”), and contact relationship (“Is there a gap between the bed and the headboard?”). For distance-related questions, we compute Euclidean distances between object centroids in the global 3D coordinate space. For con-tact relationships, object dimensions are also considered to determine physical adjacency. To resolve relative direction, we define an object’s front as the side oriented toward the room center. Angular sectors are divided clockwise into four directional categories: right (45°–135°), back (135°–225°), left (225°–315°), and front (315°–45°). For example, an object located at 80° relative to the reference point is classified as being on the right. 
+
+3) Hypothesis Analysis : This category introduces condi-tional reasoning under hypothetical scenarios, often requiring geometric and commonsense inference. A typical example is 
+
+operation feasibility (“Considering only object dimensions, is it feasible to place the television on the table?”). Feasibility is determined by comparing object dimensions. For stacking, the movable object’s length and width must be smaller than those of the supporting surface. For embedding (e.g., fitting an item into a drawer), the object’s height must also fall within the bounds of the specific container’s volume. A detailed comparison with existing datasets is provided in Table I. The full ScanForgeQA dataset comprises 34,276 single-room scenes, 103K simulated video scans, and 925K QA pairs. V. S CENE PICK FRAME SAMPLING 
+
+Owing to constraints in context length and GPU memory, current VLMs are unable to process entire scene video se-quences, and must instead work with only a small subset of frames. For example, in the VSI-Bench [1] evaluation, al-though each video sequence contains several thousand frames, the VLMs typically receive fewer than 64 frames as input. While uniform interval sampling is widely adopted and works well for standard video understanding tasks, spatial scanning videos present unique challenges as they capture 3D scene information. When it comes to spatial reasoning or 3D scene comprehension, uniform sampling often overlooks important spatial cues and critical scene details. To achieve a deeper and more accurate understanding of spatial scanning videos, it is necessary to develop frame sampling methods that prioritize the extraction of the most informative and representative aspects of the scene, rather than relying solely on evenly spaced selections in the time domain. Building upon the capabilities of the feed-forward visual geometry foundation model [52], we design a novel frame sampling strategy, ScenePick, which ensures comprehensive coverage of the scene’s spatial extent while selectively focus-ing on the key objects relevant to the question, as shown in Fig. 4. Specifically, given a scene video V = {fi}Ni=1 , we first JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 6
+
+uniformly sample Nm frames {f mi }Nm 
+
+> i=1
+
+as a subset, where Nm
+
+is determined by the available GPU memory. Our objective is to select Ns frames {f si }Ns 
+
+> i=1
+
+from {f mi }Nm 
+
+> i=1
+
+subset have most coverage of the underlying scene, where Ns < N m < N .To achieve this, we leverage pretrained VGGT model [52] to decode a set of camera parameters and depth maps from the 
+
+Nm candidate frames: 
+
+{Ei, Ii, Di}Nm 
+
+> i=1
+
+= VGGT ({f mi }Nm
+
+> i=1
+
+), (1) where Ei and Ii are extrinsic and intrinsic matrices of the camera, respectively, and Di denotes the predicted depth map for each frame. Then we reconstruct 3D point clouds Pi for each frame by reprojecting depth values: 
+
+xcam = I−1
+
+> i
+
+
+
+uv
+
+1
+
+ · Di, Pi = E−1
+
+> i
+
+xcam 
+
+1
+
+
+
+, (2) where (u, v ) denotes the pixel coordinates. For each 3D point 
+
+p ∈ Pi, we also obtain a confidence score c(p) ∈ [0 , 1] 
+
+from the depth head of VGGT. For subsequent processing, we aggregate all valid points across the sampled frames—those with confidence c(p) > 0.1—to define the spatial extent of the scene: 
+
+Pvalid =
+
+> Nm
+
+[
+
+> i=1
+
+{p ∈ P i | c(p) > 0.1}. (3) We then discretize the 3D bounding box covering all valid points into voxels. To account for variations in scale in VGGT outputs, we set the voxel size ∆ adaptively as a fraction of the bounding box’s dimension: 
+
+∆ = 1
+
+λ · (max( Pvalid ) − min( Pvalid )) , (4) where λ is a tunable hyperparameter. For each candidate frame, we then compute its voxel coverage V (f mi ) by mapping its valid 3D points into the voxel grid: 
+
+V (f mi ) = 
+
+ p − min( Pvalid )∆
+
+
+
+p ∈ P i ∩ P valid 
+
+
+
+. (5) However, relying solely on spatial voxel coverage for frame selection is not sufficient. Different questions target different objects in the scene, which means the key frames required for reasoning can vary accordingly. Therefore, frame selection should also account for the semantic importance of the relevant objects. Specifically, we first parse the input natural language question to extract a set of target object categories (e.g., desk, chair, and sofa) relevant to the scene O = {oj }. For each candidate frame f mi , we apply an object grounding model (e.g., Grounded SAM 2) over the set of target object categories 
+
+O, obtaining a set of bounding boxes Boj 
+
+> i
+
+for each category 
+
+oj ∈ O . For every pixel coordinate (u, v ) in frame f mi and its corresponding 3D point p ∈ P i, we define the semantic indicator function: 
+
+s(p) = 
+
+(
+
+1, ∃ oj ∈ O s.t. (u, v ) ∈ B oj 
+
+> i
+
+,
+
+0.5, otherwise . (6) We discretize the scene into a voxel grid. For each voxel 
+
+v ∈ V (f mi ), let Pv denote the set of 3D points inside it. The 
+
+Algorithm 1 ScenePick Frame Sampling 
+
+Require: Video V = {fi}Ni=1 , target object set O, number of selected frames Ns
+
+Ensure: Selected frame subset S 
+
+> 1:
+
+Uniformly sample Nm frames {f mi }Nm 
+
+> i=1
+
+from V 
+
+> 2:
+
+Use VGGT to decode depth maps {Di} and camera poses 
+
+(Ei, Ii) for each f mi 
+
+> 3:
+
+Reproject depth to obtain 3D points Pi and filter points by confidence  
+
+> 4:
+
+Aggregate all valid points to form Pvalid and compute voxel size ∆ 
+
+> 5:
+
+Detect object instances in O for each frame  
+
+> 6:
+
+Assign semantic weight s(p) for each valid 3D point  
+
+> 7:
+
+Voxelize points of each frame to obtain voxel set V (f mi )
+
+and per-voxel weight W (v) = 1 
+
+> |P v|
+
+P 
+
+> p∈P v
+
+s(p) 
+
+> 8:
+
+Initialize selected set S ← ∅ and covered voxel set C ← ∅  
+
+> 9:
+
+repeat  
+
+> 10:
+
+for each unselected frame f mi do  
+
+> 11:
+
+Compute marginal gain Gi = P    
+
+> v∈V(fmi)\C
+
+W (v) 
+
+> 12:
+
+end for  
+
+> 13:
+
+Select j = arg max i Gi 
+
+> 14:
+
+Update S ← S ∪ { j}, C ← C ∪ V (f mj ) 
+
+> 15:
+
+until |S| = Ns 
+
+> 16:
+
+return S
+
+weight of voxel v is computed as the average weight of all its contained points: 
+
+W (v) = 1
+
+|P v |
+
+X
+
+> p∈P v
+
+s(p). (7) Finally, we formulate the frame selection task as a classic maximum coverage problem. The objective is to select a subset 
+
+S, such that the union of their voxel coverages is maximized: 
+
+max  
+
+> S⊆{ 1,...,N m},|S|=Ns
+
+X    
+
+> v∈S
+> i∈SV(fmi)
+
+W (v). (8) We adopt a greedy strategy, where at each step we select the frame that maximizes the gain, defined as the number of newly covered spatial voxels. This greedy selection process is repeated until Ns frames {f si }Ns 
+
+> i=1
+
+are chosen. The resulting set of frames not only maximizes the spatial coverage of the scene but also ensures adequate semantic attention to objects relevant to the question. VI. T RAINING 
+
+Based on the above constructed ScanForgeQA dataset, we explore two training strategies: SFT and RLVR. 
+
+A. Supervised Fine-tuning 
+
+Leveraging the constructed ScanForgeQA dataset, we fine-tune several state-of-the-art models (e.g., Qwen2.5-VL and InternVL2) by applying the standard cross-entropy loss LCE 
+
+between the predictions and the ground-truth annotations: 
+
+LCE (θ) = − X
+
+> i
+
+log Pθ
+
+
+
+o(i) o(1: i−1) , q, {fj }Ns
+
+> j=1
+
+
+
+, (9) JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 7
+
+where {fj }Ns 
+
+> j=1
+
+denotes input video frames, q denotes the prompt and question, o(i) represents the i-th token in the ground-truth answer, and o(1: i−1) denotes the preceding an-swer tokens. 
+
+B. Reinforcement Learning with Verifiable Reward 
+
+To enhance visual-spatial reasoning in VLMs, we propose a reinforcement learning framework, SpaceAlign, built upon GRPO [42]. SpaceAlign introduces verifiable reward functions tailored to diverse QA types and a novel space imagination mechanism to guide spatial reasoning. 
+
+1) Verifiable Reward Function : To supervise model out-puts across multiple QA types, including multi-choice and numerical, we design a set of verifiable reward functions that assess either response format or correctness based on task-specific criteria. 
+
+Format Reward . To ensure the model responses ad-here to a predefined structure, we define a format reward 
+
+Rformat based on whether the model wraps its reasoning process and answer within <think>...</think> and 
+
+<answer>...</answer> tags, respectively. Specifically, 
+
+Rformat (ˆ y) = 1 if ˆy matches the required format, and 
+
+Rformat (ˆ y) = 0 otherwise, where ˆy is the model’s response. 
+
+Task Reward . Different reward calculation strategies are employed based on the specific types of answers. For multi-choice QA, the reward Rmc is binary, based on exact match with the ground truth: Rmc (ˆ y, y ) = 1 if ˆy = y, and 
+
+Rmc (ˆ y, y ) = 0 otherwise, where y is the ground truth. To assess numerical values, we compute relative accuracy across varying confidence thresholds θ ∈ { 0.5, 0.55 , . . . , 0.95 }. The numerical reward Rnum is defined as: 
+
+Rnum (ˆ y, y ) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+I
+
+ |ˆy − y|
+
+y ≤ 1 − θi
+
+
+
+, (10) where N is the number of confidence thresholds. 
+
+2) Space Imagination Reward : Since existing RLVR frameworks such as GRPO lack explicit reward signals for visual-spatial reasoning, we introduce a space imagination mechanism. Specifically, the model is guided to generate an 
+
+M × M grid map representing object distributions within the scene, which facilitates downstream reasoning and leads to more reliable answers. 
+
+Absolute Coordinate Reward . To quantitatively assess the quality of the generated spatial map, we propose a novel re-ward function Rabs that measures the spatial accuracy between predicted and ground truth object positions. We first compute the distance between each predicted object and its ground truth counterpart as: 
+
+di =
+
+p(xp,i − xg,i )2 + ( yp,i − yg,i )2
+
+√M 2 + M 2 , (11) where (xp,i , y p,i ) and (xg,i , y g,i ) denote the coordinates of the 
+
+i-th predicted and ground truth objects, respectively, and M is the grid map size. The reward Rabs is then computed as the weighted mean of spatial accuracies over all object categories: 
+
+Rabs =
+
+> k
+
+X
+
+> i=1
+
+ni
+
+Pkj=1 nj
+
+× (1 − di)
+
+!
+
+, (12) where k is the total number of object categories, and ni
+
+denotes the number of objects in the i-th category. 
+
+Relative Relation Reward . While the absolute coordinate reward Rabs evaluates the per-object localization accuracy, it is insensitive to the structural layout among objects. We there-fore introduce a relative relation reward Rrel that measures the consistency between predicted and ground-truth pairwise spatial relations. Let pi = (xp,i , y p,i ) and gi = (xg,i , y g,i ) denote the predicted and ground-truth coordinates of the i-th object, respectively. For any ordered pair (i, j ) with i̸ = j, we define the relation vectors r(p) 
+
+> ij
+
+= pj − pi and r(g) 
+
+> ij
+
+= gj − gi. To compare relations, we consider both directional consistency and distance-ratio consistency. 
+
+a) Directional consistency: We quantify the alignment between the two relation vectors using cosine similarity: 
+
+cos sim ij = r(p) 
+
+> ij
+
+·r(g)
+
+> ij
+
+∥r(p) 
+
+> ij
+
+∥2 ∥r(g) 
+
+> ij
+
+∥2 + ε , (13) where ε > 0 avoids division by zero. The corresponding angular discrepancy is: 
+
+Lang ,ij = 1 − cos sim ij ∈ [0 , 2] . (14) 
+
+b) Distance-ratio consistency: To preserve relative spac-ing, we penalize the normalized deviation between the pre-dicted and ground-truth pairwise distances: 
+
+Ldist ,ij = ∥r(p) 
+
+> ij
+
+∥2 − ∥ r(g) 
+
+> ij
+
+∥2
+
+√2 M . (15) The pairwise relation discrepancy combines the two terms with a balance parameter α ∈ [0 , 1] :
+
+dij = α L ang ,ij + (1 − α) Ldist ,ij . (16) We then aggregate over all ordered pairs to obtain the relative relation reward: 
+
+Rrel = 1 − 1
+
+N (N − 1) 
+
+X
+
+> i̸=j
+
+dij . (17) 
+
+3) Overall Reward : Based on the above components, we present the final reward function: 
+
+R = Rformat + Rtask + Rabs + Rrel , (18) where task ∈ { mc , num }. The advantage Ai, measuring the relative quality of response oi within a group [o1, o 2, · · · , o G],is computed from the normalized rewards Ai = R−mean( {R})std( {R})
+
+To constrain the optimized policy πθ from drifting too far from the reference model πref , a KL regularization term 
+
+DKL (πθ ∥πref ) is added. The final policy update follows the GRPO clipped surrogate objective: 
+
+J(θ) = Eq, {oi}
+
+"
+
+1
+
+G
+
+> G
+
+X
+
+> i=1
+
+
+
+min 
+
+ πθ (oi|q)
+
+πold (oi|q) Ai,
+
+clip 
+
+ πθ (oi|q)
+
+πold (oi|q) , 1 − ϵ, 1 + ϵ
+
+
+
+Ai
+
+ 
+
+− β DKL (πθ ∥πref )
+
+#
+
+,
+
+(19) where β controls the strength of KL regularization and ϵ
+
+determines the clipping range. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 8Step1 : Identify objects of interest    
+
+> Step2 : Estimate position coordinates for these objects
+> Step3 : Calculate the distance between the bed and the monitor
+> ……
+> Step1 : Identify objects of interest
+> Step2 : Estimate position coordinates for these objects
+> Step3 : Calculate the distance between the bed and the monitor
+> ……
+> Scanning Video
+> Reference
+> Point
+> Local Modeling
+> Instance Estimation
+> Coordinate Mapping
+> Select an appropriate object as a global reference point, then redefine the positions of other objects relative …
+> 𝑿𝑿
+> 𝒀𝒀
+> 𝒁𝒁
+> Cognition Generation
+> Monitor: locate one meter to the left of the reference Bed: locate 3 meters in front of the reference point
+> ……
+> VLM
+> Question
+> 2D Grid
+> Description
+
+Router 
+
+Question Decomposition 2
+
+> Step1 : Identify objects of interest
+> Step2 : Estimate position coordinates for these objects
+> Step3 : Calculate the distance between the bed and the monitor
+> ……
+> 3D Map
+
+Scene Decomposition 1
+
+Fig. 5. Illustration of our SpatailMind prompting strategy, which consists of two main steps: scene decomposition and question decomposition. 
+
+VII. S PATIAL MIND PROMPTING INFERENCE 
+
+As shown in Fig. 5, our SpatialMind prompting strategy consists of two main components: 1) Scene Decomposition ,where the 3D scene depicted in the video is transformed into multiple different representations; and 2) Question Decompo-sition , in which the question is broken down into a sequence of fine-grained reasoning steps. 
+
+A. Scene Decomposition 
+
+The scene decomposition process includes three sequential steps: local modeling, coordinate mapping, and cognition generation. 
+
+1) Local Modeling : The first step processes scanning video frames to extract object instances and their relative spatial configurations within localized coordinate systems. To handle scene complexity and reduce the search space, we leverage GPT-4o to identify all objects mentioned across the questions associated with a given scene, using them as candidate targets. For each frame i, we prompt VLMs to detect a subset of objects {cij } from the candidate targets and estimate their positions plocal  
+
+> ij
+
+∈ R3. These positions are defined relative to a randomly selected reference object (i.e., origin) within the same frame, forming a local 3D map 
+
+Li = (cij , plocal  
+
+> ij
+
+) | j = 1 , . . . , n i , where ni denotes the number of objects in frame i. Because each video frame captures only a limited field of view, the same object may appear across multiple frames from different perspectives. Thus, this step focuses on accurate per-frame object detection and spatial localization, laying the foundation for subsequent alignment in a global coordinate system. 
+
+2) Coordinate Mapping : To integrate spatial information across video frames, this step transforms all locally detected object positions into a unified global coordinate system. The global origin is defined by selecting the reference object in the first frame. To estimate motion between frames, we prompt the VLM to infer the relative rotation and translation between ad-jacent frames. These relative transformations are accumulated sequentially to compute each frame’s transformation Ti with respect to the global coordinate system: 
+
+Ti =
+
+> i
+
+Y
+
+> k=1
+
+Rk,k −1 tk,k −1
+
+0 1
+
+
+
+, (20) where Rk,k −1 and tk,k −1 denote the relative rotation and translation from frame k − 1 to frame k, respectively. This accumulated approach provides more stable and accurate alignment than directly estimating each frame’s absolute pose. Using these transformations, each object’s local coordinates are converted into global coordinates via homogeneous trans-formation: pglobal 
+
+> ij
+
+1
+
+
+
+= Ti ·
+
+plocal 
+
+> ij
+
+1
+
+
+
+, (21) where pglobal  
+
+> ij
+
+denotes the global coordinates of the object j in the frame i. This step ensures that all detected objects across frames are positioned consistently within the same 3D space. Since objects may appear in multiple frames under different perspectives, we merge duplicate detections based on spatial proximity and semantic consistency via prompting. The result is a global 3D map of the scene G =
+
+n
+
+(ck, pglobal  
+
+> k
+
+)
+
+oNk=1 
+
+,where N is the total number of all object instances in the entire scene. This map serves as a unified spatial abstraction that captures the overall layout from egocentric scanning videos. 
+
+3) Cognition Generation : Beyond constructing a 3D map, we explore two additional formats for representing scene structure: a 2D spatial grid and natural language descriptions. We define a regular 2D grid over the global scene, typically aligned with the XY -plane. Each grid cell corresponds to a fixed real-world area (e.g., 1 meter per cell, denoted by cell size s ). Each object ck is mapped to a discrete grid location 
+
+(ik, j k) =   xk
+
+> s
+
+ ,  yk
+
+> s
+
+ , where (xk, y k) are the horizontal components of the object’s global position pglobal  
+
+> k
+
+. In parallel, we generate natural language descriptions of object locations relative to a designated reference point. Using prompting, the model produces statements such as {“monitor”: “locate 1 meter to the left of the reference point” }. These descriptions JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 9
+
+TABLE II PERFORMANCE COMPARISON ON VSI-B ENCH . † INDICATES RESULTS ON VSI-B ENCH (TINY ) SET . INDICATES THE CURRENT BEST RESULTS , WHILE REPRESENTS THE BEST RESULTS FROM THE CONFERENCE VERSION .
+
+Method Backbone Obj. Count Abs. Dist. Obj. Size Room Size Rel. Dist. Rel. Dir. Route Plan Appr. Order Avg ∆
+
+Close-source Models Human Level † 94.3 47.0 60.4 45.9 94.7 95.8 95.8 100.0 79.2 -Gemini-2.0 Flash † 52.4 30.6 66.7 31.8 56.0 46.3 24.5 55.1 45.4 -Gemini-1.5 Pro †
+
+Gemini-1.5 Pro 49.6 28.8 58.6 49.4 46.0 48.1 42.0 68.0 48.8 -Gemini-1.5 Pro 56.2 30.9 64.1 43.6 51.3 46.3 36.0 34.6 45.4 -SpaceEra 63.9 51.8 70.2 47.3 56.3 45.9 42.6 44.3 52.8 ↑ 7.4% 
+
++ScenePick 59.7 33.5 68.8 46.5 53.4 50.1 39.6 40.3 49.0 ↑ 3.6% 
+
+GPT-4o GPT-4o 46.2 5.3 43.8 38.2 37.0 41.3 31.5 28.5 34.0 -SpaceEra 40.0 27.1 62.7 40.9 41.0 39.6 37.1 38.5 40.8 ↑ 6.8% 
+
+Open-source Models Struct2D Qwen2.5-VL-3B 46.0 34.7 56.4 42.6 35.1 44.9 33.5 - 41.9 -Spatial-MLLM 65.3 34.8 63.1 45.1 41.3 46.2 33.5 46.3 48.4 -SpaceVista Qwen2.5-VL-7B 62.9 36.0 58.1 42.0 44.2 49.7 38.9 56.3 48.6 -InternVL2-8B InternVL2-8B 23.1 28.7 48.2 39.8 36.7 30.7 29.9 39.6 34.6 -SpaceEra 47.0 32.8 53.2 46.6 39.8 36.8 37.9 47.5 42.7 ↑ 8.1% 
+
++ScenePick 47.8 34.1 54.3 49.3 42.8 39.1 39.8 48.2 44.4 ↑ 1.7% 
+
++SpaceAlign 53.3 37.6 55.0 47.4 42.5 41.0 41.7 49.8 46.0 ↑ 3.3% 
+
+SpaceEra++ 54.8 38.7 55.2 47.9 43.1 41.1 42.2 50.4 46.7 ↑ 4.0% 
+
+InternVL2-40B InternVL2-40B 34.9 26.9 46.5 31.8 42.1 32.2 34.0 39.6 36.0 -SpaceEra 52.2 30.5 54.4 41.0 50.5 37.0 40.2 50.3 44.5 ↑ 8.5% 
+
++ScenePick 54.0 32.7 56.0 44.4 53.7 37.7 41.1 52.5 46.5 ↑ 2.0% 
+
++SpaceAlign 57.9 32.3 58.3 45.0 56.4 42.4 44.6 52.7 48.7 ↑ 4.2% 
+
+SpaceEra++ 59.2 33.2 58.9 46.5 58.1 42.8 45.1 53.2 49.6 ↑ 5.1% 
+
+Qwen2.5-VL-7B Qwen2.5-VL-7B 40.3 22.2 50.1 38.9 38.0 40.7 31.4 35.9 37.2 -SpaceEra 55.0 29.5 57.3 44.0 43.5 44.3 38.3 39.2 43.9 ↑ 6.7% 
+
++ScenePick 57.3 30.2 58.5 45.6 45.3 45.4 39.0 39.9 45.2 ↑ 1.3% 
+
++SpaceAlign 65.1 31.7 60.1 49.1 49.6 51.0 40.1 42.5 48.7 ↑ 4.8% 
+
+SpaceEra++ 66.7 32.6 62.0 49.7 52.3 52.0 43.1 44.3 50.3 ↑ 6.4% 
+
+Qwen2.5-VL-72B Qwen2.5-VL-72B 37.9 28.6 57.4 49.8 45.5 38.4 20.6 35.4 39.2 -SpaceEra 48.6 34.4 68.9 54.7 53.4 43.9 30.1 42.7 47.1 ↑ 7.9% 
+
++ScenePick 50.7 36.4 74.5 57.7 54.8 45.2 34.2 46.4 50.0 ↑ 2.9% 
+
+Qwen3-VL-8B Qwen3-VL-8B 34.7 24.4 64.3 39.8 34.5 44.5 31.4 43.7 39.7 -SpaceEra 41.1 27.9 69.3 46.3 35.0 47.0 37.0 50.2 44.2 ↑ 4.5% 
+
++ScenePick 41.9 29.8 71.1 46.9 35.7 49.4 38.5 50.7 45.6 ↑ 1.4% 
+
++SpaceAlign 47.4 28.6 73.1 51.4 39.5 54.2 41.8 57.9 49.2 ↑ 5.0% 
+
+SpaceEra++ 48.6 31.8 75.0 51.9 42.0 57.1 44.7 59.0 51.3 ↑ 7.1% 
+
+serve as a human-interpretable form of spatial cognition, bridging visual perception and symbolic reasoning. 
+
+B. Question Decomposition 
+
+Different types of spatial questions require distinct reason-ing strategies. To accommodate this diversity, we first cate-gorize questions into several types (e.g., object size, relative distance, and relative direction). For each category, we design a dedicated reasoning procedure using GPT-4o, followed by human verification to ensure correctness and interpretability. For instance, consider a question from the “relative distance” category: Among the refrigerator, window, and microwave, which object is closest to the door? The reasoning process for this type follows four structured steps: 1) Identify all mentioned objects, 2) Estimate the spatial coordinates of all relevant objects, 3) Compute the pairwise distances between the door and each candidate object, and 4) Select the object with the minimum distance as the answer. During inference, the system correspondingly selects the appropriate reasoning procedure based on the identified question type. To perform 3D spatial reasoning, we feed the VLMs with the input scanning video, one form of scene representation (e.g., 3D map, 2D grid, or textual position descriptions), the question, and the corresponding step-by-step reasoning plan. VIII. E XPERIMENTS 
+
+A. Experimental Settings 1) Benchmarks: We conducted evaluations on four comprehensive benchmarks, including VSI-Bench [1], OpenEQA [53], ScanQA [54], and SQA3D [55]. They span a range of spatial tasks, such as object recognition, attribute estimation, spatial understanding, and functional reasoning. 
+
+2) Baselines: As shown in Tables II, our evaluation covers a diverse set of VLM baselines spanning multiple architec-tures and scales. These include closed-source models such as Gemini-2.0 Flash 1, Gemini-1.5 Pro 2, and GPT-4o [56], as well as open-source models, encompassing both spatial-specific 
+
+> 1
+
+https://deepmind.google/technologies/gemini/flash/. 
+
+> 2
+
+https://deepmind.google/technologies/gemini/pro/. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 10                                                 
+
+> TABLE III PERFORMANCE COMPARISON ON THE EM-EQA SUBSET OF OPEN EQA
+> AND THE VALIDATION SET OF SCAN QA AND SQA3D. T HE BACKBONE IS
+> QWEN 2.5-VL-7B.
+> Method OpenEQA ScanQA SQA3D
+> Acc/Score BLEU-1 EM-1 Qwen2.5-VL-7B 50.1/3.1 32.5 17.2 SpaceEra 58.6/3.5 37.9 24.5 +ScenePick 59.5/3.5 40.1 26.3 +SpaceAlign 61.1/3.6 44.2 28.5 SpaceEra++ 63.6/3.6 46.5 30.5 TABLE IV EFFECTS OF DIFFERENT FRAME SAMPLING APPROACHES AND RL
+> TRAINING STRATEGIES ON VSI-B ENCH . T HE BACKBONE IS
+> QWEN 2.5-VL-7B.
+> Row Method Avg
+> 1SpaceEra 43.9 2+ScenePick (w/o object semantics) 44.9 3+ScenePick (w/o spatial coverage) 44.3 4+ScenePick 45.2 5+SpaceAlign (w/o space imagination reward) 45.8 6+SpaceAlign (w/o absolute coordinate reward) 46.3 7+SpaceAlign (w/o relative relation reward) 47.9 8+SpaceAlign 48.7 9SpaceEra++ 50.3
+
+models (e.g., Struct2D [39], Spatial-MLLM [46], and Space-Vista [57]) and general-purpose models (e.g., InternVL2 [58] with 8B and 40B parameters, Qwen2.5-VL [59] with 7B and 72B parameters, and Qwen3-VL [60] with 8B parameters). 
+
+3) Configurations: Gemini models operate at a fixed sam-pling rate of 1 frame per second (FPS). InternVL processes 8 frames per video, whereas other models process 16 frames per video, all at a resolution of 224×224. We set the global batch size to 16 and used a linear learning-rate schedule, with a peak value of 10 −5. For ScenePick sampling, we set 
+
+Nm = 128 and Ns = 16 . The hyperparameter λ is 20. In the SpaceAlign training, we performed 8 rollouts per question and set the default sampling temperature to 1. The parameter M
+
+is set to 10 for the VSI-Bench dataset and to 8 for all other datasets. The coefficient ε, α, and β is set to 0.1, 0.6, and 0.04, respectively. The hyperparameter ϵ is fixed to 0.2. All experiments are conducted on 8 NVIDIA H20 GPUs. 
+
+B. Performace Comparison 
+
+We investigated the following multiple key questions to assess our approach: 
+
+1) How do ScenePick and SpaceAlign impact VLM per-formance? : As shown in Table II, we independently intro-duced the ScenePick frame sampling and the SpaceAlign training strategy across a range of VLMs. The results re-veal three key findings: a) Both ScenePick and SpaceAlign consistently improve visual-spatial understanding across mod-els. This includes large-scale proprietary models such as Gemini-1.5 Pro and the open-source models enhanced in the conference version, demonstrating the effectiveness and generalizability of the extended methods. b) Finetuning the model with SpaceAlign strategy yields larger gains compared                                           
+
+> TABLE V MULTI -SEED ROBUSTNESS ANALYSIS OF THE ADDED COMPONENTS ON
+> VSI-B ENCH AND THE BACKBONE IS QWEN 3-VL-8B.
+> Method Avg ∆
+> Base 39.7 -SpaceEra 44.2 ↑4.5% +ScenePick 45.6 ↑1.4%
+> +SpaceAlign (Seed 42) 49.2 ↑5.0%
+> +SpaceAlign (Seed 0) 48.9 ↑4.7%
+> +SpaceAlign (Seed 3407) 49.1 ↑4.9% +SpaceAlign (Mean ±Std) 49.1 ±0.2 -TABLE VI SENSITIVITY ANALYSIS OF GPT-4 O-BASED DECOMPOSITION IN THE
+> SPATIAL MIND PROMPTING STRATEGY ON VSI-B ENCH .
+> Backbone Recognizer Avg ∆
+> Qwen2.5-VL-72B None 39.2 -GPT-4o 44.0 ↑4.8%
+> Qwen3-VL-8B 42.3 ↑3.1%
+> Qwen3-VL-30B 43.5 ↑4.3%
+
+to ScenePick sampling. For instance, Qwen2.5-VL-7B gains 4.8% from SpaceAlign fine-tuning, compared to only 1.3% from ScenePick sampling. c) Humans and VLMs exhibit com-plementary strengths. Human participants excel in qualitative tasks (e.g., achieving 100% accuracy on the Appearance Order 
+
+task) but perform poorly on precise quantitative estimations (e.g., Object Size ). In contrast, VLMs show strong quantitative reasoning ability and, in some cases, even surpass human-level performance. This contrast underscores the potential of VLMs to complement human perception in spatial tasks. 
+
+2) Can combining two components yield further gains? :
+
+To assess whether ScenePick and SpaceAlign provide comple-mentary benefits, we concatenated these two components. The results, reported in the row marked “SpaceEra++” in Table II, demonstrate consistent performance improvements across all evaluated models, confirming that the two approaches are complementary and can lead to further performance gains. 
+
+3) Does the improvement generalize to other spatial benchmarks? : To assess the generalizability of the extended methods, we conducted evaluations on multiple other bench-marks, including OpenEQA, ScanQA, and SQA3D. As shown in Table III, both ScenePick sampling and SpaceAlign training lead to consistent performance gains across all benchmarks. These results further validate the standalone and combined advantages of our newly proposed method and confirm its applicability across diverse spatial tasks and datasets. 
+
+4) How is the answer to the metric-based question de-termined? : Metric-scale estimation is supported by the joint effect of several factors: a) Semantic Priors. Semantic priors play an important role, since many indoor object categories, such as chairs, tables, doors, and beds, typically fall within relatively stable size ranges. b) Contextual Reference. Contex-tual references from surrounding objects and the overall scene layout provide useful anchors for relative scale estimation. c) Multi-view Calibration. Compared with a single image, a scanning video offers richer multi-view cues, including view-JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 11 10 20 30 40 50 
+
+> 48.5
+> 49.0
+> 49.5
+> 50.0
+> 50.5
+> 51.0
+> Avg Accuracy
+> VSI-Bench
+> SQA3D
+> 29.0
+> 30.0
+> 31.0
+> 32.0
+> 33.0
+> 34.0
+> EM-1
+
+(a) Parameter λ4 6 8 10 12  
+
+> M
+> 48.0
+> 48.5
+> 49.0
+> 49.5
+> 50.0
+> 50.5
+> 51.0
+> Avg Accuracy
+> VSI-Bench
+> SQA3D
+> 28.0
+> 29.0
+> 30.0
+> 31.0
+> 32.0
+> 33.0
+> 34.0
+> EM-1
+
+(b) Parameter M
+
+Fig. 6. Parameter analysis under different hyperparameters λ and M .
+
+point changes, parallax, occlusion variation, and broader scene coverage, which help reduce scale ambiguity. Accordingly, the reported performance on metric-based questions should be in-terpreted as the result of multi-view visual evidence combined with learned semantic priors, rather than pure geometry alone. 
+
+5) Is the gain from the newly added module robust? :
+
+To further assess the robustness of the performance gains introduced by the newly added component, we report repeated-run results for the +SpaceAlign variant using three different random seeds in Table V. We choose this setting because ScenePick is a deterministic frame-selection strategy, while the principal source of stochasticity in our framework lies in the training process of SpaceAlign. As such, repeated runs of +SpaceAlign provide a direct evaluation of the stability of the main trainable component. The results show only marginal variation across different runs, and the observed gains remain consistent, confirming the robustness of the improvements brought by SpaceAlign. 
+
+C. Ablation Study 
+
+In this section, we explored the impact of various design choices on the performance of SpaceEra++, using Qwen2.5-VL-7B as the backbone model, as shown in Table IV. 
+
+1) On ScenePick sampling : To isolate the contributions of each component in the ScenePick frame sampling strategy, we evaluated three variants:  
+
+> •
+
+(Row 2 ): Ignoring object semantics and considering only scene-space coverage during selection, i.e., treating all 3D points as equally important.  
+
+> •
+
+(Row 3 ): Ignoring scene-space coverage and considering only the target objects, i.e., retaining only the 3D points belonging to the objects of interest.  
+
+> •
+
+(Row 4 ): Considering both factors simultaneously. From the results, we observed that considering only a single factor is insufficient, leading to lower performance than jointly accounting for both. In addition, relying solely on spatial cov-erage outperforms using object semantics alone, likely because spatial coverage provides a more comprehensive representation of the scene’s geometry, whereas frames selected purely based on object semantics tend to be more concentrated. 
+
+2) On SpaceAlign training : To investigate the sources of effectiveness of our proposed SpaceAlign training strategy, we designed the following four variants: Qwen2.5-VL-7B SpaceEra SpaceEra++      
+
+> Method
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> Inference Time (s)
+> 8.37
+> 10.84 11.03
+> 5.71 6.03 6.08
+> 2.66
+> 4.81 4.95
+> Without Flash Attention With Flash Attention
+
+Fig. 7. Inference time comparison with and without Flash Attention. Measuring from the closest point of each object, what is the distance between the trash  bin and the  towel (in meters)? 
+
+> ScenePick Sampling Uniform Sampling
+
+Fig. 8. Comparison of scene using different frame sampling methods.  
+
+> •
+
+(Row 5 ): Removing the space imagination rewards (in-cluding Rabs and Rrel ) and optimizing the model using only rewards Rformat and Rtask . 
+
+> •
+
+(Row 6 ): Removing the absolute coordinate reward Rabs 
+
+and optimizing the model using rewards Rformat , Rtask ,and Rrel . 
+
+> •
+
+(Row 7 ): Removing the relative relation reward Rrel and optimizing the model using other three rewards.  
+
+> •
+
+(Row 8 ): Optimizing the model using all rewards, includ-ing Rformat , Rtask , Rabs , and Rrel .From the results, we observed that removing all space imagination rewards leads to the largest performance drop, indicating that geometric guidance is essential for stable align-ment. When the absolute coordinate reward Rabs is excluded, performance improves compared with Row 5 but still remains noticeably lower than the full model, suggesting that absolute spatial cues play an important role in grounding the model to global scene structure. Conversely, removing the relative relation reward results in a milder degradation, showing that relative positional reasoning provides complementary benefits. Finally, the full model using all reward components achieves the best performance, demonstrating that absolute and relative spatial signals jointly enhance the VLM’s capability to align and interpret spatial information. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 12 0 20 40 60 80 100 120 140 160 180  
+
+> Step
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> Reward
+> SpaceAlign (Ours)
+> Vanilla GRPO
+> Fig. 9. Reward curves along training steps under different RL strategies.
+
+D. Parameter Analysis 
+
+To evaluate the robustness of our approach, we analyzed its performance sensitivity to the voxel parameter λ and grid size 
+
+M , as illustrated in Fig. 6. From the presented results, we derived the following find-ings:  
+
+> •
+
+As λ increases, the voxel size ∆ decreases, leading to a finer spatial discretization. This allows the coverage met-ric to capture more detailed variations in scene structure, enabling the selection of frames that provide richer and more diverse scene coverage. However, when λ becomes excessively large, the voxels become overly fine, causing many voxels to contain only a few points or even noise. This may make the coverage estimation overly sensitive and potentially reduce its robustness.  
+
+> •
+
+As M increases, the spatial imagination grid becomes finer, enabling more detailed object distributions. How-ever, the larger value reduces relative spatial errors, yield-ing higher and less discriminative rewards ( M appears in the denominator in Eqns. (13) and (17)). Although a finer grid offers richer spatial supervision, an excessively large M can diminish reward sensitivity and introduce sparsity, potentially affecting training stability and final performance. 
+
+E. Sensitivity Analysis 
+
+To evaluate the sensitivity of SpatialMind prompting strat-egy to the choice of GPT-4o, we replaced GPT-4o in both the scene decomposition and question decomposition stages with two open-source alternatives, namely Qwen3-VL-8B 3
+
+and Qwen3-VL-30B 4, while keeping all other components unchanged. The corresponding results are reported in Table VI. The results show that the overall framework remains effec-tive under both replacements, which verifies that the proposed method is not overly sensitive to the choice of GPT-4o and can be reproduced with fully open alternatives. The performance differences across substitutes are consistent with the capability gap of the underlying parser, but they do not affect the main conclusions of the paper. 
+
+> 3https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct.
+> 4https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct.
+
+F. Inference Efficiency 
+
+To evaluate the impact of SpaceEra++ on inference effi-ciency, we conducted experiments using the Qwen2.5-VL-7B as the backbone on an A100 GPU. Inference is performed on 100 samples, and we reported the average inference time per sample. The results are presented in Fig. 7. As shown in the table, the extended methods do not intro-duce any noticeable increase in inference latency compared with the conference version model, referred to as SpaceEra, while delivering substantial performance improvements. In ad-dition, applying inference acceleration techniques for VLMs, such as Flash Attention, can further reduce inference time and improve overall efficiency. 
+
+G. Visualization 1) Sampling Rending: To intuitively illustrate the differ-ences in scene representation between uniform sampling and the proposed ScenePick sampling strategy, we rendered 16 video frames selected by each method using VGGT model, as shown in Fig. 8. It can be observed that the scenes rendered from ScenePick sampling are more complete and exhibit richer structural details. Moreover, ScenePick places greater emphasis on key objects relevant to the query, such as the “trash bin” and the “towel”, which are depicted with finer granularity, as highlighted by the solid bounding boxes. These results demonstrate that the frames selected by ScenePick provide higher-quality spatial structure, thereby enhancing the visual-spatial understanding capabilities of VLMs. 
+
+2) Training Curves: As shown in Fig. 9, we presented the reward curves of our method under different training strategies (e.g., SpaceAlign and GRPO). Compared with Vanilla GRPO, SpaceAlign converges faster, achieves higher rewards, and shows smaller fluctuations, indicating more stable training and validating the effectiveness of the proposed spatial imagination mechanism. 
+
+H. Qualitative Analysis 
+
+Fig. 10 illustrates a spatial reasoning case on an indoor scene reconstructed from a scan, where the task is to de-termine the egocentric position of a lamp when standing by the bed and facing the trash bin. It compares different versions of Qwen2.5-VL-7B, showing that the conference version SpaceEra predicts an incorrect spatial relation, while the current journal version SpaceEra++ correctly identifies the lamp as being in the front-right direction. This improvement highlights that the journal version benefits from incorporating spatial imagination rewards during reasoning, which encour-age the model to mentally construct a top-down spatial layout, perform viewpoint transformation, and reason over relative positions more systematically rather than relying on local visual cues. IX. C ONCLUSION 
+
+In this work, we analyze the limitations of our NeurIPS 2025 Spotlight paper and propose novel solutions that extend it into a more comprehensive framework for visual-spatial JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 13 Qwen2.5-VL-7B: 
+
+> Front-Left
+> SpaceEra:
+> Back-Right
+> If I am standing by the bed and facing the trash bin, is the lamp to my front-left, front-right, back-left, or back-right? The directions refer to the quadrants of a Cartesian plane (if I am standing at the origin and facing along the positive y-axis).
+> SpaceEra++:
+> Front-Right
+> <think> From the video frames, I reconstruct a coarse 6 ×6 top-down grid of the scene and assign approximate coordinates (row, col): <map>Bed (2, 5), Trash bin (2, 2), Lamp (1, 2), Desk (2, 1), Closet (5, 4)</map>. Now assume you stand by the bed and face the trash bin. Using the bed area as the reference, moving from the bed region toward the trash bin goes leftward in the grid, so that direction is the positive y-axis (forward). Comparing the lamp to this forward direction, the lamp at (1, 2) is slightly to the right of the line from the bed toward the trash bin at (2, 2). Therefore, the lamp is in your front-right quadrant.</think>
+
+Fig. 10. An example illustrating the thinking process of the SpaceAlign strategy, comparing predictions from Qwen2.5-VL-7B, the conference version SpaceEra, and the current extended version SpaceEra++. A 10×10 grid is used in practice, while a 6×6 grid is shown here solely for clearer visualization. 
+
+understanding, termed SpaceEra++. Specifically, to address insufficient scene input, we introduce ScenePick, a frame sampling strategy that jointly considers scene coverage and object semantics to obtain a more complete scene repre-sentation without increasing the number of input frames. To further overcome limitations in spatial optimization, we design SpaceAlign, a spatially constrained GRPO algorithm that integrates both absolute and relative spatial cues to achieve more accurate spatial reasoning. Furthermore, we conduct extensive experiments across multiple benchmarks, demon-strating that these extensions consistently improve upon the original schema and thoroughly validate the effectiveness and generalization capability of the proposed framework. In the future, we will focus on more comprehensive eval-uations in diverse real-world environments, including large-scale multi-room and outdoor scenarios, to further assess and improve the generalization of visual-spatial reasoning. ACKNOWLEDGMENTS 
+
+This work is supported by Shenzhen Science and Technology Program, No.:KQTD20240729102207002; Guangdong S&T Program, No.:2025B0101130003; the National Natural Science Foundation of China, No.:62236003, No.:62376140, No.:62476071, No.:625B2065, No.:U24A20328, and No.:U23A20315; Guangdong Basic and Applied Basic Research Foundation, No.:2025A1515011732; Beijing Natural Science Foundation, No.:4262074 and No.:L254018; the Science and Technology Innovation Program for Distinguished Young Scholars of Shandong Province Higher Education Institutions, No.:2023KJ128; the Special Fund for Taishan Scholar Project of Shandong Province; the Major Key Project of Pengcheng Laboratory, No.:PCL2025A14-4; the Fundamental Research Funds for the Central Universities, No.:HIT.DZJJ.2025048. REFERENCES [1] J. Yang, S. Yang, A. W. Gupta, R. Han, L. Fei-Fei, and S. Xie, “Thinking in space: How multimodal large language models see, remember, and recall spaces,” arXiv preprint arXiv:2412.14171 , 2024. [2] Y. Jin, J. Li, J. Zhang, J. Hu, Z. Gan, X. Tan, Y. Liu, Y. Wang, C. Wang, and L. Ma, “Llava-vsd: Large language-and-vision assistant for visual spatial description,” in Proceedings of the 32nd ACM International Conference on Multimedia , 2024, pp. 11 420–11 425. [3] X. Tian, J. Gu, B. Li, Y. Liu, Y. Wang, Z. Zhao, K. Zhan, P. Jia, X. Lang, and H. Zhao, “Drivevlm: The convergence of autonomous driving and large vision-language models,” in 8th Annual Conference on Robot Learning .[4] H. Zhang, M. Liu, Y. Li, M. Yan, Z. Gao, X. Chang, and L. Nie, “Attribute-guided collaborative learning for partial person re-identification,” IEEE Transactions on Pattern Analysis and Machine Intelligence , vol. 45, no. 12, pp. 14 144–14 160, 2023. [5] D. Driess, F. Xia, M. S. Sajjadi, C. Lynch, A. Chowdhery, B. Ichter, A. Wahid, J. Tompson, Q. Vuong, T. Yu et al. , “Palm-e: an embodied multimodal language model,” in Proceedings of the 40th International Conference on Machine Learning , 2023, pp. 8469–8488. [6] K. Chandrasegaran, A. Gupta, L. M. Hadzic, T. Kota, J. He, C. Eyza-guirre, Z. Durante, M. Li, J. Wu, and F.-F. Li, “Hourvideo: 1-hour video-language understanding,” Advances in Neural Information Processing Systems , vol. 37, pp. 53 168–53 197, 2024. [7] H. Zhang, Q. Chu, M. Liu, H. Shi, Y. Wang, and L. Nie, “Exo2ego: Exocentric knowledge guided mllm for egocentric video understanding,” in Proceedings of the AAAI Conference on Artificial Intelligence , vol. 40, no. 15, 2026, pp. 12 502–12 510. [8] B. Chen, Z. Xu, S. Kirmani, B. Ichter, D. Sadigh, L. Guibas, and F. Xia, “Spatialvlm: Endowing vision-language models with spatial reasoning capabilities,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 14 455–14 465. [9] A.-C. Cheng, H. Yin, Y. Fu, Q. Guo, R. Yang, J. Kautz, X. Wang, and S. Liu, “Spatialrgpt: Grounded spatial reasoning in vision-language models,” Advances in Neural Information Processing Systems , vol. 37, pp. 135 062–135 093, 2025. [10] W. Cai, I. Ponomarenko, J. Yuan, X. Li, W. Yang, H. Dong, and B. Zhao, “Spatialbot: Precise spatial understanding with vision language models,” 
+
+arXiv preprint arXiv:2406.13642 , 2024. [11] S. Chen, X. Chen, C. Zhang, M. Li, G. Yu, H. Fei, H. Zhu, J. Fan, and T. Chen, “Ll3da: Visual interactive instruction tuning for omni-3d understanding reasoning and planning,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 26 428–26 438. [12] Y. Hong, H. Zhen, P. Chen, S. Zheng, Y. Du, Z. Chen, and C. Gan, “3d-llm: Injecting the 3d world into large language models,” Advances in Neural Information Processing Systems , vol. 36, pp. 20 482–20 494, 2023. [13] Z. Qi, Z. Zhang, Y. Fang, J. Wang, and H. Zhao, “Gpt4scene: Understand 3d scenes from videos with vision-language models,” arXiv preprint arXiv:2501.01428 , 2025. [14] H. Zhang, M. Liu, Z. Li, H. Wen, W. Guan, Y. Wang, and L. Nie, “Spatial understanding from videos: Structured prompts meet simulation data,” 
+
+arXiv preprint arXiv:2506.03642 , 2025. [15] M. Du, B. Wu, Z. Li, X.-J. Huang, and Z. Wei, “Embspatial-bench: Benchmarking spatial understanding for embodied tasks with large JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 14 
+
+vision-language models,” in Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers) ,2024, pp. 346–355. [16] W. Zhang, W. E. Ng, L. Ma, Y. Wang, J. Zhao, A. Koenecke, B. Li, and L. Wang, “Sphere: Unveiling spatial blind spots in vision-language mod-els through hierarchical evaluation,” arXiv preprint arXiv:2412.12693 ,2024. [17] C. Ma, K. Lu, T.-Y. Cheng, N. Trigoni, and A. Markham, “Spatialpin: Enhancing spatial reasoning capabilities of vision-language models through prompting and interacting 3d priors,” in The Thirty-eighth Annual Conference on Neural Information Processing Systems .[18] J. Yu, Y. Zhang, Z. Zhang, Z. Yang, G. Zhao, F. Sun, F. Zhang, Q. Liu, J. Sun, J. Liang et al. , “Rag-guided large language models for visual spatial description with adaptive hallucination corrector,” in Proceedings of the 32nd ACM International Conference on Multimedia , 2024, pp. 11 407–11 413. [19] W. Yuan, J. Duan, V. Blukis, W. Pumacay, R. Krishna, A. Murali, A. Mousavian, and D. Fox, “Robopoint: A vision-language model for spatial affordance prediction in robotics,” in 8th Annual Conference on Robot Learning .[20] C. H. Song, V. Blukis, J. Tremblay, S. Tyree, Y. Su, and S. Birchfield, “Robospatial: Teaching spatial understanding to 2d and 3d vision-language models for robotics,” arXiv preprint arXiv:2411.16537 , 2024. [21] Y. Liu, D. Chi, S. Wu, Z. Zhang, Y. Hu, L. Zhang, Y. Zhang, S. Wu, T. Cao, G. Huang et al. , “Spatialcot: Advancing spatial reasoning through coordinate alignment and chain-of-thought for embodied task planning,” arXiv preprint arXiv:2501.10074 , 2025. [22] G. Baruch, Z. Chen, A. Dehghan, Y. Feigin, P. Fu, T. Gebauer, D. Kurz, T. Dimry, B. Joffe, A. Schwartz et al. , “Arkitscenes: A diverse real-world dataset for 3d indoor scene understanding using mobile rgb-d data,” in Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 1) .[23] A. Chang, A. Dai, T. Funkhouser, M. Halber, M. Niebner, M. Savva, S. Song, A. Zeng, and Y. Zhang, “Matterport3d: Learning from rgb-d data in indoor environments,” in International Conference on 3D Vision (3DV) , 2017. [24] A. Dai, A. X. Chang, M. Savva, M. Halber, T. Funkhouser, and M. Nießner, “Scannet: Richly-annotated 3d reconstructions of indoor scenes,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2017, pp. 5828–5839. [25] M. Deitke, E. VanderBilt, A. Herrasti, L. Weihs, K. Ehsani, J. Salvador, W. Han, E. Kolve, A. Kembhavi, and R. Mottaghi, “Procthor: Large-scale embodied ai using procedural generation,” Advances in Neural Information Processing Systems , vol. 35, pp. 5982–5994, 2022. [26] Y. Mao, Y. Zhang, H. Jiang, A. Chang, and M. Savva, “Multiscan: Scalable rgbd scanning for 3d environments with articulated objects,” 
+
+Advances in neural information processing systems , vol. 35, pp. 9058– 9071, 2022. [27] S. K. Ramakrishnan, A. Gokaslan, E. Wijmans, O. Maksymets, A. Clegg, J. M. Turner, E. Undersander, W. Galuba, A. Westbury, A. X. Chang et al. , “Habitat-matterport 3d dataset (hm3d): 1000 large-scale 3d environments for embodied ai,” in Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2) .[28] C. Yeshwanth, Y.-C. Liu, M. Nießner, and A. Dai, “Scannet++: A high-fidelity dataset of 3d indoor scenes,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 12–22. [29] T. Vu, K. Kim, T. M. Luu, T. Nguyen, and C. D. Yoo, “Softgroup for 3d instance segmentation on point clouds,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2022, pp. 2708– 2717. [30] X. Wu, L. Jiang, P.-S. Wang, Z. Liu, X. Liu, Y. Qiao, W. Ouyang, T. He, and H. Zhao, “Point transformer v3: Simpler faster stronger,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 4840–4851. [31] P. Nguyen, T. D. Ngo, E. Kalogerakis, C. Gan, A. Tran, C. Pham, and K. Nguyen, “Open3dis: Open-vocabulary 3d instance segmentation with 2d mask guidance,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 4018–4028. [32] D. Rozenberszki, O. Litany, and A. Dai, “Unscene3d: Unsupervised 3d instance segmentation for indoor scenes,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 19 957–19 967. [33] Z. Guo, R. Zhang, X. Zhu, Y. Tang, X. Ma, J. Han, K. Chen, P. Gao, X. Li, H. Li et al. , “Point-bind & point-llm: Aligning point cloud with multi-modality for 3d understanding, generation, and instruction following,” arXiv preprint arXiv:2309.00615 , 2023. [34] Z. Qi, R. Dong, S. Zhang, H. Geng, C. Han, Z. Ge, L. Yi, and K. Ma, “Shapellm: Universal 3d object understanding for embodied interaction,” in European Conference on Computer Vision . Springer, 2024, pp. 214– 238. [35] Z. Liu, J. Hou, X. Wang, X. Ye, J. Wang, H. Zhao, and X. Bai, “Lion: Linear group rnn for 3d object detection in point clouds,” Advances in Neural Information Processing Systems , vol. 37, pp. 13 601–13 626, 2024. [36] R. Xu, X. Wang, T. Wang, Y. Chen, J. Pang, and D. Lin, “Pointllm: Empowering large language models to understand point clouds,” in 
+
+European Conference on Computer Vision . Springer, 2024, pp. 131– 147. [37] Y. Man, S. Zheng, Z. Bao, M. Hebert, L. Gui, and Y.-X. Wang, “Lexicon3d: Probing visual foundation models for complex 3d scene understanding,” Advances in Neural Information Processing Systems ,vol. 37, pp. 76 819–76 847, 2024. [38] Z. Liao, Q. Xie, Y. Zhang, Z. Kong, H. Lu, Z. Yang, and Z. Deng, “Improved visual-spatial reasoning via r1-zero-like training,” arXiv preprint arXiv:2504.00883 , 2025. [39] F. Zhu, H. Wang, Y. Xie, J. Gu, T. Ding, J. Yang, and H. Jiang, “Struct2d: A perception-guided framework for spatial reasoning in large multimodal models,” arXiv preprint arXiv:2506.04220 , 2025. [40] K. Ouyang, Y. Liu, H. Wu, Y. Liu, H. Zhou, J. Zhou, F. Meng, and X. Sun, “Spacer: Reinforcing mllms in video spatial reasoning,” arXiv preprint arXiv:2504.01805 , 2025. [41] A. Jaech, A. Kalai, A. Lerer, A. Richardson, A. El-Kishky, A. Low, A. Helyar, A. Madry, A. Beutel, A. Carney et al. , “Openai o1 system card,” arXiv preprint arXiv:2412.16720 , 2024. [42] D. Guo, D. Yang, H. Zhang, J. Song, P. Wang, Q. Zhu, R. Xu, R. Zhang, S. Ma, X. Bi et al. , “Deepseek-r1 incentivizes reasoning in llms through reinforcement learning,” Nature , vol. 645, no. 8081, pp. 633–638, 2025. [43] K. Team, A. Du, B. Gao, B. Xing, C. Jiang, C. Chen, C. Li, C. Xiao, C. Du, C. Liao et al. , “Kimi k1. 5: Scaling reinforcement learning with llms,” arXiv preprint arXiv:2501.12599 , 2025. [44] Z. Shao, P. Wang, Q. Zhu, R. Xu, J. Song, X. Bi, H. Zhang, M. Zhang, Y. Li, Y. Wu et al. , “Deepseekmath: Pushing the limits of mathematical reasoning in open language models,” arXiv preprint arXiv:2402.03300 ,2024. [45] Y. Peng, G. Zhang, M. Zhang, Z. You, J. Liu, Q. Zhu, K. Yang, X. Xu, X. Geng, and X. Yang, “Lmm-r1: Empowering 3b lmms with strong reasoning abilities through two-stage rule-based rl,” arXiv preprint arXiv:2503.07536 , 2025. [46] D. Wu, F. Liu, Y.-H. Hung, and Y. Duan, “Spatial-mllm: Boosting mllm capabilities in visual-based spatial intelligence,” arXiv preprint arXiv:2505.23747 , 2025. [47] Y. Zhang, Z. Xu, Y. Shen, P. Kordjamshidi, and L. Huang, “Spartun3d: Situated spatial understanding of 3d world in large language models,” 
+
+arXiv preprint arXiv:2410.03878 , 2024. [48] X. Linghu, J. Huang, X. Niu, X. S. Ma, B. Jia, and S. Huang, “Multi-modal situated reasoning in 3d scenes,” Advances in Neural Information Processing Systems , vol. 37, pp. 140 903–140 936, 2024. [49] H. Fu, B. Cai, L. Gao, L.-X. Zhang, J. Wang, C. Li, Q. Zeng, C. Sun, R. Jia, B. Zhao et al. , “3d-front: 3d furnished rooms with layouts and semantics,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2021, pp. 10 933–10 942. [50] Y. Yang, F.-Y. Sun, L. Weihs, E. VanderBilt, A. Herrasti, W. Han, J. Wu, N. Haber, R. Krishna, L. Liu et al. , “Holodeck: Language guided generation of 3d embodied ai environments,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 16 227–16 237. [51] M. Deitke, D. Schwenk, J. Salvador, L. Weihs, O. Michel, E. VanderBilt, L. Schmidt, K. Ehsani, A. Kembhavi, and A. Farhadi, “Objaverse: A universe of annotated 3d objects,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2023, pp. 13 142–13 153. [52] J. Wang, M. Chen, N. Karaev, A. Vedaldi, C. Rupprecht, and D. Novotny, “Vggt: Visual geometry grounded transformer,” in Proceedings of the Computer Vision and Pattern Recognition Conference , 2025, pp. 5294– 5306. [53] A. Majumdar, A. Ajay, X. Zhang, P. Putta, S. Yenamandra, M. Henaff, S. Silwal, P. Mcvay, O. Maksymets, S. Arnaud et al. , “Openeqa: Embod-ied question answering in the era of foundation models,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,2024, pp. 16 488–16 498. [54] D. Azuma, T. Miyanishi, S. Kurita, and M. Kawanabe, “Scanqa: 3d question answering for spatial scene understanding,” in proceedings of JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 15 
+
+the IEEE/CVF conference on computer vision and pattern recognition ,2022, pp. 19 129–19 139. [55] X. Ma, S. Yong, Z. Zheng, Q. Li, Y. Liang, S.-C. Zhu, and S. Huang, “Sqa3d: Situated question answering in 3d scenes,” in The Eleventh International Conference on Learning Representations .[56] A. Hurst, A. Lerer, A. P. Goucher, A. Perelman, A. Ramesh, A. Clark, A. Ostrow, A. Welihinda, A. Hayes, A. Radford et al. , “Gpt-4o system card,” arXiv preprint arXiv:2410.21276 , 2024. [57] P. Sun, S. Lang, D. Wu, Y. Ding, K. Feng, H. Liu, Z. Ye, R. Liu, Y.-H. Liu, J. Wang et al. , “Spacevista: All-scale visual spatial reasoning from mm to km,” arXiv preprint arXiv:2510.09606 , 2025. [58] Z. Chen, W. Wang, Y. Cao, Y. Liu, Z. Gao, E. Cui, J. Zhu, S. Ye, H. Tian, Z. Liu et al. , “Expanding performance boundaries of open-source multimodal models with model, data, and test-time scaling,” 
+
+arXiv preprint arXiv:2412.05271 , 2024. [59] S. Bai, K. Chen, X. Liu, J. Wang, W. Ge, S. Song, K. Dang, P. Wang, S. Wang, J. Tang et al. , “Qwen2. 5-vl technical report,” arXiv preprint arXiv:2502.13923 , 2025. [60] S. Bai, Y. Cai, R. Chen, K. Chen, X. Chen, Z. Cheng, L. Deng, W. Ding, C. Gao, C. Ge et al. , “Qwen3-vl technical report,” arXiv preprint arXiv:2511.21631 , 2025. 
+
+Weili Guan received the master’s degree from National University of Singapore, and the Ph.D. degree from Monash University. She has about 6 years of working experience at the enterprise. She is currently a professor at the School of Information Science and Technology, Harbin Institute of Tech-nology (Shenzhen), China. Her research interests are multimedia computing and information retrieval. She has published more than 60 papers at the first-tier conferences and journals, like ACM MM, SIGIR, IEEE TPAMI and IEEE TIP. 
+
+Haoyu Zhang received the M.S. degree from Shan-dong University, in 2023. He is currently work-ing toward the doctor’s degree with the School of Computer Science and Technology, Harbin Institute of Technology (Shenzhen). His research interests include egocentric vision and spatial understanding. His work has been published in several top-tier conferences and journals, including IEEE TPAMI, CVPR, NeurIPS, ICML, AAAI, and ACM MM. He has served as a Reviewer for various conferences and journals, such as CVPR, ICCV, NeurIPS, ICML, ICLR, IEEE TPAMI, IEEE TKDE, and IEEE TMM. 
+
+Meng Liu received the M.S. degree in compu-tational mathematics from the Dalian University of Technology, China, in 2016. She is currently a Professor with the School of Computer Science and Technology, Shandong Jianzhu University. Her research interests include multimedia computing and information retrieval. Various parts of her work have been published in top forums and journals, such as SIGIR, MM, and IEEE Transactions on Image Processing. She has served as a Reviewer and a Subreviewer for various conferences and journals, such as MMM 2018, ACM MM 2018/2019, JVCI, and INS. 
+
+Qianlong Xiang received the B.E. degree from the School of Computer Science and Techonology, Harbin Institute of Techonology, Weihai, China, in 2022. He is currently pursuing the Ph.D. degree at the School of Information Science and Techonology, Harbin Institute of Techonology, Shenzhen, China. His research has been published in top-tier confer-ences including CVPR. He has served as a reviewer for various conferences and journals, such as IEEE TPAMI, ACM MM and IEEE TCSVT. His main research interests include model compression and generative AI. 
+
+Yaowei Wang received the PhD degree in computer science from Graduate University, Chinese Academy of Sciences, in 2005. He is currently an associate researcher with Pengcheng Laboratory, Shenzhen, China. He was an assistant professor with the School of Information and Electronics, Beijing Institute of Technology, and also was a guest assistant professor with the National Engineering Laboratory for Video Technology, Peking University, China. He has been the author or co-author of more than 50 refereed journals and conference papers. His research inter-ests include machine learning and multimedia content analysis and under-standing. 
+
+Liqiang Nie is currently the dean with the Depart-ment of Computer Science and Technology, Harbin Institute of Technology (Shenzhen). He received his B.Eng. and Ph.D. degree from Xi’an Jiaotong University and National University of Singapore (NUS), respectively. After PhD, Dr. Nie continued his research in NUS as a research fellow for three years. His research interests lie primarily in multi-media computing and information retrieval. Dr. Nie has co-/authored more than 100 papers and 4 books, received more than 34,000 Google Scholar citations. He is an AE of IEEE TKDE, IEEE TMM, IEEE TCSVT, ACM ToMM, and Information Science. Meanwhile, he is the regular area chair of ACM MM, NeurIPS, IJCAI and AAAI. He is a member of ICME steering committee. He has received many awards, like ACM MM and SIGIR best paper honorable mention in 2019, SIGMM rising star in 2020, TR35 China 2020, DAMO Academy Young Fellow in 2020, SIGIR best student paper in 2021, and ACM MM best paper in 2022.
