@@ -1,0 +1,554 @@
+Title: UniRef-UAV: A Multimodal Benchmark for Universal Referring in UAV Imagery
+
+URL Source: https://arxiv.org/pdf/2607.08267v1
+
+Published Time: Fri, 10 Jul 2026 00:40:27 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+> IEEE TRANSACTIONS ON MULTIMEDIA 1
+
+# UniRef-UAV: A Multimodal Benchmark for Universal Referring in UAV Imagery 
+
+Haibin Tian , Huichao Xie , Xuelin Qian , Member, IEEE , Ruitao Lu , Junwei Han , Fellow, IEEE , and Dingwen Zhang , Member, IEEE 
+
+Abstract —Unmanned aerial vehicles (UAVs) increasingly rely on visual grounding capabilities to localize task-relevant targets from diverse instructions in complex aerial scenes. Existing referring expression comprehension (REC) benchmarks and methods, however, are largely built around text-only queries and single-object outputs, which limits their applicability to practical UAV scenarios involving reference images, multimodal instructions, absent targets, and multiple valid target instances. To address this gap, we introduce Universal Referring , a gen-eralized UAV referring task that jointly expands the query modality and the output cardinality. We construct UniRef-UAV , a multimodal benchmark that supports text-only, image-only, and text+image queries with modality-dependent target cardinality, where text-only and text+image queries admit no-target, single-target, and multi-target grounding while image-only queries focus on existence-aware single-instance grounding. It also provides in-domain and cross-domain evaluation protocols for visual-query generalization. We further present UAV-URNet , a detection-style baseline that maps heterogeneous queries into a shared query space and predicts variable-size target sets through set prediction. Extensive experiments show that UAV-URNet provides a stable and reproducible baseline with more consistent no-target dis-crimination and a more lightweight, reproducible implementation than large general-purpose MLLMs. Additional domain analysis, query-representation analysis, and ablation studies demonstrate that multimodal queries help reduce visual-query ambiguity and promote a more unified query–target alignment space. The annotations, visual query crops/images, train/validation/test splits, evaluation scripts, and baseline code will be made publicly available to facilitate reproducible research. 
+
+Index Terms —UAV vision, multimodal referring, universal referring, visual grounding, variable-cardinality detection. 
+
+I. I NTRODUCTION 
+
+# UNMANNED aerial vehicles (UAVs) have become an im-portant mobile sensing platform for security patrols [1], emergency search and rescue [2], [3], traffic monitoring [4], and industrial inspection [5]. Related visual systems have also expanded toward large-scale scene reconstruction and open-vocabulary scene querying [6]–[8], but practical UAV operations still require interfaces that ground task instruc-tions to concrete visual targets. Beyond autonomous flight and navigation, these applications increasingly require UAVs                
+
+> Haibin Tian and Huichao Xie contributed equally to this work. Haibin Tian, Huichao Xie, Xuelin Qian, and Dingwen Zhang are with the School of Automation, Northwestern Polytechnical University, Xi’an 710072, China (e-mail: haibintian@foxmail.com; xiehuichao@mail.nwpu.edu.cn; xlqian@nwpu.edu.cn; zdw2006yyy@nwpu.edu.cn). Corresponding author: Dingwen Zhang. Ruitao Lu is with the College of Missile Engineering, Rocket Force Uni-versity of Engineering, Xi’an 710038, China (e-mail: lrt19880220@163.com). Junwei Han is with the School of Artificial Intelligence, Chongqing University of Posts and Telecommunications, Chongqing 400065, China (e-mail: jhan@nwpu.edu.cn).
+
+to interpret task-level instructions and associate them with specific visual targets in complex aerial scenes. For example, a rescue UAV must localize the indicated victim or area before approaching or delivering supplies, while a surveillance UAV must identify the particular person, vehicle, or object of interest before tracking or triggering an alarm. Such require-ments highlight referring understanding as a key capability for UAV-based multimodal scene understanding, where natural-language descriptions, reference images, or other multimodal cues must be grounded to the correct scene entities to support reliable downstream decision-making and action. Referring in UAV imagery differs substantially from con-ventional referring expression comprehension [9]. Aerial scenes usually cover large spatial extents and contain many distractor instances with similar semantics or appearances, making target disambiguation highly challenging. Moreover, referred targets in UAV imagery often occupy only a few pixels and exhibit low resolution, weak texture, and ambiguous boundaries, further complicating fine-grained recognition and localization [10]. These visual difficulties are coupled with limitations in the query modality. Language is effective for conveying high-level semantics, intent, and spatial relations, but it may be insufficient or cumbersome for rare, visually complex, or hard-to-verbalize targets. Visual references, in contrast, provide concrete appearance cues, yet lack the ab-straction and compositional expressiveness of text. Moreover, UAV tasks naturally exhibit variable target cardinality, where a single query may correspond to no object, one object, or multiple object instances. Collectively, query-modality limi-tations and variable target cardinality challenge the standard REC setting, which typically relies on text-only queries and assumes a single referred target [10]–[12], and motivate a more flexible multimodal referring framework for UAV scenarios. To address this issue, we formulate Universal Referring ,a more general UAV referring paradigm with multimodal query inputs and flexible-cardinality outputs , as illustrated in Fig. 1. Universal Referring supports text-only, image-only, and text+image queries, and adopts modality-dependent out-put cardinality: text-only and text+image queries allow zero-to-many targets, while image-only queries are restricted to existence-aware single-instance grounding due to prototype ambiguity. To instantiate this task, we introduce UniRef-UAV , a multi-modal benchmark built from 22 public UAV datasets spanning urban traffic, low-altitude flight, and open-field environments. On top of these images, we manually curate three query forms, namely text-only, image-only, and text+image queries, to cover both semantic and appearance-driven referring needs.  
+
+> This work has been submitted to the IEEE Transactions on Multimedia for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible. arXiv:2607.08267v1 [cs.CV] 9 Jul 2026 IEEE TRANSACTIONS ON MULTIMEDIA 2
+
+Query Modalities 
+
+> text-only
+> semantic description
+> Image-Only
+> visual prototype
+> Text+image
+> semantics + appearance
+
+Output Cardinality 
+
+1
+
+> Single
+> one instance
+
+N
+
+> Multi
+> multiple instances
+
+0
+
+> Zero
+> no instance
+
+Visual Query Domains 
+
+> in-domain
+> →
+> cross-domain
+> →
+
+Baseline & Evaluation     
+
+> Fine-tune
+> UAV-URNet Qwen3.5-0.8B
+> 1.0
+> 0.5
+> 0Precision@(F1=1, IoU>=0.5)
+> No-target accuracy (N-acc)
+> Zero-shot Text+image
+> Precision@(F1=1, IoU>=0.5)
+> Qwen3.6-27B
+> GLM-4.6V-FP8
+> Gemma-4-31B-it
+> InternVL3.5-38B
+> LocateAnything-3B
+> 0.30 .60
+
+Universal Referring 
+
+Text-only Query Image-only Query Text+Image Query    
+
+> helicopter above the skyline
+> a child riding a bicycle
+> woman standing on the bridge
+> shoes on the grass
+> Text query Image query Text+Image query Red boxes: target instances
+
+Fig. 1. Overview of Universal Referring and the UniRef-UAV benchmark. UniRef-UAV jointly expands UAV referring along query modality and modality-dependent target cardinality: text-only and text+image queries support no-target, single-target, and multi-target grounding, while image-only queries support existence-aware single-instance grounding. Representative UAV cases, in-domain/cross-domain visual-query settings, and baseline evaluation results are shown, where red boxes denote target instances. 
+
+UniRef-UAV further adopts flexible target-cardinality annota-tions, including no-target, single-target, and multi-target cases, resulting in more than 150K query samples. As a benchmark, it provides both in-domain and cross-domain evaluation settings, enabling systematic analysis of how well models localize referred targets when the visual query comes from the same or different UAV data domains. Beyond the UniRef-UAV benchmark, we further develop the UAV Universal Referring Network (UAV-URNet) as a baseline framework tailored to the proposed task. Unlike conventional REC models that regress one bounding box for each query, Universal Referring requires the model to determine whether the referred target exists and to predict a target set with variable cardinality. UAV-URNet addresses this requirement with a detection-style set prediction framework. It extracts semantic representations for both scene images and visual queries, projects heterogeneous query modalities into a shared query space, and performs query-conditioned candidate matching to produce a variable number of bounding boxes. By decoupling candidate box generation from cross-modal matching, UAV-URNet can flexibly integrate text-only, image-only, and text+image queries while explicitly handling no-target, single-target, and multi-target cases without substan-tial architectural modification. Experiments on UniRef-UAV show that this framework provides a stable, reproducible, and extensible baseline for multimodal universal referring in UAV scenarios. The main contributions of this paper are summarized as follows: 1) We identify the distinctive challenges of referring un-derstanding in UAV imagery and formulate Universal Referring , a generalized task that supports multimodal query inputs and modality-dependent output cardinality. 2) We build UniRef-UAV , a multimodal universal refer-ring benchmark for aerial scenes. It supports three query forms, i.e., text-only, image-only, and text+image queries, covers diverse UAV scenarios and output cardi-nalities, and provides both in-domain and cross-domain evaluation protocols. 3) We propose UAV-URNet , a detection-style baseline framework for the proposed task. The model accommo-dates different query modalities and predicts variable-size target sets, providing a simple, reproducible, and ex-tensible baseline for UAV multimodal referring research. II. R ELATED WORK 
+
+A. Classical Referring Expression Comprehension in UAV Perspective 
+
+SkyFind [10] represents an important step toward UAV-based REC by introducing a large-scale aerial benchmark with textual referring expressions. It highlights key challenges in aerial referring, including small-object localization, back-ground suppression, and long-range spatial relation modeling. Nevertheless, SkyFind still follows the conventional REC paradigm: the query is limited to text, and each expression IEEE TRANSACTIONS ON MULTIMEDIA 3                                                               
+
+> TABLE I COMPARISON OF EXISTING GREC-RELATED DATASETS AND UNI REF -UAV. Dataset Domain Img Obj Expr Avg Len. Expr Type Avg Res. Avg O/I MQ GREC gRefCOCO [13] Life 20.0K 60.7K 258.8K 4.98 Text 593 ×485 10.12% ×✓
+> VQDv1 [14] Life 122.8K 604.9K 621.5K 6.31 Text 578 ×484 18.48% ×✓
+> D3 [15] Life 10.6K 18.5K 422 6.31 Text 746 ×613 9.92% ×✓
+> SkyFind [10] UAV 35.6K 352.9K 1.0M 27.19 Text 2192 ×1305 0.74% ××
+> UniRef-UAV UAV 48.5K 210.3K 157.0K 4.73 Text/Image 1455 ×860 1.30% ✓✓
+> Note: Img, Obj, and Expr denote the numbers of images, annotated objects, and referring expressions, respectively. Avg Len. denotes the average expression length, Avg Res. denotes the average image resolution, and Avg O/I denotes the average object-to-image area ratio. MQ indicates multimodal query support, and GREC indicates whether variable-cardinality referring annotations are provided.
+
+is mainly associated with a single existing target. These limi-tations motivate a more general UAV referring formulation that supports multimodal queries and flexible output cardinality. 
+
+B. Generalized Referring Expression Comprehension 
+
+Representative GREC datasets, including gRefCOCO [13], VQDv1 [14], and D3 [15], relax the single-target assumption by allowing a textual query or description to correspond to zero, one, or multiple object instances. As summarized in Table I, however, these datasets remain centered on natural images and text-only queries, and therefore do not address the UAV-specific multimodal referring setting studied in this paper. 
+
+C. Multimodal Queried Grounding 
+
+Recent multimodal query-based detection and grounding methods have begun to combine textual prompts with visual exemplars, aiming to compensate for the limited descriptive capacity of text alone in fine-grained categories, long-tail ob-jects, and visually ambiguous concepts. MQ-Det [16] extends language-queried detection by incorporating visual exemplars into category representations. T-Rex2 [17] further unifies text prompts, visual prompts, and their combination within an open-set detector. By aligning textual and visual prompts through contrastive learning, it enables flexible switching among different prompt forms during detection. Language-vision prompt pre-training has also been explored for low-data instance segmentation [18], further reflecting the utility of coupling language and visual cues under limited supervision. Nevertheless, in MQ-Det and T-Rex2, multimodal queries mainly serve as class-level prompts or enhanced category pro-totypes: visual exemplars are used to define or refine a category concept, and the detector is expected to retrieve all instances belonging to that category. In contrast, Universal Referring aims to localize a query-specific target set determined by the joint semantics of text, image, or their combination. Image-only referring is also related to one-shot object detection, where a visual support example guides target localization [19]– [23]. However, these methods are typically category-oriented and evaluated by AP or mAP, whereas Universal Referring treats the query image as a visual semantic prototype and further requires existence-aware grounding under a set-level cardinality protocol. III. U NIVERSAL REFERRING TASK DEFINITION 
+
+A. Problem Formulation 
+
+We reformulate visual referring as a unified, modality-agnostic semantic grounding problem. Given an image I ∈
+
+RH×W ×3 and a query Q, the model is required to localize all image regions that satisfy the query condition. The output is a set of bounding boxes B = {bi}|B|
+
+> i=1
+
+, where each bi denotes one target instance grounded by Q.Unlike conventional referring expression comprehension, our formulation explicitly incorporates both the query modal-ity and the output cardinality into the task definition. 
+
+Input Query. We consider three query types: 
+
+Q ∈ { T, V, T + V }
+
+where T is a text description (text-only), V is a reference image (image-only), and T+V is a reference image with text (text+image). 
+
+Output Set. The model outputs a set of boxes whose valid cardinality depends on the query modality: 
+
+|B| ∈ C (Q), C(Q) = 
+
+(
+
+{0, 1, . . . , N }, Q ∈ { T, T+V },
+
+{0, 1}, Q = V .
+
+Classical REC and GREC can be viewed as special cases of Universal Referring. When Q = T and |B| = 1, the task reduces to conventional REC; when Q = T and |B| ∈ C(T) , it corresponds to GREC-style text-conditioned variable-cardinality grounding. Universal Referring further extends this space by introducing image-only and text+image queries, thereby jointly generalizing the query modality and modality-dependent output cardinality of visual referring. We assume that grounding semantics can be represented independently of query modality, while different modalities provide different levels of semantic specificity. As shown in Table II, the three query modalities differ in their semantic specification, boundary definition, hierarchy control, cardinal-ity, and grounding type. Text-only queries explicitly specify se-mantic concepts and set boundaries, enabling flexible ground-ing with variable cardinality. In contrast, image-only queries provide visual semantic prototypes without explicit seman-tic boundary specification, making multi-instance grounding fundamentally ambiguous. Therefore, image-only grounding is formulated as a prototype-based existence and localization problem, where the model retrieves the instance that best IEEE TRANSACTIONS ON MULTIMEDIA 4
+
+matches the query image under supervision-induced grounding semantics. Text+image queries combine symbolic semantic specification with visual appearance grounding, providing the strongest semantic disambiguation capability.                  
+
+> TABLE II COMPARISON OF THE THREE QUERY MODALITIES .Property Text-only Image-only Text+Image Semantic specification Explicit Implicit prototype Disambiguated Semantic boundary Well-defined Ambiguous Well-defined Hierarchy control Explicit Implicit Explicit Cardinality 0/1/Many 0/1 0/1/Many Grounding type Set Prototype Hybrid
+
+Universal Referring treats query modality as part of the task semantics rather than a superficial input variation. It exposes a fundamental coupling between semantic expressiveness and output cardinality, requiring different query forms to be uni-fied within one grounding formulation while respecting their distinct grounding assumptions. 
+
+B. Evaluation Metrics 
+
+Following the GREC evaluation protocol [9], [13], we evaluate Universal Referring by set-level exact correctness. For target-present samples, predictions are matched to ground-truth boxes through one-to-one assignment under IoU ≥ 0.5,and a sample is counted as correct only when the matched prediction set achieves F1 = 1 , where 
+
+F1 = 2TP 2TP + FP + FN .
+
+We report Precision@(F1=1, IoU ≥0.5) , defined as 
+
+Precision@(F1 = 1 , IoU ≥ 0.5) = 1
+
+|D| 
+
+X
+
+> j∈D
+
+I[F1 j = 1] ,
+
+where D denotes the evaluated sample set. For no-target samples, exact correctness is defined by empty-set prediction rather than by the box-matching F1 formula, and we report 
+
+N-acc on the no-target subset D0:
+
+N-acc = 1
+
+|D 0|
+
+X
+
+> j∈D 0
+
+I[| ˆBj | = 0] .
+
+This evaluation protocol jointly measures localization accuracy and output-cardinality correctness. For image-only queries, where multi-target cases are excluded by construction, the evaluation reduces to existence-aware single-instance ground-ing. In the following tables, we use P and N to denote Precision@(F1=1, IoU ≥0.5) and N-acc, respectively. IV. D ATASET CONSTRUCTION 
+
+A. Construction Necessity 
+
+To assess the dataset gap behind UAV universal referring, we conduct a cross-dataset training and evaluation study. Specifically, we train two representative variable-output refer-ring models, SimVG [24] and MMGroundingDINO [25], [26], on three different data sources: gRefCOCO [13] for general-ized referring in ground-view natural images, SkyFind [10] for conventional text-based UAV REC, and the proposed UniRef-UAV. All models are evaluated on the same UniRef-UAV text+image test set. This comparison reveals whether existing ground-view GREC data or text-only UAV REC data can be directly transferred to the proposed UAV universal referring setting.                                 
+
+> TABLE III CROSS -DATASET EVALUATION ON THE UNI REF -UAV TEST SET .Model Train P(%) N(%) SSkyFind 1.71 7.17 SgRefCOCO 10.59 5.13 SU-TI −18.47 3.12 DSkyFind 2.18 12.14 DgRefCOCO 11.61 29.29 DU-TI −46.64 50.97 D∗U-TI +54.64 93.53
+> Note: S and D denote SimVG ViT-L and MM-GroundDINO-Tiny, respectively. U-TI −and U-TI +denote UniRef-UAV text+image training split without and with image query inputs, respectively. ∗denotes the modified version extended according to the baseline design in Section V-B to support image query inputs.
+
+As shown in Table III, models trained on existing datasets transfer poorly to the UniRef-UAV test set. Training on gRefCOCO improves over SkyFind in most cases, indicat-ing that variable-cardinality supervision is helpful. However, both ground-view GREC data and conventional text-based UAV REC data remain far behind models trained directly on UniRef-UAV. In particular, incorporating image-query su-pervision further improves the MM-GroundDINO baseline, demonstrating the benefit of visual query information in the proposed setting. These results suggest that the performance gap is not merely caused by the domain shift between ground-view and aerial imagery. More importantly, it reflects a mismatch between existing referring datasets and the requirements of UAV uni-versal referring, where multimodal queries and variable target cardinalities must be handled jointly. Therefore, existing public referring datasets are insufficient for this task, and a dedicated multimodal UAV grounding benchmark such as UniRef-UAV is necessary. 
+
+B. Data Sources 
+
+UniRef-UAV is built from images collected from 22 publicly available UAV-related datasets. These sources cover a wide range of aerial scenarios, including urban traffic monitoring, low-altitude flight, and open-field environments, providing diverse visual content for the proposed universal referring setting. After frame sampling, uniform subsampling, visual deduplication, and manual quality filtering, UniRef-UAV con-tains 48,470 unique images. The complete source list and image filtering protocol are provided in the Data Source Details section of the supplementary material. IEEE TRANSACTIONS ON MULTIMEDIA 5
+
+C. Annotation Process 
+
+UniRef-UAV is annotated through a unified human-in-the-loop process designed around three requirements: mul-timodal query construction, variable-cardinality supervision, and image-level split control. Annotators first create text-only queries by selecting an object instance or an object set in the target image, drawing tight bounding boxes, and writing a natural-language expression that matches the selected targets in both semantics and cardinality. Text+image queries are then built by attaching a visual query example to the text annotation. Specifically, an in-domain visual query is cropped from a nearby frame in the same source environment and corresponds to the same object instance, whereas a cross-domain visual query is collected from an external web image with the same semantic meaning. Image-only queries are derived from the text+image annotations by removing the textual condition, while ambiguous multi-target samples are excluded. To reflect practical UAV operations, UniRef-UAV further in-cludes no-target queries, where the queried object is plausible in the scene category but absent from the current target image. Annotation quality is controlled through batch-wise mutual verification between annotator groups, and batches with an error rate above the preset threshold are returned for correc-tion. Finally, the dataset is split at the target image level under a 7:1:2 train/validation/test ratio, with source datasets, query modalities, and output-cardinality buckets balanced as much as possible. The complete annotation and splitting protocol is provided in the Annotation and Split Details section of the supplementary material. 
+
+D. Dataset Statistics 
+
+After the above annotation process, UniRef-UAV contains 
+
+48,470 images and 156,987 task-ready base queries . Among these queries, 110,869 correspond to a single target, 34,616 correspond to multiple targets, and 11,502 are no-target queries. The detailed target-cardinality distribution is reported in Table IV.           
+
+> TABLE IV TARGET -CARDINALITY DISTRIBUTION OF BASE QUERIES .Type #Queries Ratio no target 11,502 7.33% single target 110,869 70.62% multi target 34,616 22.05%
+> Total 156,987 100%
+
+Image resolution distribution. We visualize the image resolutions in Fig. 2d. UniRef-UAV covers a broad range of resolutions, from low-resolution frames to high-resolution aerial images, while maintaining a relatively balanced distri-bution. Common video resolutions, such as 1080p and 720p, account for a large portion of the dataset. 
+
+Text-query noun statistics. We analyze the semantic cov-erage of text queries through noun-frequency statistics. As shown in Fig. 2b and Fig. 2a, high-frequency nouns mainly                                   
+
+> TABLE V STATISTICS OF THE TRAINING ,VALIDATION ,AND TEST SPLITS .
+> Base queries
+> Setting Train Val. Test Total text-only 64,103 15,582 25,849 105,534 text+image 34,253 6,878 10,322 51,453 Total 98,356 22,460 36,171 156,987
+> Unique images
+> Setting Train Val. Test Total text-only 33,927 4,847 9,696 48,470 text+image 32,992 4,570 9,358 46,920 Total 33,927 4,847 9,696 48,470
+
+correspond to typical UAV targets, such as vehicles, pedestri-ans, and buildings, while the overall distribution spans diverse semantic categories. 
+
+(a) Veh.  
+
+> Art.
+> Road
+> People
+> Bldg.
+> Signs
+> Water
+> Act.
+> Spat.
+> Subst.
+> Group
+> Media
+> 0
+> 5k
+> 10k
+> 15k
+> 20k
+> 25k
+> 30k
+> Images
+
+(b) 10 5 10 4 10 3 10 2 10 1 10 0
+
+> BBox area ratio
+> 0
+> 2000
+> 4000
+> 6000
+> Count
+> P50=0.0024
+> P90=0.0265
+
+(c) 1000 2000 3000 4000  
+
+> Width (px)
+> 500
+> 1000
+> 1500
+> 2000
+> 2500
+> 3000
+> Height (px)
+> 0
+> 10
+> 20
+> 30
+> ratio (%)
+
+(d)  
+
+> Fig. 2. Dataset statistics of UniRef-UAV. (a) Noun-frequency word cloud. (b) Image-category distribution. (c) Bounding-box area ratio distribution. (d) Image-resolution distribution.
+
+Instance statistics. We further analyze the distribution of annotated bounding boxes in terms of both their quantity and spatial scale. Specifically, we compute the ratio between each bounding box area and its corresponding image area (Fig. 2c), and categorize all object instances into small , medium , and 
+
+large according to the standard COCO area definitions [27]. The resulting size statistics are summarized in Table VI. As shown in Fig. 2c, the bounding-box area ratios exhibit a near bell-shaped distribution, with most instances concentrated in a small relative-area range, i.e., approximately 0.001–0.010 of the image area. This observation is consistent with the small-object nature of UAV imagery. Meanwhile, Table VI shows that COCO-defined small objects do not dominate the dataset. This is mainly because many images in UniRef-UAV have high resolutions: even objects with small relative areas may exceed the COCO pixel-area threshold for small objects and IEEE TRANSACTIONS ON MULTIMEDIA 6
+
+are therefore categorized as medium or large. 
+
+Visual-query domain distribution. For the text+image query setting, we further report the distribution of in-domain and cross-domain visual queries under different target car-dinalities. As shown in Table VII, the ratio between in-domain and cross-domain queries is approximately 13:7 across no-target, single-target, and multi-target cases. This design supports a detailed evaluation of model behavior under both domain-consistent and domain-shifted visual queries.                             
+
+> TABLE VI BOUNDING -BOX SCALE DISTRIBUTION UNDER DIFFERENT QUERY SETTINGS .
+> Setting #Boxes Small Medium Large text–only 136,257 40,028 (29.38%) 60,904 (44.70%) 35,325 (25.93%) text+image 74,076 20,655 (27.88%) 32,637 (44.06%) 20,784 (28.06%)
+> TABLE VII VISUAL -QUERY DOMAIN DISTRIBUTION OF TEXT +IMAGE QUERIES UNDER DIFFERENT TARGET CARDINALITIES .
+> Target Cardinality In-domain Cross-domain Total 0 / no target 1,482 (62.32%) 896 (37.68%) 2,378 1 / single target 24,348 (65.45%) 12,852 (34.55%) 37,200 many / multi target 8,000 (67.37%) 3,875 (32.63%) 11,875
+> Total 33,830 (65.75%) 17,623 (34.25%) 51,453
+> Note: Percentages are computed within each target-cardinality row.
+
+V. U NIVERSAL REFERRING BASELINE 
+
+To validate the feasibility of Universal Referring in UAV imagery, UAV-URNet is designed as a unified baseline frame-work that handles multiple query modalities and variable-sized outputs (Fig. 3). The goal of UAV-URNet is not to pursue state-of-the-art performance, but to provide a simple, reproducible, and extensible reference implementation . Concretely, UAV-URNet is designed to: (i) support different query modalities within a single architecture and (ii) naturally accommodate predictions with varying cardinality. 
+
+A. Detection-Style Grounding Architecture 
+
+Our baseline implementation builds upon Ground-ingDINO [25], a classical detection-style grounding model that follows the 2+2 architecture [9]. This architecture consists of four main components: an image encoder, atext query encoder, a cross-modal interaction module, and a fusion decoder. The image and query encoders first extract modality-specific features, which are then fused through cross-modal interactions and decoded into bounding box predictions (see Fig. 3(a)). We adopt this detection-style set prediction paradigm be-cause it naturally matches the requirements of Universal Refer-ring. First, set prediction allows the model to output zero, one, or multiple boxes, which is essential for variable-cardinality grounding. Second, decoupling candidate generation from query-conditioned matching makes it easier to incorporate heterogeneous query representations without redesigning the box prediction pipeline. Third, the framework operates on query embeddings rather than modality-specific query formats, making it suitable for extending text-conditioned grounding to image-only and text+image queries. 
+
+B. Unified Query Representation 
+
+To support different query modalities within a shared back-bone, we adopt a unified query representation strategy rather than introducing new task-specific heads. Concretely, we map text-only, image-only, and text+image queries into a common query embedding space that can be directly consumed by the existing detection encoder and decoder. 
+
+Text-only Queries . For text-only queries (Fig. 3a), UAV-URNet directly follows the original GroundingDINO text-conditioned grounding pipeline, using the text embedding as the query representation without introducing additional modules. 
+
+Text+Image Queries . For multimodal queries that contain both text and image inputs (Fig. 3c), we extend the text query formulation into a multimodal query formulation by fusing the textual query with the visual query representation. Specifically, we encode the query image using the same vision backbone as the target image, and refine the textual representation via the same cross-attention layers that take the query image features as keys and values, analogous to the original cross-attention mechanism, where information from the target image and the text query is fused. This operation fuses the two query streams and produces a multimodal query representation. The refined multimodal query is then fed into the cross-modal refinement module, where it participates in the same cross-modal interactions as in the text-only case. This design preserves the text-driven inference process of the original framework, while allowing the query image to provide additional disambiguating context with minimal changes to the original architecture. 
+
+Image-only Queries . For image-only queries (Fig. 3b), the query image is encoded using the same vision encoder as the target image. The resulting feature representation is then projected through a lightweight MLP to match the dimension-ality of the textual embedding space. The projected feature is treated as a pseudo-token that serves as the query embedding during cross-modal matching. This simple adaptation allows image-based queries to be seamlessly integrated into the ex-isting grounding architecture without modifying the detection backbone or the decoding process. 
+
+C. Training Strategy 
+
+During training, we freeze both the visual encoder and the text encoder, and optimize only the cross-modal interaction layers, the projection MLPs, and the detection decoder. This strategy preserves the representation power of large-scale pretrained encoders while substantially reducing training cost and implementation complexity. It is important to empha-size that the purpose of this baseline is task validation rather than architectural optimization . We avoid introduc-ing specialized modules or auxiliary supervision so that the framework remains transparent and easy to reproduce. As IEEE TRANSACTIONS ON MULTIMEDIA 7Text Query Image  
+
+> Language Encoder Vision Encoder
+
+Textual Embedding 
+
+Image Feature 
+
+Cross Modal Refinement 
+
+> Fusion Decoder
+
+Box prediction 
+
+> Modal-agnostic Query Image Feature Query Anchor
+
+(a) text-only 
+
+Image Query Image  
+
+> (Shared Weights)
+> Vision Encoder Vision Encoder
+
+MLP 
+
+> Fake Textual Embedding
+
+Image Feature 
+
+Cross Modal Refinement 
+
+> Fusion Decoder
+
+Box prediction 
+
+> Modal-agnostic Query Image Feature Query Anchor
+
+(b) image-only 
+
+Text Query Image Query Image   
+
+> Language Encoder Vision Encoder Vision Encoder
+> (Shared Weights)
+> Cross Modal Refinement
+> Enhanced Multimodal Embedding
+> Image Feature
+
+Cross Modal Refinement 
+
+> Fusion Decoder
+
+Box prediction 
+
+> Modal-agnostic Query Image Feature Query Anchor
+
+(c) text+Image 
+
+> Fig. 3. Overview of UAV-URNet under three query types. Text-only queries follow the original GroundingDINO text-conditioned pipeline. Image-only queries are encoded by the shared vision encoder and projected through a lightweight MLP into the text-token dimension as pseudo query tokens. Text+image queries use the visual-query features to refine the text tokens, and the resulting multimodal query tokens are fed into the original cross-modal refinement and detection decoder.
+
+such, the proposed baseline provides a stable and extensible starting point for future research on universal referring in UAV imagery. We keep the original GroundingDINO set-prediction losses unchanged, including the matching and box regression objectives, and only adapt the query-representation pathway for visual and multimodal inputs. VI. E XPERIMENTS 
+
+A. Benchmark Results 
+
+We first evaluate representative methods from four families: 2+1 single-target transformers [24], [28], [29], detection-style grounding models [25], [30], general-purpose MLLMs [31]– [35], and grounding-oriented MLLMs [36]–[43]. The MLLM prompting and post-processing protocol is provided in the 
+
+MLLM Prompting and Post-processing Protocol section of the supplementary material. The detailed results under text-only, image-only, and text+image query settings are summarized in Table VIII. We summarize the main observations as follows: 1) 2+1 architectures are single-region grounding mod-els. TransVG [28], CLIP-VG [29], and SimVG [24] are all formulated for grounding one referred region per query under the standard REC protocol. As a result, they do not natively model variable-cardinality outputs or no-target cases in our benchmark. 2) Detection-style models do not natively support image-only queries in our benchmark. Although detection-style models can in principle output a variable number of boxes, current implementations are primarily text-conditioned and trained outside the UAV perspective. As a result, they remain weak under aerial imagery and do not natively support image-only queries. 3) Grounding-oriented MLLMs are weak at precise localization in our setting. Most of the evaluated grounding-oriented MLLMs are mostly trained under the classic REC regime (text-only, single-target) and lack supervision for multi-instance outputs, no-target discrimination, and multimodal queries, leading to poor localization on our benchmark. 4) General-purpose MLLMs transfer better across query modalities, but at a higher cost. Models such as GLM-4.6V [32] and Qwen3.6-27B [31] adapt more effectively to different query forms and outperform many grounding-oriented MLLMs, suggesting the ben-efit of large-scale and diverse multimodal pretraining. However, this advantage comes with substantially higher inference cost, which limits deployment efficiency and reproducibility. Overall, the results in Table VIII show that Universal Referring is challenging along both input modality and output structure, and that current detection-based and MLLM-based grounding approaches are not yet fully adequate for this setting, indicating the need for domain-specific fine-tuning and architectural adaptation. 
+
+B. Baseline Fine-Tuning Results 
+
+To better contextualize the task-specific behavior of UAV-URNet, we include a lightweight general-purpose MLLM as an auxiliary reference by fully fine-tuning Qwen3.5-0.8b [44] IEEE TRANSACTIONS ON MULTIMEDIA 8                                                                                                                                                                  
+
+> TABLE VIII PERFORMANCE OF REPRESENTATIVE METHODS UNDER TEXT -ONLY ,IMAGE -ONLY ,AND TEXT +IMAGE QUERY SETTINGS .Model Text-only Image-only Text+Image
+> PNPNPN
+> 2+1 single-target transformer
+> TransVG [28] 0.034 0.000 ––––CLIP-VG [29] 0.052 0.000 ––––SimVG [24] 0.045 0.002 ––––
+> Detection-style (2+2) transformer
+> MMGroundingDINO [26] 0.127 0.964 ––––MDETR [30] 0.049 0.024 ––––
+> MLLM
+> Qwen3.6-27B [31] 0.205 0.030 0.175 0.872 0.585 0.828 GLM-4.6V-Flash [32] 0.131 0.076 0.581 0.003 0.484 0.060 MiMo-VL-7B-RL [33] 0.047 0.000 0.105 0.000 0.095 0.000 InternVL3.5-38B [34] 0.148 0.006 0.441 0.147 0.384 0.233 GLM-4.6V-FP8 [32] 0.186 0.122 0.611 0.000 0.505 0.087 Gemma-4-31B-it [35] 0.204 0.840 0.553 0.375 0.462 0.837
+> Grounding-oriented MLLM
+> LLaVA-Grounding [36] 0.123 0.164 0.158 0.427 0.190 0.204 GLaMM [37] 0.098 0.203 0.094 0.024 0.210 0.078 Ferret-v2 [38] 0.129 0.536 0.077 1.000 0.060 1.000 KOSMOS-2 [39] 0.097 0.000 ––––Griffon [40] 0.011 0.011 0.061 0.741 0.040 0.628 Rex-Omni [41] 0.121 0.185 0.267 0.028 0.278 0.042 Rex-Seek [42] 0.142 0.006 0.451 0.028 0.409 0.000 LocateAnything-3B [43] 0.165 0.437 0.018 0.018 0.258 0.366
+> Note: “–” indicates that the model does not support the corresponding input modality in that query setting. TABLE IX FINE -TUNING COMPARISON BETWEEN QWEN 3.5-0.8 B AND UAV-URN ET UNDER DIFFERENT TEST SETTINGS .Model Text-only Image-only Text+Image Merged
+> PNPNPNPN
+> UAV-URNet (matched train) 0.518 0.975 0.582 0.299 0.546 0.935 ––UAV-URNet (merged train) 0.528 0.964 0.691 0.254 0.590 0.871 0.572 0.871 Qwen3.5-0.8b [44] (merged train) 0.320 0.492 0.772 0.324 0.675 0.340 0.485 0.456
+
+on UniRef-UAV, with the detailed training configuration pro-vided in the Implementation and Evaluation Details section of the supplementary material. Qwen3.5-0.8b is trained on the merged training split containing all three query forms and evaluated on text-only, image-only, text+image, and merged test splits. In contrast, UAV-URNet is reported under both the merged-training protocol and the modality-matched training protocol. The results are shown in Table IX. Compared with the fine-tuned Qwen3.5-0.8b, UAV-URNet achieves higher Precision@(F1=1, IoU ≥0.5) on the text-only and merged test splits, and consistently obtains much stronger N-acc across all settings. This suggests that a task-specific expert model is more reliable for output-cardinality control and no-target discrimination. In contrast, Qwen3.5-0.8b achieves higher Precision@(F1=1, IoU ≥0.5) under image-only and text+image settings, showing the potential of general-purpose MLLMs to exploit visual query cues for target-present cases. However, its substantially lower N-acc indicates a tendency to over-predict boxes and difficulty in recognizing absent targets. These results reveal a clear trade-off: UAV-URNet better fits the structured no-target and variable-cardinality requirements of Universal Referring, while Qwen3.5-0.8b shows stronger positive-sample visual matching in some visual-query settings. Modality-matched training and merged training exhibit different generalization behaviors. Matched training mainly benefits the corresponding test modality and yields higher N-acc in the text-only and text+image settings, indicating that modality-specific supervision can improve no-target dis-crimination under matched evaluation. However, it provides limited cross-modal sharing. By contrast, merged training improves Precision@(F1=1, IoU ≥0.5) across text-only, image-only, and text+image tests, and directly supports the merged test split. This indicates that different query forms provide complementary supervision and help the model learn a more unified query–target alignment space. For Universal Referring, where one model is expected to handle heterogeneous queries, merged training provides a more practical balance among localization accuracy, modality coverage, and model reuse. IEEE TRANSACTIONS ON MULTIMEDIA 9              
+
+> TABLE X CROSS -DOMAIN AND IN -DOMAIN EVALUATION OF UAV-URN ET UNDER VISUAL -QUERY SETTINGS .Test setting Visual query domain PN
+> Image-only cross-domain 0.582 0.259 in-domain 0.753 0.251 Text+Image cross-domain 0.472 0.883 in-domain 0.653 0.863
+
+C. Cross-Domain and In-Domain Visual Query Analysis. 
+
+To further analyze the domain generalization ability of visual queries, we evaluate the merged-trained UAV-URNet on image-only and text+image samples that contain visual query inputs. The results are reported in Table X. In-domain visual queries consistently yield better localization than cross-domain visual queries, indicating that visual prototypes are easier to match when the query and target scene share a similar domain. Adding text to the visual query improves no-target discrimination, suggesting that textual semantics provide a useful existence constraint. Overall, cross-domain visual queries remain a meaningful generalization challenge in UniRef-UAV: multimodal queries help suppress false positives, but they do not fully remove the localization degradation caused by cross-domain visual prototypes. 
+
+D. Common query embedding space. 
+
+To examine whether merged training induces a shared representation rather than simply memorizing separate query modalities, we conduct a modality-centered similarity analysis on the decoder-head query features; the full protocol and results are provided in the Common Query Embedding Space 
+
+section of the supplementary material. The analysis shows that paired queries across different modalities are consistently more similar than shifted nonpaired queries after modality-wise centering and normalization, with the strongest alignment observed between image-only and text+image queries. These results indicate that UAV-URNet maps different query forms into a comparable query space before detection, supporting a unified query–target alignment interface. 
+
+E. Ablation Study 
+
+We finally ablate key design choices in our query formula-tion. 
+
+Encoder sharing and freezing . Table XI compares dif-ferent sharing/freezing strategies in the text+image setting. The three strategies are numerically close, but they reveal different trade-offs. The freeze+share setting achieves the best Precision@(F1=1, IoU ≥0.5) value (0.546), indicating the strongest localization behavior under the text+image setting. Unfreezing the shared encoder slightly improves N-acc (0.945) but reduces Precision@(F1=1, IoU ≥0.5) (0.531). The no-share variant does not outperform the shared alternative on both metrics, so we retain freeze + share as a compact and stable default. 
+
+Effect of multimodal cues . We further isolate the effect of multimodal cues by: (i) augmenting image-only data with text  
+
+> TABLE XI ABLATION ON SHARING /FREEZING STRATEGY (TEXT +IMAGE SETTING ).
+
+Freeze Weights Share Weights P N
+
+✓ ✓ 0.546 0.935 
+
+× × 0.534 0.940 
+
+× ✓ 0.531 0.945 
+
+> TABLE XII EFFECT OF ADDING TEXT SUPERVISION TO IMAGE -ONLY DATA .
+
+Setting Precision@(F1=1, IoU ≥0.5) N-acc Image-only 0.582 0.299 Image-only + text query 0.618 0.840 
+
+> TABLE XIII EFFECT OF REMOVING IMAGE PROMPT FROM TEXT +IMAGE QUERIES .
+
+Setting Precision@(F1=1, IoU ≥0.5) N-acc Text+image 0.546 0.935 Text+image w/o image 0.464 0.510 
+
+queries, and (ii) removing the image prompt from text+image queries. As shown in Table XII, adding text supervision to image-only data raises Precision@(F1=1, IoU ≥0.5) from 0.582 to 0.618 and boosts N-acc from 0.299 to 0.840, showing that textual cues help the model handle ambiguous matches and no-target cases more reliably. Conversely, Table XIII shows that removing the image prompt from text+image queries degrades both Precision@(F1=1, IoU ≥0.5) (0.546 → 0.464) and N-acc (0.935 → 0.510), confirming that the visual prompt provides complementary grounding information that text alone cannot replace. Taken together, these ablations show that query-side modality design is a substantive factor in Universal Referring: text and image cues are complementary, and the proposed structured query formulation yields more robust behavior across target and no-target cases. VII. C ONCLUSION 
+
+This paper studies flexible referring understanding for UAV imagery and introduces Universal Referring , a task that jointly generalizes the query modality and the output cardinality of conventional REC. To support this setting, we construct UniRef-UAV, a multimodal benchmark covering text-only, image-only, and text+image queries with modality-dependent target cardinality. We further provide UAV-URNet as a detection-style baseline that maps heterogeneous queries into a shared representation space and predicts variable-size target sets through set prediction. Experiments show that existing grounding models and general-purpose MLLMs are not yet sufficient for this set-ting, especially under multimodal queries, variable target cardinality, and no-target cases in UAV scenes. UAV-URNet offers a stronger task-specific baseline, with more reliable no-target discrimination and a reproducible implementation. Nevertheless, cross-domain visual queries, precise localization IEEE TRANSACTIONS ON MULTIMEDIA 10 
+
+of small aerial objects, and hard no-target cases remain open challenges. Future work will extend UniRef-UAV along three directions. First, automated data construction pipelines with MLLM-assisted query generation, filtering, and verification may re-duce annotation cost and improve query diversity. Second, UAV-specialized MLLMs trained on larger aerial corpora may better combine semantic reasoning with fine-grained local-ization. Third, lightweight and accurate deployment-oriented models are needed to bring Universal Referring closer to real UAV platforms with limited onboard computation. REFERENCES [1] H. V. Dudukcu, M. Taskiran, and N. Kahraman, “Uav sensor data applications with deep neural networks: A comprehensive survey,” Eng. Appl. Artif. Intell. , vol. 123, p. 106476, 2023. [2] M. La Salandra, S. Nicotri, G. Donvito et al. , “A paradigm shift in processing large uav image datasets for emergency management of natural hazards,” Int. J. Appl. Earth Obs. Geoinf. , vol. 132, p. 103996, 2024. [3] Z. Song, Y. Li, S. Zhou, W. Tang, and L. Wang, “Mode-track: Robust multi-object tracking with motion decoupling in uav videos,” IEEE Trans. Multimedia , vol. PP, no. 99, pp. 1–11, 2026. [4] B.-H. Chen and S.-C. Huang, “An advanced moving object detection al-gorithm for automatic traffic monitoring in real-world limited bandwidth networks,” IEEE Trans. Multimedia , vol. 16, pp. 837–847, 2014. [5] Z. Yang, T. Zheng, X. Ni, Z. Yan, S. Liu, Y. Yu, H. Chen, Y. Wang, L. Fang, and W. Hao, “Open set industrial surface defect recognition with high frequency feature enhancement and class mutual-information constraint,” IEEE Trans. Multimedia , vol. 28, pp. 3755–3767, 2026. [6] Y. Gao, Y. Dai, H. Li, W. Ye, J. Chen, D. Chen, D. Zhang, and T. He, “CoSurfGS: 3D surface Gaussian splatting with collaborative distributed learning for large-scale scene reconstruction,” Int. J. Comput. Vis. , vol. 134, no. 5, p. 195, 2026. [7] S. Fei, X. Gao, J. Hu, X. Hou, L. Li, J. Ren, and D. Zhang, “Knowledge distillation-based distributed dynamic 3D Gaussian splatting for large-scale scene reconstruction,” Expert Syst. Appl. , vol. 305, p. 130758, 2026. [8] M. Wang, J.-C. Shi, S.-H. Guan, and H.-B. Duan, “Language embedded 3D gaussians for open-vocabulary scene querying,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 48, no. 4, pp. 4928–4941, 2026. [9] L. Xiao, X. Yang, X. Lan, Y. Wang, and C. Xu, “Toward visual grounding: A survey,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 48, no. 3, pp. 2749–2771, 2026. [10] K. Wang, G. Wu, X. Fu et al. , “Skyfind: A large-scale benchmark unveiling referring expression comprehension for uav,” IEEE Trans. Pattern Anal. Mach. Intell. , pp. 1–17, 2026. [11] S. Kazemzadeh, V. Ordonez, M. Matten, and T. Berg, “ReferItGame: Referring to Objects in Photographs of Natural Scenes,” in Proc. Conf. Empir. Methods Nat. Lang. Process. (EMNLP) , 2014, pp. 787–798. [12] J. Mao, J. Huang, A. Toshev, O. Camburu, A. Yuille, and K. Murphy, “Generation and comprehension of unambiguous object descriptions,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2016, pp. 11–20. [13] S. He, H. Ding, C. Liu, and X. Jiang, “GREC: Generalized referring expression comprehension,” arXiv preprint arXiv:2308.16182 , 2023. [14] M. Acharya, K. Jariwala, and C. Kanan, “Vqd: Visual query detection in natural scenes,” in Proc. NAACL-HLT , 2019, pp. 1955–1961. [15] C. Xie, Z. Zhang, Y. Wu et al. , “Described object detection: Liberating object detection with flexible expressions,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 36, 2023, pp. 79 095–79 107. [16] Y. Xu, M. Zhang, C. Fu et al. , “Multi-modal queried object detection in the wild,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 36, 2023, pp. 4452–4469. [17] Q. Jiang, F. Li, Z. Zeng et al. , “T-rex2: Towards generic object detection via text-visual prompt synergy,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2024, pp. 38–57. [18] D. Zhang, H. Li, D. He, N. Liu, L. Cheng, J. Wang, and J. Han, “Unsupervised pre-training with language-vision prompts for low-data instance segmentation,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 47, no. 10, pp. 8642–8657, 2025. [19] B. Kang, Z. Liu, X. Wang, F. Yu, J. Feng, and T. Darrell, “Few-shot object detection via feature reweighting,” in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2019, pp. 8420–8429. [20] L. Karlinsky, J. Shtok, S. Harary et al. , “Repmet: Representative-based metric learning for classification and few-shot object detection,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2019, pp. 5192–5201. [21] A. Osokin, D. Sumin, and V. Lomakin, “OS2D: One-stage one-shot object detection by matching anchor features,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2020, pp. 635–652. [22] T.-I. Hsieh, Y.-C. Lo, H.-T. Chen, and T.-L. Liu, “One-shot object detection with co-attention and co-excitation,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , vol. 32, 2019. [23] D.-J. Chen, H.-Y. Hsieh, and T.-L. Liu, “Adaptive image transformer for one-shot object detection,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2021, pp. 12 247–12 256. [24] M. Dai, L. Yang, Y. Xu et al. , “SimVG: A simple framework for visual grounding with decoupled multi-modal fusion,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS) , 2024. [25] S. Liu, Z. Zeng, T. Ren et al. , “Grounding DINO: Marrying DINO with grounded pre-training for open-set object detection,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2024, pp. 38–55. [26] X. Zhao, Y. Chen, S. Xu et al. , “An open and comprehensive pipeline for unified object grounding and detection,” arXiv:2401.02361 , 2024. [27] T.-Y. Lin, M. Maire, S. Belongie et al. , “Microsoft COCO: Common objects in context,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2014, pp. 740–755. [28] J. Deng, Z. Yang, T. Chen, W. Zhou, and H. Li, “TransVG: End-to-end visual grounding with transformers,” in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2021, pp. 1769–1779. [29] L. Xiao, X. Yang, F. Peng, M. Yan, Y. Wang, and C. Xu, “CLIP-VG: Self-paced curriculum adapting of CLIP for visual grounding,” IEEE Trans. Multimedia , vol. 26, pp. 4334–4347, 2024. [30] A. Kamath, M. Singh, Y. LeCun, G. Synnaeve, I. Misra, and N. Carion, “MDETR: Modulated detection for end-to-end multi-modal understand-ing,” in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2021, pp. 1780–1790. [31] Qwen Team, “Qwen3.6-27B: Flagship-level coding in a 27B dense model,” Model release blog, April 2026. [32] GLM-V Team, W. Hong, W. Yu et al. , “GLM-4.5V and GLM-4.1V-Thinking: Towards versatile multimodal reasoning with scalable rein-forcement learning,” arXiv:2507.01006 , 2025. [33] Xiaomi LLM-Core Team, Z. Yue, Z. Lin et al. , “MiMo-VL technical report,” arXiv:2506.03569 , 2025. [34] W. Wang, Z. Gao, L. Gu et al. , “InternVL3.5: Advancing open-source multimodal models in versatility, reasoning, and efficiency,” 
+
+arXiv:2508.18265 , 2025. [35] Google DeepMind, “Gemma 4 model card,” Hugging Face model card, 2026. [36] H. Zhang, H. Li, F. Li et al. , “LLaVA-Grounding: Grounded visual chat with large multimodal models,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2024, pp. 19–35. [37] H. Rasheed, M. Maaz, S. Shaji et al. , “GLaMM: Pixel grounding large multimodal model,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2024, pp. 13 009–13 018. [38] H. Zhang, H. You, P. Dufter, B. Zhang, C. Chen, H.-Y. Chen, T.-J. Fu, W. Y. Wang, S.-F. Chang, Z. Gan, and Y. Yang, “Ferret-v2: An improved baseline for referring and grounding with large language models,” arXiv preprint arXiv:2404.07973 , 2024. [39] Z. Peng, W. Wang, L. Dong et al. , “Kosmos-2: Grounding multimodal large language models to the world,” in Proc. Int. Conf. Learn. Repre-sent. (ICLR) , 2024. [40] Y. Zhan, Y. Zhu, Z. Chen et al. , “Griffon: Spelling out all object locations at any granularity with large language models,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2024, pp. 405–422. [41] Q. Jiang, J. Huo, X. Chen et al. , “Detect anything via next point prediction,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2026, pp. 25 472–25 483. [42] Q. Jiang, L. Wu, Z. Zeng, T. Ren, Y. Xiong, Y. Chen, Q. Liu, and L. Zhang, “Referring to any person,” in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV) , 2025, pp. 21 667–21 678. [43] S. Wang, S. Liu, Y. Kuang et al. , “LocateAnything: Fast and high-quality vision-language grounding with parallel box decoding,” 
+
+arXiv:2605.27365 , 2026. [44] Qwen Team, “Qwen3.5: Towards native multimodal agents,” February 2026. [Online]. Available: https://qwen.ai/blog?id=qwen3.5 SUPPLEMENTARY MATERIAL 1
+
+# Supplementary Material 
+
+I. D ATA SOURCE DETAILS 
+
+UniRef-UAV is built from images collected from 22 publicly available UAV-related datasets listed in Table I. These sources cover a wide range of aerial scenarios, including urban traffic monitoring, low-altitude flight, and open-field environments, providing diverse visual content for the proposed universal referring setting. For video-based datasets, we first sample frames at fixed temporal intervals and then merge them with images from static-image datasets. From the merged pool, we uniformly subsample 65,000 images. To reduce redundancy, we further perform visual-similarity-based deduplication to remove near-duplicate frames. During manual annotation, images that are severely blurred or difficult to recognize are discarded. After filtering, UniRef-UAV contains 48,470 unique images. II. A NNOTATION AND SPLIT DETAILS 
+
+A. Query Annotation 
+
+We first construct text-only queries. For each image, annota-tors select either a specific object instance or a group of objects and annotate them with tight bounding boxes. They then write a natural-language description that uniquely specifies the selected target set. Each annotation is further checked to ensure that the textual query is consistent with the annotated boxes in both semantics and target cardinality. Based on the text-only annotations, we further construct text+image queries by adding visual query examples. We consider two types of visual-query domains: in-domain and cross-domain. For in-domain queries, the visual query and the target image come from the same source environment and correspond to the same object instance. Specifically, annotators are provided with a nearby reference frame, sampled within a 2–3 second temporal window around the target image, and are asked to crop the target object from that frame as the image query. The source frame used for the visual query is excluded from the UniRef-UAV target image pool, which preserves instance-level consistency while avoiding image-level duplication between visual queries and dataset images. If no suitable reference crop can be found, the sample is retained only as a text-only query. For cross-domain queries, the visual query and the target image come from different scenes. Annotators search for an image from the web that matches the semantic meaning of the text query, and use it as the visual query. This design allows UniRef-UAV to evaluate both instance-consistent vi-sual grounding and cross-domain visual prototype grounding. Cross-domain visual queries are intended to serve as semantic visual prototypes rather than instance-consistent references. During annotation, a web-collected query image is accepted only when it matches the core semantic category and key vi-sual attributes specified by the text query, without requiring the same instance, scene, or data domain. For text+image queries, the text defines the semantic boundary and the image provides complementary appearance cues; for image-only queries, we retain only unambiguous zero- or single-target cases to re-duce prototype-induced semantic ambiguity. For web-collected visual queries, we only retain images from copyright-free sources or sources that permit academic redistribution. 
+
+B. Output Cardinality Design 
+
+To cover variable target cardinalities, UniRef-UAV explic-itly includes no-target queries, where the queried object is absent from the target image despite being plausible in UAV scenarios. This setting reflects practical UAV operations in which a requested target may not appear in the current field of view. Concretely, we randomly select 15% of the images for no-target annotation. For each selected image, we first retrieve three candidate queries from the existing annotation pool, prioritizing queries from the same source dataset. A candidate is accepted only when its referred target is semantically absent from the selected target image. If none of the retrieved candidates satisfies this requirement, annotators manually con-struct a text+image query describing an object that could reasonably appear in the scene but is not present, with the corresponding image query collected from the web. Finally, each no-target query is assigned an in-domain or cross-domain label according to whether the image query and the target image originate from the same dataset. 
+
+C. Quality Control 
+
+To ensure annotation quality, we organize the labeling process in multiple batches and apply a mutual verification protocol. In each batch, annotators are divided into two groups, denoted as Group A and Group B, and the data are split accordingly. Each group completes the annotations for its assigned subset and independently reviews 10% of the annotations produced by the other group. If the error rate identified in the reviewed subset exceeds 1%, the entire batch annotated by the corresponding group is returned for correction and subsequently rechecked. 
+
+D. Image-only Query Design 
+
+Image-only queries are derived from the text+image anno-tations by removing the textual condition. Accordingly, they follow the same training and testing splits as the text+image query setting. As discussed in the main manuscript, visual queries alone may introduce ambiguity when multiple targets satisfy the same appearance cue. Therefore, for the image-only setting, we exclude samples with multi-target annotations and retain only cases with unambiguous target cardinality. 
+
+E. Data Splitting Strategy 
+
+A key requirement in constructing the dataset splits is to pre-serve the query distribution while preventing image-level leak-age across training and testing. We adopt a train/validation/test ratio of 7:1:2 and perform the split under the following constraints: SUPPLEMENTARY MATERIAL 2
+
+TABLE I SUMMARY OF UAV-RELATED DATA SOURCES USED IN UNI REF -UAV. 
+
+Dataset Data Annotation Target Class Viewpoint Images AUAIR [1] Image 2D bbox, tracking/trajectory, scene metadata Traffic participants: car, bus, truck, pedestrian, bicycle, etc. UAV top/oblique views over ground scenes 32,823 DTB70 [2] Video Single-object bbox tracking Generic single objects, including pedestrians, vehicles, boats, and animals UAV following ground targets 15,777 DarkTrack2021 [3] Video Single-object bbox tracking Generic single objects in nighttime scenes UAV following ground targets 6,627 ERA [4] Video Event-level labels / clip labels Event and action categories UAV top/oblique views over ground scenes 2,864 ITCVD [5] Image 2D bbox / detection Vehicles UAV top views over ground scenes 173 MDOT [6] Video Multi-object bbox tracking Vehicles, pedestrians, and other multiple targets Cooperative multi-UAV top/oblique views over ground scenes 259,793 Manipal-UAV-Person [7] Image 2D bbox detection Person UAV top/oblique views over ground scenes 13,462 UAV123 [8] Video Single-object bbox tracking Generic single objects UAV following ground targets 113,476 UAVDT [9] Video 2D bbox detection + MOT + attributes Vehicles as the main class, with some pedestrian and crowd scenes UAV top/oblique views over ground scenes 2,488 UAVDark135 [10] Video Single-object bbox tracking Generic single objects in nighttime scenes UAV following ground targets 125,466 UAVID [11] Image Semantic segmentation masks Building, road, vegetation, car, human, etc. UAV top views over ground scenes 690 UAVVD [12] Video Rotated boxes / detection + tracking Vehicles UAV top views over ground scenes 1,685 VTUAV [13] Video Single-object bbox tracking (RGB/thermal-infrared) Generic single objects UAV following ground targets 1,667,629 VisDrone2019 [14] Image/Video 2D bbox detection, MOT, SOT Pedestrian, people, bicycle, car, van, bus, truck, etc. UAV top/oblique views over ground scenes 315,519 WebUAV3M [15] Image/Video Tracking / retrieval-style sequence data Generic single objects and open-category targets UAV following ground targets 753,595 aeroscapes [16] Image 2D bbox / segmentation, mainly for aerial semantics Buildings, roads, vehicles, natural objects, etc. UAV/low-altitude aerial top views over ground scenes 6,538 DAC-SDC22 [17] Image 2D bbox detection Small vehicles / road targets UAV top views over ground scenes 93,520 ntut4k [18] Image 2D bbox detection Human UAV top views over ground scenes 4,095 tacuav [19] Image 2D bbox / traffic object detection Vehicles and road traffic targets UAV top views over ground scenes 16,363 UDD [20] Image 2D keypoints / sparse annotation / aerial reconstruction related labels Urban scene objects and building structures UAV top views over ground scenes 301 VDD [21] Image Semantic segmentation masks Multiple road and urban scene classes UAV top views over ground scenes 400 vsai [22] Image 2D bbox detection Vehicles UAV top views over ground scenes, multiple viewpoints 9,075 
+
+1) Each target image, together with all its associated queries, is treated as the minimum sampling unit. 2) The same target image is assigned to only one split. 3) The split ratio is maintained within each source dataset to preserve source-level diversity. 4) Within each source dataset, the distributions of text-only and text+image queries are kept as balanced as possible. 5) Within each source dataset, the target-cardinality buck-ets, i.e., zero, one, and many targets, are also balanced as much as possible. Based on these principles, we use a source-wise stratified splitting strategy. For each source dataset, target images are first divided according to the predefined ratio. Since different target images may contain different numbers and types of queries, the initial split may still lead to imbalanced query modalities or target-cardinality distributions. We therefore it-eratively exchange target-image units between splits to reduce this imbalance, with priority given to the test set, followed by the validation set and then the training set. The procedure stops when the above constraints are satisfied or no further improvement can be obtained. III. I MPLEMENTATION AND EVALUATION DETAILS 
+
+We implement UAV-URNet on top of Grounding-DINO [23] using the 2+2 detection-style architecture described in the main manuscript. The implementation is based on MMDe-tection [24]. We initialize from pretrained weights of MMGroundingDINO-tiny [25] and fine-tune for 5 epochs with a batch size of 4 per GPU on 2× RTX 4090 GPUs. UAV-URNet is optimized with AdamW using a learning rate of 
+
+1 × 10 −4 and a weight decay of 1 × 10 −4, with gradient clipping at a maximum norm of 0.1. We adopt a MultiStepLR scheduler with milestone at epoch 3, decay factor 0.1, and end epoch 5. On the query side, we adopt the unified representa-tion strategy from the main manuscript, supporting text-only, image-only, and text+image queries with minimal changes to the original detector. We follow the GREC protocol and report Precision@(F1=1, IoU ≥0.5) and N-acc. The score threshold of 0.6 is selected according to validation-set performance and is kept fixed for UAV-URNet, query modalities, and test settings. SUPPLEMENTARY MATERIAL 3
+
+For the training and evaluation of multimodal large language models (MLLMs), models with up to 2 billion parameters are deployed and evaluated on an RTX 4090 GPU. Models exceeding 2 billion parameters are evaluated on two RTX PRO 6000 GPUs, with vLLM [26] adopted for efficient inference. As an auxiliary reference for the fine-tuning analysis, we also perform full-parameter fine-tuning of Qwen3.5-0.8b [27] on UniRef-UAV using two RTX PRO 6000 GPUs and compare it with UAV-URNet in the main manuscript. Qwen3.5-0.8b is trained for 3 epochs: the first 2 epochs use the augmented training split, and the final epoch switches to the clean training split. We use a per-device training batch size of 2 and gradient accumulation of 4 on two GPUs, resulting in an effective global batch size of 16. 
+
+A. MLLM Prompting and Post-processing Protocol 
+
+For all MLLM baselines, we use model-specific grounding templates to adapt the prompt to each model’s native ground-ing interface. The prompts follow the modality-dependent cardinality of UniRef-UAV: text-only and text+image queries may return a set of matching boxes, whereas image-only queries return at most one box. The Qwen3.6-27B zero-shot baseline uses the same Qwen-style bbox_2d template as the Qwen3.5-0.8B fine-tuning pipeline, while MiMo-VL follows a Qwen2.5-VL-style bbox_2d interface with /no_think .The output format is parsed according to each model’s origi-nal response convention; for example, Gemma-style box_2d 
+
+responses are interpreted in the documented [y1, x1, y2, x2] order before conversion to the unified xyxy format. If the model output cannot be parsed into a valid bounding-box set, we treat it as an empty prediction. This prompting and post-processing protocol is kept fixed across all methods and query settings to ensure fair and reproducible evaluation. The complete model-specific prompt templates and parsing rules will be released together with the evaluation code. Table II gives representative prompt examples for Qwen-style and Gemma-style grounding interfaces.                   
+
+> TABLE II REPRESENTATIVE MLLM PROMPT EXAMPLES.
+> Model style Query form Prompt example Qwen-style text-only Locate “ {query }” in the image. Output JSON only as a list like [ {‘‘bbox_2d’’ : [x1, y1, x2, y2],
+> ‘‘label’’ : “ {query }”}] or [] . Use normalized relative coordinates scaled to 1000. Qwen-style image-only You are given two images in order. Image-1 is the full scene. Image-2 is the reference object. Locate in Image-1 the most similar object of the same category as Image-2. Output JSON only as a list like [{‘‘bbox_2d’’ : [x1, y1, x2, y2], ‘‘label’’ :“target” }] or [] . Use normalized relative coordinates scaled to 1000. Return at most one box. If no similar object of the same category exists, return [] .Qwen-style text+image You are given two images in order. Image-1 is the full scene. Image-2 is the reference object. Locate in Image-1 the object matching Image-2 and the description “ {query }”. Output JSON only as a list like [{‘‘bbox_2d’’ : [x1, y1, x2, y2], ‘‘label’’ :“{query }”}] or [] . Use normalized relative coordinates scaled to 1000. Gemma-style text-only What are the bounding boxes for all objects matching “{query }” in the image? Respond with JSON only as a list like [ {‘‘box_2d’’ : [y1, x1, y2, x2],
+> ‘‘label’’ : “ {query }”}] or [] . Coordinates refer to an image size of 1000 ×1000, relative to the input dimensions. Gemma-style image-only Image-1 is the full scene. Image-2 is the visual reference crop. What’s the bounding box in Image-1 for the object most similar to Image-2 and of the same category? Respond with JSON only as a list like [{‘‘box_2d’’ : [y1, x1, y2, x2], ‘‘label’’ :“target” }] or [] . Coordinates refer to an image size of 1000 ×1000, relative to the input dimensions. Return at most one box. If no similar same-category object exists, return [] .Gemma-style text+image Image-1 is the full scene. Image-2 is the visual reference crop. What are the bounding boxes in Image-1 for all objects that match Image-2 and “{query }”? Respond with JSON only as a list like [{‘‘box_2d’’ : [y1, x1, y2, x2], ‘‘label’’ :“{query }”}] or [] . Coordinates refer to an image size of 1000 ×1000, relative to the input dimensions.
+
+IV. C OMMON QUERY EMBEDDING SPACE 
+
+The main manuscript reports the key finding that UAV-URNet maps text-only, image-only, and text+image queries into a comparable representation space before detection. Here we provide the full analysis protocol and quantitative results. We use the query features fed into the decoder head as the analysis target. All three query forms are extracted under the same target scene image to avoid additional confounding from scene variation. Let qmi ∈ Rd denote the query representation of the i-th test sample under modality m ∈ {T, V, TV },where T, V, and TV correspond to text-only, image-only, and text+image, respectively. In our implementation, d = 256 .Since raw cosine similarity can be affected by modality-specific mean shifts, we first mean-center and normalize each modality: 
+
+˜qmi = qmi − μm
+
+∥qmi − μm∥2
+
+, μm = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+qmi , (1) where N = 5000 is the number of randomly sampled queries from the test split. For any two query modalities a and b, we compare the paired similarity from the same sample with the SUPPLEMENTARY MATERIAL 4
+
+shifted nonpaired similarity from mismatched samples: 
+
+spair (a, b ) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+(˜ qai )⊤ ˜qbi , (2) 
+
+sshift (a, b ) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+(˜ qai )⊤ ˜qbπ(i). (3) Here π(i)̸ = i indexes a shifted nonpaired query. If the three query forms are mapped into a shared semantic space, cross-modal representations from the same sample should be closer than those from mismatched samples: 
+
+∆( a, b ) = spair (a, b ) − sshift (a, b ) > 0. (4) All three modality pairs satisfy this condition on the test split. To avoid losing information by reporting only the gap, Table III presents the paired similarity, the shifted nonpaired similarity, and their difference. 
+
+TABLE III MODALITY-CENTERED QUERY SIMILARITY ON THE TEST SPLIT. 
+
+Pair Paired Shifted Gap Paired > Shifted T ↔ V 0.2271 -0.0012 0.2283 73.5% T ↔ TV 0.2572 -0.0025 0.2598 66.4% V ↔ TV 0.6457 -0.0024 0.6481 94.9% 
+
+Note: T, V, and TV denote text-only, image-only, and text+image, respec-tively. 
+
+The paired similarities are consistently higher than the corresponding shifted nonpaired similarities, while the shifted values remain close to zero (−0.0012 , −0.0025 , and 
+
+−0.0024 ). This indicates that mismatched queries only exhibit background-level similarity after removing modality-specific mean bias. The strongest evidence comes from the alignment between image-only and text+image queries: spair (V , TV) = 0.6457 , compared with sshift (V , TV) = −0.0024 . Moreover, 
+
+94 .9% of paired samples have higher similarity than shifted samples. These results show that the visual representation and the multimodal representation of the same query are close in the decoder/head input space. Therefore, the unified query rep-resentation does not simply rely on modality-specific shortcuts. Instead, by mapping text-only, image-only, and text+image queries into the same detection interface, UAV-URNet learns a comparable and shareable common query embedding space, leading to a more unified query–target alignment. REFERENCES [1] I. Bozcan and E. Kayacan, “Au-air: A multi-modal unmanned aerial vehicle dataset for low altitude traffic surveillance,” in Proc. IEEE Int. Conf. Robot. Autom. (ICRA) , 2020, pp. 8504–8510. [2] S. Li and D.-Y. Yeung, “Visual object tracking for unmanned aerial vehicles: A benchmark and new motion models,” in Proc. AAAI Conf. Artif. Intell. , vol. 31, no. 1, 2017. [3] J. Ye, C. Fu, Z. Cao, S. An, G. Zheng, and B. Li, “Tracker meets night: A transformer enhancer for uav tracking,” IEEE Robot. Autom. Lett. ,vol. 7, no. 2, pp. 3866–3873, 2022. [4] L. Mou, Y. Hua, P. Jin, and X. X. Zhu, “Era: A data set and deep learning benchmark for event recognition in aerial videos [software and data sets],” IEEE Geosci. Remote Sens. Mag. , vol. 8, no. 4, pp. 125–133, 2020. [5] M. Yang, “Itcvd dataset,” DATA Archiving and Networked Services (DANS), Jan. 2020. [6] P. Zhu, J. Zheng, D. Du, L. Wen, Y. Sun, and Q. Hu, “Multi-drone-based single object tracking with agent sharing network,” IEEE Trans. Circuits Syst. Video Technol. , vol. 31, no. 10, pp. 4058–4070, 2021. [7] K. Akshatha, A. Karunakar, B. Satish Shenoy, K. Phani Pavan, V. D. Chinmay et al. , “Manipal-uav person detection dataset: A step towards benchmarking dataset and algorithms for small object detection,” ISPRS J. Photogramm. Remote Sens. , vol. 195, pp. 77–89, 2023. [8] M. Mueller, N. Smith, and B. Ghanem, “A benchmark and simulator for uav tracking,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2016, pp. 445–461. [9] D. Du, Y. Qi, H. Yu et al. , “The unmanned aerial vehicle benchmark: Object detection and tracking,” in Proc. Eur. Conf. Comput. Vis. (ECCV) ,2018, pp. 375–391. [10] B. Li, C. Fu, F. Ding, J. Ye, and F. Lin, “All-day object tracking for unmanned aerial vehicle,” IEEE Trans. Mobile Comput. , vol. 22, no. 8, pp. 4515–4529, 2023. [11] Y. Lyu, G. Vosselman, G.-S. Xia, A. Yilmaz, and M. Y. Yang, “Uavid: A semantic segmentation dataset for uav imagery,” ISPRS J. Photogramm. Remote Sens. , vol. 165, pp. 108–119, 2020. [12] J. Wang, S. Simeonova, and M. Shahbazi, “Orientation-and scale-invariant multi-vehicle detection and tracking from unmanned aerial videos,” Remote Sensing , vol. 11, no. 18, p. 2155, 2019. [13] P. Zhang, J. Zhao, D. Wang, H. Lu, and X. Ruan, “Visible-thermal uav tracking: A large-scale benchmark and new baseline,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR) , 2022, pp. 8886–8895. [14] P. Zhu, L. Wen, D. Du, X. Bian, H. Fan, Q. Hu, and H. Ling, “Detection and tracking meet drones challenge,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 44, no. 11, pp. 7380–7399, 2022. [15] C. Zhang, G. Huang, L. Liu et al. , “Webuav-3m: A benchmark for unveiling the power of million-scale deep uav tracking,” IEEE Trans. Pattern Anal. Mach. Intell. , vol. 45, no. 7, pp. 9186–9205, 2023. [16] I. Nigam, C. Huang, and D. Ramanan, “Ensemble knowledge transfer for semantic segmentation,” in Proc. IEEE Winter Conf. Appl. Comput. Vis. (WACV) , 2018, pp. 1499–1508. [17] X. Xu, X. Zhang, B. Yu et al. , “Dac-sdc: Design automation conference system design contest 2022 dataset,” 2022. [18] K.-T. Lai, Y.-T. Chung, J.-J. Su, C.-H. Lai, and Y.-H. Huang, “Ai wings: An aiot drone system for commanding ardupilot uavs,” IEEE Syst. J. ,vol. 17, no. 2, pp. 2213–2224, 2023. [19] S. Bemposta Rosende, S. Ghisler, J. Fern´ andez-Andr´ es, and J. S´ anchez-Soriano, “Dataset: traffic images captured from uavs for use in training machine vision algorithms for traffic management,” Data , vol. 7, no. 5, p. 53, 2022. [20] Y. Chen, Y. Wang, P. Lu, Y. Chen, and G. Wang, “Large-scale structure from motion with semantic constraints of aerial images,” in Proc. Chin. Conf. Pattern Recognit. Comput. Vis. (PRCV) , 2018, pp. 347–359. [21] W. Cai, K. Jin, J. Hou, C. Guo, L. Wu, and W. Yang, “Vdd: Varied drone dataset for semantic segmentation,” J. Vis. Commun. Image Represent. ,vol. 109, p. 104429, 2025. [22] J. Wang, X. Teng, Z. Li, Q. Yu, Y. Bian, and J. Wei, “Vsai: A multi-view dataset for vehicle detection in complex scenarios using aerial images,” 
+
+Drones , vol. 6, no. 7, p. 161, 2022. [23] S. Liu, Z. Zeng, T. Ren et al. , “Grounding DINO: Marrying DINO with grounded pre-training for open-set object detection,” in Proc. Eur. Conf. Comput. Vis. (ECCV) , 2024, pp. 38–55. [24] K. Chen, J. Wang, J. Pang et al. , “MMDetection: Open mmlab detection toolbox and benchmark,” arXiv:1906.07155 , 2019. [25] X. Zhao, Y. Chen, S. Xu et al. , “An open and comprehensive pipeline for unified object grounding and detection,” arXiv:2401.02361 , 2024. [26] W. Kwon, Z. Li, S. Zhuang, Y. Sheng, L. Zheng, C. H. Yu, J. E. Gonzalez, H. Zhang, and I. Stoica, “Efficient memory management for large language model serving with PagedAttention,” in Proc. ACM Symp. Operating Syst. Princ. (SOSP) , 2023, pp. 611–626. [27] Qwen Team, “Qwen3.5: Towards native multimodal agents,” February 2026. [Online]. Available: https://qwen.ai/blog?id=qwen3.5

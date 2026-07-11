@@ -1,0 +1,507 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-11T20:35:20.551085+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 9,
+    "quick_skim_target": 11,
+    "quick_selected": 9
+  },
+  "deep_dive": [
+    {
+      "id": "2607.03941v1",
+      "source": "arxiv",
+      "title": "WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control",
+      "abstract": "Recent advances in embodied AI have established robot foundation models (RFMs) as the dominant approach for generalist robotic systems to date. By leveraging imitation learning on extensive robot demonstrations, RFMs have achieved impressive capabilities in mapping visual observations and language instructions to continuous robotic actions. However, current RFMs lack an inherent ability to reason about physical dynamics and the causal effects of robot behaviors on the 3D physical world. This creates a fundamental mismatch between 2D-centric visual perception and 3D-centric embodied interaction, severely limiting the generalization ability of RFMs in real-world tasks.To address this gap, we present WSA$_1$, a novel RFM built upon proposed 3D-Centric World-Spatial-Action modeling paradigm. It not only learns 3D world-aware visual thought for future robot behaviors, but also models mutual constraints between 3D world state transitions and robotic actions to enhance behavior generalization. Notably, WSA$_1$ achieves highly data-efficient pre-training with 6k hours of expert demonstration data (only 1k hours from real robot), while delivering competitive manipulation performance (93% success rate) on RoboTwin2.0 simulation benchmark and achieving +20% average boosted performance over state-of-the-art RFMs on real-world robot control tasks. These results reveal that generalizable RFM can be attained without large-scale real robot data when paired with 3D-centric world-action joint modeling, which offers a practical and affordable pathway to generalist robotic systems.",
+      "authors": [
+        "Jiahao Jiang",
+        "Jianing Zhang",
+        "Zhenhan Yin",
+        "Ruidong Chen",
+        "Sen Wang",
+        "Zhaoshu Yu",
+        "Pengpeng Zeng",
+        "Xiaofeng Cao",
+        "Xuanhan Wang",
+        "Jingkuan Song",
+        "Heng Tao Shen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-04T16:26:39+00:00",
+      "link": "https://arxiv.org/pdf/2607.03941v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "3D-centric world-spatial-action model for robot control",
+      "llm_evidence_cn": "面向机器人控制的3D中心世界-空间-动作模型",
+      "llm_evidence": "面向机器人控制的3D中心世界-空间-动作模型",
+      "canonical_evidence": "面向机器人控制的3D中心世界-空间-动作模型",
+      "llm_tldr_en": "Proposes WSA1, a robot foundation model with 3D-centric reasoning about physical dynamics and causal effects, bridging 2D perception and 3D interaction.",
+      "llm_tldr_cn": "当前机器人基础模型缺乏对物理动力学和3D世界的因果推理能力，导致2D感知与3D交互不匹配。本文提出WSA1，一种以3D为中心的机器人基础模型，通过显式建模世界-空间-动作三元组，使机器人能够推理行为对3D物理世界的因果影响。实验表明该方法在多种真实任务上显著提升了泛化能力，为具身智能的世界模型应用提供了新范式。",
+      "llm_tldr": "当前机器人基础模型缺乏对物理动力学和3D世界的因果推理能力，导致2D感知与3D交互不匹配。本文提出WSA1，一种以3D为中心的机器人基础模型，通过显式建模世界-空间-动作三元组，使机器人能够推理行为对3D物理世界的因果影响。实验表明该方法在多种真实任务上显著提升了泛化能力，为具身智能的世界模型应用提供了新范式。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.07395v1",
+      "source": "arxiv",
+      "title": "When Prompts Ignore Structure: Graph-Based Attribute Reasoning for Calibrated VLMs",
+      "abstract": "Reliable confidence estimation remains a key limitation of test-time adaptation in vision-language models (VLMs), where prompt tuning improves zero-shot accuracy but often degrades calibration due to entropy-driven overconfidence. Prior approaches mitigate this using LLM-derived class attributes and contrastive regularization, yet treat attributes independently, ignoring their relational structure. We propose ARGTCA, which represents (class, attribute) pairs as nodes in a Symbolic Attribute Graph and trains a Graph Attention Network (GAT) using contrastive objectives to produce structurally informed embeddings that capture inter-attribute dependencies. We introduce two attribute selection strategies: ARGTCA-DIV for intra-class diversity and ARGTCA-DISC for inter-class discrimination. Experiments across nine benchmarks show that ARGTCA-DIV reduces average Expected Calibration Error (ECE) by approximately ~37% over baselines, while ARGTCA-DISC consistently performs as the second-best variant, reducing average ECE by approximately ~17% over baselines. These results suggest that modeling symbolic attribute interactions provides a principled approach for reliable test-time adaptation in VLMs.",
+      "authors": [
+        "Tanay Sodha",
+        "Aditya Sharma",
+        "Ramya Hebbalaguppe",
+        "Vinti Agarwal",
+        "Pranav Murthy Yeluripaty"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-08T13:31:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.07395v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "graph-based attribute reasoning for calibrated VLMs",
+      "llm_evidence_cn": "基于图属性的视觉语言模型校准推理",
+      "llm_evidence": "基于图属性的视觉语言模型校准推理",
+      "canonical_evidence": "基于图属性的视觉语言模型校准推理",
+      "llm_tldr_en": "Proposes ARGTCA, a graph-based attribute reasoning method that captures inter-attribute dependencies via a Symbolic Attribute Graph and Graph Attention Network to improve calibration of test-time adapted VLMs.",
+      "llm_tldr_cn": "本文提出ARGTCA方法，利用符号属性图和图注意力网络捕捉属性间依赖关系，以改进测试时自适应视觉语言模型的校准性能。通过对比学习得到结构化嵌入，并引入两种属性选择策略，有效解决了属性独立假设导致的过度自信问题。",
+      "llm_tldr": "本文提出ARGTCA方法，利用符号属性图和图注意力网络捕捉属性间依赖关系，以改进测试时自适应视觉语言模型的校准性能。通过对比学习得到结构化嵌入，并引入两种属性选择策略，有效解决了属性独立假设导致的过度自信问题。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.08059v1",
+      "source": "arxiv",
+      "title": "When Thinking Hurts: Epistemic Signals in the Reasoning Chains of Visual Language Models",
+      "abstract": "Uncertainty quantification for visual language models (VLMs) conventionally targets the answer token distribution. We provide the first three-family empirical characterisation of answer entropy behaviour in thinking-mode VLMs. Running four models on identical POPE adversarial samples, we find three qualitatively distinct patterns: Qwen3-VL-8B-Thinking shows complete collapse (ans H AUROC = 0.492); GLM-4.1V-9B-Thinking shows no collapse (0.716); and InternVL3-8B shows selective thinking (chains on only 50% of samples, ans H = 0.675 full / 0.602 thinking-only). Across all three thinking-mode models, thinking chain entropy outperforms answer entropy on the subset where chains are generated (0.647, 0.759, 0.608 vs. 0.492, 0.716, 0.602 respectively), suggesting chain signals are the more reliable predictor whenever chains are present. This holds strongly for Qwen and GLM, but with only marginal and statistically unreliable advantage for InternVL3 (n_FP = 17). A 300-sample VQAv2 pilot confirms chain entropy (0.680) outperforms answer entropy (0.595) on VQAv2 questions, with the gap largest for free-form answers (0.733 vs. 0.467). On harder reasoning tasks (HallusionBench) both Qwen models show moderate signal (approx. 0.64), consistent with incomplete pre-commitment on difficult questions. We additionally document structured abstention affecting 12-22% of queries with asymmetry toward absent-object queries, and a practical abstention gate raising accuracy from 71.0% to 93.8% at 62.7% coverage with no additional inference cost.",
+      "authors": [
+        "Mayank Singal"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T02:19:16+00:00",
+      "link": "https://arxiv.org/pdf/2607.08059v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "thinking-mode VLMs reasoning chains",
+      "llm_evidence_cn": "思考模式视觉语言模型推理链",
+      "llm_evidence": "思考模式视觉语言模型推理链",
+      "canonical_evidence": "思考模式视觉语言模型推理链",
+      "llm_tldr_en": "This paper characterizes epistemic signals in reasoning chains of thinking-mode VLMs, revealing three distinct patterns of answer entropy behavior and showing that thinking chain entropy outperforms answer entropy for uncertainty quantification.",
+      "llm_tldr_cn": "本文首次对思考模式视觉语言模型（VLM）的推理链中认知信号进行了三族经验表征。在POPE对抗样本上测试四个模型，发现三种不同的答案熵行为模式：完全崩溃、无崩溃和选择性思考。结果表明，在生成推理链的子集上，思考链熵在不确定性量化上优于答案熵，为VLM推理行为提供了新见解。",
+      "llm_tldr": "本文首次对思考模式视觉语言模型（VLM）的推理链中认知信号进行了三族经验表征。在POPE对抗样本上测试四个模型，发现三种不同的答案熵行为模式：完全崩溃、无崩溃和选择性思考。结果表明，在生成推理链的子集上，思考链熵在不确定性量化上优于答案熵，为VLM推理行为提供了新见解。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.04334v1",
+      "source": "arxiv",
+      "title": "Do GUI Agents Believe Their Eyes? Diagnosing State-Belief Reliance on Pixels versus Structure",
+      "abstract": "Multimodal GUI agents read an interface through two redundant channels: the rendered pixels of a screenshot and a serialized structure such as a DOM or accessibility tree. Before acting, an agent forms a belief about the current interface state, but existing benchmarks score task success, element grounding, or attack resistance and do not ask whether that belief is drawn from the pixels. We formalize visual state reliance, the attribution of a state belief to pixels, structure, or priors, and measure it with paired single-channel interventions over 310 real web, mobile, and desktop probes. Every probe is scored by deterministic forced choice, with no model-generated item and no model judge. Our central metric is the Perception-Fusion Gap, the fraction of probes a model perceives correctly yet resolves toward structure under conflict. Across five models from three vendors, textual state beliefs defer to structure while image-only accuracy stays near ceiling, and Perception-Fusion Gap is positive for every model; non-text identity, by contrast, stays largely pixel-bound. The substitution is specific to the serialized-text and indexed-action channel, and coordinate-action agents are largely immune. For textual conflicts, a white-box ablation traces the effect to a single copied structural value, and in two live environments the conflict drives wrong actions and real task failure. Visual state reliance therefore gives a measurable diagnostic of whether agent state beliefs are visually grounded, and the errors it exposes propagate to actions.",
+      "authors": [
+        "Guijia Zhang",
+        "Harry Yang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-07-05T14:33:29+00:00",
+      "link": "https://arxiv.org/pdf/2607.04334v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Evaluation of visual state reliance for GUI agents",
+      "llm_evidence_cn": "GUI代理视觉状态依赖的评估基准",
+      "llm_evidence": "GUI代理视觉状态依赖的评估基准",
+      "canonical_evidence": "GUI代理视觉状态依赖的评估基准",
+      "llm_tldr_en": "Proposes a diagnostic benchmark for GUI agents measuring whether state beliefs come from pixels or structure, with controlled interventions on 310 probes.",
+      "llm_tldr_cn": "现有基准只评估任务成功率，不关心GUI代理的状态信念来源。本文提出视觉状态依赖归因框架，通过配对单通道干预测试310个真实界面，用确定性二选一评分，核心指标是感知融合度。该工作揭示了代理对像素/结构的依赖模式，为视觉推理评估提供新视角。",
+      "llm_tldr": "现有基准只评估任务成功率，不关心GUI代理的状态信念来源。本文提出视觉状态依赖归因框架，通过配对单通道干预测试310个真实界面，用确定性二选一评分，核心指标是感知融合度。该工作揭示了代理对像素/结构的依赖模式，为视觉推理评估提供新视角。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.04610v1",
+      "source": "arxiv",
+      "title": "RoboVista: Evaluating Vision Language Models for Diverse Robot Applications",
+      "abstract": "Diverse applications for robotics, such as industry and agriculture, require robots to operate across various embodiments, changing visual conditions, and complex planning. Vision-Language Models (VLMs) offer a promising foundation for general-purpose and interpretable robotic reasoning. Aligning VLMs with diverse robot applications requires a modular understanding of the individual decision components that underlie robotic behavior. Capturing such structure is challenging for conventional robot benchmarks that are primarily based on teleoperated, end-to-end datasets. We propose Robot Question Answering (RQA), a modular evaluation framework and RoboVista, a benchmark curated from real robotic systems, research papers, and expert annotations. RoboVista contains 474 Visual Question Answering (VQA) instances with human annotated reasoning and covers 39 unique task types in agricultural, industrial, domestic, surgical robotics, autonomous driving, and open robot datasets. Experiments on RoboVista show that state-of-the-art VLMs exhibit substantial gaps. Physical robot experiments suggest strong correlation between RoboVista performance and real-world task execution.",
+      "authors": [
+        "Shuangyu Xie",
+        "Kaiyuan Chen",
+        "Ziyang Chen",
+        "Simeon Adebola",
+        "Yixuan Huang",
+        "Zehan Ma",
+        "Tianshuang Qiu",
+        "Wentao Yuan",
+        "Dhruv Shah",
+        "Pannag R. Sanketi",
+        "Ken Goldberg"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-06T02:34:56+00:00",
+      "link": "https://arxiv.org/pdf/2607.04610v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "evaluation benchmark for vision-language models in robotics",
+      "llm_evidence_cn": "面向机器人的视觉语言模型评估基准",
+      "llm_evidence": "面向机器人的视觉语言模型评估基准",
+      "canonical_evidence": "面向机器人的视觉语言模型评估基准",
+      "llm_tldr_en": "Presents RoboVista, a benchmark and RQA framework for evaluating VLMs on diverse robot applications, including modular understanding of decision components.",
+      "llm_tldr_cn": "针对机器人在多变环境下使用VLM的评估难题，本文提出RoboVista基准和RQA模块化评估框架，涵盖工业、农业等场景。通过从真实机器人系统、研究论文和专家注释中构建数据集，支持对视觉语言模型的决策组件进行解耦评估。实验表明该框架能有效揭示不同VLM在机器人任务中的能力差异。",
+      "llm_tldr": "针对机器人在多变环境下使用VLM的评估难题，本文提出RoboVista基准和RQA模块化评估框架，涵盖工业、农业等场景。通过从真实机器人系统、研究论文和专家注释中构建数据集，支持对视觉语言模型的决策组件进行解耦评估。实验表明该框架能有效揭示不同VLM在机器人任务中的能力差异。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.05911v1",
+      "source": "arxiv",
+      "title": "Progressive Reasoning with Primitive Correction for Compositional Zero-Shot Learning",
+      "abstract": "Compositional Zero-Shot Learning (CZSL) aims to combine known attributes and objects as primitives for recognizing previously unseen attribute-object pairs. Prior works either predict attributes and objects independently, missing their strong contextual dependency, or use unidirectional conditional modeling (e.g., object-guided attribute prediction), which is prone to error propagation. We propose PRPC, a Progressive Reasoning framework with Primitive Correction, which explicitly models the bidirectional dependency between attributes and objects via step-wise inference. PRPC performs mutual correction of primitives to suppress prediction errors in earlier steps. Specifically, we formulate CZSL as structured, Q&A-style Chain-of-Thought reasoning process and constrain the MLLM to follow predefined semantic steps to generate intermediate decisions. To further enhance the reliability and logical consistency of intermediate reasoning, we introduce reinforcement learning post-training with a GRPO-based objective, providing step-level rewards aligned with the progressive inference procedure. Extensive experiments on three CZSL benchmarks demonstrate that PRPC achieves state-of-the-art performance, validating the effectiveness of progressive reasoning and bidirectional correction for robust compositional generalization.",
+      "authors": [
+        "Ziyi Chen",
+        "Haoyan Shi",
+        "Sunhan Xu",
+        "Congyan Lang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T07:06:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05911v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "progressive reasoning with primitive correction for compositional zero-shot learning",
+      "llm_evidence_cn": "基于原始纠正的渐进推理用于组合零样本学习",
+      "llm_evidence": "基于原始纠正的渐进推理用于组合零样本学习",
+      "canonical_evidence": "基于原始纠正的渐进推理用于组合零样本学习",
+      "llm_tldr_en": "Proposes PRPC, a progressive reasoning framework with primitive correction for CZSL, modeling bidirectional dependency between attributes and objects via chain-of-thought.",
+      "llm_tldr_cn": "针对组合零样本学习中属性-对象依赖缺失和误差传播问题，本文提出PRPC框架，通过逐步推理显式建模双向依赖，并引入原始纠正机制抑制早期错误。将CZSL建模为结构化问答形式的思维链推理，实验表明在多个数据集上显著优于现有方法，验证了渐进推理和纠正的有效性。",
+      "llm_tldr": "针对组合零样本学习中属性-对象依赖缺失和误差传播问题，本文提出PRPC框架，通过逐步推理显式建模双向依赖，并引入原始纠正机制抑制早期错误。将CZSL建模为结构化问答形式的思维链推理，实验表明在多个数据集上显著优于现有方法，验证了渐进推理和纠正的有效性。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08267v1",
+      "source": "arxiv",
+      "title": "UniRef-UAV: A Multimodal Benchmark for Universal Referring in UAV Imagery",
+      "abstract": "Unmanned aerial vehicles (UAVs) increasingly rely on visual grounding capabilities to localize task-relevant targets from diverse instructions in complex aerial scenes. Existing referring expression comprehension (REC) benchmarks and methods, however, are largely built around text-only queries and single-object outputs, which limits their applicability to practical UAV scenarios involving reference images, multimodal instructions, absent targets, and multiple valid target instances. To address this gap, we introduce \\emph{Universal Referring}, a generalized UAV referring task that jointly expands the query modality and the output cardinality. We construct \\emph{UniRef-UAV}, a multimodal benchmark that supports text-only, image-only, and text+image queries with modality-dependent target cardinality, where text-only and text+image queries admit no-target, single-target, and multi-target grounding while image-only queries focus on existence-aware single-instance grounding. It also provides in-domain and cross-domain evaluation protocols for visual-query generalization. We further present \\emph{UAV-URNet}, a detection-style baseline that maps heterogeneous queries into a shared query space and predicts variable-size target sets through set prediction. Extensive experiments show that UAV-URNet provides a stable and reproducible baseline with more consistent no-target discrimination and a more lightweight, reproducible implementation than large general-purpose MLLMs. Additional domain analysis, query-representation analysis, and ablation studies demonstrate that multimodal queries help reduce visual-query ambiguity and promote a more unified query--target alignment space. The annotations, visual query crops/images, train/validation/test splits, evaluation scripts, and baseline code will be made publicly available to facilitate reproducible research.",
+      "authors": [
+        "Haibin Tian",
+        "Huichao Xie",
+        "Xuelin Qian",
+        "Ruitao Lu",
+        "Junwei Han",
+        "Dingwen Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-09T09:09:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.08267v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal benchmark for universal referring in UAV",
+      "llm_evidence_cn": "无人机通用引用多模态基准",
+      "llm_evidence": "无人机通用引用多模态基准",
+      "canonical_evidence": "无人机通用引用多模态基准",
+      "llm_tldr_en": "Introduces UniRef-UAV, a multimodal benchmark for universal referring in UAV images, supporting multiple query modalities and output cardinality.",
+      "llm_tldr_cn": "针对现有无人机视觉定位基准仅考虑纯文本查询和单目标输出的局限性，本文提出了通用引用任务及UniRef-UAV基准。该基准支持文本、图像及文本+图像多模态查询，并允许输出多个目标实例，更贴近实际无人机场景。评估了多个模型，揭示了处理多模态查询的挑战，为无人机视觉定位研究提供了新资源。",
+      "llm_tldr": "针对现有无人机视觉定位基准仅考虑纯文本查询和单目标输出的局限性，本文提出了通用引用任务及UniRef-UAV基准。该基准支持文本、图像及文本+图像多模态查询，并允许输出多个目标实例，更贴近实际无人机场景。评估了多个模型，揭示了处理多模态查询的挑战，为无人机视觉定位研究提供了新资源。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "evaluation benchmarks for visual reasoning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.06620v1",
+      "source": "arxiv",
+      "title": "SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts",
+      "abstract": "Recent Multimodal Large Language Models (MLLMs) struggle to bridge the representational gap between 2D semantic understanding and 3D spatial geometry. Existing 3D-aware models either rely on costly 3D-specific data or utilize RGB-only inputs with heuristic sampling and monolithic, shallow fusion, which respectively disrupt essential spatiotemporal connectivity and induce modality contention across diverse spatial tasks. To overcome these bottlenecks, we introduce SpaR3D-MoE, an end-to-end framework that enables adaptive spatial reasoning by equipping MLLMs with geometry-aware capabilities from only sparse RGB inputs. First, we propose an adaptive spatiotemporal manifold sampling mechanism that constructs a geometry-aware spatiotemporal graph to extract informative keyframes, effectively mitigating sequence redundancy while preserving the scene's topological connectivity. Second, we introduce the heterogeneous geometry-inductive Mixture-of-Experts driven by an instruction-pose aware router, which adaptively routes multimodal tokens to specialized experts, resolving the cross-modal contention inherent in monolithic fusion. Extensive experiments on VSI-Bench, ScanQA, and SQA3D demonstrate that our method achieves state-of-the-art performance. Notably, SpaR3D-MoE achieves the highest average score of 63.5 on VSI-Bench, outperforming the strongest baseline by 7.8 absolute points, alongside relative improvements of 35.4% and 51.4% in Route Plan and Relative Direction tasks, respectively.",
+      "authors": [
+        "Haida Feng",
+        "Hao Wei",
+        "Haolin Wang",
+        "Shiwei Li",
+        "Chade Li",
+        "Yihong Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-07T09:27:38+00:00",
+      "link": "https://arxiv.org/pdf/2607.06620v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "adaptive 3D spatial reasoning from sparse views with geometry-inductive MoE",
+      "llm_evidence_cn": "基于几何归纳混合专家网络的自适应稀疏视图3D空间推理",
+      "llm_evidence": "基于几何归纳混合专家网络的自适应稀疏视图3D空间推理",
+      "canonical_evidence": "基于几何归纳混合专家网络的自适应稀疏视图3D空间推理",
+      "llm_tldr_en": "Introduces SpaR3D-MoE, an end-to-end framework for adaptive 3D spatial reasoning from sparse RGB inputs, using geometry-inductive Mixture-of-Experts.",
+      "llm_tldr_cn": "针对MLLM在2D语义与3D几何之间的表征鸿沟，本文提出SpaR3D-MoE，一个端到端框架，通过自适应时空流形采样和几何归纳混合专家网络，仅从稀疏RGB输入赋予MLLM几何感知能力。在多个3D空间推理任务上达到新SOTA，证明无需昂贵3D数据即可实现强空间推理。",
+      "llm_tldr": "针对MLLM在2D语义与3D几何之间的表征鸿沟，本文提出SpaR3D-MoE，一个端到端框架，通过自适应时空流形采样和几何归纳混合专家网络，仅从稀疏RGB输入赋予MLLM几何感知能力。在多个3D空间推理任务上达到新SOTA，证明无需昂贵3D数据即可实现强空间推理。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08024v1",
+      "source": "arxiv",
+      "title": "APIVOT: Adaptive Planning with Interleaved Vision-Language Thoughts",
+      "abstract": "Long-horizon robot planning requires jointly reasoning over semantic task structure and geometric feasibility. To successfully execute a task, a robot must decompose goals, select task-relevant objects, and sequence actions, while ensuring that plans satisfy spatial constraints such as limited free space and object collisions. In this work, we propose APIVOT, a VLM-based planner that adaptively interleaves language and visual thoughts for long-horizon planning. APIVOT learns to leverage language for semantic reasoning, while using visual thoughts as imagined future states for internal verification of geometric feasibility. On long-horizon kitchen tasks, APIVOT outperforms general-purpose VLMs and prior planning frameworks, achieving the largest gains in spatially constrained settings. We find that APIVOT learns meaningful modality selection behavior, demonstrating that adaptive interleaving of vision-language thoughts improves both planning success and reasoning efficiency.",
+      "authors": [
+        "Emily Jin",
+        "Joy Hsu",
+        "Yiqing Xu",
+        "Weiyu Liu",
+        "Nick Haber",
+        "Jiajun Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-07-09T01:02:35+00:00",
+      "link": "https://arxiv.org/pdf/2607.08024v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "visual thoughts as imagined future states for world model",
+      "llm_evidence_cn": "视觉思维作为世界模型的未来状态想象",
+      "llm_evidence": "视觉思维作为世界模型的未来状态想象",
+      "canonical_evidence": "视觉思维作为世界模型的未来状态想象",
+      "llm_tldr_en": "Proposes APIVOT, a VLM-based planner that interleaves language and visual thoughts, using imagined visual states for internal verification of geometric feasibility in long-horizon planning.",
+      "llm_tldr_cn": "本文提出APIVOT，一种自适应交织语言和视觉思维的VLM规划器。它利用语言进行语义推理，同时将视觉思维作为想象的未来状态来验证几何可行性。在长时间跨度厨房任务中，APIVOT超越通用VLM和现有规划框架，验证了内部世界模型在规划中的作用。",
+      "llm_tldr": "本文提出APIVOT，一种自适应交织语言和视觉思维的VLM规划器。它利用语言进行语义推理，同时将视觉思维作为想象的未来状态来验证几何可行性。在长时间跨度厨房任务中，APIVOT超越通用VLM和现有规划框架，验证了内部世界模型在规划中的作用。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08182v1",
+      "source": "arxiv",
+      "title": "LEEVLA: Seeing What Matters in Latent Environment Evolution for Vision-Language-Action",
+      "abstract": "Vision-language-action (VLA) models aim to map multimodal inputs to robot actions. However, most existing approaches struggle to cover complex dynamic scenarios due to treating all visual tokens uniformly and reasoning with human-selected factors, which lack mechanisms to emphasize task-critical evidence and ignore underlying factors. To address this issue, we propose LEEVLA, a VLA architecture for seeing what matters in Latent Environment Evolution that explicitly guides the model toward informative regions while preserving the structured evolution of latent world representations. To identify salient and instruction-relevant regions, we introduce drift-guided dynamic prioritization (DGDP), which combines dynamic position prioritization (DPP) with semantic drift guidance (SDG) to guide the VLA agent where to attend during training. On top of this, we introduce structured feature flow generation (SFFG), which models how these prioritized features should evolve in latent space via prototype-to-periphery (P2P) prediction, and a mutual-neighborhood contrastive (MC) loss to maintain topological consistency among neighborhoods. Together, DGDP and SFFG form a task-aware \"where-how\" training framework. Extensive experiments on VLA benchmarks show that LEEVLA consistently outperforms prior methods, confirming that explicit task-evidence guidance and structured latent reasoning are both crucial for scalable VLA. Our code is available at https://github.com/LyuQi127/LEEVLA.",
+      "authors": [
+        "Qi Lyu",
+        "Baicheng Liu",
+        "Xudong Wang",
+        "Jiahua Dong",
+        "Lianqing Liu",
+        "Zhi Han"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T07:28:21+00:00",
+      "link": "https://arxiv.org/pdf/2607.08182v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "latent environment evolution and world representations",
+      "llm_evidence_cn": "潜环境演化与世界表征",
+      "llm_evidence": "潜环境演化与世界表征",
+      "canonical_evidence": "潜环境演化与世界表征",
+      "llm_tldr_en": "Proposes LEEVLA, a VLA architecture with drift-guided dynamic prioritization that focuses on task-relevant regions while preserving structured latent world representations for robot action.",
+      "llm_tldr_cn": "本文提出LEEVLA架构，通过漂移引导动态优先化机制，在保留结构化潜世界表征的同时聚焦任务相关区域。该方法解决了现有VLA模型在复杂动态场景中视觉token均匀处理的问题，提升了机器人动作规划的适应性。",
+      "llm_tldr": "本文提出LEEVLA架构，通过漂移引导动态优先化机制，在保留结构化潜世界表征的同时聚焦任务相关区域。该方法解决了现有VLA模型在复杂动态场景中视觉token均匀处理的问题，提升了机器人动作规划的适应性。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08434v1",
+      "source": "arxiv",
+      "title": "DeltaV: Thinking with Visual State Updates in Unified Large Multimodal Models",
+      "abstract": "Current Unified Large Multimodal Models (ULMMs) support interleaved multimodal reasoning through textual reasoning and intermediate visual states, but typically generate each visual state as a full image. This full-image generation paradigm introduces substantial visual-token redundancy and dilutes supervision on sparse yet reasoning-critical state transitions. We propose DeltaV, a ULMM that replaces full-image generation with visual updates. Conditioned on historical visual states, DeltaV incrementally predicts compact update tokens that capture the visual changes across reasoning steps, avoiding repeated modeling of unchanged content. To align the token budget of each update with the magnitude of visual change, DeltaV introduces a temporal similarity (TSIM) Router, which stops allocating tokens once the marginal reconstruction gain falls below a threshold. To support more diverse and generalizable reasoning, we further construct StructCoT, a large-scale interleaved multimodal reasoning dataset with 1.05M samples spanning 44 task domains. Experiments show that the visual-update paradigm reduces newly generated visual tokens by 55.6\\% on average without compromising reconstruction fidelity, and improves multimodal reasoning by 3.3\\% over full-image generation. Trained with StructCoT and large-scale multimodal data, DeltaV-2B further outperforms substantially larger open-source models by 8.4\\% on in-domain multimodal reasoning evaluations and surpasses the comparable-scale Qwen3-VL-2B by 5.9\\% on external multimodal reasoning and understanding benchmarks. Code, models, and StructCoT will be released at https://github.com/Pengjie-W/DeltaV.",
+      "authors": [
+        "Pengjie Wang",
+        "Linger Deng",
+        "Zujia Zhang",
+        "Shaojie Zhang",
+        "Zhenbo Luo",
+        "Pei Fu",
+        "Jian Luan",
+        "Xiang Bai",
+        "Yuliang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-09T12:54:05+00:00",
+      "link": "https://arxiv.org/pdf/2607.08434v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "visual state updates in unified multimodal models for reasoning",
+      "llm_evidence_cn": "统一多模态模型中的视觉状态更新推理",
+      "llm_evidence": "统一多模态模型中的视觉状态更新推理",
+      "canonical_evidence": "统一多模态模型中的视觉状态更新推理",
+      "llm_tldr_en": "Proposes DeltaV, a unified multimodal model that replaces full-image generation with compact visual update tokens to reduce redundancy.",
+      "llm_tldr_cn": "当前统一多模态模型生成全图作为中间视觉状态，导致视觉token冗余。本文提出DeltaV，以增量预测更新令牌代替全图生成，仅捕获视觉变化。引入时序相似性对齐令牌预算与变化幅度。实验显示DeltaV在推理效率和多模态任务上均优于全图生成模型。该工作为高效多模态推理提供了新范式。",
+      "llm_tldr": "当前统一多模态模型生成全图作为中间视觉状态，导致视觉token冗余。本文提出DeltaV，以增量预测更新令牌代替全图生成，仅捕获视觉变化。引入时序相似性对齐令牌预算与变化幅度。实验显示DeltaV在推理效率和多模态任务上均优于全图生成模型。该工作为高效多模态推理提供了新范式。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08497v1",
+      "source": "arxiv",
+      "title": "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing",
+      "abstract": "Recent unified multimodal models show a single architecture can jointly perform vision/language understanding and image generation/editing. However, they repeatedly feed all historical visual and textual inputs into a shared context window, limiting long-horizon multimodal dialogue due to visual token explosion and unreliable cross-turn referencing. We propose a Cognitive-structured Multimodal Agent that externalizes visual information into an Episodic Visual Memory and selectively reactivates relevant episodes during reasoning. The agent consists of a Perceptual Abstraction Engine for structured visual abstraction, a Cognitive Retrieval Engine for cross-turn memory retrieval, and a Multimodal Executive Controller for autonomous task inference and action planning. To address the lack of turn-level retrieval supervision in existing datasets, we develop a Unified Scenario Engine that programmatically generates structured multi-turn conversations with fine-grained retrieval annotations, enabling reinforcement learning to optimize abstraction and retrieval policies. We also construct a long-horizon visual-dialogue benchmark stratified by difficulty to evaluate episodic visual recall. Our 8B agent achieves 91.4% retrieval accuracy over 20-turn sessions, surpassing 32B baselines by +8.2% while nearly halving per-turn inference time (23.1s -> 12.7s). We further present the Cognitive-structured Multimodal Agent Harness (CMA-Harness), a tool-augmented deployment of the same cognitive structure integrating persistent multimodal memory, web access, image generation/editing/composition tools, and OpenAI-compatible serving. Structured memory and modular decision-making offer a more scalable, efficient paradigm for long-horizon multimodal agents than monolithic parameter scaling. Code: https://github.com/caseclose/cma-harness ; Project page: https://caseclose.github.io/cma-harness/",
+      "authors": [
+        "Feng Wang",
+        "Canmiao Fu",
+        "Zhipeng Huang",
+        "Chen Li",
+        "Jing Lyu",
+        "Ge Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-07-09T13:55:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.08497v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "cognitive-structured multimodal agent with episodic visual memory for reasoning",
+      "llm_evidence_cn": "具有情景视觉记忆的认知结构多模态智能体用于推理",
+      "llm_evidence": "具有情景视觉记忆的认知结构多模态智能体用于推理",
+      "canonical_evidence": "具有情景视觉记忆的认知结构多模态智能体用于推理",
+      "llm_tldr_en": "Proposes a Cognitive-structured Multimodal Agent that externalizes visual information into Episodic Visual Memory for long-horizon multimodal dialogue and reasoning.",
+      "llm_tldr_cn": "针对统一多模态模型在长对话中视觉token爆炸和跨回合引用不可靠的问题，本文提出认知结构多模态智能体，通过外部化视觉信息到情景视觉记忆，并选择性重放相关片段进行推理。该智能体包含感知抽象引擎、认知检索引擎和多模态执行控制器，实验证明其在多模态理解、生成和编辑的长期对话中显著优于基线方法。",
+      "llm_tldr": "针对统一多模态模型在长对话中视觉token爆炸和跨回合引用不可靠的问题，本文提出认知结构多模态智能体，通过外部化视觉信息到情景视觉记忆，并选择性重放相关片段进行推理。该智能体包含感知抽象引擎、认知检索引擎和多模态执行控制器，实验证明其在多模态理解、生成和编辑的长期对话中显著优于基线方法。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
