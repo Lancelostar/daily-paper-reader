@@ -1,0 +1,380 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-12T20:49:02.484885+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2607.03941v1",
+      "source": "arxiv",
+      "title": "WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control",
+      "abstract": "Recent advances in embodied AI have established robot foundation models (RFMs) as the dominant approach for generalist robotic systems to date. By leveraging imitation learning on extensive robot demonstrations, RFMs have achieved impressive capabilities in mapping visual observations and language instructions to continuous robotic actions. However, current RFMs lack an inherent ability to reason about physical dynamics and the causal effects of robot behaviors on the 3D physical world. This creates a fundamental mismatch between 2D-centric visual perception and 3D-centric embodied interaction, severely limiting the generalization ability of RFMs in real-world tasks.To address this gap, we present WSA$_1$, a novel RFM built upon proposed 3D-Centric World-Spatial-Action modeling paradigm. It not only learns 3D world-aware visual thought for future robot behaviors, but also models mutual constraints between 3D world state transitions and robotic actions to enhance behavior generalization. Notably, WSA$_1$ achieves highly data-efficient pre-training with 6k hours of expert demonstration data (only 1k hours from real robot), while delivering competitive manipulation performance (93% success rate) on RoboTwin2.0 simulation benchmark and achieving +20% average boosted performance over state-of-the-art RFMs on real-world robot control tasks. These results reveal that generalizable RFM can be attained without large-scale real robot data when paired with 3D-centric world-action joint modeling, which offers a practical and affordable pathway to generalist robotic systems.",
+      "authors": [
+        "Jiahao Jiang",
+        "Jianing Zhang",
+        "Zhenhan Yin",
+        "Ruidong Chen",
+        "Sen Wang",
+        "Zhaoshu Yu",
+        "Pengpeng Zeng",
+        "Xiaofeng Cao",
+        "Xuanhan Wang",
+        "Jingkuan Song",
+        "Heng Tao Shen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-07-04T16:26:39+00:00",
+      "link": "https://arxiv.org/pdf/2607.03941v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "3D-centric world-spatial-action model for world modeling",
+      "llm_evidence_cn": "三维中心的世界-空间-动作模型用于世界建模",
+      "llm_evidence": "三维中心的世界-空间-动作模型用于世界建模",
+      "canonical_evidence": "三维中心的世界-空间-动作模型用于世界建模",
+      "llm_tldr_en": "WSA1 proposes a 3D-centric world-spatial-action robot foundation model that integrates explicit 3D representations and world dynamics to achieve generalizable robot control.",
+      "llm_tldr_cn": "本文提出WSA1，一种以三维为中心的世界-空间-动作机器人基础模型，通过融入显式三维表示和物理动态推理，解决了现有机器人模型在2D感知与3D交互之间的不匹配问题。实验表明，该模型在多种真实世界任务中展现出更强的泛化能力，为构建真正理解物理世界的具身智能体提供了新范式。",
+      "llm_tldr": "本文提出WSA1，一种以三维为中心的世界-空间-动作机器人基础模型，通过融入显式三维表示和物理动态推理，解决了现有机器人模型在2D感知与3D交互之间的不匹配问题。实验表明，该模型在多种真实世界任务中展现出更强的泛化能力，为构建真正理解物理世界的具身智能体提供了新范式。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.08434v1",
+      "source": "arxiv",
+      "title": "DeltaV: Thinking with Visual State Updates in Unified Large Multimodal Models",
+      "abstract": "Current Unified Large Multimodal Models (ULMMs) support interleaved multimodal reasoning through textual reasoning and intermediate visual states, but typically generate each visual state as a full image. This full-image generation paradigm introduces substantial visual-token redundancy and dilutes supervision on sparse yet reasoning-critical state transitions. We propose DeltaV, a ULMM that replaces full-image generation with visual updates. Conditioned on historical visual states, DeltaV incrementally predicts compact update tokens that capture the visual changes across reasoning steps, avoiding repeated modeling of unchanged content. To align the token budget of each update with the magnitude of visual change, DeltaV introduces a temporal similarity (TSIM) Router, which stops allocating tokens once the marginal reconstruction gain falls below a threshold. To support more diverse and generalizable reasoning, we further construct StructCoT, a large-scale interleaved multimodal reasoning dataset with 1.05M samples spanning 44 task domains. Experiments show that the visual-update paradigm reduces newly generated visual tokens by 55.6\\% on average without compromising reconstruction fidelity, and improves multimodal reasoning by 3.3\\% over full-image generation. Trained with StructCoT and large-scale multimodal data, DeltaV-2B further outperforms substantially larger open-source models by 8.4\\% on in-domain multimodal reasoning evaluations and surpasses the comparable-scale Qwen3-VL-2B by 5.9\\% on external multimodal reasoning and understanding benchmarks. Code, models, and StructCoT will be released at https://github.com/Pengjie-W/DeltaV.",
+      "authors": [
+        "Pengjie Wang",
+        "Linger Deng",
+        "Zujia Zhang",
+        "Shaojie Zhang",
+        "Zhenbo Luo",
+        "Pei Fu",
+        "Jian Luan",
+        "Xiang Bai",
+        "Yuliang Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-09T12:54:05+00:00",
+      "link": "https://arxiv.org/pdf/2607.08434v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "visual state updates for iterative reasoning",
+      "llm_evidence_cn": "视觉状态更新用于迭代推理",
+      "llm_evidence": "视觉状态更新用于迭代推理",
+      "canonical_evidence": "视觉状态更新用于迭代推理",
+      "llm_tldr_en": "DeltaV replaces full-image generation in ULMMs with compact visual update tokens, reducing redundancy and improving reasoning-critical state transitions.",
+      "llm_tldr_cn": "该论文指出现有统一多模态模型在推理中生成完整图像导致冗余和监督稀释，提出DeltaV，仅预测视觉变化更新令牌，通过时间相似性匹配控制令牌预算，在视觉推理任务上显著减少计算量并提升对关键状态转变的关注，为多模态推理提供了高效新范式。",
+      "llm_tldr": "该论文指出现有统一多模态模型在推理中生成完整图像导致冗余和监督稀释，提出DeltaV，仅预测视觉变化更新令牌，通过时间相似性匹配控制令牌预算，在视觉推理任务上显著减少计算量并提升对关键状态转变的关注，为多模态推理提供了高效新范式。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.05122v1",
+      "source": "arxiv",
+      "title": "Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies",
+      "abstract": "Vision-language-action (VLA) models enable robot navigation from natural language and visual goals, but remain susceptible to perceptual distractions and ambiguous scene interpretations. This paper presents the first empirical evaluation of visual grounding for VLA navigation policies. We propose a real-time segmentation-based grounding method that highlights traversable areas in green and non-traversable areas in red using SegFormer. Two variants are evaluated: observation-only segmentation and joint observation-goal augmentation. Using OmniVLA on the Grand Tour dataset, we show that visual grounding reduces the mean waypoint error by 27-44% at the farthest waypoint, depending on the instruction length. The benefits are greater for long instructions than for short instructions, and grounding provides little improvement for image goals. Normalized error analysis indicates that grounding primarily acts as a trajectory length regularizer, reducing the predicted path length by 30% without improving per-unit-distance reasoning. Our results indicate that visual grounding offers a simple, computationally inexpensive method to improve VLA navigation without model retraining, although it cannot compensate for missing training signals in out-of-distribution instructions.",
+      "authors": [
+        "Adrian Szvoren",
+        "Dimitrios Kanoulas",
+        "Nilufer Tuptuk"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-07-06T14:11:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05122v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "visual grounding method for navigation",
+      "llm_evidence_cn": "用于导航的视觉定位方法",
+      "llm_evidence": "用于导航的视觉定位方法",
+      "canonical_evidence": "用于导航的视觉定位方法",
+      "llm_tldr_en": "Proposes segmentation-based visual grounding to reduce waypoint error in VLA navigation policies, evaluated on Grand Tour dataset.",
+      "llm_tldr_cn": "该论文针对视觉-语言-动作（VLA）导航策略中感知干扰和场景歧义的问题，提出了基于语义分割的实时视觉定位方法。通过将可通行区域标记为绿色、不可通行区域标记为红色，该方法在OmniVLA模型上使最远路点的平均误差降低了27%-44%。实验表明，视觉定位显著提升了导航策略在复杂指令下的鲁棒性。",
+      "llm_tldr": "该论文针对视觉-语言-动作（VLA）导航策略中感知干扰和场景歧义的问题，提出了基于语义分割的实时视觉定位方法。通过将可通行区域标记为绿色、不可通行区域标记为红色，该方法在OmniVLA模型上使最远路点的平均误差降低了27%-44%。实验表明，视觉定位显著提升了导航策略在复杂指令下的鲁棒性。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "recent advances in visual reasoning",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.08182v1",
+      "source": "arxiv",
+      "title": "LEEVLA: Seeing What Matters in Latent Environment Evolution for Vision-Language-Action",
+      "abstract": "Vision-language-action (VLA) models aim to map multimodal inputs to robot actions. However, most existing approaches struggle to cover complex dynamic scenarios due to treating all visual tokens uniformly and reasoning with human-selected factors, which lack mechanisms to emphasize task-critical evidence and ignore underlying factors. To address this issue, we propose LEEVLA, a VLA architecture for seeing what matters in Latent Environment Evolution that explicitly guides the model toward informative regions while preserving the structured evolution of latent world representations. To identify salient and instruction-relevant regions, we introduce drift-guided dynamic prioritization (DGDP), which combines dynamic position prioritization (DPP) with semantic drift guidance (SDG) to guide the VLA agent where to attend during training. On top of this, we introduce structured feature flow generation (SFFG), which models how these prioritized features should evolve in latent space via prototype-to-periphery (P2P) prediction, and a mutual-neighborhood contrastive (MC) loss to maintain topological consistency among neighborhoods. Together, DGDP and SFFG form a task-aware \"where-how\" training framework. Extensive experiments on VLA benchmarks show that LEEVLA consistently outperforms prior methods, confirming that explicit task-evidence guidance and structured latent reasoning are both crucial for scalable VLA. Our code is available at https://github.com/LyuQi127/LEEVLA.",
+      "authors": [
+        "Qi Lyu",
+        "Baicheng Liu",
+        "Xudong Wang",
+        "Jiahua Dong",
+        "Lianqing Liu",
+        "Zhi Han"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T07:28:21+00:00",
+      "link": "https://arxiv.org/pdf/2607.08182v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "latent environment evolution for world representation in VLA",
+      "llm_evidence_cn": "视觉-语言-动作中的潜在世界演化",
+      "llm_evidence": "视觉-语言-动作中的潜在世界演化",
+      "canonical_evidence": "视觉-语言-动作中的潜在世界演化",
+      "llm_tldr_en": "LEEVLA proposes a VLA architecture with drift-guided dynamic prioritization to focus on task-critical evidence and maintain latent world representations.",
+      "llm_tldr_cn": "本文提出LEEVLA架构，通过漂移引导动态优先化机制，在视觉-语言-动作模型中强调任务关键证据并保持潜在世界表示的演化。实验证明，该方法在复杂动态场景中优于统一处理所有视觉标记的基线，为构建具有世界理解的机器人模型提供了有效途径。",
+      "llm_tldr": "本文提出LEEVLA架构，通过漂移引导动态优先化机制，在视觉-语言-动作模型中强调任务关键证据并保持潜在世界表示的演化。实验证明，该方法在复杂动态场景中优于统一处理所有视觉标记的基线，为构建具有世界理解的机器人模型提供了有效途径。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.06620v1",
+      "source": "arxiv",
+      "title": "SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts",
+      "abstract": "Recent Multimodal Large Language Models (MLLMs) struggle to bridge the representational gap between 2D semantic understanding and 3D spatial geometry. Existing 3D-aware models either rely on costly 3D-specific data or utilize RGB-only inputs with heuristic sampling and monolithic, shallow fusion, which respectively disrupt essential spatiotemporal connectivity and induce modality contention across diverse spatial tasks. To overcome these bottlenecks, we introduce SpaR3D-MoE, an end-to-end framework that enables adaptive spatial reasoning by equipping MLLMs with geometry-aware capabilities from only sparse RGB inputs. First, we propose an adaptive spatiotemporal manifold sampling mechanism that constructs a geometry-aware spatiotemporal graph to extract informative keyframes, effectively mitigating sequence redundancy while preserving the scene's topological connectivity. Second, we introduce the heterogeneous geometry-inductive Mixture-of-Experts driven by an instruction-pose aware router, which adaptively routes multimodal tokens to specialized experts, resolving the cross-modal contention inherent in monolithic fusion. Extensive experiments on VSI-Bench, ScanQA, and SQA3D demonstrate that our method achieves state-of-the-art performance. Notably, SpaR3D-MoE achieves the highest average score of 63.5 on VSI-Bench, outperforming the strongest baseline by 7.8 absolute points, alongside relative improvements of 35.4% and 51.4% in Route Plan and Relative Direction tasks, respectively.",
+      "authors": [
+        "Haida Feng",
+        "Hao Wei",
+        "Haolin Wang",
+        "Shiwei Li",
+        "Chade Li",
+        "Yihong Wu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-07T09:27:38+00:00",
+      "link": "https://arxiv.org/pdf/2607.06620v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "3D spatial reasoning from sparse RGB views",
+      "llm_evidence_cn": "从稀疏RGB视图进行3D空间推理",
+      "llm_evidence": "从稀疏RGB视图进行3D空间推理",
+      "canonical_evidence": "从稀疏RGB视图进行3D空间推理",
+      "llm_tldr_en": "Proposes SpaR3D-MoE for adaptive 3D spatial reasoning from sparse views using a geometry-inductive mixture-of-experts and spatiotemporal manifold sampling.",
+      "llm_tldr_cn": "多模态大模型在2D语义与3D几何之间存在表示鸿沟。本文提出SpaR3D-MoE框架，通过自适应时空流形采样和几何归纳混合专家，仅从稀疏RGB输入实现几何感知的空间推理。在多个3D任务上达到领先性能，为3D视觉推理提供高效方案。",
+      "llm_tldr": "多模态大模型在2D语义与3D几何之间存在表示鸿沟。本文提出SpaR3D-MoE框架，通过自适应时空流形采样和几何归纳混合专家，仅从稀疏RGB输入实现几何感知的空间推理。在多个3D任务上达到领先性能，为3D视觉推理提供高效方案。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.05543v1",
+      "source": "arxiv",
+      "title": "GEM-Occ: From Visual Geometry Evidence to Embodied Semantic Occupancy Memory",
+      "abstract": "Semantic occupancy provides a structured spatial memory for embodied indoor agents by jointly representing occupied regions, observed free space, unknown areas, and object semantics. However, existing indoor occupancy benchmarks and methods mainly focus on single-view prediction or room-level online perception, leaving long-horizon semantic mapping across connected indoor spaces underexplored. We introduce HIOcc, a hierarchical indoor occupancy benchmark that unifies ScanNet, ScanNet++, and Matterport3D under a common sparse semantic occupancy format while preserving their native observation geometries, including perspective RGB-D frames and pano-centric observation groups. HIOcc supports three complementary evaluation regimes: local semantic occupancy prediction, room-level online occupancy mapping, and building-level mapping across connected panoramic environments. We further propose GEM-Occ, a Gaussian Evidence Memory framework for semantic occupancy mapping. Rather than using pointmaps as persistent map states, GEM-Occ treats local visual geometry predictions as transient evidence, converts them into semantic Gaussian occupancy evidence and free-space ray evidence, and fuses them into a persistent hierarchical memory through visibility- and uncertainty-aware causal updates. The memory is organized into local caches, room-level submaps, and a building-level graph, and can be queried at any time through Gaussian-to-occupancy splatting. Experiments on HIOcc show that GEM-Occ improves local occupancy prediction, online map stability, free-space reasoning, revisit consistency, and building-level scalability over prior indoor occupancy and Gaussian-based mapping baselines.",
+      "authors": [
+        "Hu Zhu",
+        "Bohan Li",
+        "Xianda Guo",
+        "Hongsi Liu",
+        "Baorui Peng",
+        "Mingqi Yuan",
+        "Xin Jin",
+        "Wenjun Zeng",
+        "Chang Wen Chen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-07-06T18:26:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05543v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hierarchical indoor occupancy benchmark and method for embodied agents",
+      "llm_evidence_cn": "用于具身智能体的分层室内占用基准与方法",
+      "llm_evidence": "用于具身智能体的分层室内占用基准与方法",
+      "canonical_evidence": "用于具身智能体的分层室内占用基准与方法",
+      "llm_tldr_en": "Introduces HIOcc benchmark and GEM-Occ method for long-horizon semantic occupancy mapping across connected indoor spaces, unifying multiple datasets.",
+      "llm_tldr_cn": "现有室内占用预测主要关注单视图或单房间感知，缺乏跨连接空间的长期语义映射。该论文提出HIOcc基准，统一了ScanNet、ScanNet++和Matterport3D为稀疏语义占用格式，并支持多种评估机制。同时提出GEM-Occ方法，利用视觉几何证据构建结构化可泛化的占用记忆，为具身智能体提供空间记忆，对构建世界模型有重要启示。",
+      "llm_tldr": "现有室内占用预测主要关注单视图或单房间感知，缺乏跨连接空间的长期语义映射。该论文提出HIOcc基准，统一了ScanNet、ScanNet++和Matterport3D为稀疏语义占用格式，并支持多种评估机制。同时提出GEM-Occ方法，利用视觉几何证据构建结构化可泛化的占用记忆，为具身智能体提供空间记忆，对构建世界模型有重要启示。",
+      "llm_tags": [
+        "query:world-model:composite"
+      ],
+      "matched_query_tag": "query:world-model:composite",
+      "matched_query_text": "Papers central to 世界模型, especially work that connects or combines: world model concept and applications; What is a world model in artificial intelligence?.",
+      "matched_requirement_id": "req-composite-world-model",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.05511v1",
+      "source": "arxiv",
+      "title": "Light-Omni: Reflex over Reasoning in Agentic Video Understanding with Long-Term Memory",
+      "abstract": "Agentic video understanding equips models with long-term memory to autonomously process and respond to continuous, long-horizon multimodal streams. However, advanced video agents often rely on ``detective-style'' iterative reasoning for action control (e.g., $\\mathtt{search}$) and evidence aggregation, incurring prohibitive costs and latency. We argue that such heavy reasoning primarily compensates for the lack of global context and semantic misalignment in retrieval. This paper introduces Light-Omni, a multimodal agent framework for reflexive and lightweight video understanding. It achieves this through dual contextual states that instantly build the required context in a single forward pass. First, we maintain a global state, a finite-sized multimodal script continuously consolidated from episodic memory, serving as the global context for Light-Omni. Through hierarchical merging, it preserves recent details while summarizing past events. Second, conditioned on this global context, we generate a parametric latent state that directly drives autonomous actions and produces retrieval embeddings, with minimal latency. Benefiting from this coupled design, Light-Omni achieves semantically aligned retrieval and reflexive responses while avoiding iterative reasoning. Extensive experiments validate the effectiveness of Light-Omni across multiple video benchmarks. Notably, it outperforms M3-Agent with an average 2.4% accuracy gain, a 12.1$\\times$ speedup, and a 2.6$\\times$ improvement in GPU memory efficiency. Furthermore, it serves as a memory system to enhance both the performance and efficiency of existing MLLMs. Project page: https://clare-nie.github.io/Light-Omni.",
+      "authors": [
+        "Chang Nie",
+        "Jiaju Wei",
+        "Junlan Feng",
+        "Chaoyou Fu",
+        "Caifeng Shan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-06T18:00:06+00:00",
+      "link": "https://arxiv.org/pdf/2607.05511v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agentic video understanding with reflexive reasoning",
+      "llm_evidence_cn": "智能体视频理解中的反射式推理",
+      "llm_evidence": "智能体视频理解中的反射式推理",
+      "canonical_evidence": "智能体视频理解中的反射式推理",
+      "llm_tldr_en": "Light-Omni proposes a reflexive video agent with dual contextual states to avoid costly iterative reasoning, achieving lightweight understanding.",
+      "llm_tldr_cn": "该论文指出现有视频智能体依赖迭代推理导致高开销，提出Light-Omni框架，通过双上下文状态实现单次前向传播的反射式理解，在长期记忆视频任务中降低了延迟和成本，展示了反射优于重型推理的理念。",
+      "llm_tldr": "该论文指出现有视频智能体依赖迭代推理导致高开销，提出Light-Omni框架，通过双上下文状态实现单次前向传播的反射式理解，在长期记忆视频任务中降低了延迟和成本，展示了反射优于重型推理的理念。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.05859v1",
+      "source": "arxiv",
+      "title": "AVA-VLM: Adaptive Visual Attention-Vision Language Model for In-the-Wild Construction Site Monitoring",
+      "abstract": "Vision-Language Models (VLMs) are promising for construction-site monitoring, and recent construction-tailored VLMs have primarily adapted pretrained VLMs through direct QA-style fine-tuning from a single global image. We argue that this direct paradigm remains limited for in-the-wild deployment in terms of operational range, reliability under reduced-resolution inputs, and inference efficiency. To address these challenges, we propose AVA-VLM, an Adaptive Visual Attention-Vision Language Model that follows a human-inspired coarse-to-fine reasoning strategy. AVA-VLM first reasons over a low-resolution global image and selectively requests a high-resolution local crop only when detailed inspection is needed, similar to how a human inspector zooms in on hard-to-see yet important areas. We further introduce a region-aware Chain-of-Thought dataset that teaches the model when to inspect, where to crop, and how to use local evidence. Experiments show that AVA-VLM improves reliability under long-distance and reduced-resolution conditions while substantially reducing visual-token usage.",
+      "authors": [
+        "Younggun Kim",
+        "Taeheon Kim",
+        "Youngseo Kim",
+        "Seunghee Park"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T05:30:13+00:00",
+      "link": "https://arxiv.org/pdf/2607.05859v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adaptive visual attention VLM for construction monitoring",
+      "llm_evidence_cn": "用于施工监控的自适应视觉注意力VLM",
+      "llm_evidence": "用于施工监控的自适应视觉注意力VLM",
+      "canonical_evidence": "用于施工监控的自适应视觉注意力VLM",
+      "llm_tldr_en": "Proposes AVA-VLM with coarse-to-fine reasoning strategy, first low-resolution global reasoning then selective high-resolution crop, for efficient construction site monitoring.",
+      "llm_tldr_cn": "现有施工专用的视觉语言模型通过全局图像进行直接问答，在野外部署时面临分辨率低和效率问题。该论文提出AVA-VLM，模拟人类粗到细的推理策略：先对低分辨率全局图像推理，再按需请求高分辨率局部裁剪。该方法在保证精度的同时提升了推理效率，适用于真实施工环境。",
+      "llm_tldr": "现有施工专用的视觉语言模型通过全局图像进行直接问答，在野外部署时面临分辨率低和效率问题。该论文提出AVA-VLM，模拟人类粗到细的推理策略：先对低分辨率全局图像推理，再按需请求高分辨率局部裁剪。该方法在保证精度的同时提升了推理效率，适用于真实施工环境。",
+      "llm_tags": [
+        "query:vr"
+      ],
+      "matched_query_tag": "query:vr",
+      "matched_query_text": "visual reasoning",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.05911v1",
+      "source": "arxiv",
+      "title": "Progressive Reasoning with Primitive Correction for Compositional Zero-Shot Learning",
+      "abstract": "Compositional Zero-Shot Learning (CZSL) aims to combine known attributes and objects as primitives for recognizing previously unseen attribute-object pairs. Prior works either predict attributes and objects independently, missing their strong contextual dependency, or use unidirectional conditional modeling (e.g., object-guided attribute prediction), which is prone to error propagation. We propose PRPC, a Progressive Reasoning framework with Primitive Correction, which explicitly models the bidirectional dependency between attributes and objects via step-wise inference. PRPC performs mutual correction of primitives to suppress prediction errors in earlier steps. Specifically, we formulate CZSL as structured, Q&A-style Chain-of-Thought reasoning process and constrain the MLLM to follow predefined semantic steps to generate intermediate decisions. To further enhance the reliability and logical consistency of intermediate reasoning, we introduce reinforcement learning post-training with a GRPO-based objective, providing step-level rewards aligned with the progressive inference procedure. Extensive experiments on three CZSL benchmarks demonstrate that PRPC achieves state-of-the-art performance, validating the effectiveness of progressive reasoning and bidirectional correction for robust compositional generalization.",
+      "authors": [
+        "Ziyi Chen",
+        "Haoyan Shi",
+        "Sunhan Xu",
+        "Congyan Lang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T07:06:27+00:00",
+      "link": "https://arxiv.org/pdf/2607.05911v1",
+      "tags": [
+        "keyword:vr",
+        "query:vr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "progressive reasoning with primitive correction for compositional visual learning",
+      "llm_evidence_cn": "通过原语校正的渐进推理用于组合视觉学习",
+      "llm_evidence": "通过原语校正的渐进推理用于组合视觉学习",
+      "canonical_evidence": "通过原语校正的渐进推理用于组合视觉学习",
+      "llm_tldr_en": "Proposes PRPC, a progressive reasoning framework with primitive correction for Compositional Zero-Shot Learning, modeling bidirectional attribute-object dependencies.",
+      "llm_tldr_cn": "针对组合零样本学习中属性与对象独立预测或单向建模的问题，提出PRPC渐进推理框架，通过双向依赖建模和原语互校正逐步抑制误差。将组合学习建模为结构化问答式链式推理，在多个基准上显著提升未见组合的识别准确率。",
+      "llm_tldr": "针对组合零样本学习中属性与对象独立预测或单向建模的问题，提出PRPC渐进推理框架，通过双向依赖建模和原语互校正逐步抑制误差。将组合学习建模为结构化问答式链式推理，在多个基准上显著提升未见组合的识别准确率。",
+      "llm_tags": [
+        "query:vr:composite"
+      ],
+      "matched_query_tag": "query:vr:composite",
+      "matched_query_text": "Papers central to 请帮我查找视觉推理方向的论文, especially work that connects or combines: visual reasoning; recent advances in visual reasoning; evaluation benchmarks for visual reasoning.",
+      "matched_requirement_id": "req-composite-vr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

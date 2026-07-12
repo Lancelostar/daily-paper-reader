@@ -6,56 +6,49 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-11
-- 运行时间：2026-07-11 20:41:28 UTC
+- 最新运行日期：2026-07-12
+- 运行时间：2026-07-12 20:52:19 UTC
 - 运行状态：成功
-- 本次总论文数：12
-- 精读区：3
-- 速读区：9
+- 本次总论文数：9
+- 精读区：5
+- 速读区：4
 
 ### 今日简报（AI）
-今日处理12篇论文，精读3篇，速读9篇，聚焦机器人控制与视觉语言模型领域。最值得关注的是世界空间动作模型WSA$_1$实现通用机器人控制，以及基于图的属性推理方法校准视觉语言模型。建议优先精读这两篇高评分工作，深入理解三维感知与结构化推理的前沿进展。
-- 详情：[/202607/11/README](/202607/11/README)
+今日聚焦机器人通用控制与多模态视觉推理，精选两篇9.0分论文精读。
+最值得看的方向：3D世界空间动作模型提升机器人泛化能力，以及通过视觉状态更新统一多模态模型推理。
+建议后续深挖GEM-Occ的语义占用记忆与具身任务结合，同时关注Light-Omni的长时记忆机制在智能体视频理解中的潜力。
+- 详情：[/202607/12/README](/202607/12/README)
 
 ### 精读区论文标签
-1. [WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control](/202607/11/2607.03941v1-wsa1-a-3d-centric-world-spatial-action-model-for-generalizable-robot-control)  
+1. [WSA$_1$: a 3D-Centric World-Spatial-Action Model for Generalizable Robot Control](/202607/12/2607.03941v1-wsa1-a-3d-centric-world-spatial-action-model-for-generalizable-robot-control)  
    标签：评分：9.0/10、query:world-model
-   evidence：面向机器人控制的3D中心世界-空间-动作模型
-2. [When Prompts Ignore Structure: Graph-Based Attribute Reasoning for Calibrated VLMs](/202607/11/2607.07395v1-when-prompts-ignore-structure-graph-based-attribute-reasoning-for-calibrated-vlms)  
+   evidence：三维中心的世界-空间-动作模型用于世界建模
+2. [DeltaV: Thinking with Visual State Updates in Unified Large Multimodal Models](/202607/12/2607.08434v1-deltav-thinking-with-visual-state-updates-in-unified-large-multimodal-models)  
+   标签：评分：9.0/10、query:vr
+   evidence：视觉状态更新用于迭代推理
+3. [Green for Go, Red for No: Visual Grounding via Semantic Segmentation for VLA Navigation Policies](/202607/12/2607.05122v1-green-for-go-red-for-no-visual-grounding-via-semantic-segmentation-for-vla-navigation-policies)  
    标签：评分：8.0/10、query:vr
-   evidence：基于图属性的视觉语言模型校准推理
-3. [When Thinking Hurts: Epistemic Signals in the Reasoning Chains of Visual Language Models](/202607/11/2607.08059v1-when-thinking-hurts-epistemic-signals-in-the-reasoning-chains-of-visual-language-models)  
+   evidence：用于导航的视觉定位方法
+4. [SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts](/202607/12/2607.06620v1-spar3d-moe-adaptive-3d-spatial-reasoning-from-sparse-views-meets-geometry-inductive-mixture-of-experts)  
    标签：评分：8.0/10、query:vr
-   evidence：思考模式视觉语言模型推理链
+   evidence：从稀疏RGB视图进行3D空间推理
+5. [LEEVLA: Seeing What Matters in Latent Environment Evolution for Vision-Language-Action](/202607/12/2607.08182v1-leevla-seeing-what-matters-in-latent-environment-evolution-for-vision-language-action)  
+   标签：评分：8.0/10、query:world-model
+   evidence：视觉-语言-动作中的潜在世界演化
 
 ### 速读区论文标签
-1. [Do GUI Agents Believe Their Eyes? Diagnosing State-Belief Reliance on Pixels versus Structure](/202607/11/2607.04334v1-do-gui-agents-believe-their-eyes-diagnosing-state-belief-reliance-on-pixels-versus-structure)  
-   标签：评分：7.0/10、query:vr
-   evidence：GUI代理视觉状态依赖的评估基准
-2. [Progressive Reasoning with Primitive Correction for Compositional Zero-Shot Learning](/202607/11/2607.05911v1-progressive-reasoning-with-primitive-correction-for-compositional-zero-shot-learning)  
-   标签：评分：7.0/10、query:vr
-   evidence：基于原始纠正的渐进推理用于组合零样本学习
-3. [SpaR3D-MoE: Adaptive 3D Spatial Reasoning from Sparse Views Meets Geometry-Inductive Mixture-of-Experts](/202607/11/2607.06620v1-spar3d-moe-adaptive-3d-spatial-reasoning-from-sparse-views-meets-geometry-inductive-mixture-of-experts)  
-   标签：评分：7.0/10、query:vr
-   evidence：基于几何归纳混合专家网络的自适应稀疏视图3D空间推理
-4. [APIVOT: Adaptive Planning with Interleaved Vision-Language Thoughts](/202607/11/2607.08024v1-apivot-adaptive-planning-with-interleaved-vision-language-thoughts)  
+1. [GEM-Occ: From Visual Geometry Evidence to Embodied Semantic Occupancy Memory](/202607/12/2607.05543v1-gem-occ-from-visual-geometry-evidence-to-embodied-semantic-occupancy-memory)  
    标签：评分：7.0/10、query:world-model
-   evidence：视觉思维作为世界模型的未来状态想象
-5. [LEEVLA: Seeing What Matters in Latent Environment Evolution for Vision-Language-Action](/202607/11/2607.08182v1-leevla-seeing-what-matters-in-latent-environment-evolution-for-vision-language-action)  
-   标签：评分：7.0/10、query:world-model
-   evidence：潜环境演化与世界表征
-6. [DeltaV: Thinking with Visual State Updates in Unified Large Multimodal Models](/202607/11/2607.08434v1-deltav-thinking-with-visual-state-updates-in-unified-large-multimodal-models)  
-   标签：评分：7.0/10、query:vr
-   evidence：统一多模态模型中的视觉状态更新推理
-7. [Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing](/202607/11/2607.08497v1-cognitive-structured-multimodal-agent-for-multimodal-understanding-generation-and-editing)  
-   标签：评分：7.0/10、query:vr
-   evidence：具有情景视觉记忆的认知结构多模态智能体用于推理
-8. [RoboVista: Evaluating Vision Language Models for Diverse Robot Applications](/202607/11/2607.04610v1-robovista-evaluating-vision-language-models-for-diverse-robot-applications)  
+   evidence：用于具身智能体的分层室内占用基准与方法
+2. [Light-Omni: Reflex over Reasoning in Agentic Video Understanding with Long-Term Memory](/202607/12/2607.05511v1-light-omni-reflex-over-reasoning-in-agentic-video-understanding-with-long-term-memory)  
    标签：评分：6.0/10、query:vr
-   evidence：面向机器人的视觉语言模型评估基准
-9. [UniRef-UAV: A Multimodal Benchmark for Universal Referring in UAV Imagery](/202607/11/2607.08267v1-uniref-uav-a-multimodal-benchmark-for-universal-referring-in-uav-imagery)  
+   evidence：智能体视频理解中的反射式推理
+3. [AVA-VLM: Adaptive Visual Attention-Vision Language Model for In-the-Wild Construction Site Monitoring](/202607/12/2607.05859v1-ava-vlm-adaptive-visual-attention-vision-language-model-for-in-the-wild-construction-site-monitoring)  
    标签：评分：6.0/10、query:vr
-   evidence：无人机通用引用多模态基准
+   evidence：用于施工监控的自适应视觉注意力VLM
+4. [Progressive Reasoning with Primitive Correction for Compositional Zero-Shot Learning](/202607/12/2607.05911v1-progressive-reasoning-with-primitive-correction-for-compositional-zero-shot-learning)  
+   标签：评分：6.0/10、query:vr
+   evidence：通过原语校正的渐进推理用于组合视觉学习
 
 
 <div class="dpr-home-promo-card">
