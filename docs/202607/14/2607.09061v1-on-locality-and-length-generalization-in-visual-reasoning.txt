@@ -1,0 +1,539 @@
+Title: On Locality and Length Generalization in Visual Reasoning
+
+URL Source: https://arxiv.org/pdf/2607.09061v1
+
+Published Time: Mon, 13 Jul 2026 01:27:08 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+Published as a conference paper at ECCV 2026 
+
+# ON LOCALITY AND LENGTH GENERALIZATION IN VISUAL REASONING 
+
+Pulkit Madan † Sanjay Haresh † Reza Ebrahimi Sunny Panchal Apratim Bhattacharyya Roland Memisevic 
+
+Qualcomm AI Research ∗
+
+{pmadan, sanjayh }@qti.qualcomm.com 
+
+## ABSTRACT 
+
+A striking feature of the human visual system is that it ingests visual information through a series of local foveated glimpses, rather than a single global computa-tion. This makes human vision distinctly different from most popular computer vision models in use today, which input images globally and in a single shot. A natural question therefore is whether local, sequential vision models may provide any fundamental computational benefits in addition to being biologically more plausible than global models. In this work, we investigate this question from the perspective of visual state tracking and length generalization. Inspired by recent studies of length generalization in language models, we study the behavior of vi-sion models trained on simple vision tasks that require the aggregation of local information across an image. Our experiments reveal that, similar to language models, vision models can learn to exploit global shortcuts and thereby fail to generalize over task length or complexity. We also show that recurrent vision poli-cies based on strictly local perception can mitigate these failures, thereby allowing models to generalize on these tasks. Our results show that local attention may be an essential overlooked requirement for robust compositional generalization. 
+
+## 1 INTRODUCTION 
+
+Current state-of-the-art vision models have shown human level performance on tasks such as image captioning and visual question answering (Bai et al., 2025; OpenAI; Anthropic). This success is built on models which ingest an image in a single forward pass to create an encoding of the global contents of the image. E.g. , transformer based models encode images in a sequence of tokens and (self-)attend to these tokens at every step of a reasoning process. This mechanism is different from the way humans process images, which is based on local glimpses connected through saccades ( e.g ., (Hayhoe & Ballard, 2005)). This raises the question of whether this type of sequential processing is purely an evolutionary artifact or if it is beneficial, or even necessary, for human-level multimodal intelligence. To shed light onto this question, we introduce a set of simple visual reasoning tasks that humans would solve by following a trajectory of local glimpses over the image. The problems involve ag-gregating local 2D information to derive the state of a system represented diagrammatically in the image (Fig. 1). The complexity of these visual reasoning problems can be defined by their length ,which measures the minimum number of steps required to solve them. The main challenge we con-sider in this work is that of extrapolation — solving longer problems without explicit training — usually referred to as length generalization . Extrapolation requires models to go beyond memo-rization and towards true compositional understanding, requiring strategies that are independent of the length of problem. Following a trajectory of local glimpses is an example of a strategy that is independent of problem length. Our visual reasoning problems are inspired by standard tasks widely used to study length general-ization in language models, such as the task of determining the parity of a binary sequence. Recent 
+
+> ∗
+
+Qualcomm AI Research is an initiative of Qualcomm Technologies, Inc. 
+
+† Equal contribution. 
+
+1arXiv:2607.09061v1 [cs.CV] 10 Jul 2026 Published as a conference paper at ECCV 2026 
+
+Figure 1: Overview of our work’s central question: How should visual reasoning models process spatially distributed evidence when test-time task length exceeds the training range? Global models, that process the full image in a single pass, can learn shortcuts that fail out-of-distribution. Foveated recurrent processing, in contrast, decomposes the task into repeated local observations and state updates, which supports generalization to longer visual sequences. work has shown that transformer language models fail to length-generalize in such tasks (Dubois et al., 2020; Anil et al., 2022; Dziri et al., 2023; Abbe et al., 2024; Deletang et al., 2023; Ebrahimi et al., 2024; Zhou et al., 2024). This failure is widely attributed to the fact that these models learn global “shortcut” solutions (Liu et al., 2023; Li et al., 2025), which fail to represent the composi-tional structure in these tasks and therefore do not generalize out-of-distribution (OOD). Previous studies (Abbe et al., 2024; Ebrahimi et al., 2024) trace these shortcuts to the global attention mech-anism: transformers struggle to retrieve the right information in the right order from their context window, and thus fail to sequentially retrieve a required token at the right time. While the inability to length-generalize in such sequential tasks has also been shown to hold for state-space models (SSM) (Merrill et al., 2024; Sarrof et al., 2024; Cirone et al., 2024; Shakerinava et al., 2026; Ebrahimi & Memisevic, 2025), nonlinear recurrent networks (RNNs) do not suffer from this shortcoming (Giles et al., 1992; Casey, 1996; Deletang et al., 2023). This has been argued to be due to their ability to decompose a reasoning task inductively into a genuine step-by-step computation (Ebrahimi et al., 2026).In this work, we show a similar result in visual reasoning. However, in contrast to the existing work, we also show that recurrence is only one of two conditions that enables OOD generalization. The other is locality of perception, that is, the ingestion of information through a sequence of local glimpses. In fact, we show that a recurrent network exposed to a global view of the image does not learn to generalize OOD. Our work thus elucidates the importance of local perception. This is an aspect of reasoning that is naturally obscured in textual versions of these tasks. The reason is that in textual tasks, the relevant information is already decomposed into meaningful symbols and passed as tokens to the model sequentially. In contrast, the tasks we present in our work require a model not only to follow an abstract reasoning process but also to gather the local information required to complete the task. Our results suggest that the task of information gathering is an important overlooked aspect of general reasoning tasks. And it suggests local perception to be a key ingredient enabling a model to gather information in scenarios unseen during training. In line with previous findings in language modeling, we further show that generalization on state tracking tasks is distinctly different from generalization on recall tasks, and that local perception is not required (nor beneficial) for the latter. Our main contributions in detail are: 2Published as a conference paper at ECCV 2026      
+
+> (a) V ISUAL PARITY (b) S TATE MACHINE
+> (c) R ECALL (d) F INDING ROOTS
+
+Figure 2: Examples from our visual reasoning test-bed for length generalization. Top: VISUAL 
+
+PARITY and S TATE MACHINE require aggregating switch states over a variable-length visual se-quence, with S TATE MACHINE additionally requiring order-sensitive state updates. Bottom-left: 
+
+RECALL requires visual retrieval in the presence of clutter (no state tracking). Bottom-right: FIND - 
+
+> ING
+
+ROOTS is a real-world plot-reasoning task requiring localization of relevant subplots, identifi-cation of specific functions, and reasoning over its roots. 1. We propose length generalization as a fundamental testbed for visual reasoning, requiring models to extrapolate to images with more objects, longer visual dependencies, and greater task complexity than seen during training. 2. We show that current vision and vision-language models, despite strong in-distribution performance, fail to extrapolate in this setting, exposing a gap in visual reasoning that is not captured by standard benchmark evaluations. 3. We trace this failure to global perception: when models process the entire image at once, they can learn to use perceptual shortcuts that break under increased visual complexity. 4. We demonstrate that recurrent and strictly local perception enables length generalization. We also show that size and resolution of local glimpses is crucial for robust generalization. 5. Across three synthetic tasks and one real-world task, our results suggest that achieving flexible, human-like reasoning may require a return to biologically inspired, sequential attention policies. 
+
+## 2 TEST -BED FOR LENGTH GENERALIZATION 
+
+In the following, we first present the tasks designed to evaluate generalization in visual reasoning tasks and subsequently we present the datasets used for each task. 2.1 LENGTH GENERALIZATION TASKS 
+
+We consider visual reasoning problems that require a model to determine the state of an underlying system encoded as local information distributed over the image. We control the task length along 3Published as a conference paper at ECCV 2026 the two axes: resolution , i.e. the spatial resolution of the image, and task length , i.e., the number local pieces of information encoding the state. We note that these two dimensions are separate but can interact with one another, because for a fixed task length, the density of entities is dependent on the resolution. Fig. 2 shows examples of the tasks described in detail below. 
+
+VISUAL PARITY . This task serves as a visual analog to the classic bit-string Parity problem (Dubois et al., 2020; Anil et al., 2022; Dziri et al., 2023; Abbe et al., 2024). The input consists of N binary “switches” (toggleable states: pressed / 1 or not-pressed / 0) placed at random positions across the image. The objective is to compute the global parity of the system, or equivalently determining if the sum of pressed states is odd or even. Crucially, this task is subtly different from the customary Parity task used to study length general-ization in language models: In the textual domain, an autoregressive model ingests a pre-ordered, linear sequence of bits. In our visual setting, the bits are not fed sequentially. Instead, the relevant information is spatially distributed. Consequently, the model must locate the switches within the 2D canvas and aggregate all of their states to determine the global state of the system. An example of the task can be seen in Fig. 2a. 
+
+STATE MACHINE . While Visual Parity requires the model to aggregate information across local positions on the image, the task is inherently permutation-invariant, that is, the order of information aggregation does not matter. To rule out permutation-invariance as a confounding factor, we also construct a task in which the order is relevant. To this end, following Liu et al. (2023), we construct a task that simulates a state machine realizing the action of the dihedral group: Starting from a pre-defined state, a non-pressed / 0 switch applies an update rule to the current state. States are numerical, and initial the update rule is increment . A pressed / 1 switch reverses the current update rule, such that the non-pressed switch henceforth decrements the state. This will be the case until another pressed switch is encountered, which changes the meaning back to increment , and so on. To denote the order, we render arrows between the switches. The starting switch is denoted using the color green, the ending switch is denoted using the color red, and the intermediate switches are denoted using the color purple. All increment and decrement operations are modulo 3, so that at inference time, the model never encounter values it has never seen during training. Fig. 2b shows an example of the task; a formal definition of this construction is provided in Sec. C. 
+
+RECALL . Out-of-distribution generalization in the tasks above demonstrates a model’s ability to perform state tracking . It is important to note that, while transformer-based language models cannot length-generalize in these tasks, they can length-generalize in tasks involving key-value retrieval (or “recall”). These are tasks in which a model needs to determine the value associated with a given key after seeing a sequence of interleaved key-value pairs ( e.g . (Phan et al., 2025)). We therefore include a control setting, in which state tracking is not required to successfully general-ize out-of-distribution. Following Campbell et al. (2024), we define the task as a search problem, in which the model needs to identify if a specific target object is present (True or False) among a set of distractors with multiple overlapping attributes. Specifically, consider the task of finding a red letter “L” within a visual scene showing red letters “T” and green letters “L”. Neither color nor shape alone is sufficient to identify the target object. To test generalization, we introduce out-of-distribution cases by increasing the number of objects beyond the number shown during training, which adds visual clutter and complexity. To reduce overlap, we increase the size of the canvas jointly with the number of distractors. This setup evaluates both recall and robustness under distribution shift. Suc-cessful generalization is non-trivial, as it requires a form of feature binding (Campbell et al., 2024). However, it does not require state tracking and should solvable using a global, parallel computation over the image similar to object detection. An example of the task can be seen in Fig. 2c. 
+
+FINDING ROOTS . We also include a task based on mathematical reasoning over plots to evaluate performance on a real-world task that can be solved naturally with the help of state tracking. Under-standing of mathematical plots is an important real-world task, for which data can nevertheless be generated synthetically. This makes it possible to control the amount of local visual information that needs to be aggregated in both in-distribution and out-of-distribution settings. We use the Finding-Zeros task from the MathSearch benchmark (Madan et al., 2024), where the goal is to determine the zeros of a function from a plot of the function in the presence of distractors, such as other functions and subplots. An example of the task can be seen in Fig. 2d. A natural way to answer a question, 4Published as a conference paper at ECCV 2026 probe 1               
+
+> MLP
+> LSTM
+> Vision
+> action 1
+> Foveated Peripheral Foveated Peripheral Foveated Peripheral
+> Vision
+> MLP MLP
+> LSTM
+> Vision Vision
+> MLP MLP
+> LSTM
+> Vision Vision
+> MLP
+> probe 2action 2probe 5action 5
+> STATE
+> MACHINE
+> (length 5) Step 1 Step 2 Step 5
+
+Figure 3: Overview of F OVE AGENT -LSTM. At each step, the model receives a high-resolution local glimpse together with a low-resolution peripheral glimpse, updates its recurrent state, and predicts the next action and any other task-relevant outputs. This step-by-step local processing is different from most standard vision and vision-language models, which process the full image globally in a single forward pass. such as “Find the roots of function SE in subplot 61” , is to use iterative visual search to first localize the relevant subplot, to subsequently locate the target function and coordinate axes, and to finally pinpoint the intersection of the curve with the horizontal axis ( y = 0 ). To generate out-of-distribution scenarios, we set the number of zeros and/or the number of subplots at test time to different values than during training. 2.2 DATASETS 
+
+We create Gymnasium environments (Towers et al., 2024) for the tasks in Sec. 2.1 along with or-acle policies. Using these oracle policies, we generate a dataset of trajectories, each containing a sequence of local glimpses Gl, which are small local crops from the larger image, corresponding pe-ripheral glimpses Gp, which are larger crops centered at the same locations, delta actions A, which are defined as the difference between the current glimpse position and the next desired position, probes P , which are used as extra sub-task supervision as we shall discuss below, a task question 
+
+Q, and a task outcome O. For robustness, we also add noise to the training trajectories by randomly perturbing the locations of glimpses. For each task, we create in-distribution (InD) and out-of-distribution (OOD) settings by varying image resolution and task complexity. For all our experiments, we only use the InD dataset for training and run evaluations on both InD and OOD settings. Unless specified otherwise, we use 
+
+1200 × 800 image resolution as the InD resolution. For V ISUAL PARITY and S TATE MACHINE , we use 2−10 switches in the InD setting and 10 −20 switches in the OOD setting. For R ECALL , we use 
+
+< 10 distractors in the InD setting and > 10 distractors in the OOD setting. Finally, for F INDING 
+
+ROOTS , we use 1–6 roots and 1–6 subplots in the InD setting, and we consider two separate OOD settings: we set the number of roots to 7–10 for one (setting “OOD-numroots”) and the number of subplots to 7–9 for the other (setting “OOD-subplots)”. Additional dataset details are provided in Sec. C. 
+
+## 3 RECURRENT FOVEATION MODEL 
+
+We now describe the recurrent, local vision model we use in our experiments. The model ingests visual input through a sequence of foveated and peripheral glimpses, similar to earlier models of foveated perception (Larochelle & Hinton, 2010; Ba et al., 2014; Mnih et al., 2014; Gregor et al., 2015). We illustrate the architecture, which we refer to as F OVE AGENT -LSTM, in Fig. 3. 5Published as a conference paper at ECCV 2026 We hypothesize that the local glimpse can facilitate mainly the processing of fine-grained image details, whereas the peripheral glimpse can facilitate “navigation”, that is, determining positions to move to. We shall present evidence for this separation in Section 4. 
+
+Overview and Step-by-step Operation. For any given vision task, the model starts from a fixed initial location, which is provided as an input to the model. The model then iteratively processes the information encoded in the local glimpses and generates displacements to determine the next glimpse location as well as any additional task-specific information. The model continues this itera-tive process until it has acquired the required information to solve the task, at which point it outputs the solution. 
+
+Architecture. The F OVE AGENT -LSTM model consists of a recurrent LSTM backbone as shown in Fig. 3. The foveated and the peripheral glimpses are each encoded by a ResNet (He et al., 2016) encoder, which output features are concatenated and passed to the LSTM backbone. Both glimpses are square in shape and the size of the peripheral glimpse G p is 4 × the size of the foveated glimpse Gl. However, both glimpses are resized to the same fixed resolution, which we refer to as the sensor resolution . We use a fixed sensor resolution to mimic the human visual system and also to restrict the amount of information in the peripheral glimpse and thus to reduce the potential for learning visual “shortcuts”. At every timestep, the F OVE AGENT -LSTM outputs the action along with the output of a probe (described next). The action encodes the displacement specifying the next location to be extracted. Specifically, the displacement is determined by a tuple of the form (angle, magnitude): (θ, d ), where 
+
+0 ≤ θ ≤ 2π and 0 ≤ d ≤ Gp. The next location, xt+1 , is defined as xt+1 = xt + du t(θ), where xt
+
+is the current position and ut(θ) is a unit vector pointing in the direction given by the angle θ. As 
+
+0 ≤ d ≤ Gp, the new local glimpse center xt+1 is constrained to be within the peripheral glimpse location. Additionally, the action also contains a stop bit, s, which is 1 when the model decides to output the solution, and 0 otherwise. 
+
+Probes. At every time step, in addition to an action, the F OVE AGENT -LSTM can output the value of a probe which makes it possible to add supervision signals beyond final answer accuracy during training (Bhattacharyya et al., 2024). In the V ISUAL PARITY and S TATE MACHINE tasks, probes are 0, 1 or null if the state in the current local glimpse is 0, 1 or not visible, respectively. This kind of information is analogous to aligned chain-of-thought supervision used in textual tasks, where it can drastically improve data efficiency for learning (Ebrahimi et al., 2026). In the case of F INDING 
+
+ROOTS , the probe encodes whether a function root is observed or not. 
+
+## 4 EXPERIMENTS 
+
+We now present evaluation results that support our core hypotheses regarding OOD generalization in visual state tracking. We summarize our hypotheses as follows: H1. Local perception is necessary for OOD generalization. H2. Recurrence is necessary for OOD generalization. H3. Together, recurrence and local perception are sufficient for OOD generalization. 
+
+Experimental Setup. We vary both the task complexity and image resolution to create an OOD set as described in Sec. 2.2. In this section, we compare the F OVE AGENT -LSTM against Q WEN 2.5-VL-3B-I NSTRUCT , which is a broadly used state-of-the-art visual reasoning model. We train the models on the InD set as described in Sec. 2.2 until convergence. We also perform zero-shot eval-uations on a range of other closed source state-of-the-art models, using the prompts and chain-of-thought instructions reported in Sec. G. 
+
+Evaluation Metrics. We use final answer accuracy as our main metric for evaluation. For FOVE AGENT -LSTM, in addition to the final answer, we also evaluate whether the model visits all locations containing task-relevant local information, e.g ., all switches in V ISUAL PARITY . The full evaluation criteria are described in Sec. B. 6Published as a conference paper at ECCV 2026 
+
+Figure 4: Success rates on V ISUAL PARITY and S TATE MACHINE as a function of task complex-ity and image resolution. Top: performance for varying numbers of switches (within and beyond the training range). The shaded regions indicate in-distribution and out-of-distribution task lengths. 
+
+Bottom: average OOD performance across image resolutions, with stars marking the training res-olution. The foveated model maintains high accuracy out-of-distribution, while the performance of the global-view VLM baselines degrades with increasing task length and resolution. 4.1 PARITY AND STATE MACHINE TASKS 
+
+To evaluate the ability of the models to perform state tracking, we use the V ISUAL PARITY and STATE MACHINE tasks described in Sec. 2.1. Note that the InD dataset used for training contains images showing 2 to 10 switches on a 800x1200 resolution canvas. The OOD evaluation set con-tains varying image resolutions and tasks with 11 to 20 switches We first compare the F OVE AGENT -LSTM with Q WEN 2.5-VL-3B-I NSTRUCT , which we finetune to make predictions using the full high resolution image along with the “chain-of-thought” description of the target glimpse posi-tions to provide the same supervision information as that of F OVE AGENT -LSTM. We also compare FOVE AGENT -LSTM with various SOTA models like GPT 5.4 (OpenAI) and Claude Sonnet 4.6 (Anthropic) using few-shot prompting. We show the results for the V ISUAL PARITY and S TATE MACHINE tasks in Fig. 4. The results show that F OVE AGENT -LSTM generalizes across both axes of task complexity, resolution, and task length. On the other hand, Q WEN 2.5-VL-3B-I NSTRUCT , while able to achieve high accuracy in-distribution, shows a sharp decline in performance as the task complexity increases. For the few-shot closed-source VLMs, we noticed that the degradation with increasing canvas com-plexity appears to reflect multiple sources of error. In many cases, the models fail to recover the complete task-relevant structure from the image, for example by missing switches or misinterpreting arrows. In other cases, the visual evidence appears to be available but the state-tracking computation 7Published as a conference paper at ECCV 2026 
+
+Figure 5: Effect of the visual interface on length generalization for V ISUAL PARITY with the same recurrent backbone. The performance of the Global and Local+Global variants de-grades OOD, while the foveated setup main-tains high success using local high-resolution glimpses with low-resolution peripheral context. 16 64 80 160 320                 
+
+> Resolution
+> 14816
+> Peripheral Glimpse Scale
+> 0.25 0.32 0.32 0.31 0.27
+> 0.80 0.84 0.99 0.85 0.00
+> 0.37 0.79 0.68 0.54 0.05
+> 0.11 0.40 0.56 0.31 0.18
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> Accuracy
+
+Figure 6: Effect of peripheral glimpse scale and resolution on F OVE AGENT -LSTM. The x-axis varies the resolution of the peripheral glimpse and the y-axis varies the scale of the peripheral glimpse relative to the local glimpse. Best per-formance should require sufficient spatial con-text for navigation without allowing the periph-eral view to be used to compute global shortcuts. still fails. This highlights that in spite of the intentional simplicity of the task design, these tasks are non-trivial to solve, and challenge both visual information gathering, and state tracking capabil-ities of the best available VLMs. Overall, the results summarized in Figure 4 provide evidence for hypothesis H3 .4.2 LOCAL VS GLOBAL PERCEPTION 
+
+In Section 4.1, we show that a model with local visual processing and a recurrent backbone is able to generalize OOD in visual state tracking tasks. We now examine in more detail which aspects of the model enable OOD generalization. To this end, we consider three setups which differ in how visual information is provided at each time step: (1) Global : The recurrent model receives the full high-resolution image showing the task (2) Local+Global : The recurrent model receives local high-resolution crops along with the full high-resolution image showing the task (3) F OVE AGENT -LSTM: The model receives local high-resolution crops along with larger peripheral crops at down-scaled resolution (same as in the previous section) but never sees the full image Figure 5 shows that although the three settings have similar in-distribution performance, both Global 
+
+and Local+Global , in which the model has access to the full high resolution canvas during training, show poor OOD generalization. The results provide evidence for hypothesis H1 .4.3 VARYING GLIMPSE SIZE AND RESOLUTION 
+
+The use of local receptive fields requires a model to take multiple steps to explore the input image and aggregate information before predicting the output. For most typical tasks, the number of steps required to collect the relevant information will be inversely proportional to the glimpse size, as larger glimpses cover more canvas area per step. This also means that with larger glimpse sizes, a recurrent network can process the whole image in fewer steps and requires fewer time-steps to back-propagate errors through for learning. On the other hand, according to the main thesis of this work, larger glimpses also provide an oppor-tunity to learn global shortcuts that do not generalize. For example, in the case of Visual Parity, a larger glimpse containing multiple switches would allow the model to learn a parallel computation that does not generalize out-of-distribution. This suggests that there is a strict trade-off with re-spect to glimpse size: larger glimpse sizes should benefit learning, and smaller glimpse sizes should benefit OOD generalization. 8Published as a conference paper at ECCV 2026 
+
+Figure 7: Generalization on V ISUAL PARITY 
+
+without traversal arrows. F OVE AGENT -LSTM maintains high OOD performance while ac-tively searching for unvisited switches. 
+
+Figure 8: Effect of sequence-processing architec-ture on S TATE MACHINE with fixed local visual inputs. Strictly recurrent models generalize out-of-distribution, while all other tested architectures do not. This trade-off also affects the resolution with which the glimpse is made available to the model (the sensor-resolution of the glimpse): an optimal sensor resolution needs to be high enough to support navigating the canvas, but it needs to be low enough to avoid learning shortcuts over the glimpse. This creates a conflict which foveation can elegantly resolve: the high-resolution fovea makes it possible to infer the details relevant to the task, while the low-resolution periphery makes it possible to navigate the canvas. To study the relationship between glimpse size, resolution and resulting accuracy quantitatively, we vary glimpse sizes and resolution on V ISUAL PARITY . We show the results using the F OVE AGENT -LSTM model in Fig. 6. To jointly capture prediction accuracy and exploration efficiency, we report the metric prs = A/L where r denotes the resolution, s denotes the scale of the peripheral glimpse, 
+
+A denotes the success rate or accuracy and L denotes the average number of steps taken by the model before making a prediction. We find that there is indeed an optimal resolution and size for the peripheral glimpse at resolution 80 and size 4, and increasing resolution or size deteriorates performance. 4.4 STATE TRACKING WITH ACTIVE VISUAL SEARCH 
+
+The state-tracking tasks in Sec. 4.1 above use visual cues in the form of arrows to specify the order in which the switches should be visited. We next study a complementary and more challenging variant in which these visual cues are removed. Here, the model must combine state tracking with active visual search: it must locate an unvisited switch, navigate to it, process its symbol, update the current state, and repeat this process until all switches have been considered. In this experiment, to make exploration more efficient, we augment the model with zoom-in and zoom-out actions, allowing it to adjust peripheral coverage while searching for the next target. As previously, the peripheral glimpse is always down-sampled to a fixed low resolution, regardless of its spatial extent. To further support navigation, we also make it possible for the model to mark each switch it has seen with a black dot on the canvas, and all subsequent glimpses reflect this change. The marks serve as an external memory for the model’s visitation history. We find that this makes it much easier to train the model. The agent still has to choose its next fixation, interpret each switch locally, and update the current state. As shown in Fig. 7, with these modifications the model continues to generalize out-of-distribution in this more challenging setting. These results indicate that the generalization behavior observed in the previous task with arrows is not merely a consequence of following an explicitly provided traversal path. Rather, when equipped with local recurrent processing, low-resolution peripheral search, and a spatial memory of past visitations, the model learns to combine active exploration with state tracking. 9Published as a conference paper at ECCV 2026 4.5 RECURRENT VS GLOBAL PROCESSING OF LOCAL VISUAL INPUTS 
+
+As we discussed, local perception controls how visual information is input to the model, but out-of-distribution generalization also depends on the computational backbone used to process that infor-mation. In this experiment, we fix a stream of input glimpses for the S TATE MACHINE task, and we compare the performance of multiple different architectures on the same local observations. We compare non-linear recurrent networks with models known to struggle with length-generalization, including transformers and linear RNNs (Mamba and XLSTM). Fig. 8 shows that recurrent networks are the only models that length-generalize. The results are in line with similar findings in textual state tracking tasks, and they suggest that the non-recurrent models can learn shortcuts even when the visual input is local. We also note that, even though strong pre-trained VLMs such as Q WEN 2.5-VL-3B-I NSTRUCT and QWEN3.5-VL-27B, perform well when fine-tuned in-distribution, they do not generalize out-of-distribution. Additional V ISUAL 
+
+PARITY results in Sec. E.2 follow the same trend. This experiment provides clear evidence in support of H2 .4.6 RECALL TASK 400x600 800x1200 1200x1800 2400x3600 
+
+> Canvas size
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Accuracy
+> FoveAgent-LSTM (Ours)
+> Qwen2.5-VL-3B-Instruct
+
+Figure 9: Results on R ECALL , a visual retrieval task with increasing clutter but no sequential state track-ing. The (non-foveated) global model performs well in this setting, highlighting the distinction between recall-heavy visual search and state-tracking tasks. We now turn to R ECALL to study OOD generalization in the absence of any state tracking. We train F OVE AGENT -LSTM and Q WEN 2.5-VL-3B-I NSTRUCT on the task with results shown in Fig. 9. We note that Q WEN 2.5-VL-3B-I NSTRUCT signif-icantly outperforms the foveated model on this task. As we note in Sec. 2.1, this task does not require state-tracking and a global vision model can learn the correct set of binding features (Campbell et al., 2024) leading to high accuracy. This is true despite using a significantly higher number of distractors during testing than during training. The fact that the recurrent model generalizes state tracking but not recall, while the transformer-based model does the converse, mirrors similar findings in the case of textual tasks (Phan et al., 2025). 4.7 TOWARDS LENGTH GENERALIZATION IN A REAL -WORLD SCENARIO 
+
+Vision-language models ( e.g ., Bai et al., 2025) have made significant progress in reasoning over mathematical plots as shown through evaluations on benchmarks like MathVista (Lu et al., 2024). Here we consider the real-world task of finding roots, which should arguably benefit from state tracking capabilities as discussed in Sec. 2.1. We demonstrate that despite impressive results on standard benchmarks, model performance lags significantly on this task particularly in terms of OOD length generalization. We finetune Q WEN 2.5-VL-3B-I NSTRUCT as well as a “foveated” version of Q WEN 2.5-VL-3B-I NSTRUCT , i.e ., F OVE AGENT -Q WEN . We use F OVE AGENT -Q WEN instead of F OVE AGENT -LSTM here, as currently, there are no large pre-trained vision-language models with a recurrent backbone capable of reasoning effectively over mathematical plots. F OVE AGENT -Q WEN receives a low-resolution glimpse of the original image, and local foveated glimpse(s) of size 200 × 200 pixels at the original image resolution. Both models are trained with exactly the same chain-of-thought tra-jectory, visualized in Fig. 14; however, Q WEN 2.5-VL-3B-I NSTRUCT does not receive local crops at the predicted locations because it already has access to the full-resolution global image of the can-vas. During training, the model sees up to 6 subplots on the canvas and functions containing up to 6 roots. On each subplot a maximum of 4 functions may be present. As OOD scenarios, we consider generalization over the number of subplots [7-9], the number of zeros [7-10], and a combination of both. 10 Published as a conference paper at ECCV 2026 Table 1: Accuracy (%) on F INDING ROOTS across in-distribution and OOD test settings; higher is better. Rows indicate the evaluation split: OOD-subplots increases the number of subplots, OOD-numroots increases the number of function roots, and OOD-(subplots+nr) increases both. The first column is the finetuned global-view Q WEN 2.5-VL-3B-I NSTRUCT baseline using a single global image input, while the remaining columns are F OVE AGENT -Q WEN variants that combine a global glimpse (G) with high-resolution local glimpses (L). Test Scenario G(1200,800) G(480,320) + L G(600,400) + L G(1200,800) + L In-distribution 57.24 74.50 80.44 82.26 OOD-subplots 50.12 57.49 68.78 77.24 OOD-numroots (nr) 32.63 61.62 65.85 67.12 OOD-(subplots+nr) 35.53 50.92 59.70 57.46 0 2000 4000 6000 8000 10000 12000                
+
+> Total Vision Tokens (Compute Cost)
+> 20
+> 30
+> 40
+> 50
+> 60
+> 70
+> OOD-numroots  Accuracy  (%)
+> SAME COMPUTE
+> +29.0% Acc
+> Standard Scaling Fails:
+> 10x Compute -> +3.8% Acc
+> G(300x200)+L
+> G(480x320)+L
+> G(600x400)+L G(1200x800)+L
+> 600x400 1200x800 1800x1200
+
+Performance vs. Visual Compute 
+
+> QwenVL-2.5V-3B
+> FoveAgent-Qwen
+
+Figure 10: Compute-matched comparison on F INDING ROOTS . For the same visual compute bud-get, F OVE AGENT -Q WEN nearly doubles the accuracy of the finetuned global-view Q WEN 2.5-VL-3B-I NSTRUCT baseline, showing that allocating compute to high-resolution local glimpses is sub-stantially more effective than uniformly increasing global image resolution. As shown in Tab. 1, the foveated approach significantly outperforms the model using only a 1200 ×
+
+800 global view, both in InD and OOD settings. These gains suggest that many failures of the global model stem from insufficient access to fine-grained visual evidence: local glimpses allow FOVE AGENT -Q WEN to inspect the relevant subplot, function, and root locations. At the same time, one should interpret the OOD-numroots gains cautiously. The model is evaluated beyond the training range of roots, but this split represents a moderate extrapolation from nearby counts rather than the stronger form of systematic length generalization tested in the synthetic state-tracking tasks. Thus, the result supports the importance of foveated perception for gathering visual evidence from the canvas. But they remain consistent with our broader conclusion that robust OOD state tracking requires recurrent processing. Finally, we observe that for global models, performance degradation for OOD scenarios involving more subplots is substantially smaller than for scenarios involving more roots. This aligns with the earlier recall experiments: locating a target subplot is closer to a visual retrieval problem, whereas finding multiple roots requires maintaining and updating state across a variable- length sequence of local observations. 
+
+Limits of uniformly scaling resolution: Another effect of adding local glimpses is that it increases the compute available to the model by allocating additional tokens to selected regions of the image. To ensure that the gains from F OVE AGENT -Q WEN are not simply due to using more visual tokens, we compare against global-view baselines at matched computational budgets. For a fair comparison, each global-view baseline is finetuned for its corresponding input, allowing each baseline to adapt to the corresponding visual token budget. 11 Published as a conference paper at ECCV 2026 Fig. 10 shows that F OVE AGENT -Q WEN nearly doubles the accuracy of the baseline for the same compute budget. This result suggests a clear functional division: global resolution needs to be sufficient only for coarse navigation, while fine-grained visual reasoning is better served by high-resolution local glimpses. Notably, even when the global-view baseline is finetuned at substantially higher resolution, uniformly scaling global compute yields only marginal gains, indicating that the advantage of F OVE AGENT -Q WEN is not simply a consequence of using more visual tokens. 
+
+## 5 RELATED WORK 
+
+OOD Generalization in Language Tasks. It is well known that transformer-based language models fail at performing algorithmic tasks in token sequences whose lengths are different from those seen during training (Dubois et al., 2020; Anil et al., 2022; Dziri et al., 2023; Zhou et al., 2024). Several recent works have proposed explanations for this inability, ranging from the inability to solve tasks with high “globality” (Abbe et al., 2024) to the inability to perform random-access addressing into the context window (Ebrahimi et al., 2024). Recently, it has been shown that the problem is not only restricted to transformer-based models but also holds for linear RNNs and state-space models (e.g., Merrill et al., 2024; Sarrof et al., 2024; Cirone et al., 2024; Shakerinava et al., 2026; Ebrahimi & Memisevic, 2025). In this work, we consider the related problem of performing algorithmic reasoning in the visual domain, and we show that there exist important commonalities but also differences to reasoning over symbol sequences. 
+
+OOD Generalization in Vision Tasks. There is a wide range of benchmarks on visual reasoning (e.g., Lu et al., 2024; Yue et al., 2024 and references therein) as well as a wide range of benchmarks that measure OOD generalization in vision, such as (Babaiee et al., 2025; Cherian et al., 2023; Zhao et al., 2022). In contrast to the existing work, in this work we consider a highly specific and simple form of OOD generalization: the ability of a model to generalize over a number of visual entities that differs between training and testing. This is in direct analogy to existing studies in the language domain (Dubois et al., 2020; Anil et al., 2022; Dziri et al., 2023), where it was shown that this is type of generalization is challenging for existing foundation models, although it is trivial for humans. A simple visual version of the parity task, similar to some of the tasks we study in the work, is discussed by Stabinger et al. (2020). In contrast to our work, that work considers in-distribution performance (and specifically failures of gradient-based learning), Similar to our work, Veerabadran et al. (2023) study the use of recurrent networks for visual OOD generalization. However, in that work, models perceive whole images whereas in our study they perceive local regions which improves OOD generalization. Importantly, the results in that work show that, although recurrent models outperform non-recurrent ones, generalization performance drops sharply as a function of image size, in line with our findings in Sec. 2. Similarly, Lotfi et al. (2025) present an approach to OOD generalization by training a convolutional network to perform (global) pre-defined modifications to the input image. In contrast to that work, we investigate the impact of local versus global perception on the ability to generalize and show that local perception is an inductive bias that enables generalization. 
+
+Visual attention. Foveation is an important feature of human vision, and there is a range of work exploring the use of biologically inspired spatial attention in computer vision tasks, includ-ing (Larochelle & Hinton, 2010; Ba et al., 2014; Mnih et al., 2014; Gregor et al., 2015) (see also Guo et al., 2022 for a recent survey). However the study of spatial attention has taken a back-seat in recent years in favor vision-language models with convolutional or ViT-based visual front-end. In contrast to existing work in that area, our primary goal is not to introduce a novel attention mecha-nism but to study the way in which local attention can benefit length-generalization. 
+
+## 6 DISCUSSION 
+
+In this work, we study out-of-distribution generalization in the context of visual reasoning. We hypothesize that the common practice of encoding visual information in a global context window, or by using a global vision front-end, such as a convolutional network or ViT, prevents existing models from generalizing out-of-distribution. We show that combining local visual input with recurrent processing unlocks length generalization in visual state tracking. These results suggest recurrence 12 Published as a conference paper at ECCV 2026 and locality both to be necessary, and the combination of both to be sufficient for compositional generalization in visual reasoning tasks. We also show that out-of-distribution generalization on the one hand, and the need to explore or perform search over the image on the other, are in conflict, in that the first requires small/low-resolution glimpses while the latter requires large/high-resolution glimpses. And we show that a human-inspired foveation model combining a high-resolution fovea with a low-resolution periphery makes it possible to resolve this conflict. We train the local perception policies in this work using imitation learning based on ground truth policies. While these are straightforward to generate for synthetic tasks, learning broadly general policies is an open research problem and it will likely require more varied tasks, reinforcement learning or a combination of both. Recent work has shown that recurrent computation in language models not only improves OOD generalization, but that it also has a dramatic impact on data efficiency for learning reasoning tasks in distribution (Ebrahimi et al., 2026). We hypothesize that a similar find-ing will be true for visual reasoning tasks, which would suggest that local visual attention may be a crucial, albeit vastly underexplored, ingredient in future visual foundation mod-els. 
+
+## REFERENCES 
+
+Emmanuel Abbe, Samy Bengio, Aryo Lotfi, Colin Sandon, and Omid Saremi. How far can trans-formers reason? the globality barrier and inductive scratchpad. In NeurIPS , 2024. 2, 4, 12 Cem Anil, Yuhuai Wu, Anders Andreassen, Aitor Lewkowycz, Vedant Misra, Vinay Ramasesh, Am-brose Slone, Guy Gur-Ari, Ethan Dyer, and Behnam Neyshabur. Exploring length generalization in large language models. In NeurIPS , 2022. 2, 4, 12 Anthropic. Introducing claude sonnet 4.6. https://www.anthropic.com/news/ claude-sonnet-4-6/ , 2026. [Online; accessed Mar-2026]. 1, 7 Jimmy Ba, Volodymyr Mnih, and Koray Kavukcuoglu. Multiple object recognition with visual attention. arXiv preprint arXiv:1412.7755 , 2014. 5, 12 Zahra Babaiee, Peyman Kiasari, Daniela Rus, and Radu Grosu. Visual graph arena: Evaluating visual conceptualization of vision and multimodal large language models. In ICML , 2025. 12 Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, Jiabo Ye, Xi Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang, Haiyang Xu, and Junyang Lin. Qwen2.5-vl technical report. arXiv preprint arXiv:2502.13923 , 2025. 1, 10 Apratim Bhattacharyya, Sunny Panchal, Reza Pourreza, Mingu Lee, Pulkit Madan, and Roland Memisevic. Look, remember and reason: Grounded reasoning in videos with language models. In ICLR , 2024. 6 Declan Iain Campbell, Sunayana Rane, Tyler Giallanza, C. Nicol` o De Sabbata, Kia Ghods, Amogh Joshi, Alexander Ku, Steven M Frankland, Thomas L. Griffiths, Jonathan D. Cohen, and Tay-lor Whittington Webb. Understanding the limits of vision language models through the lens of the binding problem. In NeurIPS , 2024. 4, 10 Mike Casey. The dynamics of discrete-time computation, with application to recurrent neural net-works and finite state machine extraction. Neural computation , 8(6):1135–1178, 1996. 2 Anoop Cherian, Kuan-Chuan Peng, Suhas Lohit, Kevin Smith, and Joshua B. Tenenbaum. Are Deep Neural Networks SMARTer than Second Graders? In CVPR , 2023. 12 Nicola Muca Cirone, Antonio Orvieto, Benjamin Walker, Cristopher Salvi, and Terry Lyons. Theo-retical foundations of deep selective state-space models. In NeurIPS , 2024. 2, 12 13 Published as a conference paper at ECCV 2026 Gregoire Deletang, Anian Ruoss, Jordi Grau-Moya, Tim Genewein, Li Kevin Wenliang, Elliot Catt, Chris Cundy, Marcus Hutter, Shane Legg, Joel Veness, and Pedro A Ortega. Neural networks and the chomsky hierarchy. In ICLR , 2023. 2 Yann Dubois, Gautier Dagan, and Elia Bruni. Location attention for extrapolation to longer se-quences. In ACL , 2020. 2, 4, 12 Nouha Dziri, Ximing Lu, Melanie Sclar, Xiang (Lorraine) Li, Liwei Jiang, Bill Yuchen Lin, Sean Welleck, Peter West, Chandra Bhagavatula, Ronan Le Bras, Jena Hwang, Soumya Sanyal, Xiang Ren, Allyson Ettinger, Zaid Harchaoui, and Yejin Choi. Faith and fate: Limits of transformers on compositionality. In NeurIPS , 2023. 2, 4, 12 MohammadReza Ebrahimi and Roland Memisevic. Revisiting bi-linear state transitions in recurrent neural networks. In NeurIPS , 2025. 2, 12 MohammadReza Ebrahimi, Sunny Panchal, and Roland Memisevic. Your context is not an array: Unveiling random access limitations in transformers. In COLM , 2024. 2, 12 Reza Ebrahimi, Micha¨ el Defferrard, Sunny Panchal, and Roland Memisevic. On the “induction bias” in sequence models. In ICML , 2026. 2, 6, 13 C Lee Giles, Clifford B Miller, Dong Chen, Hsing-Hen Chen, Guo-Zheng Sun, and Yee-Chun Lee. Learning and extracting finite state automata with second-order recurrent neural networks. Neural Computation , 4(3):393–405, 1992. 2 Karol Gregor, Ivo Danihelka, Alex Graves, and Daan Wierstra. Draw: A recurrent neural network for image generation. ICML , 2015. 5, 12 Meng-Hao Guo, Tian-Xing Xu, Jiang-Jiang Liu, Zheng-Ning Liu, Peng-Tao Jiang, Tai-Jiang Mu, Song-Hai Zhang, Ralph R. Martin, Ming-Ming Cheng, and Shi-Min Hu. Attention mechanisms in computer vision: A survey. Computational Visual Media , 8(3):331–368, 2022. 12 Mary Hayhoe and Dana Ballard. Eye movements in natural behavior. Trends in Cognitive Sciences ,9(4):188–194, April 2005. ISSN 1364-6613. doi: 10.1016/j.tics.2005.02.009. URL https: //doi.org/10.1016/j.tics.2005.02.009 . 1 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image recog-nition. In CVPR , 2016. 6, 17 Sepp Hochreiter and J¨ urgen Schmidhuber. Long short-term memory. Neural computation , 9(8): 1735–1780, 1997. 17 Hugo Larochelle and Geoffrey E Hinton. Learning to combine foveal glimpses with a third-order boltzmann machine. In NeurIPS , 2010. 5, 12 Belinda Z. Li, Zifan Carl Guo, and Jacob Andreas. (how) do language models track state? In ICML ,2025. 2 Bingbin Liu, Jordan T. Ash, Surbhi Goel, Akshay Krishnamurthy, and Cyril Zhang. Transformers learn shortcuts to automata. In ICLR , 2023. 2, 4, 17 Aryo Lotfi, Enrico Fini, Samy Bengio, Moin Nabi, and Emmanuel Abbe. Chain-of-sketch: Enabling global visual reasoning, 2025. 12 Pan Lu, Hritik Bansal, Tony Xia, Jiacheng Liu, Chunyuan Li, Hannaneh Hajishirzi, Hao Cheng, Kai-Wei Chang, Michel Galley, and Jianfeng Gao. Mathvista: Evaluating mathematical reasoning of foundation models in visual contexts. In ICLR , 2024. 10, 12 Pulkit Madan, Sanjay Haresh, Apratim Bhattacharyya, Litian Liu, and Reza Zadeh. Math-search: A benchmark for multi-hop visual reasoning over plots. In Multimodel Algorithmic Reasoning Workshop, CVPR , 2024. 4, 16, 17 William Merrill, Jackson Petty, and Ashish Sabharwal. The illusion of state in state-space models. In ICML , 2024. 2, 12 14 Published as a conference paper at ECCV 2026 Volodymyr Mnih, Nicolas Heess, Alex Graves, and Koray Kavukcuoglu. Recurrent models of visual attention. In NeurIPS , 2014. 5, 12 OpenAI. Introducing gpt-5.4. https://openai.com/index/introducing-gpt-5-4/ ,2026. [Online; accessed Mar-2026]. 1, 7 Buu Phan, Reza Ebrahimi, Sanjay Haresh, and Roland Memisevic. Delayed attention training im-proves length generalization in transformer–rnn hybrids. arXiv preprint arXiv:2510.00258 , 2025. 4, 10 Yash Sarrof, Yana Veitsman, and Michael Hahn. The expressive capacity of state space models: A formal language perspective. In NeurIPS , 2024. 2, 12 Mehran Shakerinava, Behnoush Khavari, Siamak Ravanbakhsh, and Sarath Chandar. The expressive limits of diagonal SSMs for state-tracking. In ICLR , 2026. 2, 12 Sebastian Stabinger, David Peer, and Antonio Rodr´ ıguez-S´ anchez. Training of feedforward net-works fails on a simple parity-task. NeurIPS, Nov 2020. 12 Mark Towers, Ariel Kwiatkowski, Jordan Terry, John U Balis, Gianluca De Cola, Tristan Deleu, Manuel Goul˜ ao, Andreas Kallinteris, Markus Krimmel, Arjun KG, et al. Gymnasium: A standard interface for reinforcement learning environments. arXiv preprint arXiv:2407.17032 , 2024. 5 Vijay Veerabadran, Srinivas Ravishankar, Yuan Tang, Ritik Raina, and Virginia de Sa. Adaptive recurrent vision performs zero-shot computation scaling to unseen difficulty levels. In NeurIPS ,2023. 12 Xiang Yue, Yuansheng Ni, Kai Zhang, Tianyu Zheng, Ruoqi Liu, Ge Zhang, Samuel Stevens, Dongfu Jiang, Weiming Ren, Yuxuan Sun, Cong Wei, Botao Yu, Ruibin Yuan, Renliang Sun, Ming Yin, Boyuan Zheng, Zhenzhu Yang, Yibo Liu, Wenhao Huang, Huan Sun, Yu Su, and Wenhu Chen. Mmmu: A massive multi-discipline multimodal understanding and reasoning benchmark for expert agi, 2024. 12 Bingchen Zhao, Shaozuo Yu, Wufei Ma, Mingxin Yu, Shenxiao Mei, Angtian Wang, Ju He, Alan Yuille, and Adam Kortylewski. Ood-cv: A benchmark for robustness to out-of-distribution shifts of individual nuisances in natural images, 2022. 12 Hattie Zhou, Arwen Bradley, Etai Littwin, Noam Razin, Omid Saremi, Joshua Susskind, Samy Bengio, and Preetum Nakkiran. What algorithms can transformers learn? a study in length generalization. In ICLR , 2024. 2, 12 15 Published as a conference paper at ECCV 2026 
+
+## A APPENDIX OVERVIEW 
+
+The Appendix is organized as follows: 1. Sec. B describes the evaluation metrics used for each task. 2. Sec. C provides dataset and task-construction details, including the formal construction of the S TATE MACHINE task. 3. Sec. D gives implementation and training details for FOVE AGENT -LSTM and FOVE AGENT -Q WEN .4. Sec. E reports additional controlled visual-reasoning results that support the main-paper analyses of local versus global perception and recurrent versus global processing. 5. Sec. F provides additional F INDING ROOTS results and qualitative examples, including the multi-function split and visual trajectory generation procedure. 6. Sec. G lists the zero-shot VLM prompts for V ISUAL PARITY , S TATE MACHINE , and R E-
+
+> CALL
+
+.
+
+## B EVALUATION METRICS 
+
+In this section, we describe the criteria used to evaluate the models on all the tasks considered in this work. Evaluation for Visual-Parity and State-Machine is based on prediction accuracy, requiring the model to correctly identify the final state (e.g., parity 0/1 or state machine 0/1/2). Crucially, for F OVE AGENT -LSTM, we impose a traversal requirement: the model must attend to every task-relevant object on the canvas. Consequently, any instance where F OVE AGENT -LSTM misses an item is penalized as incorrect, even if the classification is coincidentally correct. For Conjunc-tive Search task, we also use the accuracy metric. For the Finding Zeros task, we implement a precision-based evaluation metric that accommodates reasonable approximation in numerical pre-dictions. Using the metadata available in Math-Search (Madan et al., 2024), we conduct a relaxed evaluation for each predicted zero. A prediction is considered correct if it falls within one quarter of one tick step of the x-axis of the ground truth value. For example, in Fig. 13, where the x-tick step is 1.0, the predicted root must be within ±0.25 units of the actual root to be counted as cor-rect. Since a function may have multiple zeros, we use partial scoring i.e. the model is assigned a score proportional to the number of zeros predicted correctly. Concretely, the score takes the form 
+
+S(x) =   
+
+> P
+> iI(xi∼∈ Z)
+> |x|
+
+where x is the set of zeros predicted by the model, Z is the set of ground truth zeros and ∼∈ represents the relaxed evaluation as described above. 
+
+## C DATASET AND TASK DETAILS 
+
+In this section, we provide additional details about the datasets and task constructions used in the main paper. For each task described in Sec. 3.1, we generate in-distribution (InD) and out-of-distribution (OOD) splits by varying image resolution and task complexity, as summarized in Sec. 3.2. All models are trained only on InD training examples and evaluated on both InD and OOD test sets. For each task, we generate separate training, validation, and InD test sets, as well as additional OOD test sets. For F OVE AGENT -LSTM, training examples are generated using oracle policies that produce trajectories of glimpse-action pairs. Each trajectory contains local glimpses, peripheral glimpses, actions, probes, the task question, and the final answer label. For S TATE MA- 
+
+> CHINE
+
+and V ISUAL PARITY , the switches on canvas are connected with arrows. The oracle policy follows the arrows until the last unvisited switch. The step size of the oracle policy is bounded by the size of the peripheral glimpse, Gp. More concretely, it takes a step of up to a maximum of 
+
+0.8 × | Gp| in the direction of the next unvisited switch. For the more challenging variant of V ISUAL 
+
+PARITY described in Sec. 4.4, the switches are not connected with arrows. Here, the oracle policy visits the next unvisited switch visible in the peripheral glimpse. If no unvisited switch is visible, the policy zooms out until it finds an unvisited switch, or until all the boundaries of the canvas are visible. When all boundaries of the canvas are seen the episode is ended. Each zoom-out action doubles the size of glimpses i.e. the glimpse sees 4x the area compared to the previous step. Once the agent reaches the target, the policy zooms in to bring both the glimpse sizes to the original size. Similar to zoom-out, each zoom-in action halves the size of the glimpses. 16 Published as a conference paper at ECCV 2026 It is to be noted that the regardless of the size, the glimpses are always down-samp led to the sensor resolution before they are passed as inputs to the model to avoid learning shortcuts. For robustness, we add noise to the positions of the glimpses in the oracle trajectories so that the trained policy can learn recovery behavior. For all tasks except F INDING ROOTS , we generate 50k training trajectories at a resolution of 1200 × 800 . Evaluation is conducted on 2000 unseen samples from each InD and OOD split. For F INDING ROOTS , we curate a training set of 20k samples from Math-Search (Madan et al., 2024), containing images of size 1200 × 800 , question-answer pairs, and rich metadata for each plot. For each sample, we generate a visual trajectory that simulates an agent equipped with both global and local glimpses as it locates the roots of a target function in a specified subplot. The agent begins at the upper-left corner (0 , 0) and navigates to positions that help identify the correct subplot and target function before executing the root-finding procedure. The complete pseudocode for trajectory generation is provided in Algorithm 1. An example of this task is shown in Fig. 13, and the corresponding trajectory generated by F OVE AGENT -Q WEN is shown in Fig. 14. 
+
+STATE MACHINE construction. The main text introduces S TATE MACHINE as an order-sensitive visual reasoning task: unlike V ISUAL PARITY , it is not enough to aggregate the set of observed switch values; the model must process them in the order specified by arrows. Here we give the formal construction underlying that task. Following Liu et al. (2023) (Example 6), we instantiate the visual sequence as a state machine realizing the action of the dihedral group. Each switch corresponds to one input symbol, and the arrows in the image specify the order in which those symbols must be processed. This construction is useful because it creates a simple state-tracking problem where the correct answer depends on sequential updates, making shortcut solutions based on unordered aggregation insufficient. Formally, we consider a semiautomaton with state space Q = {0, . . . , S − 1} × {− 1, +1 } and input alphabet Σ = {advance , reverse }. The transition function δ : Q × Σ → Q is defined as 
+
+δ(( s, b ), advance ) = ( s + b (mod S), b ),δ(( s, b ), reverse ) = ( s, −b),
+
+where s denotes the current position on a cycle of length S, and b ∈ {− 1, +1 } specifies the current direction. Thus, advance moves one step in the current direction, while reverse flips the direc-tion of subsequent movements. The transformations induced by these operations realize the action of the dihedral group DS . In all experiments, we set S = 3 .Given an input sequence σ1, . . . , σ n ∈ Σn, represented visually by the sequence of switches con-nected by arrows, the state evolves according to 
+
+qi = δ(qi−1, σ i), i = 1 , . . . , n, 
+
+starting from the initial state q0 = ( s0, b 0) specified in the input prompt. Let qn = ( sn, b n) denote the final state after processing the entire input sequence. The task is to determine the final position 
+
+sn ∈ { 0, 1, 2}.
+
+## D IMPLEMENTATION DETAILS 
+
+In this section, we describe the implementation details of F OVE AGENT -LSTM. We use a 4-layer LSTM (Hochreiter & Schmidhuber, 1997) as our base recurrent model and a ResNet-18 (He et al., 2016) as our visual backbone. FOVE AGENT -LSTM takes 2 glimpses as input at each step. Alocal glimpse of resolution 80 × 80 and a peripheral glimpse that has a resolution of x − multiple where x ∈ { 1, 2, 4, 8, 16 }. We use x = 4 unless otherwise specified. Refer to Sec 5.4 for a sweep over x. At each step, we have three 2-layer MLPs that predict probes (what the current glimpse is looking at), actions (where to look at next) and task (the final output of the task, which is only supervised for the last step) respectively. We train all our models using Adam optimizer with a learning rate of 1 × 10 −4 on 4 Nvidia A100 GPUs with a batch size of 48 (12 on each GPU). We train F OVE AGENT -LSTM for 200k iterations and evaluate every 10k iterations on a val set. We select the best performing checkpoint on the val set, and report its performance on a test set. 17 Published as a conference paper at ECCV 2026 0 20 40 60 80 100 
+
+> Test Sequence Length
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Accuracy
+> Global Model
+> Local Model
+> Training Length
+
+Figure 11: Results on the 1D visual parity task. The local recurrent model generalizes to longer sequences than seen during training, while the global model fails outside the training-length regime. To develop F OVE AGENT -Q WEN , we utilize Q WEN 2.5-VL-3B-I NSTRUCT as our foundation model. As a baseline, we fine-tune the base model on the Finding Zeros task. Following the pro-cedure in Algorithm 1, the baseline Q WEN 2.5-VL-3B-I NSTRUCT model receives a full-resolution global image ( 1200 × 800 ) and simulates an imaginary glimpse of size 200 × 200 to locate function roots. In contrast, our F OVE AGENT -Q WEN follows an identical trajectory but supplements the global glimpse with local glimpses corresponding to predicted locations, enabling fine-grained visual pro-cessing of complex subplots. For both configurations, we fine-tune the vision encoder and lan-guage modeling backbone of Q WEN 2.5-VL-3B-I NSTRUCT on 20,000 samples over 10 epochs, with a batch size of 4 distributed across 4 Nvidia A100 GPUs (1 sample per GPU) using the Adam optimizer with a learning rate of 1 × 10 −5. Similar to F OVE AGENT -LSTM, we select the best-performing model based on validation performance and report its results on InD test sets and various OOD scenarios in Table 1. In the table, the first column presents results from the baseline model (finetuned with full high-resolution global image), while subsequent columns show F OVE AGENT -QWEN performance with varying lower global glimpse resolutions but a fixed local glimpse size of 
+
+200 × 200 .
+
+## E ADDITIONAL CONTROLLED VISUAL REASONING RESULTS 
+
+The main paper separates two ingredients required for OOD visual reasoning: how visual evidence is gathered and how the resulting observations are processed . Section 4.1 shows that F OVE AGENT -LSTM generalizes on the 2D state-tracking tasks, while the following sections isolate these two factors more directly. In particular, the Local vs Global Perception experiment studies the visual interface, and the Recurrent vs Global Processing of Local Visual Inputs experiment studies the computational structure used after local observations have been obtained. Here, we provide addi-tional controlled results that support both conclusions. E.1 1D V ISUAL PARITY : C ONTROLLING FOR THE VISUAL FRONT -E ND 
+
+The 2D visual parity task differs from the standard language parity task in two ways: the input is spatially distributed over an image, and the model must use a visual front-end to extract the relevant symbols. To control for this difference, we construct a simpler 1D visual parity task that keeps the input visual while making the sequence structure explicit. We render the bit sequence as a horizontal image, with white and gray blocks denoting 0s and 1s, respectively, and a black block marking the end of the sequence. This setting connects directly to the main-paper discussion on processing local visual inputs. Once the relevant symbols are presented in a simple sequential format, the central question becomes whether the model can apply the same parity update repeatedly beyond the training length. As shown in Fig. 11, the local recurrent model generalizes to substantially longer sequences than those 18 Published as a conference paper at ECCV 2026 seen during training. The global model, in contrast, achieves strong in-distribution performance but fails to generalize to longer OOD sequences. This mirrors the gap between recurrent networks and transformer-style models on language parity, and supports the main-paper conclusion that recurrence is important for robust length generalization. E.2 ADDITIONAL VISUAL PARITY BASELINES 
+
+In the main paper, the Local vs Global Perception experiment shows that providing a recurrent model with the full high-resolution canvas can encourage shortcut learning. Specifically, the Global 
+
+and Local+Global variants perform well in distribution but degrade OOD, whereas F OVE AGENT -LSTM maintains high accuracy by combining local high-resolution glimpses with low- resolution peripheral context. This indicates that local perception is not merely an implementation detail; it is an important inductive bias for preventing global shortcuts. The Recurrent vs Global Processing of Local Visual Inputs experiment then fixes the visual input stream and varies only the architecture used to process it. That comparison shows that strict recurrent state updates generalize OOD, while architectures with richer global interactions over the observa-tion history, including attention-based transformers, Mamba, and xLSTM, degrade more sharply. Together, these two main-paper experiments suggest that OOD visual state tracking requires both an appropriate local visual interface and a computation that scales through repeated recurrent updates. Here we provide an additional comparison on V ISUAL PARITY that reinforces the same conclusion. We evaluate more recurrent backbones and a VLM baseline on increasing task lengths. As in the main-paper S TATE MACHINE results, models that strictly process observations step by step maintain stronger OOD generalization. By contrast, backbones that permit non-strictly-recurrent or global processing can fit the training-length regime but are more prone to shortcut solutions that fail as the number of switches increases. 11 12 13 14 15 16 17 18 19 20 
+
+Number of switches 
+
+0.2 
+
+0.6 
+
+1.0 
+
+> Success rate
+
+## Recurrent v/s Global Processing 
+
+> LSTM
+> GRU
+> RNN
+> xLSTM
+> Mamba
+> Qwen2.5-VL-3B
+
+Figure 12: Additional baselines on V ISUAL PARITY under increasing task length. Strict recurrent backbones maintain stronger OOD generalization, while non-recurrent or globally processing base-lines degrade as the number of switches increases. 
+
+## F ADDITIONAL RESULTS ON FINDING ROOTS 
+
+In this section, we report results on a more challenging subset of F INDING ROOTS where the target subplot contains two or more functions. This setting requires finer visual processing to identify the target function and estimate its roots, making the benefit of local glimpses especially clear. 19 Published as a conference paper at ECCV 2026 Table 2: Accuracy (%) on the multi-function split of F INDING ROOTS ; higher is better. Rows indicate InD and OOD test settings, where OOD-subplots increases the number of subplots, OOD-numroots increases the number of roots, and OOD-(subplots+nr) increases both. The global-view QWEN 2.5-VL-3B-I NSTRUCT baseline receives only a full-image input G, while F OVE AGENT -QWEN variants combine a global glimpse G with high-resolution local glimpses L. 
+
+Test Scenario G(1200,800) G(300,200)+L G(480,320)+L G(600,400)+L G(1200,800)+L In-distribution 26.63 41.52 60.59 65.19 67.01 OOD-subplots 19.75 33.10 36.52 49.90 65.13 OOD-numroots (nr) 1.06 47.75 56.30 62.37 63.66 OOD-(subplots+nr) 7.90 35.08 35.86 52.07 45.96 Question: Find all roots for function “O” in Figure 43. 
+
+Figure 13: Example from F INDING ROOTS . The model must identify the target subplot and function from the question, then estimate the x-values where the target function crosses zero. 20 Published as a conference paper at ECCV 2026 
+
+Algorithm 1 Oracle visual trajectory for F INDING ROOTS . The trajectory first localizes the target subplot and legend, then scans along the zero level to identify roots and interpolate their x-values when needed.  
+
+> 1:
+
+Initialize at top-left corner (0 , 0)  
+
+> 2:
+
+Navigate to the target subplot title  
+
+> 3:
+
+Check if the legend box is fully visible  
+
+> 4:
+
+if legend not fully visible then  
+
+> 5:
+
+Traverse the legend box to explore all entries  
+
+> 6:
+
+end if  
+
+> 7:
+
+Locate or interpolate y = 0 on the y-axis  
+
+> 8:
+
+Begin horizontal scan from y-axis  
+
+> 9:
+
+while not reached end of function plot do  
+
+> 10:
+
+Stop at intersection where y = 0 meets the function  
+
+> 11:
+
+if corresponding x-value is visible then  
+
+> 12:
+
+Continue search for next intersection point  
+
+> 13:
+
+else  
+
+> 14:
+
+Traverse downward to the x-axis  
+
+> 15:
+
+if surrounding x-ticks not visible then  
+
+> 16:
+
+Traverse horizontally to locate surrounding x-tick values  
+
+> 17:
+
+Calculate the target x-value through interpolation  
+
+> 18:
+
+end if  
+
+> 19:
+
+Return to the intersection point  
+
+> 20:
+
+end if  
+
+> 21:
+
+end while 
+
+21 Published as a conference paper at ECCV 2026 To predict the title of the subplot I should look at (0.70, 0.03) <GLIMPSE 1> 
+
+Now I can see the title. This is subplot 43. 
+
+Next, I need to look at the legend to identify function O. I should look at (0.58, 0.08 ) <GLIMPSE 2> 
+
+I can see part of the legend now. The legend is wide; I need to look at the right side too. I predict I should look at 
+
+(0.83, 0.08) <GLIMPSE 3> 
+
+Now I can see the full legend. 
+
+To find the roots, I need to locate where the function crosses y=0. I should look at (0.37, 0.47) <GLIMPSE 4> 
+
+Now I can see where y=0 is on the y -axis. 
+
+To find the roots of the function, I need to locate where the function crosses the y=0. 
+
+There's an intersection point at (0.51, 0.47) <GLIMPSE 5> 
+
+To find the x -value of this root, I need to look at the x -axis below. I predict I should look at (0.51, 0.93) <GLIMPSE 6> 
+
+Now I can see the x -axis directly below the intersection point. I can already see the corresponding x -tick from my current 
+
+position. I can already see the left x -tick with value 1.0. I can already see the right x -tick with value 1.5. 
+
+Based on the x -ticks and the position of the intersection, I determine that this root is at x = 1.026. 
+
+I need to go back to the intersection point to continue exploring. 
+
+I should look at (0.51, 0.47) <GLIMPSE 7> 
+
+I'm back at the intersection point. There's an intersection point at (0.67, 0.47) <GLIMPSE 8> 
+
+To find the x -value of this root, I need to look at the x -axis below. 
+
+I predict I should look at (0.67, 0.93) <GLIMPSE 9> 
+
+Now I can see the x -axis directly below the intersection point. I can already see the corresponding x -tick from my current 
+
+position. I can already see the left x -tick with value 2.0. I can already see the right x -tick with value 2.5. 
+
+Based on the x -ticks and the position of the intersection, I determine that this root is at x = 2.167. 
+
+I need to go back to the intersection point to continue exploring. I should look at (0.67, 0.47) <GLIMPSE 10> 
+
+I'm back at the intersection point. There's an intersection point at (0.90, 0.47) <GLIMPSE 11> 
+
+To find the x -value of this root, I need to look at the x -axis below. I predict I should look at (0.90, 0.93) <GLIMPSE 12> 
+
+Now I can see the x -axis directly below the intersection point. I can already see the corresponding x -tick from my current 
+
+position. I can already see the left x -tick with value 3.5. I can already see the right x -tick with value 4.0. 
+
+Based on the x -ticks and the position of the intersection, I determine that this root is at x = 3.781. 
+
+In summary, I found 3 root(s) of function O in subplot 43. 
+
+The answer is: [1.026, 2.167, 3.781] 
+
+Figure 14: Visual chain-of-thought trajectory for the F INDING ROOTS example in Fig. 13. The pre-dicted fixation locations determine the high-resolution local crops supplied to F OVE AGENT -Q WEN ,enabling fine-grained inspection of the target subplot and root locations. The finetuned global-view Q WEN 2.5-VL-3B-I NSTRUCT baseline is trained with the same chain-of-thought trajectory, but does not receive these local crops because it already has access to the full-resolution global im-age. 22 Published as a conference paper at ECCV 2026 
+
+## G ZERO -S HOT EVALUATION PROMPTS 
+
+The following prompts are used for zero-shot VLM evaluations. We typeset them directly for read-ability; the required response format is always to reason inside <think > tags and provide the final answer inside <ans > tags. G.1 VISUAL PARITY PROMPT 
+
+System prompt for Visual Parity 
+
+You are a helpful visual assistant that analyzes images of nodes to determine the parity of the bit string rendered over the image. The image contains a number of circular nodes (blobs). Each blob has a digit 0 or 1 written in its center. You must find all the blobs in the image, extract the bit string, and compute its parity. 
+
+First, understand how to classify each node: 
+
+• Value 1: The node has the digit 1 written in its center. • Value 0: The node has the digit 0 written in its center. 
+
+When analyzing the image to find the parity of the bit string: 
+
+1. Scan the image to locate all the circular nodes. 2. For each node, read the digit ( 0 or 1) at its center. 3. Collect all the identified bits to form a single string. The order of bits does not matter for parity calculation. 4. Compute the parity of the final bit string. Parity is 1 if there is an odd number of 1s, and 0 if there is an even number of 1s. 5. Return your final parity value. For each question, within <think > tags, describe each node you find and identify its bit value (0 or 1). Finally, state the extracted string, compute the parity, and provide your final answer as a 0 or 1 inside <ans > tags. 
+
+23 Published as a conference paper at ECCV 2026 G.2 STATE MACHINE PROMPT 
+
+System prompt for State Machine 
+
+You are a helpful visual assistant that analyzes images of a graph to determine the final state of a state machine. You will be provided with an initial state (0, 1, or 2) in the question. The image contains a number of circular nodes (blobs) connected by arrows. Each blob has a digit 0 or 1 written in its center. You must follow the arrows to read the sequence of bits and compute the final state. 
+
+First, understand how to identify the sequence of the nodes based on their colors: 
+
+• Green node: The starting node. • Beige nodes: The intermediate nodes. • Purple node: The ending node. 
+
+Next, understand the rules of the state machine: 
+
+• You start with the initial state provided in the question. • At the beginning, the operation associated with the symbol 0 is “increment”. • Value 0: Apply the current operation associated with 0. If it is incrementing, add 1 to the state (modulo 3). If it is decrementing, subtract 1 from the state (modulo 3). • Value 1: Reverse the operation associated with 0. If 0 meant increment, it now means decre-ment. If 0 meant decrement, it now means increment. Encountering a 1 does not change the numerical state itself. • All state updates are modulo 3, meaning the numerical state is always 0, 1, or 2. 
+
+When analyzing the image to find the final state: 
+
+1. Note the initial state given in the question. 2. Scan the image to locate the green starting node. 3. Follow the arrows sequentially from the green node, through all beige intermediate nodes, until you reach the purple ending node. 4. For every node in this sequence (starting with the green node), read its digit ( 0 or 1) and apply the rules above to update either the numerical state or the meaning of 0.5. Return your final state value after processing the entire sequence, up to and including the purple node. For each question, within <think > tags, state the initial state. Then, describe the sequence of nodes you follow. For each node, state its color, identify its bit value (0 or 1), and explain the updated state and the current meaning of 0 (increment or decrement). Finally, provide your final computed state value as a 0, 1, or 2 inside <ans > tags. 
+
+24 Published as a conference paper at ECCV 2026 G.3 RECALL PROMPT 
+
+System prompt for Recall 
+
+You are a helpful visual assistant that analyzes images and finds if a particular object is present in the image or not. 
+
+When analyzing an image to find the object: 
+
+1. Go through each object step by step and classify. 2. Identify the correct object on the canvas if present. 3. Return True if the object is present, else return False. 
+
+Examples: 
+
+• Example 1: Question: On the canvas, is a red L present? Answer: <think > . . . </think ><ans >True </ans >
+
+• Example 2: Question: On the canvas, is a red T present? Answer: <think > . . . </think ><ans >False </ans >
+
+• Example 3: Question: On the canvas, is a green L present? Answer: <think > . . . 
+
+> </think > < ans >
+
+False </ans >
+
+• Example 4: Question: On the canvas, is a green T present? Answer: <think > . . . 
+
+> </think > < ans >
+
+True </ans >
+
+For each question, within <think > tags, analyze the image carefully, reason step by step about what you observe, and then at the end, provide your final answer as True or False inside <ans >
+
+tags. 
+
+25

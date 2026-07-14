@@ -1,0 +1,1101 @@
+Title: Model Guides You How to Draw: Adaptive Visual Gating for Unified Multimodal Reasoning
+
+URL Source: https://arxiv.org/pdf/2607.10004v1
+
+Published Time: Tue, 14 Jul 2026 00:24:38 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Model Guides You How to Draw: Adaptive Visual Gating for Unified Multimodal Reasoning 
+
+Wenxi Gao 1, Guanxi Lu 1, Didi Zhu 1, Hao Mark Chen 1,Quan Deng 1,2 , Zhican Wang 1, Jiankang Deng 1, Hongxiang Fan 1
+
+> 1
+
+Imperial College London, 2Tsinghua University 
+
+Abstract 
+
+Unified multimodal models (UMMs) with interleaved reasoning, which gener-ate both textual and visual steps as part of intermediate reasoning traces, have demonstrated great potential for visual mathematical reasoning tasks. However, we identify a key insight in this paradigm: generating intermediate visual reasoning steps is not always beneficial and can even be harmful, as self-generated visual steps may introduce erroneous visual evidence that misleads subsequent reasoning. Moreover, frequently triggering visual steps during reasoning incurs substantial computational and memory overhead, degrading inference efficiency. To address these accuracy and efficiency challenges, we observe that the model’s internal signals can indicate whether a visual step will benefit reasoning before the entire visual generation is completed. Specifically, this work identifies two internal sig-nals: i) Generation Intent , which reflects whether the model has a concrete textual plan for what to draw, and ii) Visual Fidelity , which measures whether the visual generation remains grounded in the original input image. Leveraging these internal signals, we propose AdaViG , a training-free adaptive visual gating method for unified multimodal reasoning. AdaViG dynamically evaluates each triggered visual step at an early visual generation stage and aborts it when both signals are weak, thereby preventing misleading visual evidence from entering the reasoning trace while avoiding unnecessary computation. Comprehensive experiments demonstrate that AdaViG improves accuracy by up to 5.7% while reducing visual generation FLOPs by 25 .0% –91 .0% and wall-clock latency by 15 .4% –45 .6% .
+
+1 Introduction 
+
+Recent advances in multimodal large language models (MLLMs) [ 1, 42 ] have shown promis-ing performance in mathematical reasoning, particularly through multimodal chain-of-thought (MCoT) [ 36 , 27 , 37 ]. However, existing MCoT methods with text-only rationales [ 36 , 27 ] are limited for vision math problems that require explicit visual construction as intermediate reasoning steps, such as drawing auxiliary lines or transforming diagrams. To overcome this limitation, MCoT has extended from text-only rationales to interleaved multimodal rationales [ 14 , 33 ], where textual and visual steps are interleaved so the model can reason with images. Among various interleaved MCoT methods, tool-driven approaches [ 14 , 33 , 24 , 29 ] operate over a fixed toolkit, such as zoom-in or cropping, limiting their flexibility. Code-based approaches [ 7 , 11 ,31 , 38 ] can generate more diverse visual aids but depend on reliable code synthesis and rendering. In contrast, intrinsic approaches [ 17 , 10 , 8, 16 , 25 ] enable the model itself to generate visual steps, showing great potential for interleaved reasoning. This paradigm is primarily realized by unified multimodal models (UMMs) [ 6 , 32 , 3, 35 ], with fine-tuned variants such as Bagel-Zebra-CoT [ 16 ]and MathCanvas [25] that natively generate visual steps as part of the reasoning.             
+
+> Preprint. arXiv:2607.10004v1 [cs.CV] 10 Jul 2026 Question:
+> A right -angled triangle with side lengths a=8, b=15 and c=17 is given. How big is the radius r of the
+> inscribed semicircle shown?
+> UMMs
+> Text
+> Image
+> Text
+> Let the right triangle have legs of
+> lengths a=8 and b=15, and
+> hypotenuse c=17. A semicircle of
+> radius r is tangent to all three sides.
+> Because OE is parallel to AC , we have
+> angle ∠BEO = ∠BAC, and ∠BOE = ∠BCA.
+> Hence ∆BOE is similar to ∆ABC. From
+> similarity, OE / AC = BO /BC .
+> ……
+> Therefore, the radius of the inscribed
+> semicircle is 17/4 .
+> UMMs
+> UMMs
+> Failure 1: Intent Vacancy
+> No concrete textual
+> drawing plan.
+> Failure 2: Perception Drift
+> Add an irrelevant line.
+> Issue: Harmful
+> Generation Error
+> Let the right triangle have legs of
+> lengths a=8 and b=15, and hypotenuse
+> c=17. A semicircle of radius r is tangent
+> to all three sides.
+> UMMs
+> Text
+> Image
+> Text
+> UMMs
+> UMMs
+
+MathCanvas : Fixed paradigm Ours: Adaptive paradigm        
+
+> Adaptive Abort Image Generation
+> Let O be the center of the semicircle. Let
+> the semicircle of radius r be tangent to
+> AB at E. …… In right triangle ∆EOB, by the
+> Pythagorean theorem:EO 2+EB 2=OB 2, so
+> r2+9 2=(15 -r) 2. …… Therefore, the radius
+> of the inscribed semicircle is 4.8 .
+> Introspective Signal
+> ❌✅
+
+Figure 1: A representative harmful generation case from MathVision under the fixed MathCanvas paradigm exhibiting two failure modes ( left ), and how AdaViG adaptively aborts it ( right ). &5,$)34) %)&5, 90&&5, .9/2-&(                    
+
+> 
+> 
+> 
+> ).&5-7).&5)0'9
+>  
+>   
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> ")853)*-..
+> ")85)'1()
+> $-46&.3)*-..
+> /&+))0)3&5-10
+> &5,$)34) %)&5, 90&&5, .9/2-&(
+> 
+> 
+> 
+> ).&5-7)$&',))/139
+> 
+>   
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> &5,&07&4
+> !#
+> ")85 /&+)
+> 
+> ",316+,2654&/2.)44
+> 
+> 
+> 
+> 
+> 
+> ''63&'9
+> &5,&07&4
+> (&$-
+> 8*&45)3
+>  
+
+Figure 2: Accuracy and efficiency im-provements over MathCanvas. However, the decision of whether to emit a textual or vi-sual step in UMMs with CoT is primarily determined by the next action token. This paradigm lacks an explicit mech-anism for assessing whether a visual step would actually improve reasoning quality. We identify two systemic issues with this design: (1) Harmful Generation Error. Self-generated visual steps in UMMs can be redundant, incorrect, and misleading. As shown in Figure 1, a harmful visual step misleads the subsequent text reasoning into a wrong answer, whereas the text-only counterfactual on the same sample suc-ceeds. We observe that nearly 30% of self-generated visual steps are harmful and degrade accuracy, as shown in Fig-ure 5(a). We term this observation the generation utility gap .
+
+(2) Reasoning Inefficiency. Frequent triggering of visual steps accounts for nearly 50% of overall inference latency and accounts for nearly 80% of the extra KV-cache memory footprint, as shown in Figure 5(b). To address these limitations, we investigate how intrinsic visual generation hurts reasoning in UMMs. Our analysis reveals two recurring failure modes. (1) Intent Vacancy : the model draws without a clear textual plan. (2) Perception Drift : the generated image drifts from the original input diagram and misleads subsequent text reasoning steps. Motivated by these insights, we analyze early diffusion attention patterns during image generation and uncover two introspective signals: Generation Intent ,which captures whether the model has a textual plan for what to draw, and Visual Fidelity , which captures whether the generation remains grounded in the input diagram. Based on these signals, we propose AdaViG , a training-free, plug-and-play adaptive visual gating method that decides at an early stage of the drawing process whether a visual step should proceed and aborts harmful image generations before they complete, as shown in Figure 1. This adaptive paradigm improves both accuracy and throughput over MathCanvas, as shown in Figure 2. Our contributions are as follows: • We present the generation utility gap in unified multimodal reasoning, showing that certain intrinsic visual generations are not just redundant but can harm reasoning accuracy. • We identify two introspective signals during early diffusion that indicate whether an image generation is likely to help or hurt, and use these signals to build AdaViG , a training-free adaptive visual gating method that aborts harmful generations early. • Experiments across benchmarks show that AdaViG boosts accuracy by up to 5.7% while reducing generation FLOPs by 25 .0% –91 .0% and wall-clock latency by 15 .4% –45 .6% .2Generation Intent high                                
+
+>      
+> "%'#""'"'
+> 
+> 
+> 
+> 
+> 
+> 
+> &(  '*
+> % *(&#"" &$%'"%'#"' '* &&&
+> 
+> #')%#"
+> ('%
+>  $(
+> %!(
+> 
+> 
+> Question : What is the area of the original
+> triangle?
+> Question : How many different sizes can
+> such squares have?
+> Generated Image Input Image Input Image Generated Image
+> Generation Intent low Visual Fidelity low
+> Case A :(0.35,0.008)
+> Case A: Harmful (Ans: 9 ❌,GT=3) Case B: Helpful (Ans: 12 ✅,GT=12)
+> Early Diffusion Signals Predict Generation Utility
+> Case B :(0.53,0.028)
+> Visual Fidelity high
+
+Figure 3: AdaViG uses early diffusion signals to predict generation utility. Left : A harmful trace has low I (e.g., no clear drawing plan in the text) and low F (e.g., the generated diagram drifts from the input image), placing the case in the abort region; the generated image distorts the input 3 × 3
+
+lattice into a 2 × 2 pattern with extraneous polygons. Middle : The joint distribution of (I, F) at diffusion step t⋆ = 5 of MathCanvas model on MathVision shows that harmful traces concentrate in the low-low region. Right : A helpful trace has high I (e.g., explicit plan to draw AO ) and high F
+
+(e.g., heatmap traces the input triangle) and the gate retains the effective generation. 
+
+2 Related Work 
+
+Unified Multimodal Models. Unified multimodal models unify multimodal understanding and gen-eration within a single architecture [ 6, 32 , 3, 35 , 41 ], often combining modality-specific components with a shared autoregressive, diffusion, or hybrid backbone. Prior work has improved UMM rea-soning performance through post-training, including reinforcement learning [ 22 , 28 ], self-generated supervision [ 26 , 12 ], and supervised chain-of-thought (CoT)-style fine-tuning [ 25 , 16 ]. In particular, UMM-based CoT methods exploit this unified text–image interface to produce interleaved multimodal reasoning traces. However, these methods do not assess whether a generated image will benefit subsequent reasoning, potentially incurring unnecessary generation costs and propagating misleading visual context. We address this limitation with a training-free gate that uses early diffusion attention during image generation to estimate image utility before full generation. 
+
+Interleaved Multimodal Mathematical Reasoning. Recent advances in multimodal large language models [ 1, 42 ] have shown strong performance on multimodal mathematical reasoning tasks [ 21 , 30 ]. Textual rationales [ 36 , 40 , 27 ] enhance the reasoning ability of MLLMs by enabling multistage reasoning in a structured form, but they can be insufficient for problems whose solutions depend on spatial information. Interleaved multimodal rationales address this limitation by integrating visual evidence into the reasoning context [ 4 , 9]. Existing interleaved reasoning methods can be grouped into three categories. Tool-driven methods [ 14 , 33 , 24 , 29 ] invoke external visual operations, such as cropping, zooming, detection, or sketching, but are limited by a predefined operation space. Code-based methods [ 7, 11 , 31 ] render auxiliary diagrams or plots from generated programs, but rely on accurate code synthesis and executable rendering. Intrinsic approaches [ 17 , 16 , 25 ] leverage the understanding and generation abilities of UMMs to generate visual thoughts directly. 
+
+Key Novelty of AdaViG . Complementary to these interleaved-reasoning paradigms, research has also explored efficient and adaptive interleaved multimodal reasoning. For example, [ 18 , 20 ] use runtime signals to determine when and what visual context to insert, reducing redundant visual-token usage. Concurrently, [ 19 , 2] inject visual and textual information into the latent reasoning process to improve inference efficiency. However, these approaches neither target intrinsic visual generation in UMMs with CoT nor assess whether generated visual context can harm subsequent reasoning. 
+
+3 Preliminaries 
+
+UMMs with CoT. Using MathCanvas [ 25 ] as an example, we formalize the reasoning process below. Let M denote a UMM with a Mixture-of-Transformers (MoT) design, in which separate understanding and generation experts, Eu and Eg , share cross-modal self-attention layers. Given 3a problem (q, I in ) consisting of a question q and an optional input image Iin , M autoregressively produces an interleaved reasoning trace with N steps: 
+
+S = ( s1, s 2, s 3, . . . , s N ), (1) where each step si is either a textual step Ei decoded through Eu or a visual step Igen i synthesized through Eg via a T -step diffusion process. The final element sN is a text node containing the extracted answer ˆa. Let τi ∈ { E, I gen } denote the type of si. The successor type is determined by 
+
+τi+1 =
+
+
+
+E, τi = Igen (text) ,Igen , τi = E, a i = ⟨img_start ⟩ (image) ,E, τi = E, a i̸ = ⟨img_start ⟩ (text) ,
+
+(2) where ai ∼ PEu (· | s<i ) is the terminal action token of the current text node, which determines the type of the next node, and is sampled from the autoregressive decoding distribution of the M.
+
+Attention in UMMs. Image generation runs a T -step denoising diffusion inside the shared MoT, which applies causal attention on text tokens and bidirectional attention on vision tokens. Tokens fall into three pools: text ( Stext ), ViT ( Svit ), and VAE ( Svae ). Every image ( Iin or Igen ) has both Svit 
+
+and Svae tokens. At denoising step t, the noised VAE latent queries Q attend to all preceding keys K.We define the segment attention mass at denoising step t as 
+
+mt(Q, K) = 1
+
+|Q| 
+
+X
+
+q∈Q 
+
+X
+
+k∈K 
+
+αt(q, k ) . (3) where αt(q, k ) denotes the head-averaged softmax attention weight from query q to key k.
+
+4 Motivation 
+
+To mitigate the influence of misleading, harmful self-generated images in existing UMMs with CoT, we begin with an empirical analysis of the generation utility gap and then characterize two systemic issues in accuracy and efficiency, which motivate our adaptive design. $( ,$                                                    
+
+> 
+> )% ,$
+>  
+> ,+)$
+> 
+> !$)'
+> ")%,$-*"$(,$
+> $( ,$
+>  
+> )% ,$
+> 
+> ,+)$
+> 
+> +"&-*
+> ")%,$-*"$(,$
+> 
+> )#$#&/  
+> %($  )&'%$0*%($
+> *%($*).&,&# ')%$0+)&'%
+>  ' $$ "-&'&1)'*+
+> %!',&+
+> 
+>  
+> $( ,$
+> 
+> )% ,$
+>  
+> ,+)$
+> 
+> !$)'
+> ")%,$-*"$(,$
+> $( ,$
+>  
+> )% ,$
+> 
+> ,+)$
+> 
+> +"&-*
+> ")%,$-*"$(,$
+> 
+> )#$#&/  
+> %($  )&'%$0*%($
+> *%($*).&,&# ')%$0+)&'%
+>  ' $$ "-&'&1)'*+
+> %!',&+
+> 
+>  
+> $( ,$
+> 
+> )% ,$
+>  
+> ,+)$
+> 
+> !$)'
+> ")%,$-*"$(,$
+> $( ,$
+>  
+> )% ,$
+> 
+> ,+)$
+> 
+> +"&-*
+> ")%,$-*"$(,$
+> 
+> )#$#&/  
+> %($  )&'%$0*%($
+> *%($*).&,&# ')%$0+)&'%
+>  ' $$ "-&'&1)'*+
+> %!',&+
+> 
+>  
+
+Figure 4: Generation utility gap. (a) Harm-ful generations occur at similar rates across two UMMs. (b) Utility of visual generations varies across different reasoning traces for the same problem, indicating that harmfulness is not de-termined solely by the problem instance. 
+
+Insight-1: Visual generations can sometimes harm reasoning accuracy. We denote the in-terleaved UMMs with CoT in Section 3 as Cgen ,where the action token ai can trigger visual-step generation. To investigate the utility of visual steps, we construct a text-only MCoT counter-factual, denoted as Ctxt , by forcing every node type τi to remain text E regardless of the rule in Equation 2. We then conduct contrastive ex-periments of Cgen and Ctxt on MathVision using two different UMM-based CoT methods, Bagel-Zebra-CoT [ 16 ] and MathCanvas [ 25 ], and assign each sample to one of three categories. (1) Help-ful : Cgen produces the correct answer while Ctxt 
+
+is incorrect. (2) Harmful : Cgen generates the in-correct answer while Ctxt is correct. (3) Neutral :both Cgen and Ctxt generate the correct answer. As shown in Figure 4(a), on MathCanvas, 28 .2% of samples are helpful, while a comparable 26 .3% 
+
+are harmful. Bagel-Zebra-CoT exhibits a similar pattern. We term this imbalance the generation utility gap : although intrinsic image generation can benefit some reasoning traces, its expected utility is close to zero because helpful and harmful generations largely offset each other. 
+
+Insight-2: Harmfulness emerges from the evolving reasoning trace rather than from the problem alone. We further investigate what influences the utility gap by evaluating MathCan-vas on MathVision with 16 independently sampled reasoning traces for each problem. Fig-ure 4(b) visualizes the generation utility labels of all samples, where each cell denotes the util-ity label of one trace as helpful, harmful, or neutral. We find that 90 .1% of samples exhibit 4at least two distinct utility labels across their 16 traces, and 40 .5% of samples contain both a helpful trace and a harmful trace. Conversely, no sample is uniformly harmful, and only 9.9% 
+
+of samples are uniformly neutral. These statistics imply that the harmfulness of image gener-ation cannot be decided from the input query alone. Instead, it depends on the evolving par-tial reasoning trace and must be assessed adaptively at runtime when generation is about to oc-cur. This motivates us to seek internal model signals that can support such adaptive decisions. '6-%.5.21 '6-%*45* &*'6- :1''6-                                                                    
+
+> 
+> 
+> 
+> 
+> *4(*16',*
+>    
+>  
+> 
+>   
+>  
+> '40+7/*1 4424
+> !*'521.1,1*++.(.*1(:
+> '6-%*45* &*'6-'6-%.56' /:03.')
+> 
+> 
+> 
+> '6*1(: *024:!'6.2
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> #*96 0',*
+> '6-%*45* &*'6-:1''6-/:03.')
+> 
+> 
+> 
+> !*/'6.8*%'(-**024:
+> 
+>   
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> #*96 0',*
+> 
+> 
+> 
+> 
+> 
+> 
+> ((74'(:
+> '6-%.5.21 '6-%*45* &*'6-:1''6-
+> 
+> 
+> 
+> 
+> *4(*16',*
+>    
+>  
+> 
+>   
+>  
+> '40+7/*1 4424
+> !*'521.1,1*++.(.*1(:
+> '6-%*45* &*'6-'6-%.56' /:03.')
+> 
+> 
+> 
+> '6*1(: *024:!'6.2
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> '6*1(:
+> *024:
+> #*96 0',*
+> '6-%*45* &*'6-:1''6-/:03.')
+> 
+> 
+> 
+> !*/'6.8*%'(-**024:
+> 
+>   
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> '6-'18'5
+> "$
+> #*96 0',*
+> 
+> #-42
+> 
+> 
+> 
+> 
+> 
+> ((74'(:
+> '6-
+> )'%
+> $( ,$
+> 
+> )% ,$
+>  
+> ,+)$
+> 
+> !$)'
+> ")%,$-*"$(,$
+> $( ,$
+>  
+> )% ,$
+> 
+> ,+)$
+> 
+> +"&-*
+> ")%,$-*"$(,$
+> 
+> )#$#&/  
+> %($  )&'%$0*%($
+> *%($*).&,&# ')%$0+)&'%
+>  ' $$ "-&'&1)'*+
+> %!',&+
+> 
+>  
+> $( ,$
+> 
+> )% ,$
+>  
+> ,+)$
+> 
+> !$)'
+> ")%,$-*"$(,$
+> $( ,$
+>  
+> )% ,$
+> 
+> ,+)$
+> 
+> +"&-*
+> ")%,$-*"$(,$
+> 
+> )#$#&/  
+> %($  )&'%$0*%($
+> *%($*).&,&# ')%$0+)&'%
+>  ' $$ "-&'&1)'*+
+> %!',&+
+> 
+>  
+
+Figure 5: Two systemic issues of UMMs with CoT. (a) The propor-tion of harmful generation error and reasoning inefficiency, averaged over Bagel-Zebra-CoT and Math-Canvas. (b) Image generation ac-counts for over 50% of end-to-end la-tency and 80% of KV-cache memory on average across four benchmarks. 
+
+Performance and efficiency limitations. Based on the above observations, we identify two key limitations of ex-isting methods. First, we observe the Harmful Generation Errors : as shown in Figure 5(a), approximately 14 .6–22 .6% 
+
+of errors arise from generated visual content that either intro-duces incorrect information or adds redundant context. Such generations can mislead the reasoning process, particularly in long-context reasoning tasks. Second, we identify the Reason-ing Inefficiency : as shown in Figure 5(b), image generation contributes more than 50% of the end-to-end latency and more than 80% of the KV-cache memory consumption across four benchmarks. These costs are incurred uniformly across all reasoning traces, including harmful and neutral traces where generation provides no accuracy gain. These findings motivate an adaptive mechanism that determines, for each reasoning trace, whether image generation is necessary, and makes this decision before most computation has been incurred. 
+
+5 Methodology: From the Generation Utility Gap to Adaptive Visual Gating 
+
+We propose AdaViG , a training-free gating mechanism that decides whether a triggered image generation should proceed for each UMM reasoning trace. We first analyze how generated images mislead subsequent reasoning (Section 5.1), and then introduce two introspective signals, Generation Intent (I) and Visual Fidelity (F ). They capture the misleading potential at an early diffusion stage during image generation (Section 5.2). These two signals construct our adaptive gate (Section 5.3). 
+
+5.1 How Generated Images Mislead Reasoning 
+
+Section 4 shows that self-generated images can reduce final accuracy. To address the problem, we analyze how this harm propagates through the reasoning trace. Figure 6 shows a representative harmful trace of MathCanvas [ 25 ] evaluated on WeMath [ 23 ]. The generated image distorts the input geometry due to Intent Vacancy and Perception Drift (Section 1) by producing an irregular non-closed polygon. After insertion, the subsequent text generation assigns a higher attention ratio to the generated image than to the input image for 92% of post-image text tokens, especially in the early reasoning span. The model then follows the spurious generated edge instead of the angle in the original question and produces an incorrect answer. This analysis reveals the failure mechanism: a harmful generated image can induce later reasoning drift once the image is consumed as important evidence. Further statistical analysis is provided in Appendix A.1. 
+
+5.2 Early Diffusion Attention Signals 
+
+As introduced in Section 3, image generation in UMMs is implemented as a diffusion process within a shared transformer. At diffusion step t, VAE queries attend to multiple token segments in the shared context, including the preceding text tokens Stext , the input-image tokens Sin vit , Sin vae , and the current VAE latent tokens Svae . These segments have different semantic roles. The text tokens Stext provide the reasoning plan, specifying what the model intends to draw. The input image tokens Sin provide visual grounding, specifying what the generated image should remain faithful to. The VAE latent tokens Svae capture the model’s current self-denoising state. Early diffusion attention weights can predict generation utility. Figure 3 visualizes this for the MathCanvas model on MathVision [ 30 ], contrasting helpful traces with harmful traces. We provide detailed attention visualizations in Appendix A.2. The helpful traces have closer attention on the 5                             
+
+> $ !#!! !
+> 
+> 
+> 
+> 
+> 
+> 
+> !!!!
+> "! !
+> Question :
+> A simple closed polygon has 2n
+> congruent edges, with all 𝐴 !,𝐵 !angles
+> congruent. If the acute angle at 𝐴 "is 10 °
+> less than at 𝐵 ",find n.
+> Post -image text reasoning:
+> Consider the triangle formed by two
+> adjacent edges meeting at 𝐴 "and 𝐵 ",
+> together with the third edge connecting
+> them . The exterior angle equals twice the
+> acute angle at 𝐴 ",so it is 2𝑥° .……
+> Therefore, n = 12 .}❌(Ground Truth: 36)
+> Input Image
+> Generated Image
+> Generated > Input in 92%
+> of post -image tokens
+> Attention to Image in Post -Image Text Reasoning
+
+Figure 6: Generated images can mislead later reasoning. MathCanvas commits a perception drift ,generating an irregular non-closed polygon that distorts the input. This induces an attention drift :post-image text attends more to the generated image (Orange) than to the input (Blue) in 92% of tokens, with the largest gap in the early span. Heatmaps show attention concentrating on irrelevant edges, propagating erroneous evidence into subsequent reasoning and yielding a wrong answer. preceding text reasoning trace Stext or the input image Sin . The harmful traces show weak attention to both, and their VAE queries instead concentrate disproportionately on the emerging image itself. This contrast motivates two quantitative statistics that respectively target Intent Vacancy and Perception Drift .Let mt(Qvae , S) denote the attention mass from VAE queries Qvae to a token segment S at diffusion step t. We define two early diffusion statistics at an early decision step t⋆.
+
+Generation Intent. The first statistic measures the relative balance between preceding text reason-ing Stext and input image Sin = Sin vit ∪ S in vae . We define Generation Intent :
+
+I = mt⋆ (Qvae , Stext )
+
+mt⋆ (Qvae , Stext ) + mt⋆ (Qvae , Sin ) . (4) A high I indicates that the emerging image is conditioned predominantly on the text reasoning plan between the two problem-specific sources, corresponding to text plan-driven generation and reducing the risk of Intent Vacancy . In contrast, a low I indicates dominance by the input image evidence. The absence of explicit textual guidance can lead to unconstrained elaboration of the input diagram and increase the risk of Perception Drift .
+
+Visual Fidelity. The second metric captures whether the generation maintains sufficient attention to the input image. We define Visual Fidelity :
+
+F = mt⋆
+
+ Qvae , Sin vit 
+
+ . (5) A low F suggests that the generation is weakly related to the original input diagram and may drift toward irrelevant or misleading visual content, corresponding to Perception Drift .
+
+5.3 Adaptive Visual Gating (AdaViG) 
+
+We use a conservative abort rule because neither signal alone is sufficient. Low I alone is not necessarily harmful, since the generation may still be strongly focused on the input image. Low F
+
+alone is also insufficient, since the model may still follow an explicit textual construction. Therefore, we abort only when both signals are weak: 
+
+g(I, F) = 
+
+ABORT , I < τ I ∧ F < τ F ,
+
+CONTINUE , otherwise . (6) If the gate returns CONTINUE , diffusion proceeds normally. If it returns ABORT , AdaViG stops denoising at step t⋆, discards the partial VAE latents, and resets to a text node. We provide the detailed algorithm in Appendix A.3. 6Table 1: Main results on math reasoning benchmarks. The best accuracy (%) results among UMMs w/ CoT are in bold , and the second best are underlined . Orange indicates accuracy gains; blue indicates efficiency gains, measured by the reduction (%) in image-generation FLOPs.                                                                                                     
+
+> Method DynaMath WeMath MathVerse MathVista Olympiad Avg.
+> General MLLMs
+> GPT-4o 56.3 45.8 50.8 60.0 33.0 49.2 Gemini-2.5-Pro 66.8 78.0 76.9 80.9 42.1 68.9 Qwen2.5-VL-7B 49.8 35.3 45.7 72.6 22.0 45.1 InternVL3-8B 37.1 34.8 39.8 70.8 21.5 40.8
+> UMMs
+> Emu3-Chat-8B 24.6 20.5 15.5 47.6 10.2 23.7 Janus-Pro-7B 20.3 16.3 15.9 42.8 9.7 21.0 MUSE-VL-7B 30.8 30.2 39.1 51.3 15.0 33.3 Bagel-7B 38.2 36.2 42.6 68.8 22.7 41.7
+> UMMs w/ CoT
+> Bagel-7B w/ CoT 38.6 37.1 43.0 68.8 23.0 42.1 Bagel-7B w/ ICoT 39.5 37.0 45.8 70.0 22.7 43.0 Bagel-Zebra-CoT 39.0 34.5 48.2 81.0 16.7 43.9
+> w/ AdaViG (Ours) Acc. ↑
+> FLOPs ↓
+> 43.5 (+4.5) -45%
+> 38.1 (+3.6) -91%
+> 51.3 (+3.1) -75%
+> 83.4 (+2.4) -34%
+> 18.9 (+2.2) -40%
+> 47.0 (+3.1) -57%
+> Bagel-Canvas 42.3 35.3 55.8 77.9 24.0 47.1
+> w/ AdaViG (Ours) Acc. ↑
+> FLOPs ↓
+> 48.0 (+5.7) -75%
+> 38.8 (+3.5) -27%
+> 58.4 (+2.6) -25%
+> 81.3 (+3.4) -26%
+> 26.2 (+2.2) -37%
+> 50.5 (+3.4) -32%
+
+Computational overhead. AdaViG intervenes only when image generation is triggered. The gate itself adds negligible overhead: I and F are computed from attention values that are already produced during the first t⋆ diffusion steps, requiring only a sum reduction over selected key segments. When the gate aborts, nearly (1 − t⋆/T ) of the diffusion cost is saved; when it continues, the only overhead is the attention reduction at step t⋆.
+
+6 Experiments 
+
+6.1 Experimental Setup Implementations. We evaluate AdaViG on two UMM-based CoT models with intrinsic image generation: Bagel-Zebra-CoT [ 16 ] and Bagel-Canvas from the MathCanvas framework [ 25 ], both based on the Bagel-7B [ 6 ] architecture. We set the early diffusion step to t⋆ = 5 , and the thresholds 
+
+(τI , τ F ) to (0 .5, 0.04) for Bagel-Zebra-CoT and (0 .6, 0.01) for Bagel-Canvas. These are tuned on MathVision testmini (304 samples). The effect of the thresholds is detailed in Appendix A.8. All experiments run on NVIDIA H200 GPUs with 141 GB of memory. 
+
+Baselines. We compare AdaViG against three types of baselines: (1) General MLLMs, including GPT-4o [ 15 ], Gemini-2.5-Pro [ 5], Qwen2.5-VL-7B [ 1], and InternVL3-8B [ 42 ]; (2) UMMs, including Emu3-Chat-8B [ 32 ], Janus-Pro-7B [ 3 ], MUSE-VL-7B [ 35 ], and Bagel-7B [ 6 ]; (3) UMMs with existing CoT methods, such as CoT [ 34 ] (text-only rationales) and ICoT [ 9 ] (interleaved multimodal rationales). 
+
+Evaluation. We evaluate AdaViG on five math reasoning benchmarks: MathVista testmini [21 ], MathVerse testmini [ 39 ], OlympiadBench [ 13 ], WeMath [ 23 ], and DynaMath [ 43 ]. We use the GPS category of MathVista testmini and the Math subset of OlympiadBench. 
+
+6.2 Main Results 
+
+Table 1 presents the accuracy and efficiency gains, where efficiency is measured by the reduction in FLOPs for image generations, as detailed in Appendix A.4. AdaViG improves accuracy and image-generation efficiency across models and datasets by reducing the utility gap in image generation. 7Table 2: End-to-end inference latency (seconds per sample). The results are measured on a single H200 GPU and averaged across each benchmark. Blue indicates the reduction in latency. 
+
+Method DynaMath WeMath MathVerse MathVista Olympiad Bagel-Zebra-CoT 37.4 41.6 53.2 52.7 24.9 
+
+w/ AdaViG (Ours) 25.7 (-31.3%) 22.6 (-45.6%) 31.7 (-40.0%) 39.8 (-24.5%) 17.6 (-29.3%) Bagel-Canvas 13.2 13.1 11.5 10.4 5.72 
+
+w/ AdaViG (Ours) 9.4 (-28.9%) 10.8 (-17.6%) 9.7 (-15.7%) 8.8 (-15.4%) 3.96 (-30.8%) !0'$./$ $!0' 5+!!0' )5*-(!#                 
+
+> 
+> 
+> $)!0(2$)!0$+"5
+>  
+>  
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> $40.$%())
+> $40$",#$
+> (/1!).$%())
+> *!&$$+$.!0(,+
+> !0'$./$ $!0' 5+!!0' )5*-(!#
+> 
+> 
+> $)!0(2$!"'$$*,.5
+> 
+>   
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> !&$)!+2!/
+> 3#!(
+> $40 *!&$
+
+Figure 7: Relative latency and KV-cache memory breakdown across benchmarks. !,# ,#$+, /',# -"               
+
+> 
+> 
+> 
+> 
+> 
+> 
+> -"&"+&)%!  
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> "!%'-+
+> .  $
+> "!%'-+
+> .  $
+> "!%'-+
+> .  $
+> "!%'-+
+> .  $
+> "!%'-+ . $
+> !,# ,#$+, /',# -"
+> 
+> 
+> 
+> 
+> -"&"+&)%!
+> 
+> 
+> 
+> 
+> 
+>  
+> 
+> 
+> 
+>  
+> 
+> "!%!*
+> .  $
+> "!%!*
+> .  $
+> "!%!*
+> .  $
+> "!%!*
+> .  $
+> "!%!*( . $
+
+Figure 8: Reduction in the average number of generated images per sample. Notably, on DynaMath with Bagel-Canvas, it improves accuracy by 5.7% and reduces image-generation FLOPs by 75% . Existing UMM reasoning methods such as CoT and ICoT achieve only 
+
+42 .1% and 43 .0% average performance, respectively, whereas AdaViG reaches 50 .5% under the same Bagel-7B backbone. This shows that AdaViG improves intrinsic image generation in UMMs with CoT, outperforming methods whose reasoning chains rely only on text ( CoT ) or on visual evidence extracted from the original input image ( ICoT ). Detailed case studies are provided in Appendix A.5. Table 2 shows that AdaViG also brings consistent end-to-end latency reductions, positively correlated with the reduction in image generations. Bagel-Zebra-CoT achieves larger latency reductions, up to 
+
+45 .6% , while Bagel-Canvas achieves 15 .4% –30 .8% . Since latency also depends on the length of the remaining and additional text reasoning process, its improvement can be lower than the reduction in image generations. We further decompose latency and KV-cache memory into text and image components (Figure 7). Both components decrease, suggesting that suppressing harmful image generations also reduces the cost of the text reasoning that would otherwise be conditioned on them. 
+
+Discussion on different models. We observe that AdaViG achieves larger accuracy gains ( 3.4% )on Bagel-Canvas, while bringing larger efficiency gains ( 57% ) on Bagel-Zebra-CoT. As shown in Figure 8, Bagel-Canvas generates an average of 1.3 images per sample reasoning trace, whereas Bagel-Zebra-CoT generates 4.8 images. This indicates that Bagel-Canvas produces more targeted image generations, as its supervised fine-tuning (SFT) on math tasks equips it with stronger capabilities. As a result, AdaViG tends to improve accuracy more on stronger models by aborting harmful image generations, while improving efficiency more on weaker models by suppressing redundant ones. 
+
+Robustness across generation frequencies. We find that Bagel-Canvas exhibits variation in the number of generated images across benchmarks, yet AdaViG consistently improves performance across high, medium, and low frequency generation settings. As shown in Figure 8, WeMath triggers frequent image generation ( 2.1 images per sample), MathVista triggers a moderate amount ( 1.2 images per sample), and DynaMath triggers sparse image generation ( 0.3 images per sample). Despite these differences, AdaViG improves performance by +3 .5% , +3 .4% , and +5 .7% , respectively. 
+
+Implications for improving UMM reasoning ability. We find that applying AdaViG to Bagel-Zebra-CoT, which is not tuned on math data, improves its accuracy from 43 .9 to 47 .0, approaching Bagel-Canvas, which is tuned on math data ( 47 .1), and recovering about 95% of the gain from specialized math training. We therefore draw two insights: (1) interleaved training data can be filtered with our gating method to retain effective reasoning traces; and (2) during reinforcement learning, our metric can be used as a reward function. Additional limitations are discussed in Appendix A.6. 
+
+6.3 Ablation Studies Performance of different gating methods. Table 3 evaluates Bagel-Canvas with different image generation abort criteria based on I and F. Results on Bagel-Zebra-CoT are reported in Appendix A.7. 8Table 3: Performance on Bagel-Canvas under gat-ing methods with different ( I,F) combinations.                              
+
+> Method Avg. Drop Performance
+> MathVista WeMath DynaMath
+> Bagel-Canvas –77.9 35.3 42.3 w/ Ionly 55% 78.8 36.2 46.1 w/ Fonly 31% 79.4 36.5 45.4 w/ I ∨ F 61% 75.1 32.7 41.2 w/ AdaViG 43% 81.3 38.8 48.0
+
+Table 4: Comparison with alternative image gen-eration aborting strategies on Bagel-Canvas.                       
+
+> Method Drop Rate Performance
+> MathVista WeMath DynaMath
+> AdaViG 43% 81.3 38.8 48.0
+> Random 25% 78.2 34.6 44.1 50% 77.4 35.6 42.9 Text-only 100% 76.9 34.1 42.7
+> DAP-ICoT [20] 12% 78.4 35.4 44.3
+
+Figure 9: Early aborting step trade-off. Figure 10: Accuracy under varying token budget. The variants “w/ I” and “w/ F” use a single weak abort signal, while “w/ I ∨ F ” aborts when either signal is weak. Single signal gates improve over Bagel-Canvas but remain suboptimal, as the two signals capture different failure modes. The I ∨ F variant removes the most generations but reduces accuracy. In contrast, AdaViG aborts only when both signals are weak and achieves the best performance with a moderate drop rate. This indicates that gating with both signals better balances accuracy and efficiency by preserving helpful image generations while aborting harmful ones. 
+
+Comparison with alternative aborting strategies. Table 4 compares AdaViG with random image generation aborting, text-only reasoning, and DAP-ICoT [ 20 ] on Bagel-Canvas. Both random aborting and the text-only methods perform worse than Bagel-Canvas, indicating that naive approaches of removing image generations are less effective. Since prior efficiency methods do not target UMMs with CoT, we adapt DAP-ICoT [ 20 ] to our setting. It yields only modest gains over Bagel-Canvas, likely because it relies on textual confidence to determine whether to insert visual steps, which is suboptimal for UMM-based reasoning. In contrast, AdaViG achieves the best performance, suggesting that its improvement does not come from merely reducing image generations, but from selectively suppressing harmful ones. Results on Bagel-Zebra-CoT are provided in Appendix A.7. 
+
+Selection of early abort step t⋆. We vary the early diffusion step for image generation abortion, as shown in Figure 9. The normalized generation cost is t/T , where t is the decision step and 
+
+T = 50 is the total number of diffusion steps. The results reveal a trade-off between accuracy and efficiency: decisions at later steps provide stronger gating capability but incur higher generation cost, highlighting the importance of choosing an appropriate early aborting step. 
+
+Performance across different token budgets. We compare AdaViG with Bagel-Zebra-CoT and its text-only variant under different token budgets, as shown in Figure 10. With a tight budget, the methods perform similarly because few image generations can be triggered. As the budget increases, Bagel-Zebra-CoT first benefits from more interleaved visual steps, but later degrades as harmful image generations become more likely. In contrast, AdaViG keeps improving by aborting low-utility generations. These results suggest that visual gating is important when scaling intrinsic interleaved reasoning with larger token budgets. 
+
+7 Conclusion 
+
+This paper investigates when intrinsic visual generation helps or hurts unified multimodal math reasoning. We show that the fixed generation paradigm in current UMMs with CoT can introduce harmful visual evidence and unnecessary costs. We propose AdaViG , a training-free adaptive visual gating method that uses early diffusion attention to measure Generation Intent and Visual Fidelity , and aborts visual generation at an early stage when both signals are weak. Experiments show that AdaViG 
+
+improves accuracy while reducing latency. These results highlight the importance of utility-aware visual generation for future UMMs with CoT training. 9References 
+
+[1] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, Jiabo Ye, Xi Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang, Haiyang Xu, and Junyang Lin. Qwen2.5-vl technical report, 2025. [2] Chao Chen, Zhixin Ma, Yongqi Li, Yupeng Hu, Yinwei Wei, Wenjie Li, and Liqiang Nie. Reasoning in the dark: Interleaved vision-text reasoning in latent space. arXiv preprint arXiv:2510.12603 , 2025. [3] Xiaokang Chen, Zhiyu Wu, Xingchao Liu, Zizheng Pan, Wen Liu, Zhenda Xie, Xingkai Yu, and Chong Ruan. Janus-pro: Unified multimodal understanding and generation with data and model scaling. arXiv preprint arXiv:2501.17811 , 2025. [4] Xinyan Chen, Renrui Zhang, Dongzhi Jiang, Aojun Zhou, Shilin Yan, Weifeng Lin, and Hongsheng Li. Mint-cot: Enabling interleaved visual tokens in mathematical chain-of-thought reasoning. arXiv preprint arXiv:2506.05331 , 2025. [5] Gheorghe Comanici, Eric Bieber, Mike Schaekermann, Ice Pasupat, Noveen Sachdeva, Inderjit Dhillon, Marcel Blistein, Ori Ram, Dan Zhang, Evan Rosen, et al. Gemini 2.5: Pushing the frontier with advanced reasoning, multimodality, long context, and next generation agentic capabilities. arXiv preprint arXiv:2507.06261 , 2025. [6] Chaorui Deng, Deyao Zhu, Kunchang Li, Chenhui Gou, Feng Li, Zeyu Wang, Shu Zhong, Weihao Yu, Xiaonan Nie, Ziang Song, et al. Emerging properties in unified multimodal pretraining. arXiv preprint arXiv:2505.14683 , 2025. [7] Chengqi Duan, Kaiyue Sun, Rongyao Fang, Manyuan Zhang, Yan Feng, Ying Luo, Yufang Liu, Ke Wang, Peng Pei, Xunliang Cai, et al. Codeplot-cot: Mathematical visual reasoning by thinking with code-driven images. arXiv preprint arXiv:2510.11718 , 2025. [8] Rongyao Fang, Chengqi Duan, Kun Wang, Linjiang Huang, Hao Li, Shilin Yan, Hao Tian, Xingyu Zeng, Rui Zhao, Jifeng Dai, et al. Got: Unleashing reasoning capability of multimodal large language model for visual generation and editing. arXiv preprint arXiv:2503.10639 , 2025. [9] Jun Gao, Yongqi Li, Ziqiang Cao, and Wenjie Li. Interleaved-modal chain-of-thought. In 
+
+Proceedings of the Computer Vision and Pattern Recognition Conference , pages 19520–19529, 2025. [10] Ziyu Guo, Renrui Zhang, Chengzhuo Tong, Zhizheng Zhao, Rui Huang, Haoquan Zhang, Manyuan Zhang, Jiaming Liu, Shanghang Zhang, Peng Gao, et al. Can we generate images with cot? let’s verify and reinforce image generation step by step. arXiv preprint arXiv:2501.13926 ,2025. [11] Tanmay Gupta and Aniruddha Kembhavi. Visual programming: Compositional visual reasoning without training. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 14953–14962, 2023. [12] Ruiyan Han, Zhen Fang, XinYu Sun, Yuchen Ma, Ziheng Wang, Yu Zeng, Zehui Chen, Lin Chen, Wenxuan Huang, Wei-Jie Xu, et al. Unicorn: Towards self-improving unified multimodal models through self-generated supervision. arXiv preprint arXiv:2601.03193 , 2026. [13] Chaoqun He, Renjie Luo, Yuzhuo Bai, Shengding Hu, Zhen Thai, Junhao Shen, Jinyi Hu, Xu Han, Yujie Huang, Yuxiang Zhang, et al. Olympiadbench: A challenging benchmark for promoting agi with olympiad-level bilingual multimodal scientific problems. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 3828–3850, 2024. [14] Yushi Hu, Weijia Shi, Xingyu Fu, Dan Roth, Mari Ostendorf, Luke Zettlemoyer, Noah A Smith, and Ranjay Krishna. Visual sketchpad: Sketching as a visual chain of thought for multimodal language models. Advances in Neural Information Processing Systems , 37:139348–139379, 2024. 10 [15] Aaron Hurst, Adam Lerer, Adam P Goucher, Adam Perelman, Aditya Ramesh, Aidan Clark, AJ Ostrow, Akila Welihinda, Alan Hayes, Alec Radford, et al. Gpt-4o system card. arXiv preprint arXiv:2410.21276 , 2024. [16] Ang Li, Charles Wang, Deqing Fu, Kaiyu Yue, Zikui Cai, Wang Bill Zhu, Ollie Liu, Peng Guo, Willie Neiswanger, Furong Huang, et al. Zebra-cot: A dataset for interleaved vision language reasoning. arXiv preprint arXiv:2507.16746 , 2025. [17] Chengzu Li, Wenshan Wu, Huanyu Zhang, Yan Xia, Shaoguang Mao, Li Dong, Ivan Vuli´ c, and Furu Wei. Imagine while reasoning in space: Multimodal visualization-of-thought. arXiv preprint arXiv:2501.07542 , 2025. [18] Xiping Li and Jianghong Ma. Aimcot: Active information-driven multimodal chain-of-thought for vision-language reasoning. arXiv preprint arXiv:2509.25699 , 2025. [19] Chengzhi Liu, Yuzhe Yang, Yue Fan, Qingyue Wei, Sheng Liu, and Xin Eric Wang. Rea-soning within the mind: Dynamic multimodal interleaving in latent space. arXiv preprint arXiv:2512.12623 , 2025. [20] Xu Liu, Yongheng Zhang, Qiguang Chen, Yao Li, Sheng Wang, and Libo Qin. Let’s think with images efficiently! an interleaved-modal chain-of-thought reasoning framework with dynamic and precise visual thoughts. In Proceedings of the AAAI Conference on Artificial Intelligence ,volume 40, pages 32213–32221, 2026. [21] Pan Lu, Hritik Bansal, Tony Xia, Jiacheng Liu, Chunyuan Li, Hannaneh Hajishirzi, Hao Cheng, Kai-Wei Chang, Michel Galley, and Jianfeng Gao. Mathvista: Evaluating mathematical reasoning of foundation models in visual contexts. arXiv preprint arXiv:2310.02255 , 2023. [22] Weijia Mao, Zhenheng Yang, and Mike Zheng Shou. Unirl: Self-improving unified multimodal models via supervised and reinforcement learning. arXiv preprint arXiv:2505.23380 , 2025. [23] Runqi Qiao, Qiuna Tan, Guanting Dong, Minhui Wu, Chong Sun, Xiaoshuai Song, Zhuoma GongQue, Shanglin Lei, Zhe Wei, Miaoxuan Zhang, Runfeng Qiao, Yifan Zhang, Xiao Zong, Yida Xu, Muxi Diao, Zhimin Bao, Chen Li, and Honggang Zhang. We-math: Does your large multimodal model achieve human-like mathematical reasoning?, 2024. [24] Haozhan Shen, Kangjia Zhao, Tiancheng Zhao, Ruochen Xu, Zilun Zhang, Mingwei Zhu, and Jianwei Yin. Zoomeye: Enhancing multimodal llms with human-like zooming capabilities through tree-based image exploration. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 6613–6629, 2025. [25] Weikang Shi, Aldrich Yu, Rongyao Fang, Houxing Ren, Ke Wang, Aojun Zhou, Changyao Tian, Xinyu Fu, Yuxuan Hu, Zimu Lu, et al. Mathcanvas: Intrinsic visual chain-of-thought for multimodal mathematical reasoning. arXiv preprint arXiv:2510.14958 , 2025. [26] Zihan Su, Hongyang Wei, Kangrui Cen, Yong Wang, Guanhua Chen, Chun Yuan, and Xi-angxiang Chu. Generation enhances understanding in unified multimodal models via multi-representation generation. arXiv preprint arXiv:2601.21406 , 2026. [27] Omkar Thawakar, Dinura Dissanayake, Ketan Pravin More, Ritesh Thawkar, Ahmed Heakl, Noor Ahsan, Yuhao Li, Ilmuz Zaman Mohammed Zumri, Jean Lahoud, Rao Muhammad Anwer, et al. Llamav-o1: Rethinking step-by-step visual reasoning in llms. In Findings of the Association for Computational Linguistics: ACL 2025 , pages 24290–24315, 2025. [28] Fu-Yun Wang, Han Zhang, Michael Gharbi, Hongsheng Li, and Taesung Park. Unirl-zero: Reinforcement learning on unified models with joint language model and diffusion model experts. arXiv preprint arXiv:2510.17937 , 2025. [29] Haozhe Wang, Alex Su, Weiming Ren, Fangzhen Lin, and Wenhu Chen. Pixel reasoner: Incentivizing pixel-space reasoning with curiosity-driven reinforcement learning. arXiv preprint arXiv:2505.15966 , 2025. 11 [30] Ke Wang, Junting Pan, Weikang Shi, Zimu Lu, Houxing Ren, Aojun Zhou, Mingjie Zhan, and Hongsheng Li. Measuring multimodal mathematical reasoning with math-vision dataset. 
+
+Advances in Neural Information Processing Systems , 37:95095–95169, 2024. [31] Ke Wang, Junting Pan, Linda Wei, Aojun Zhou, Weikang Shi, Zimu Lu, Han Xiao, Yunqiao Yang, Houxing Ren, Mingjie Zhan, et al. Mathcoder-vl: Bridging vision and code for en-hanced multimodal mathematical reasoning. In Findings of the Association for Computational Linguistics: ACL 2025 , pages 2505–2534, 2025. [32] Xinlong Wang, Xiaosong Zhang, Zhengxiong Luo, Quan Sun, Yufeng Cui, Jinsheng Wang, Fan Zhang, Yueze Wang, Zhen Li, Qiying Yu, et al. Emu3: Next-token prediction is all you need. 
+
+arXiv preprint arXiv:2409.18869 , 2024. [33] Yikun Wang, Siyin Wang, Qinyuan Cheng, Zhaoye Fei, Liang Ding, Qipeng Guo, Dacheng Tao, and Xipeng Qiu. Visuothink: Empowering lvlm reasoning with multimodal tree search. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 21707–21719, 2025. [34] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou, et al. Chain-of-thought prompting elicits reasoning in large language models. 
+
+Advances in neural information processing systems , 35:24824–24837, 2022. [35] Rongchang Xie, Chen Du, Ping Song, and Chang Liu. Muse-vl: Modeling unified vlm through semantic discrete encoding. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 24135–24146, 2025. [36] Guowei Xu, Peng Jin, Ziang Wu, Hao Li, Yibing Song, Lichao Sun, and Li Yuan. Llava-cot: Let vision language models reason step-by-step. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 2087–2098, 2025. [37] Huanjin Yao, Jiaxing Huang, Wenhao Wu, Jingyi Zhang, Yibo Wang, Shunyu Liu, Yingjie Wang, Yuxin Song, Haocheng Feng, Li Shen, et al. Mulberry: Empowering mllm with o1-like reasoning and reflection via collective monte carlo tree search. arXiv preprint arXiv:2412.18319 ,2024. [38] Jieyu Zhang, Le Xue, Linxin Song, Jun Wang, Weikai Huang, Manli Shu, An Yan, Zixian Ma, Juan Carlos Niebles, Silvio Savarese, et al. Provision: Programmatically scaling vision-centric instruction data for multimodal language models. arXiv preprint arXiv:2412.07012 , 2024. [39] Renrui Zhang, Dongzhi Jiang, Yichi Zhang, Haokun Lin, Ziyu Guo, Pengshuo Qiu, Aojun Zhou, Pan Lu, Kai-Wei Chang, Yu Qiao, et al. Mathverse: Does your multi-modal llm truly see the diagrams in visual math problems? In European Conference on Computer Vision , pages 169–186. Springer, 2024. [40] Zhuosheng Zhang, Aston Zhang, Mu Li, Hai Zhao, George Karypis, and Alex Smola. Mul-timodal chain-of-thought reasoning in language models. arXiv preprint arXiv:2302.00923 ,2023. [41] Shanshan Zhao, Xinjie Zhang, Jintao Guo, Jiakui Hu, Lunhao Duan, Minghao Fu, Yong Xien Chng, Guo-Hua Wang, Qing-Guo Chen, Zhao Xu, et al. Unified multimodal understanding and generation models: Advances, challenges, and opportunities. arXiv preprint arXiv:2505.02567 ,2025. [42] Jinguo Zhu, Weiyun Wang, Zhe Chen, Zhaoyang Liu, Shenglong Ye, Lixin Gu, Hao Tian, Yuchen Duan, Weijie Su, Jie Shao, et al. Internvl3: Exploring advanced training and test-time recipes for open-source multimodal models. arXiv preprint arXiv:2504.10479 , 2025. [43] Chengke Zou, Xingang Guo, Rui Yang, Junyu Zhang, Bin Hu, and Huan Zhang. Dynamath: A dynamic visual benchmark for evaluating mathematical reasoning robustness of vision language models. arXiv preprint arXiv:2411.00836 , 2024. 12 A Appendix 
+
+A.1 Detailed Analysis on How Generated Images Mislead Reasoning 
+
+Section 5.1 shows a single case where a generated image attracts more attention than the input image during later text reasoning. As shown in Figure 11, we verify the generalization of this phenomenon on WeMath, MathVista, and MathVerse by averaging the attention ratio across all samples. 0.0 0.2 0.4 0.6 0.8 1.0             
+
+> Normalized Post-Image Text Generation Token Position
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> Attention Ratio
+> WeMath
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalized Post-Image Text Generation Token Position
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> MathVista
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Normalized Post-Image Text Generation Token Position
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25 MathVerse
+> Input Image Generated Image
+
+Figure 11: Generated images attract more attention than input images during later text reasoning across benchmarks. 
+
+A.2 Attention Visualization of Helpful and Harmful Generation Cases a) Helpful Case 
+
+b) Harmful Case 
+
+Figure 12: Helpful case attends more to text reasoning and input image ViT than harmful case. 13 A.3 AdaViG Algorithm Algorithm 1 AdaViG : Adaptive Visual Gating 
+
+Require: Context c, decision step t⋆, thresholds (τI , τ F ) 
+
+> 1:
+
+Predict next action token a 
+
+> 2:
+
+if a̸ = ⟨img_start ⟩ then  
+
+> 3:
+
+τi = E ; Continue text decoding  
+
+> 4:
+
+else  
+
+> 5:
+
+τi = Igen ; Run diffusion for t⋆ steps  
+
+> 6:
+
+Compute I and F from early VAE attention  
+
+> 7:
+
+if I < τ I and F < τ F then  
+
+> 8:
+
+Abort diffusion; discard partial VAE latents  
+
+> 9:
+
+τi = E ; Reset to text node  
+
+> 10:
+
+else  
+
+> 11:
+
+Continue diffusion; append generated image  
+
+> 12:
+
+end if  
+
+> 13:
+
+end if 
+
+A.4 Calculation of FLOPs 
+
+We estimate image generation FLOPs from the number of executed diffusion steps. A full image generation requires T denoising steps, while an aborted generation under AdaViG only executes the first t⋆ steps. Thus, each aborted generation saves approximately (T − t⋆)/T of its image-generation FLOPs. Given an abort ratio r, the overall image generation FLOPs reduction is estimated as 
+
+∆FLOPs = r
+
+
+
+1 − t⋆
+
+T
+
+
+
+. (7) We use t⋆ = 5 and T = 50 in all experiments, so an aborted generation saves about 90% of its image generation FLOPs. 
+
+A.5 Case Studies Input Image: Question :
+
+In the figure below, choose point D on BC so that △ACD and △ABD 
+
+have equal perimeters. What is the area of △ ABD? 
+
+Options : A. !
+
+> "
+
+, B. ! 
+
+> #
+
+, C. 2, D. $#  
+
+> %
+
+, E. %
+
+> #
+
+Solution: 
+
+Text : Let BD = x, so CD = BC - BD = 5 - x. The perimeters are: PABD = AB + AD + BD = 4 + AD + x. PACD = AC 
+
++ AD + CD = 3 + AD + (5 - x) = 8 + AD - x. Equal perimeters give x = 2. 
+
+Visual Gating: = 0.42 = 0.007 Abort Generation 
+
+(Ours) Text : The area of △ABC is $ 
+
+> #
+
+𝐴𝐵 $ 𝐴𝐶 = 6. Also, the area of △ABD equals &'  
+
+> &(
+
+times △ABC. So 
+
+the area of △ABD is # 
+
+> %
+
+$ 6 = $# 
+
+> %
+
+. Therefore, the correct option is D . ✅
+
+(MathCanvas) Image Text : Since △ 𝐴𝐶𝐷 and △ 𝐴𝐵𝐷 have equal perimeters and share side 𝐴𝐷 ,
+
+the remaining sides satisfy 𝐴𝐶 = 𝐴𝐵 . So △ 𝐴𝐵𝐶 is isosceles with base 𝐴𝐵 .
+
+Drop 𝐴𝐷 ⊥ 𝐵𝐶 at 𝐷 . Then 𝐵𝐷 = 𝐷𝐶 = &)  
+
+> #
+
+.
+
+By the Pythagorean theorem: 𝐴 𝐵 # = 𝐴 𝐷 # + 𝐵 𝐷 # ⟹ 𝐴𝐷 = 2 3. Therefore: 
+
+𝑆 △+&' = $ 
+
+> #
+
+⋅ 𝐴𝐵 ⋅ 𝐴𝐷 = $ 
+
+> #
+
+⋅ 4 ⋅ 2 3 = 4 3. Since the options are unitless, 4 3
+
+corresponds to option A . ❌
+
+Figure 13: Case study between our method and MathCanvas. 14 Input Image: 
+
+Text : Let the common vertex be B. Let A be the other endpoint of the diagonal of the 
+
+right square that lies on the boundary of the left square, and let C be the adjacent 
+
+vertex of the right square so that ∠ ACB=90 °. and BA is a side of the left square while 
+
+the diagonal of the right square lies along the segment through B and A.", 
+
+Visual Gating: 
+
+Solution 1 : 
+
+Text : Let the left square be BDPF with side length 1 and the right square be ACBE with 
+
+side length 1 . AC and PD intersect at point O. The diagonal of a unit square has length 
+
+2 . To find the overlap, draw CP and consider the intersection region. 
+
+Image: 
+
+Text : The overlap region is the right triangle △PDB of the left square minus the small 
+
+right triangle △PCO cut off by the diagonal alignment. Therefore , S=S △PDB −S△PCO 
+
+=! 
+
+> "
+
+×1×1 − ! 
+
+> "
+
+×( 2 − 1)"= 2 − 1. Therefore, the option is A . ✅
+
+Question: 
+
+Two squares with side 1 have a common vertex, and the 
+
+edge of one of them lies along the diagonal of the other. 
+
+What is the area of the overlap between the squares? 
+
+Option: A. 2 − 1, B. " 
+
+> "
+
+, C. "#! 
+
+> "
+
+, D. 2 + 1, E. 3 − 2
+
+= 0.51 = 0.014 Keep Generation 
+
+Image: 
+
+= 0.62 = 0.021 Keep Generation 
+
+Text : Let the common vertex be B, and let the right square be ABCD with AB side and 
+
+BD its diagonal. The other square is BEFG with BE a side along BD of the first square. 
+
+The overlap region is the quadrilateral ABEO inside the left square. 
+
+Visual Gating: 
+
+Solution 2: 
+
+Text : The side length of each square is 1, so the diagonal BD has length 2.
+
+= 0.41 = 0.016 Keep Generation 
+
+Image: 
+
+Visual Gating: = 0.22 = 0.006 Abort Generation 
+
+(Ours) Text : The overlap area is S△ABD−S△DOE = ! 
+
+> "
+
+− ! 
+
+> "
+
+( 2 − 1)"= 2 − 1. Therefore, the 
+
+area of the overlap is A . ✅
+
+Visual Gating: 
+
+(MathCanvas) Image :
+
+Text : The area of the overlap is close to "#! 
+
+> "
+
+. Hence, the correct option is C. ❌Figure 14: Case study between our method and MathCanvas. 15 Input Image: Question: 
+
+In the figure below, choose point D on BC so that △ACD and 
+
+△ABD have equal perimeters. What is the area of △ ABD? 
+
+Options : A. !
+
+> "
+
+, B . ! 
+
+> #
+
+, C . 2, D. $#  
+
+> %
+
+, E . %
+
+> #
+
+Solution: 
+
+Text : Let BD = x, so CD = BC - BD = 5 - x. The perimeters are : PABD = AB + AD + BD = 4 + AD 
+
++ x. PACD = AC + AD + CD = 3 + AD + (5 - x) = 8 + AD - x. Equal perimeters give 4 + AD + x = 
+
+8 + AD - x, hence x = 2. 
+
+Visual Gating: = 0.42 = 0.007 Abort Generation 
+
+(Ours) Text : The area of △ABC is $ 
+
+> #
+
+𝐴𝐵 $ 𝐴𝐶 = 6. Also, the area of △ABD equals &' 
+
+> &(
+
+times △ABC. So the area of △ABD is # 
+
+> %
+
+$ 6 = $# 
+
+> %
+
+. Therefore, the correct option is D . ✅
+
+(MathCanvas) Image: 
+
+Text : Since △ 𝐴𝐶𝐷 and △ 𝐴𝐵𝐷 have equal perimeters and share side 𝐴𝐷 , the remaining 
+
+sides satisfy 𝐴𝐶 = 𝐴𝐵 . So △ 𝐴𝐵𝐶 is isosceles with base 𝐴𝐵 .
+
+Drop 𝐴𝐷 ⊥ 𝐵𝐶 at 𝐷 . Then 𝐵𝐷 = 𝐷𝐶 = &)  
+
+> #
+
+.
+
+From the diagram, 𝐵𝐶 = 𝐴𝐵 = 𝐴𝐶 = 4, and 𝐴𝐶 = 3 is given, giving 𝐵𝐷 = 2. By the 
+
+Pythagorean theorem: 
+
+𝐴 𝐵 # = 𝐴 𝐷 # + 𝐵 𝐷 # ⟹ 16 = 𝐴 𝐷 # + 4 ⟹ 𝐴𝐷 = 2 3.
+
+Therefore: 
+
+𝑆 △+&' = 1
+
+2 ⋅ 𝐴𝐵 ⋅ 𝐴𝐷 = 1
+
+2 ⋅ 4 ⋅ 2 3 = 4 3.
+
+Since the options are unitless, 4 3 corresponds to option A . ❌Figure 15: Case study between our method and MathCanvas. 
+
+A.6 Limitations 
+
+AdaViG improves unified multimodal reasoning by suppressing harmful intermediate image gen-erations using introspective attention signals. Nevertheless, its benefits may be limited on chains where intermediate visual generation is rarely triggered. In addition, the gate primarily decides whether to generate a visual aid, rather than enhancing the quality of the generated visual tokens. Further improving the quality of visual tokens requires complementary techniques beyond gating. This is particularly important when the underlying image generation capability is weak, since gating cannot fully address failures that require high-fidelity visual support. Future work will incorporate Generation Intent and Visual Fidelity into CoT supervised fine-tuning as training-time supervision signals, rather than using them only as inference-time gating criteria. 16 A.7 More Ablation Studies on Bagel-Zebra-CoT 
+
+Table 5: Performance of Bagel-Zebra-CoT under gating methods with different ( I,F) combinations. 
+
+Method Avg. Drop Performance   
+
+> MathVista WeMath DynaMath
+
+Bagel-Zebra-CoT – 81.0 34.5 39.0 w/ I only 64% 82.2 35.9 41.1 w/ F only 61% 81.9 36.1 41.6 w/ I ∨ F 76% 78.2 31.5 38.4 w/ AdaViG 57% 83.4 38.1 43.5 
+
+Table 6: Comparison with other image genera-tion aborting strategies on Bagel-Zebra-CoT. 
+
+Method Drop Rate Performance 
+
+> MathVista WeMath DynaMath
+
+AdaViG 57% 83.4 38.1 43.5 
+
+Random 25% 78.2 34.3 38.9 50% 80.4 34.3 37.7 Text-only 100% 77.1 32.5 37.5 DAP-ICoT [20] 16% 81.0 34.5 39.3 
+
+A.8 Effects on Threshold τI and τF
+
+Table 7: Accuracy (%) on MathVista across τI ∈{0.5, 0.6, 0.7} with τF fixed at 0.02. 
+
+Model τI =0 .5 τI =0 .6 τI =0 .7
+
+Bagel-Canvas 80.6 81.2 81.0 Bagel-Zebra-CoT 83.2 82.3 82.1 
+
+Table 8: Accuracy (%) on MathVista for across 
+
+τF ∈ { 0.01 , 0.02 , 0.04 } with τI fixed at 0.6. 
+
+Model τF =0 .01 τF =0 .02 τF =0 .04 
+
+Bagel-Canvas 81.1 80.7 80.3 Bagel-Zebra-CoT 82.4 82.7 83.1 
+
+17
