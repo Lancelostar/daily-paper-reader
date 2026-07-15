@@ -6,71 +6,68 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-14
-- 运行时间：2026-07-14 20:50:04 UTC
+- 最新运行日期：2026-07-15
+- 运行时间：2026-07-15 20:04:49 UTC
 - 运行状态：成功
-- 本次总论文数：17
+- 本次总论文数：15
 - 精读区：6
-- 速读区：11
+- 速读区：9
 
 ### 今日简报（AI）
-今日多模态AI研究聚焦于强化结构化视觉推理与多视图整合诊断，共梳理17篇论文，精读2篇高分工作（均9.0/10）。最值得关注：《Scene Graph Thinking》提出场景图增强MLLM结构化推理，与《MultiView-Bench》构建的世界中心多视图基准，为模型细粒度理解提供新范式。建议普通读者优先深入场景图推理方法，并利用多视图基准检验自身模型的多视角整合能力（尤其适用于自动驾驶、机器人场景）。
-- 详情：[/202607/14/README](/202607/14/README)
+- 今日共生成 15 篇推荐（精读 6 篇，速读 9 篇）
+- 精读：《UniVR: Thinking in Visual Space for Unified Visual Reasoning》（10.0/10）, 《MultiView-Bench: A Diagnostic Benchmark for World-Centric Multi-View Integration in VLMs》（9.0/10）
+- 速读：《The Ebb and Flow of Multimodal Focus: Scheduling Visual Relay Windows for Grounded VLM Reasoning》（8.0/10）, 《Model Guides You How to Draw: Adaptive Visual Gating for Unified Multimodal Reasoning》（7.0/10）, 《PhysMRV: Physical Memory Retrieval and Verification for Physics Plausibility Reasoning》（7.0/10）
+- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+- 详情：[/202607/15/README](/202607/15/README)
 
 ### 精读区论文标签
-1. [Scene Graph Thinking: Reinforcing Structured Visual Reasoning for Multimodal Large Language Models](/202607/14/2607.05716v3-scene-graph-thinking-reinforcing-structured-visual-reasoning-for-multimodal-large-language-models)  
-   标签：评分：9.0/10、query:vr
-   evidence：通过场景图强化MLLM的结构化视觉推理
-2. [MultiView-Bench: A Diagnostic Benchmark for World-Centric Multi-View Integration in VLMs](/202607/14/2607.08970v1-multiview-bench-a-diagnostic-benchmark-for-world-centric-multi-view-integration-in-vlms)  
+1. [UniVR: Thinking in Visual Space for Unified Visual Reasoning](/202607/15/2607.12800v1-univr-thinking-in-visual-space-for-unified-visual-reasoning)  
+   标签：评分：10.0/10、query:vr
+   evidence：从纯视觉演示学习统一视觉推理
+2. [MultiView-Bench: A Diagnostic Benchmark for World-Centric Multi-View Integration in VLMs](/202607/15/2607.08970v1-multiview-bench-a-diagnostic-benchmark-for-world-centric-multi-view-integration-in-vlms)  
    标签：评分：9.0/10、query:world-model
-   evidence：面向世界中心多视图集成的诊断基准，构建3D心智模型
-3. [On Locality and Length Generalization in Visual Reasoning](/202607/14/2607.09061v1-on-locality-and-length-generalization-in-visual-reasoning)  
+   evidence：评估VLM世界中心多视图整合的基准
+3. [CoRe: A Comprehensive Framework for Cross-Image Comparative Reasoning in Vision-Language Models](/202607/15/2607.12786v1-core-a-comprehensive-framework-for-cross-image-comparative-reasoning-in-vision-language-models)  
    标签：评分：9.0/10、query:vr
-   evidence：直接研究视觉推理和长度泛化
-4. [When Depth Is Better Told Than Shown: Depth-Ordinal Prompting for Vision-Language Spatial Reasoning](/202607/14/2607.11173v1-when-depth-is-better-told-than-shown-depth-ordinal-prompting-for-vision-language-spatial-reasoning)  
-   标签：评分：9.0/10、query:vr
-   evidence：提出深度顺序提示用于VLM空间推理
-5. [RetroHolmes: When Semantic Plausibility Fails Retrospective Physical Process Reasoning](/202607/14/2607.11044v1-retroholmes-when-semantic-plausibility-fails-retrospective-physical-process-reasoning)  
+   evidence：跨图像比较推理的基准
+4. [BUS: Brain-Inspired Unsupervised Self-Reflection via Backward Prediction for Multimodal Reasoning](/202607/15/2607.07361v2-bus-brain-inspired-unsupervised-self-reflection-via-backward-prediction-for-multimodal-reasoning)  
    标签：评分：8.0/10、query:vr
-   evidence：VLM回顾式物理过程推理基准
-6. [Evidence-Backed Video Question Answering](/202607/14/2607.11862v1-evidence-backed-video-question-answering)  
+   evidence：无监督自反思增强多模态视觉推理
+5. [APIVOT: Adaptive Planning with Interleaved Vision-Language Thoughts](/202607/15/2607.08024v1-apivot-adaptive-planning-with-interleaved-vision-language-thoughts)  
    标签：评分：8.0/10、query:vr
-   evidence：引入视频问答中时空证据基准
+   evidence：交错视觉思想进行几何可行性验证
+6. [Beyond the Eye: Efficient Multimodal Reasoning via Self-Regulated Implicit Visual Tools](/202607/15/2607.11106v1-beyond-the-eye-efficient-multimodal-reasoning-via-self-regulated-implicit-visual-tools)  
+   标签：评分：8.0/10、query:vr
+   evidence：自调节隐式视觉工具实现高效多模态推理
 
 ### 速读区论文标签
-1. [BUS: Brain-Inspired Unsupervised Self-Reflection via Backward Prediction for Multimodal Reasoning](/202607/14/2607.07361v2-bus-brain-inspired-unsupervised-self-reflection-via-backward-prediction-for-multimodal-reasoning)  
+1. [The Ebb and Flow of Multimodal Focus: Scheduling Visual Relay Windows for Grounded VLM Reasoning](/202607/15/2607.11436v1-the-ebb-and-flow-of-multimodal-focus-scheduling-visual-relay-windows-for-grounded-vlm-reasoning)  
    标签：评分：8.0/10、query:vr
-   evidence：无监督自反思方法增强多模态推理，提升视觉推理
-2. [Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing](/202607/14/2607.08497v1-cognitive-structured-multimodal-agent-for-multimodal-understanding-generation-and-editing)  
-   标签：评分：8.0/10、query:vr
-   evidence：具情节视觉记忆的多模态智能体用于推理
-3. [Model Guides You How to Draw: Adaptive Visual Gating for Unified Multimodal Reasoning](/202607/14/2607.10004v1-model-guides-you-how-to-draw-adaptive-visual-gating-for-unified-multimodal-reasoning)  
-   标签：评分：8.0/10、query:vr
-   evidence：多模态模型中的视觉推理，自适应门控控制中间视觉步骤
-4. [Mixture of Cognitive Experts in Large Vision-Language Models](/202607/14/2607.10796v1-mixture-of-cognitive-experts-in-large-vision-language-models)  
-   标签：评分：8.0/10、query:vr
-   evidence：通过专家混合增强LVLM的视觉推理，减少幻觉
-5. [Vision Pretraining for Dense Spatial Perception](/202607/14/2607.05247v1-vision-pretraining-for-dense-spatial-perception)  
-   标签：评分：7.0/10、query:world-model
-   evidence：面向密集空间感知的预训练，与世界模型的空间理解相关
-6. [ActiveFly-Bench: Aligning Embodied Question Answering with Vision-Language-Action for Aerial Embodied Perception](/202607/14/2607.10180v1-activefly-bench-aligning-embodied-question-answering-with-vision-language-action-for-aerial-embodied-perception)  
+   evidence：VLM推理中视觉证据的机制研究
+2. [Model Guides You How to Draw: Adaptive Visual Gating for Unified Multimodal Reasoning](/202607/15/2607.10004v1-model-guides-you-how-to-draw-adaptive-visual-gating-for-unified-multimodal-reasoning)  
    标签：评分：7.0/10、query:vr
-   evidence：面向具身空中感知的视觉-语言推理基准
-7. [ABot-N1: Toward a General Visual Language Navigation Foundation Model](/202607/14/2607.10383v1-abot-n1-toward-a-general-visual-language-navigation-foundation-model)  
+   evidence：自适应视觉门控用于多模态推理
+3. [PhysMRV: Physical Memory Retrieval and Verification for Physics Plausibility Reasoning](/202607/15/2607.10190v1-physmrv-physical-memory-retrieval-and-verification-for-physics-plausibility-reasoning)  
    标签：评分：7.0/10、query:vr
-   evidence：通过慢快架构解耦认知与控制的视觉语言导航推理
-8. [SynthDocBench: Controlled Benchmark for Long-Context Visual Document Understanding](/202607/14/2607.10400v1-synthdocbench-controlled-benchmark-for-long-context-visual-document-understanding)  
+   evidence：视频理解中的物理合理性推理
+4. [Instance-Enriched Semantic Maps for Visual Language Navigation](/202607/15/2607.12630v1-instance-enriched-semantic-maps-for-visual-language-navigation)  
    标签：评分：7.0/10、query:vr
-   evidence：用于长上下文视觉文档理解的受控基准，涉及感知与推理
-9. [Light-Omni: Reflex over Reasoning in Agentic Video Understanding with Long-Term Memory](/202607/14/2607.05511v1-light-omni-reflex-over-reasoning-in-agentic-video-understanding-with-long-term-memory)  
+   evidence：使用实例增强语义地图的视觉语言导航
+5. [MaxSAT-Based Feedback for Guiding Vision-Language Models in Sudoku](/202607/15/2607.12711v1-maxsat-based-feedback-for-guiding-vision-language-models-in-sudoku)  
+   标签：评分：7.0/10、query:vr
+   evidence：神经符号方法用于数独的视觉推理
+6. [Visual Access Boundaries in Vision-Language Model Reasoning](/202607/15/2607.12815v1-visual-access-boundaries-in-vision-language-model-reasoning)  
+   标签：评分：7.0/10、query:vr
+   evidence：分析VLM推理中的视觉访问边界
+7. [Traj-VLN: Learning Pixel-Space Interaction via Autoregressive Trajectory Generation](/202607/15/2607.10744v1-traj-vln-learning-pixel-space-interaction-via-autoregressive-trajectory-generation)  
    标签：评分：6.0/10、query:vr
-   evidence：智能体视频理解中的推理效率改进
-10. [APIVOT: Adaptive Planning with Interleaved Vision-Language Thoughts](/202607/14/2607.08024v1-apivot-adaptive-planning-with-interleaved-vision-language-thoughts)  
-   标签：评分：6.0/10、query:world-model
-   evidence：基于VLM的规划器，交错视觉思维进行几何推理，与世界模型相关
-11. [Answer-Conditioned Chain-of-Thought Distillation for Few-Shot Industrial Vision with Small VLMs](/202607/14/2607.10666v1-answer-conditioned-chain-of-thought-distillation-for-few-shot-industrial-vision-with-small-vlms)  
+   evidence：自回归轨迹生成用于视觉语言导航，涉及视觉推理
+8. [Mixture of Cognitive Experts in Large Vision-Language Models](/202607/15/2607.10796v1-mixture-of-cognitive-experts-in-large-vision-language-models)  
    标签：评分：6.0/10、query:vr
-   evidence：使用思维链蒸馏进行工业视觉检测中的视觉推理
+   evidence：LVLM中用于视觉推理的认知专家
+9. [DM-KG: A Novel Method for Boosting Spatial Cognition of Vision-Language Models in Street View Imagery](/202607/15/2607.12319v1-dm-kg-a-novel-method-for-boosting-spatial-cognition-of-vision-language-models-in-street-view-imagery)  
+   标签：评分：6.0/10、query:vr
+   evidence：街景中空间认知与逻辑推理
 
 
 <div class="dpr-home-promo-card">
